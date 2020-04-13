@@ -3,7 +3,9 @@ The Smogon/Pokemon-Showdown sprite repository
 
 # Installation
 
-You will need to install the Tup build system. Instructions for Windows/Mac/Linux can be found [here](http://gittup.org/tup/).
+- Tup build system. Instructions for Windows/Mac/Linux can be found [here](http://gittup.org/tup/).
+- GraphicsMagick
+- AdvPng
 
 # Building
 

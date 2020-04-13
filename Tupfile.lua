@@ -24,7 +24,26 @@ for file in iglob{"src/models/back-shiny/*", "src/models/back-shiny-cosmetic/*"}
     tup.rule(file, "ln -s ../../../%f %o", "build/ps/ani-back-shiny/" .. output)
 end
 
+
+function fbsprite(input, output)
+    tup.foreach_rule(
+        input,
+        "^ fbsprite %f^ tools/fbsprite.sh %f %o",
+        output
+    )
+end
+
+function twittersprite(input, output)
+    tup.foreach_rule(
+        input,
+        "^ twittersprite %f^ tools/twittersprite.sh %f %o",
+        output
+    )
+end
+
 for file in iglob{"src/models/front/*"} do
-    local output = toSmogonAlias(decodeFS(tup.base(file))) .. "." .. tup.ext(file)
-    tup.rule(file, "ln -s ../../../%f %o", "build/smogon/xy/" .. output)
+    local base = toSmogonAlias(decodeFS(tup.base(file)))
+    tup.foreach_rule(file, "ln -s ../../../%f %o", "build/smogon/xy/" .. base .. ".%e")
+    fbsprite(file, "build/smogon/fbsprites/xy/" .. base .. ".png")
+    twittersprite(file, "build/smogon/twittersprites/xy/" .. base .. ".png")
 end
