@@ -32,7 +32,7 @@ function toPSSpriteID(name)
         if info.forme == 'Female' then
             info.forme = 'F'
         end
-        result = result .. "-" ..toPSID(info.forme)
+        result = result .. "-" .. toPSID(info.forme)
     end
     return result
 end
