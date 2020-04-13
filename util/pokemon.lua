@@ -6,6 +6,10 @@ function decodeFS(filename)
                    end)
 end
 
+function decodeBase(filename)
+    return decodeFS(tup.base(filename))
+end
+
 function toPSID(name)
     name = name:lower()
     name = name:gsub("[^a-z0-9]+", '')
