@@ -2,7 +2,7 @@
 function decodeFS(filename)
     return filename:gsub('_(%x%x%x%x)',
                    function(hex)
-                       return unichr(tonumber(hex, 16))
+                       return utf8.char(tonumber(hex, 16))
                    end)
 end
 
