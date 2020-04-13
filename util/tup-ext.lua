@@ -6,7 +6,11 @@
 function glob(pats)
     local results = {}
     for pat in iter(astable(pats)) do
-        results += tup.glob(pat)
+        for _, file in ipairs(tup.glob(pat)) do
+            -- Workaround a weird issue pre reported
+            file = file:gsub("//", "/")
+            table.insert(results, file)
+        end
     end
     return results
 end
