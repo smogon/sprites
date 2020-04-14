@@ -60,3 +60,16 @@ for file in iglob{"src/models/front/*"} do
     fbsprite(file, "build/smogon/fbsprites/xy/" .. base .. ".png")
     twittersprite(file, "build/smogon/twittersprites/xy/" .. base .. ".png")
 end
+
+function forumsprite(input, output, w, h)
+    tup.foreach_rule(
+        input,
+        "^ forumsprite %f^ tools/forumsprite.sh %f %o " .. w .. " " .. h,
+        output
+    )
+end
+
+for file in iglob{"src/minisprites/gen6/pokemon/*"} do
+    local base = toSmogonAlias(decodeBase(file))
+    forumsprite(file, "build/smogon/forumsprites/" .. base .. ".png", 40, 30)
+end
