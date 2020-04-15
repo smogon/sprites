@@ -17,12 +17,12 @@ function symlink(input, output)
     )
 end
 
-for file in iglob{"src/models/front/*", "src/models/front-cosmetic/*"} do
+for file in iglob{"src/models/front/*", "src/models/front-cosmetic/*", "src/models/front-misc/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani/" .. output)
 end
 
-for file in iglob{"src/models/back/*", "src/models/back-cosmetic/*"} do
+for file in iglob{"src/models/back/*", "src/models/back-cosmetic/*", "src/models/back-misc/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani-back/" .. output)
 end
