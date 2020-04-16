@@ -50,7 +50,7 @@ for file in iglob{"src/canonical/models/back/*", "src/canonical/models/back-cosm
     symlink(file, "build/ps/ani-back/" .. output)
 end
 
-for file in iglob{"src/canonical/models/shiny/*", "src/canonical/models/shiny-cosmetic/*", "src/noncanonical/models/shiny/*"} do
+for file in iglob{"src/canonical/models/front-shiny/*", "src/canonical/models/front-shiny-cosmetic/*", "src/noncanonical/models/front-shiny/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani-shiny/" .. output)
 end
