@@ -15,7 +15,7 @@ function padsprite(input, output, w, h)
 end
 
 for dir in iter{"asymmetrical", "custom", "misc", "pokemon"} do
-    for file in iglob{"src/minisprites/gen6/" .. dir .. "/*"} do
+    for file in iglob{"src/canonical/minisprites/gen6/" .. dir .. "/*"} do
         padsprite(file,
                   "build/gen6-minisprites-padded/" .. dir .. "/" .. tup.file(file),
                   40, 30)
@@ -40,22 +40,22 @@ tup.rule(
 
 -- PS models
 
-for file in iglob{"src/models/front/*", "src/models/front-cosmetic/*", "src/models/front-misc/*"} do
+for file in iglob{"src/canonical/models/front/*", "src/canonical/models/front-cosmetic/*", "src/canonical/models/front-misc/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani/" .. output)
 end
 
-for file in iglob{"src/models/back/*", "src/models/back-cosmetic/*", "src/models/back-misc/*"} do
+for file in iglob{"src/canonical/models/back/*", "src/canonical/models/back-cosmetic/*", "src/canonical/models/back-misc/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani-back/" .. output)
 end
 
-for file in iglob{"src/models/shiny/*", "src/models/shiny-cosmetic/*"} do
+for file in iglob{"src/canonical/models/shiny/*", "src/canonical/models/shiny-cosmetic/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani-shiny/" .. output)
 end
 
-for file in iglob{"src/models/back-shiny/*", "src/models/back-shiny-cosmetic/*"} do
+for file in iglob{"src/canonical/models/back-shiny/*", "src/canonical/models/back-shiny-cosmetic/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani-back-shiny/" .. output)
 end
@@ -78,7 +78,7 @@ function twittersprite(input, output)
     )
 end
 
-for file in iglob{"src/models/front/*"} do
+for file in iglob{"src/canonical/models/front/*"} do
     local base = toSmogonAlias(decodeBase(file))
     symlink(file, "build/smogon/xy/" .. base .. ".%e")
     fbsprite(file, "build/smogon/fbsprites/xy/" .. base .. ".png")
