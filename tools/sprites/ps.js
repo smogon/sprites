@@ -22,6 +22,10 @@ for (const directory of program.args) {
     }
 }
 
+function decode(s) {
+    return s.replace(/_(....)/g, (_, m) => String.fromCharCode(parseInt(m, 16)));
+}
+
 function toPSID(s) {
     return s.toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
@@ -33,7 +37,7 @@ function toPSID(s) {
 
     const sprites = Object.create(null);
     for (const [filename, {x, y, width, height}] of Object.entries(result.coordinates)) {
-        const id = toPSID(path.parse(filename).name);
+        const id = toPSID(decode(path.parse(filename).name));
         sprites[id] = {left: x, top: y};
     }
 

@@ -4,18 +4,41 @@ tup.include("util/lua-ext.lua")
 tup.include("util/tup-ext.lua")
 tup.include("util/pokemon.lua")
 
-function symlink(input, output)
-    -- The path must be relative from output, walk back to the root
-    local prefix = ""
-    for _ in output:gmatch("/") do
-        prefix = "../" .. prefix
-    end
+-- Generate uniform size minisprites
+
+function padsprite(input, output, w, h)
     tup.foreach_rule(
         input,
-        "^ symlink %f -> %o^ ln -s " .. prefix .. "%f %o",
+        "^ padsprite %f^ tools/padsprite.sh %f %o " .. w .. " " .. h,
         output
     )
 end
+
+for dir in iter{"asymmetrical", "custom", "misc", "pokemon"} do
+    for file in iglob{"src/minisprites/gen6/" .. dir .. "/*"} do
+        padsprite(file,
+                  "build/gen6-minisprites-padded/" .. dir .. "/" .. tup.file(file),
+                  40, 30)
+    end
+end
+
+-- Forum sprites
+
+for file in iglob{"build/gen6-minisprites-padded/pokemon/*"} do
+    local base = toSmogonAlias(decodeBase(file))
+    symlink(file,
+            "build/smogon/forumsprites/" .. base .. ".png")
+end
+
+-- PS spritesheet
+
+tup.rule(
+    "build/gen6-minisprites-padded/pokemon/*",
+    "node tools/sprites/ps.js build/gen6-minisprites-padded/pokemon/ --output-image build/ps/pokemonicons-sheet.png --output-metadata build/ps/pokemonicons.json",
+    {"build/ps/pokemonicons-sheet.png", "build/ps/pokemonicons.json"}
+)
+
+-- PS models
 
 for file in iglob{"src/models/front/*", "src/models/front-cosmetic/*", "src/models/front-misc/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
@@ -37,6 +60,7 @@ for file in iglob{"src/models/back-shiny/*", "src/models/back-shiny-cosmetic/*"}
     symlink(file, "build/ps/ani-back-shiny/" .. output)
 end
 
+-- Smogdex social images
 
 function fbsprite(input, output)
     tup.foreach_rule(
@@ -61,15 +85,4 @@ for file in iglob{"src/models/front/*"} do
     twittersprite(file, "build/smogon/twittersprites/xy/" .. base .. ".png")
 end
 
-function forumsprite(input, output, w, h)
-    tup.foreach_rule(
-        input,
-        "^ forumsprite %f^ tools/forumsprite.sh %f %o " .. w .. " " .. h,
-        output
-    )
-end
 
-for file in iglob{"src/minisprites/gen6/pokemon/*"} do
-    local base = toSmogonAlias(decodeBase(file))
-    forumsprite(file, "build/smogon/forumsprites/" .. base .. ".png", 40, 30)
-end

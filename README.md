@@ -9,6 +9,8 @@ This project depends on
 - [tup](http://gittup.org/tup/)
 - [GraphicsMagick](http://www.graphicsmagick.org/)
 - [AdvPng](http://www.advancemame.it/doc-advpng.html)
+- [pnpm](https://pnpm.js.org)
+- [node.js](https://nodejs.org)
 
 ### Windows
 
@@ -19,7 +21,8 @@ Windows binaries of these dependencies can be found on the download pages of the
 _**TODO:** include installation instructions for `tup` given the Ubuntu PPA is defunct_
 
 ```
-$ sudo apt install graphicsmagick advancecomp
+$ sudo apt install nodejs graphicsmagick advancecomp
+$ sudo npm install -g pnpm
 ```
 
 ### macOS
@@ -45,10 +48,14 @@ Pokemon sprite filenames are in a 1-to-1 correspondence with the Pokemon's name,
 
 - Characters outside `[0-9a-zA-Z-.]` will be escaped using `_` and four hex characters, similar to JavaScript Unicode escapes. This conforms to the POSIX portable filename character set. (example: `Flabébé` -> `Flabe_0301be_0301`)
 
-    The following JS function may be useful:
+    The following JS functions may be useful:
      ```javascript
     function encode(s) {
         return s.replace(/[^0-9a-zA-Z-.]/g, c => '_' + c.charCodeAt(0).toString(16).padStart(4, '0'));
+    }
+    
+    function decode(s) {
+        return s.replace(/_(....)/g, (_, m) => String.fromCharCode(parseInt(m, 16)));
     }
     ```
 

@@ -20,3 +20,16 @@ end
 function iglob(pats)
     return iter(glob(pats))
 end
+
+function symlink(input, output)
+    -- The path must be relative from output, walk back to the root
+    local prefix = ""
+    for _ in output:gmatch("/") do
+        prefix = "../" .. prefix
+    end
+    tup.foreach_rule(
+        input,
+        "^ symlink %f -> %o^ ln -s " .. prefix .. "%f %o",
+        output
+    )
+end
