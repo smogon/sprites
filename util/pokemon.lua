@@ -1,9 +1,9 @@
 
 function decodeFS(filename)
-    return filename:gsub('_(%x%x%x%x)',
+    return filename:gsub('__(%x%x%x%x)',
                    function(hex)
                        return utf8.char(tonumber(hex, 16))
-                   end)
+                   end):gsub('_', ' ')
 end
 
 function decodeBase(filename)

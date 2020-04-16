@@ -23,7 +23,7 @@ for (const directory of program.args) {
 }
 
 function decode(s) {
-    return s.replace(/_(....)/g, (_, m) => String.fromCharCode(parseInt(m, 16)));
+    return s.replace(/__(....)/g, (_, m) => String.fromCharCode(parseInt(m, 16))).replace("_", " ");
 }
 
 function toPSID(s) {
