@@ -1,2 +1,4 @@
 build/
 .tup
+node_modules
+pnpm-debug.log

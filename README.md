@@ -33,6 +33,8 @@ $ brew install tup graphicsmagick advancecomp
 
 ## Building
 
+Install dependencies once with `pnpm install`. Then, to build:
+
 ```
 $ tup
 ```
