@@ -40,22 +40,22 @@ tup.rule(
 
 -- PS models
 
-for file in iglob{"src/canonical/models/front/*", "src/canonical/models/front-cosmetic/*", "src/canonical/models/front-misc/*"} do
+for file in iglob{"src/canonical/models/front/*", "src/canonical/models/front-cosmetic/*", "src/canonical/models/front-misc/*", "src/noncanonical/models/front/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani/" .. output)
 end
 
-for file in iglob{"src/canonical/models/back/*", "src/canonical/models/back-cosmetic/*", "src/canonical/models/back-misc/*"} do
+for file in iglob{"src/canonical/models/back/*", "src/canonical/models/back-cosmetic/*", "src/canonical/models/back-misc/*", "src/noncanonical/models/back/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani-back/" .. output)
 end
 
-for file in iglob{"src/canonical/models/shiny/*", "src/canonical/models/shiny-cosmetic/*"} do
+for file in iglob{"src/canonical/models/shiny/*", "src/canonical/models/shiny-cosmetic/*", "src/noncanonical/models/shiny/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani-shiny/" .. output)
 end
 
-for file in iglob{"src/canonical/models/back-shiny/*", "src/canonical/models/back-shiny-cosmetic/*"} do
+for file in iglob{"src/canonical/models/back-shiny/*", "src/canonical/models/back-shiny-cosmetic/*", "src/noncanonical/models/back-shiny/*"} do
     local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
     symlink(file, "build/ps/ani-back-shiny/" .. output)
 end
@@ -78,7 +78,7 @@ function twittersprite(input, output)
     )
 end
 
-for file in iglob{"src/canonical/models/front/*"} do
+for file in iglob{"src/canonical/models/front/*", "src/noncanonical/models/front/*"} do
     local base = toSmogonAlias(decodeBase(file))
     symlink(file, "build/smogon/xy/" .. base .. ".%e")
     fbsprite(file, "build/smogon/fbsprites/xy/" .. base .. ".png")
