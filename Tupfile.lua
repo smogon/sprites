@@ -73,6 +73,28 @@ for file in iglob{"src/canonical/models/back-shiny/*", "src/canonical/models/bac
     symlink(file, "build/ps/ani-back-shiny/" .. output)
 end
 
+-- PS AFD
+
+for file in iglob{"src/noncanonical/sprites/afd/front/*", "src/noncanonical/sprites/afd/front-cosmetic/*"} do
+    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
+    symlink(file, "build/ps/afd/" .. output)
+end
+
+for file in iglob{"src/noncanonical/sprites/afd/back/*", "src/noncanonical/sprites/afd/back-cosmetic/*"} do
+    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
+    symlink(file, "build/ps/afd-back/" .. output)
+end
+
+for file in iglob{"src/noncanonical/sprites/afd/front-shiny/*", "src/noncanonical/sprites/afd/front-shiny-cosmetic/*"} do
+    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
+    symlink(file, "build/ps/afd-shiny/" .. output)
+end
+
+for file in iglob{"src/noncanonical/sprites/afd/back-shiny/*", "src/noncanonical/sprites/afd/back-shiny-cosmetic/*"} do
+    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
+    symlink(file, "build/ps/afd-back-shiny/" .. output)
+end
+
 -- Smogdex social images
 
 function fbsprite(input, output)
