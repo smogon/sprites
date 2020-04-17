@@ -46,7 +46,7 @@ $ tup
 
 Pokemon sprite filenames are in a 1-to-1 correspondence with the Pokemon's name, for ease of processing. Filenames may be directly substituted in shell commands without escaping. This naming scheme means that some of the filenames in `src/` are a little awkward looking to humans, but it means that no additional data beyond what is encoded in the filesystem is required to determine the correct name for any given Pokémon. 
 
-Filenames must conform to the POSIX portable filename character set, `[0-9a-zA-Z-._]`. To ensure this, we encode filenames according to the following rules. Characters in `[0-9a-zA-Z-.]` are left as-is. Spaces are converted to an underscore. Other characters are escaped using two underscores and four hex characters, similar to JavaScript Unicode escapes. (example: `Flabébé` -> `Flabe__0301be__0301`)
+- Filenames must conform to the POSIX portable filename character set, `[0-9a-zA-Z-._]`. To ensure this, we encode filenames according to the following rules. Characters in `[0-9a-zA-Z-.]` are left as-is. Spaces are converted to an underscore. Other characters are escaped using two underscores and four hex characters, similar to JavaScript Unicode escapes. (example: `Flabébé` -> `Flabe__0301be__0301`)
 
     The following JS functions may be useful:
      ```javascript
