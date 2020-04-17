@@ -57,7 +57,7 @@ Filenames must conform to the POSIX portable filename character set, `[0-9a-zA-Z
     function decode(s) {
         return s.replace(/__(....)/g, (_, m) => String.fromCharCode(parseInt(m, 16))).replace("_", " ");
     }
-```
+    ```
 
 - Formes are separated with two dashes from their base. (example: `Necrozma--Dawn-Wings`)
 
