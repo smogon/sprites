@@ -14,17 +14,26 @@ function padsprite(input, output, w, h)
     )
 end
 
-for dir in iter{"asymmetrical", "custom", "misc", "pokemon"} do
-    for file in iglob{"src/canonical/minisprites/gen6/" .. dir .. "/*"} do
-        padsprite(file,
-                  "build/gen6-minisprites-padded/" .. dir .. "/" .. tup.file(file),
-                  40, 30)
+for canon in iter{"canonical", "noncanonical"} do 
+    for dir in iter{"asymmetrical", "custom", "misc", "pokemon"} do
+        -- TODO fix this, tup hates git's quirk of not creating directories when
+        -- there aren't any files
+        if canon == "noncanonical" and dir ~= "pokemon" then
+            goto continue
+        end
+            
+        for file in iglob{"src/" .. canon .. "/minisprites/gen6/" .. dir .. "/*"} do
+            padsprite(file,
+                      "build/gen6-minisprites-padded/" .. canon .. "/" .. dir .. "/" .. tup.file(file),
+                      40, 30)
+        end
+        ::continue::
     end
 end
 
 -- Forum sprites
 
-for file in iglob{"build/gen6-minisprites-padded/pokemon/*"} do
+for file in iglob{"build/gen6-minisprites-padded/canonical/pokemon/*", "build/gen6-minisprites-padded/noncanonical/pokemon/*"} do
     local base = toSmogonAlias(decodeBase(file))
     symlink(file,
             "build/smogon/forumsprites/" .. base .. ".png")
@@ -33,8 +42,8 @@ end
 -- PS spritesheet
 
 tup.rule(
-    "build/gen6-minisprites-padded/pokemon/*",
-    "node tools/sprites/ps.js build/gen6-minisprites-padded/pokemon/ --output-image build/ps/pokemonicons-sheet.png --output-metadata build/ps/pokemonicons.json",
+    {"build/gen6-minisprites-padded/canonical/pokemon/*", "build/gen6-minisprites-padded/noncanonical/pokemon/*"},
+    "node tools/sprites/ps.js build/gen6-minisprites-padded/canonical/pokemon/ build/gen6-minisprites-padded/noncanonical/pokemon/ --output-image build/ps/pokemonicons-sheet.png --output-metadata build/ps/pokemonicons.json",
     {"build/ps/pokemonicons-sheet.png", "build/ps/pokemonicons.json"}
 )
 
