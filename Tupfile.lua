@@ -49,12 +49,11 @@ tup.rule(
 
 -- PS models
 
-for file in iglob{"src/canonical/models/front/*", "src/canonical/models/front-cosmetic/*", "src/canonical/models/front-misc/*", "src/noncanonical/models/front/*",
-                  -- TODO: only pick noncanonical that aren't already in models/
-                  "src/noncanonical/sprites/gen5/front/*"} do
-    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
-    symlink(file, "build/ps/ani/" .. output)
-end
+tup.rule(
+    {"src/canonical/models/front/*", "src/canonical/models/front-cosmetic/*", "src/canonical/models/front-misc/*", "src/noncanonical/models/front/*", "src/noncanonical/sprites/gen5/front/*"},
+    "node tools/gendeploy.js src/canonical/models/front src/canonical/models/front-cosmetic src/canonical/models/front-misc src/noncanonical/models/front src/noncanonical/sprites/gen5/front ani %o",
+    "build/ps/ani.deploy.json"
+)
 
 for file in iglob{"src/canonical/models/back/*", "src/canonical/models/back-cosmetic/*", "src/canonical/models/back-misc/*", "src/noncanonical/models/back/*",
                   -- TODO: only pick noncanonical that aren't already in models/
