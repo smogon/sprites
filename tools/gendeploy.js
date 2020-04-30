@@ -37,6 +37,10 @@ function toPSSpriteID(name) {
     return result;
 }
 
+function toSmogonID(name) {
+    return name.toLowerCase().replace("--", "-").replace(/[ _]+/, "-").replace(/[^a-z0-9-]+/g, '');
+}
+
 /*
   Language:
   e = {"sel": "<file|dir>", "as"?: "<file>", "recursive"?: true}
@@ -91,7 +95,12 @@ function interpret(curDir, e) {
             return [src, pathlib.format(parsed)];
         });
     } else if (e.smogonId) {
-        
+        return interpret(curDir, e.smogonId).map(([src, dst]) => {
+            const parsed = pathlib.parse(dst);
+            delete parsed.base;
+            parsed.name = toSmogonID(decode(parsed.name));
+            return [src, pathlib.format(parsed)];
+        });
     } else if (e.replace) {
         const re = new RegExp(e.replace);
         return interpret(curDir, e.in).map(([src, dst]) => {

@@ -1,0 +1,23 @@
+{
+    "smogonId": [
+        {
+            "dest": "forumsprites",
+            "in": [
+                "build/gen6-minisprites-padded/canonical/pokemon",
+                "build/gen6-minisprites-padded/noncanonical/pokemon"
+            ]
+        },
+        {
+            "dest": "fbsprites/xy",
+            "in": [
+                "build/smogon/fbsprites/xy"
+            ]
+        },
+        {
+            "dest": "twittersprites/xy",
+            "in": [
+                "build/smogon/twittersprites/xy"
+            ]
+        }
+    ]
+}

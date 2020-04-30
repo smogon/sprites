@@ -31,14 +31,6 @@ for canon in iter{"canonical", "noncanonical"} do
     end
 end
 
--- Forum sprites
-
-for file in iglob{"build/gen6-minisprites-padded/canonical/pokemon/*", "build/gen6-minisprites-padded/noncanonical/pokemon/*"} do
-    local base = toSmogonAlias(decodeBase(file))
-    symlink(file,
-            "build/smogon/forumsprites/" .. base .. ".png")
-end
-
 -- PS spritesheet
 
 tup.rule(
@@ -47,12 +39,20 @@ tup.rule(
     {"build/ps/pokemonicons-sheet.png", "build/ps/pokemonicons.json"}
 )
 
--- PS
+-- PS deploy
 
 tup.rule(
     {},
     "node tools/gendeploy.js ps.gendeploy.json %o",
     "build/ps/deploy.json"
+)
+
+-- Smogon deploy
+
+tup.rule(
+    {},
+    "node tools/gendeploy.js smogon.gendeploy.json %o",
+    "build/smogon/deploy.json"
 )
 
 -- Smogdex social images
@@ -73,13 +73,11 @@ function twittersprite(input, output)
     )
 end
 
-for file in iglob{"src/canonical/models/front/*", "src/noncanonical/models/front/*",
-                  -- TODO: only pick noncanonical that aren't already in models/
-                  "src/noncanonical/sprites/gen5/front/*"} do
-    local base = toSmogonAlias(decodeBase(file))
-    symlink(file, "build/smogon/xy/" .. base .. ".%e")
-    fbsprite(file, "build/smogon/fbsprites/xy/" .. base .. ".png")
-    twittersprite(file, "build/smogon/twittersprites/xy/" .. base .. ".png")
-end
+local files =
+    {"src/canonical/models/front/*", "src/noncanonical/models/front/*",
+     -- TODO: only pick noncanonical that aren't already in models/
+     "src/noncanonical/sprites/gen5/front/*"}
 
+fbsprite(files, "build/smogon/fbsprites/xy/%B.png")
+twittersprite(files, "build/smogon/twittersprites/xy/%B.png")
 
