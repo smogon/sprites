@@ -64,3 +64,34 @@ local files =
 fbsprite(files, "build/smogon/fbsprites/xy/%B.png")
 twittersprite(files, "build/smogon/twittersprites/xy/%B.png")
 
+-- Trainers
+
+function padtrainer(input, output)
+    return "convert " .. input .. " -background transparent -gravity center -extent 80x80 " .. output
+end
+
+-- TODO: move some of these to util, when we figure out the precise abstractions desired
+
+function compresspng(filename, opts)
+    local cmds = {}
+    if opts.optipng then
+        cmds += "optipng -q " .. opts.optipng .. " " .. filename
+    end
+    if opts.advpng then
+        cmds += "advpng -q " .. opts.advpng .. " " .. filename
+    end
+    return cmds
+end
+
+function makecmd(cmds)
+    return table.concat(flatten(cmds), " && ")
+end
+
+tup.foreach_rule(
+    {"src/canonical/trainers/*"},
+    "^ pad trainer %f^ " .. makecmd{padtrainer("%f", "%o"), compresspng("%f",  {})},
+    {"build/padded-trainers/canonical/%b"}
+)
+
+
+

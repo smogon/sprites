@@ -19,3 +19,21 @@ function astable(table)
         return {}
     end
 end
+
+-- Adapted from premake
+function flatten(arr)
+    local result = { }
+    
+    local function flatten(arr)
+        for v in iter(arr) do
+            if type(v) == "table" then
+                flatten(v)
+            else
+                table.insert(result, v)
+            end
+        end
+    end
+    
+    flatten(arr)
+    return result
+end
