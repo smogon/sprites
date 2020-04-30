@@ -5,11 +5,9 @@ const Database = require('better-sqlite3');
 const debug = require('debug')('tupctime');
 
 const start = process.argv[2];
-if (start === undefined) {
-    throw new Error("Pass in directory containing tup db.");
+if (start !== undefined) {
+    process.chdir(start);
 }
-
-process.chdir(start);
 
 while (true) {
     if (fs.existsSync('.tup')) {
