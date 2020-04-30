@@ -61,5 +61,12 @@ tup.foreach_rule(
     {"build/padded-trainers/canonical/%b"}
 )
 
+-- Padded Dex
 
-
+for dir in iter{"front", "front-cosmetic", "front-shiny", "front-shiny-cosmetic"} do
+    tup.foreach_rule(
+        rep{"src/canonical/dex/{dir}/*", dir=dir},
+        "^ pad dex %f^ " .. makecmd{pad(120, 120, "%f", "%o"), compresspng("%f",  {})},
+        rep{"build/padded-dex/canonical/{dir}/%b", dir=dir}
+    )
+end
