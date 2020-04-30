@@ -1,19 +1,5 @@
 
-tup.include("util/strict.lua")
-tup.include("util/lua-ext.lua")
-tup.include("util/tup-ext.lua")
-
 -- Generate uniform size minisprites
-
-function pad(w, h, input, output)
-    return rep{
-        "convert {input} -background transparent -gravity center -extent {w}x{h} {output}",
-        input = input,
-        output = output,
-        w = w,
-        h = h
-    }
-end
 
 for canon in iter{"canonical", "noncanonical"} do 
     for dir in iter{"asymmetrical", "custom", "misc", "pokemon"} do
@@ -68,23 +54,6 @@ fbsprite(files, "build/smogon/fbsprites/xy/%B.png")
 twittersprite(files, "build/smogon/twittersprites/xy/%B.png")
 
 -- Trainers
-
--- TODO: move some of these to util, when we figure out the precise abstractions desired
-
-function compresspng(filename, opts)
-    local cmds = {}
-    if opts.optipng then
-        cmds += rep{"optipng -q {opts} {filename}", opts=opts.optipng, filename=filename}
-    end
-    if opts.advpng then
-        cmds += rep{"advpng -q {opts} {filename}", opts=opts.advpng, filename=filename}
-    end
-    return cmds
-end
-
-function makecmd(cmds)
-    return table.concat(flatten(cmds), " && ")
-end
 
 tup.foreach_rule(
     {"src/canonical/trainers/*"},
