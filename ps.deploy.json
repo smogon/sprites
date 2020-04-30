@@ -1,10 +1,10 @@
 {
-    "chdir": "src",
-    "in": {
-        "psSpriteId": [
+    chdir: "src",
+    in: {
+        psSpriteId: [
             {
-                "dest": "ani",
-                "in": [
+                mount: "ani",
+                in: [
                     "canonical/models/front",
                     "canonical/models/front-cosmetic",
                     "canonical/models/front-misc",
@@ -13,8 +13,8 @@
                 ]
             },
             {
-                "dest": "ani-back",
-                "in": [
+                mount: "ani-back",
+                in: [
                     "canonical/models/back",
                     "canonical/models/back-cosmetic",
                     "canonical/models/back-misc",
@@ -23,43 +23,43 @@
                 ]
             },
             {
-                "dest": "ani-shiny",
-                "in": [
+                mount: "ani-shiny",
+                in: [
                     "canonical/models/front-shiny",
                     "canonical/models/front-shiny-cosmetic"
                 ]
             },
             {
-                "dest": "ani-back-shiny",
-                "in": [
+                mount: "ani-back-shiny",
+                in: [
                     "canonical/models/back-shiny",
                     "canonical/models/back-shiny-cosmetic"
                 ]
             },
             {
-                "dest": "afd",
-                "in": [
+                mount: "afd",
+                in: [
                     "noncanonical/sprites/afd/front",
                     "noncanonical/sprites/afd/front-cosmetic"
                 ]
             },
             {
-                "dest": "afd-shiny",
-                "in": [
+                mount: "afd-shiny",
+                in: [
                     "noncanonical/sprites/afd/front-shiny",
                     "noncanonical/sprites/afd/front-shiny-cosmetic"
                 ]
             },
             {
-                "dest": "afd-back",
-                "in": [
+                mount: "afd-back",
+                in: [
                     "noncanonical/sprites/afd/back",
                     "noncanonical/sprites/afd/back-cosmetic"
                 ]
             },
             {
-                "dest": "afd-back-shiny",
-                "in": [
+                mount: "afd-back-shiny",
+                in: [
                     "noncanonical/sprites/afd/back-shiny",
                     "noncanonical/sprites/afd/back-shiny-cosmetic"
                 ]

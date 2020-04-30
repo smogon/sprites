@@ -1,3 +1,4 @@
 packages:
     - 'tools/sprites'
     - 'tools/tupctime'
+    - 'tools/deploy'

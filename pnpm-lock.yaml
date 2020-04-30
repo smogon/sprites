@@ -1,4 +1,13 @@
 importers:
+  tools/deploy:
+    dependencies:
+      commander: 5.1.0
+      debug: 4.1.1
+      json5: 2.1.3
+    specifiers:
+      commander: ^5.1.0
+      debug: ^4.1.1
+      json5: ^2.1.3
   tools/sprites:
     dependencies:
       commander: 5.0.0
@@ -153,6 +162,12 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-JrDGPAKjMGSP1G0DUoaceEJ3DZgAfr/q6X7FVk4+U5KxUSKviYGM2k6zWkfyyBHy5rAtzgYJFa1ro2O9PtoxwQ==
+  /commander/5.1.0:
+    dev: false
+    engines:
+      node: '>= 6'
+    resolution:
+      integrity: sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
   /concat-stream/1.5.2:
     dependencies:
       inherits: 2.0.4
@@ -458,6 +473,15 @@ packages:
     dev: false
     resolution:
       integrity: sha1-Epai1Y/UXxmg9s4B1lcB4sc1tus=
+  /json5/2.1.3:
+    dependencies:
+      minimist: 1.2.5
+    dev: false
+    engines:
+      node: '>=6'
+    hasBin: true
+    resolution:
+      integrity: sha512-KXPvOm8K9IJKFM0bmdn8QXh7udDh1g/giieX0NLCaMnb4hEiVFqnop2ImTXCc5e0/oHz3LTqmHGtExn5hfMkOA==
   /jsprim/1.4.1:
     dependencies:
       assert-plus: 1.0.0

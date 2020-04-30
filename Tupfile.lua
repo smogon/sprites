@@ -39,22 +39,6 @@ tup.rule(
     {"build/ps/pokemonicons-sheet.png", "build/ps/pokemonicons.json"}
 )
 
--- PS deploy
-
-tup.rule(
-    {},
-    "node tools/gendeploy.js ps.gendeploy.json %o",
-    "build/ps/deploy.json"
-)
-
--- Smogon deploy
-
-tup.rule(
-    {},
-    "node tools/gendeploy.js smogon.gendeploy.json %o",
-    "build/smogon/deploy.json"
-)
-
 -- Smogdex social images
 
 function fbsprite(input, output)
