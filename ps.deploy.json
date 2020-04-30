@@ -73,5 +73,12 @@
       in: [
         "build/padded-trainers/canonical"
       ]
+  },
+  {
+    mount: "types",
+    in: [
+      {replace: "Unknown", with: "???", in: "src/canonical/ui/types/gen4"},
+      "src/noncanonical/ui/types/gen4",
+    ]
   }
 ]
