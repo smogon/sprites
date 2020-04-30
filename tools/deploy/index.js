@@ -17,7 +17,7 @@ program
     .command('print <tag>')
     .option('-d, --dir [dir]', 'Directory')
     .option('--json', 'As JSON')
-    .action((opts) => {
+    .action((tag, opts) => {
         const dir = opts.dir || '.';
         const results = run(find(dir, tag));
         if (opts.json) {
