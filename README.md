@@ -63,6 +63,10 @@ Pokemon sprite filenames are in a 1-to-1 correspondence with the Pokemon's name,
 
 - Cosmetic female formes are `--Female` instead of `--F`, so that you may distinguish it from Unown.
 
+## Gotchas
+
+Tup, like Git, tracks files, not directories. If you `readdir()` and forget to declare a dependency it won't catch it, like it would for `read()`. You can work around this by having build tools `stat()` any filenames they acquire.
+
 ## License
 
 All code in this repository is licensed under the [MIT License](https://opensource.org/licenses/MIT).
