@@ -67,5 +67,11 @@
           },
         ]
       }
+  },
+  {
+    mount: "trainers",
+      in: [
+        "build/padded-trainers/canonical"
+      ]
   }
 ]
