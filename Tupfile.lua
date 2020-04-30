@@ -47,52 +47,13 @@ tup.rule(
     {"build/ps/pokemonicons-sheet.png", "build/ps/pokemonicons.json"}
 )
 
--- PS models
+-- PS
 
 tup.rule(
-    {"src/canonical/models/front/*", "src/canonical/models/front-cosmetic/*", "src/canonical/models/front-misc/*", "src/noncanonical/models/front/*", "src/noncanonical/sprites/gen5/front/*"},
-    "node tools/gendeploy.js src/canonical/models/front src/canonical/models/front-cosmetic src/canonical/models/front-misc src/noncanonical/models/front src/noncanonical/sprites/gen5/front ani %o",
-    "build/ps/ani.deploy.json"
+    {},
+    "node tools/gendeploy.js ps.gendeploy.json %o",
+    "build/ps/deploy.json"
 )
-
-for file in iglob{"src/canonical/models/back/*", "src/canonical/models/back-cosmetic/*", "src/canonical/models/back-misc/*", "src/noncanonical/models/back/*",
-                  -- TODO: only pick noncanonical that aren't already in models/
-                  "src/noncanonical/sprites/gen5/back/*"} do
-    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
-    symlink(file, "build/ps/ani-back/" .. output)
-end
-
-for file in iglob{"src/canonical/models/front-shiny/*", "src/canonical/models/front-shiny-cosmetic/*"} do
-    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
-    symlink(file, "build/ps/ani-shiny/" .. output)
-end
-
-for file in iglob{"src/canonical/models/back-shiny/*", "src/canonical/models/back-shiny-cosmetic/*"} do
-    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
-    symlink(file, "build/ps/ani-back-shiny/" .. output)
-end
-
--- PS AFD
-
-for file in iglob{"src/noncanonical/sprites/afd/front/*", "src/noncanonical/sprites/afd/front-cosmetic/*"} do
-    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
-    symlink(file, "build/ps/afd/" .. output)
-end
-
-for file in iglob{"src/noncanonical/sprites/afd/back/*", "src/noncanonical/sprites/afd/back-cosmetic/*"} do
-    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
-    symlink(file, "build/ps/afd-back/" .. output)
-end
-
-for file in iglob{"src/noncanonical/sprites/afd/front-shiny/*", "src/noncanonical/sprites/afd/front-shiny-cosmetic/*"} do
-    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
-    symlink(file, "build/ps/afd-shiny/" .. output)
-end
-
-for file in iglob{"src/noncanonical/sprites/afd/back-shiny/*", "src/noncanonical/sprites/afd/back-shiny-cosmetic/*"} do
-    local output = toPSSpriteID(decodeBase(file)) .. "." .. tup.ext(file)
-    symlink(file, "build/ps/afd-back-shiny/" .. output)
-end
 
 -- Smogdex social images
 

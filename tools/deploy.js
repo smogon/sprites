@@ -21,7 +21,7 @@ while (dir = stack.pop()) {
         } else if (name === 'deploy.json' || name.endsWith('.deploy.json')) {
             console.log(`Found ${path}`);
             const pairs = JSON.parse(fs.readFileSync(path, 'utf8'));
-            for (let [src, dst] of pairs) {
+            for (let {sel: src, as: dst} of pairs) {
                 src = pathlib.normalize(src);
                 dst = pathlib.normalize(dst);
 

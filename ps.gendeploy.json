@@ -1,0 +1,69 @@
+{
+    "chdir": "src",
+    "in": {
+        "psSpriteId": [
+            {
+                "dest": "ani",
+                "in": [
+                    "canonical/models/front",
+                    "canonical/models/front-cosmetic",
+                    "canonical/models/front-misc",
+                    "noncanonical/models/front",
+                    "noncanonical/sprites/gen5/front"
+                ]
+            },
+            {
+                "dest": "ani-back",
+                "in": [
+                    "canonical/models/back",
+                    "canonical/models/back-cosmetic",
+                    "canonical/models/back-misc",
+                    "noncanonical/models/back",
+                    "noncanonical/sprites/gen5/back"
+                ]
+            },
+            {
+                "dest": "ani-shiny",
+                "in": [
+                    "canonical/models/front-shiny",
+                    "canonical/models/front-shiny-cosmetic"
+                ]
+            },
+            {
+                "dest": "ani-back-shiny",
+                "in": [
+                    "canonical/models/back-shiny",
+                    "canonical/models/back-shiny-cosmetic"
+                ]
+            },
+            {
+                "dest": "afd",
+                "in": [
+                    "noncanonical/sprites/afd/front",
+                    "noncanonical/sprites/afd/front-cosmetic"
+                ]
+            },
+            {
+                "dest": "afd-shiny",
+                "in": [
+                    "noncanonical/sprites/afd/front-shiny",
+                    "noncanonical/sprites/afd/front-shiny-cosmetic"
+                ]
+            },
+            {
+                "dest": "afd-back",
+                "in": [
+                    "noncanonical/sprites/afd/back",
+                    "noncanonical/sprites/afd/back-cosmetic"
+                ]
+            },
+            {
+                "dest": "afd-back-shiny",
+                "in": [
+                    "noncanonical/sprites/afd/back-shiny",
+                    "noncanonical/sprites/afd/back-shiny-cosmetic"
+                ]
+            }
+        ]
+    }
+}
