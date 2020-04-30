@@ -37,3 +37,18 @@ function flatten(arr)
     flatten(arr)
     return result
 end
+
+-- Adapted from lua wiki, originally called replace_vars
+function rep(str, vars)
+  -- Allow replace_vars{str, vars} syntax as well as replace_vars(str, {vars})
+  if not vars then
+    vars = str
+    str = vars[1]
+  end
+  return (str:gsub("({([^}]+)})",
+    function(whole,i)
+      return vars[i] or whole
+    end))
+end
+
+

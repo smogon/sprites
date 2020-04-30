@@ -6,8 +6,13 @@ tup.include("util/tup-ext.lua")
 -- Generate uniform size minisprites
 
 function pad(w, h, input, output)
-    local size = w .. "x" .. h
-    return "convert " .. input .. " -background transparent -gravity center -extent " .. size .. " " .. output
+    return rep{
+        "convert {input} -background transparent -gravity center -extent {w}x{h} {output}",
+        input = input,
+        output = output,
+        w = w,
+        h = h
+    }
 end
 
 for canon in iter{"canonical", "noncanonical"} do 
@@ -19,9 +24,9 @@ for canon in iter{"canonical", "noncanonical"} do
         end
 
         tup.foreach_rule(
-            "src/" .. canon .. "/minisprites/gen6/" .. dir .. "/*",
+            rep{"src/{canon}/minisprites/gen6/{dir}/*", canon=canon, dir=dir},
             "^ pad g6 minisprite %f^ " .. pad(40, 30, "%f", "%o"),
-            "build/gen6-minisprites-padded/" .. canon .. "/" .. dir .. "/%b" 
+            rep{"build/gen6-minisprites-padded/{canon}/{dir}/%b",canon=canon,dir=dir}
         )
         
         ::continue::
@@ -69,10 +74,10 @@ twittersprite(files, "build/smogon/twittersprites/xy/%B.png")
 function compresspng(filename, opts)
     local cmds = {}
     if opts.optipng then
-        cmds += "optipng -q " .. opts.optipng .. " " .. filename
+        cmds += rep{"optipng -q {opts} {filename}", opts=opts.optipng, filename=filename}
     end
     if opts.advpng then
-        cmds += "advpng -q " .. opts.advpng .. " " .. filename
+        cmds += rep{"advpng -q {opts} {filename}", opts=opts.advpng, filename=filename}
     end
     return cmds
 end
