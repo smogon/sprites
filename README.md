@@ -7,7 +7,7 @@
 This project depends on
 
 - [tup](http://gittup.org/tup/)
-- [GraphicsMagick](http://www.graphicsmagick.org/)
+- [ImageMagick](http://www.imagemagick.org/)
 - [AdvPng](http://www.advancemame.it/doc-advpng.html)
 - [pnpm](https://pnpm.js.org)
 - [node.js](https://nodejs.org)
@@ -21,9 +21,11 @@ Windows binaries of these dependencies can be found on the download pages of the
 _**TODO:** include installation instructions for `tup` given the Ubuntu PPA is defunct_
 
 ```
-$ sudo apt install nodejs graphicsmagick advancecomp
+$ sudo apt install nodejs imagemagick advancecomp
 $ sudo npm install -g pnpm
 ```
+
+You may have to build imagemagick from source to get version 7.
 
 ### macOS
 
@@ -31,7 +33,7 @@ Using [`brew`](https://brew.sh/) on  a macOS:
 
 ```
 $ brew cask install osxfuse
-$ brew install tup graphicsmagick advancecomp
+$ brew install tup imagemagick advancecomp
 ```
 
 ## Building
