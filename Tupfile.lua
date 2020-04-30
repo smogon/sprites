@@ -5,12 +5,9 @@ tup.include("util/tup-ext.lua")
 
 -- Generate uniform size minisprites
 
-function padsprite(input, output, w, h)
-    tup.foreach_rule(
-        input,
-        "^ padsprite %f^ tools/padsprite.sh %f %o " .. w .. " " .. h,
-        output
-    )
+function pad(w, h, input, output)
+    local size = w .. "x" .. h
+    return "convert " .. input .. " -background transparent -gravity center -extent " .. size .. " " .. output
 end
 
 for canon in iter{"canonical", "noncanonical"} do 
@@ -20,12 +17,13 @@ for canon in iter{"canonical", "noncanonical"} do
         if canon == "noncanonical" and dir ~= "pokemon" then
             goto continue
         end
-            
-        for file in iglob{"src/" .. canon .. "/minisprites/gen6/" .. dir .. "/*"} do
-            padsprite(file,
-                      "build/gen6-minisprites-padded/" .. canon .. "/" .. dir .. "/" .. tup.file(file),
-                      40, 30)
-        end
+
+        tup.foreach_rule(
+            "src/" .. canon .. "/minisprites/gen6/" .. dir .. "/*",
+            "^ pad g6 minisprite %f^ " .. pad(40, 30, "%f", "%o"),
+            "build/gen6-minisprites-padded/" .. canon .. "/" .. dir .. "/%b" 
+        )
+        
         ::continue::
     end
 end
@@ -66,10 +64,6 @@ twittersprite(files, "build/smogon/twittersprites/xy/%B.png")
 
 -- Trainers
 
-function padtrainer(input, output)
-    return "convert " .. input .. " -background transparent -gravity center -extent 80x80 " .. output
-end
-
 -- TODO: move some of these to util, when we figure out the precise abstractions desired
 
 function compresspng(filename, opts)
@@ -89,7 +83,7 @@ end
 
 tup.foreach_rule(
     {"src/canonical/trainers/*"},
-    "^ pad trainer %f^ " .. makecmd{padtrainer("%f", "%o"), compresspng("%f",  {})},
+    "^ pad trainer %f^ " .. makecmd{pad(80, 80, "%f", "%o"), compresspng("%f",  {})},
     {"build/padded-trainers/canonical/%b"}
 )
 
