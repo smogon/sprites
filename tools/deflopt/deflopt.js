@@ -1,6 +1,5 @@
 
 import cp from 'child_process';
-import debug from './debug.js';
 
 /*
   Output looks something like:
@@ -32,7 +31,6 @@ export function deflopt(exe, file) {
     // command line switches.
     file = file.replace(/\//g, "\\");
     
-    debug("File at: " + file);
     const output = cp.execFileSync(
         "wine",
         [exe, file],
@@ -40,9 +38,7 @@ export function deflopt(exe, file) {
          // Wine doesn't even like it when the current directory is on fuse!
          // What a persnickety program!
          cwd: '/'});
-    debug("Output: " + JSON.stringify(output));
     const processed = parse("Number of files processed", output);
     const rewritten = parse("Number of files rewritten", output);
-    debug(`Processed ${processed}, rewritten ${rewritten}`);
     return {processed, rewritten};
 }
