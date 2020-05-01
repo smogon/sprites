@@ -84,7 +84,8 @@ For example, these settings reflect the compression settings for the files chaos
 ```
 CONFIG_DEFAULT_OPTIPNG=-o7
 CONFIG_DEFAULT_ADVPNG=-z4 -i5000
-CONFIG_USE_DEFLOPT=/home/monsanto/.local/bin/DeflOpt.exe
+CONFIG_DEFLOPT_PATH=/home/monsanto/.local/bin/DeflOpt.exe
+CONFIG_DEFAULT_DEFLOPT=true
 ```
 
 ## Filename Scheme
