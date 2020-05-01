@@ -24,6 +24,4 @@ function compresspng(filename, opts)
     return cmds
 end
 
-function makecmd(cmds)
-    return table.concat(flatten(cmds), " && ")
-end
+

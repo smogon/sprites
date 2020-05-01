@@ -33,3 +33,7 @@ function symlink(input, output)
         output
     )
 end
+
+function makecmd(cmds)
+    return table.concat(flatten(cmds), " && ")
+end
