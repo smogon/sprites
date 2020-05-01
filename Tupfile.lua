@@ -32,7 +32,8 @@ tup.rule(
 function fbsprite(input, output)
     tup.foreach_rule(
         input,
-        "^ fbsprite %f^ tools/fbsprite.sh %f %o",
+        "^ fbsprite %f^ " .. makecmd{"tools/fbsprite.sh %f %o",
+                                     compresspng{config="MODELS"}},
         output
     )
 end
@@ -40,7 +41,8 @@ end
 function twittersprite(input, output)
     tup.foreach_rule(
         input,
-        "^ twittersprite %f^ tools/twittersprite.sh %f %o",
+        "^ twittersprite %f^ " .. makecmd{"tools/twittersprite.sh %f %o",
+                                         compresspng{config="MODELS"}},
         output
     )
 end

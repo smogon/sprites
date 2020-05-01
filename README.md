@@ -71,6 +71,7 @@ Build settings are configurable in `tup.config`.
 - `CONFIG_DEFAULT_ADVPNG`: Command line to pass to `advpng`.
 - `CONFIG_TRAINERS_{OPTIPNG,ADVPNG}`: Compression options for `trainers/` only.
 - `CONFIG_DEX_{OPTIPNG,ADVPNG}`: Compression options for `dex/` only.
+- `CONFIG_MODELS_{OPTIPNG,ADVPNG}`: Compression options for `models/` only.
 
 For example, these settings reflect the compression settings for the files chaos uploaded in `src/`:
 ```
