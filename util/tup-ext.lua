@@ -21,6 +21,16 @@ function iglob(pats)
     return iter(glob(pats))
 end
 
+-- getconfig returning an empty string on absence is inconvenient
+function getconfig(str)
+    local v = tup.getconfig(str)
+    if v == "" then
+        return nil
+    else
+        return v
+    end
+end
+
 function symlink(input, output)
     -- The path must be relative from output, walk back to the root
     local prefix = ""
