@@ -18,11 +18,21 @@ Windows binaries of these dependencies can be found on the download pages of the
 
 ### Linux
 
-_**TODO:** include installation instructions for `tup` given the Ubuntu PPA is defunct_
-
 ```
 $ sudo apt install nodejs imagemagick advancecomp
 $ sudo npm install -g pnpm
+```
+
+Build tup from source:
+
+```
+$ sudo apt install build-essential pkg-config libfuse-dev
+$ git clone git://github.com/gittup/tup.git
+$ cd tup
+$ ./bootstrap.sh
+$ sudo cp tup /usr/local/bin/tup
+$ sudo cp tup.1 /usr/local/share/man
+
 ```
 
 You may have to build imagemagick from source to get version 7.
