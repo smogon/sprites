@@ -2,3 +2,4 @@ packages:
     - 'tools/sprites'
     - 'tools/tupctime'
     - 'tools/deploy'
+    - 'tools/deflopt'

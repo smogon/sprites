@@ -1,4 +1,9 @@
 importers:
+  tools/deflopt:
+    dependencies:
+      debug: 4.1.1
+    specifiers:
+      debug: ^4.1.1
   tools/deploy:
     dependencies:
       commander: 5.1.0

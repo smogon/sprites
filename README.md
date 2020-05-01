@@ -12,6 +12,7 @@ This project depends on
 - [OptiPNG](http://optipng.sourceforge.net/) (optional)
 - [pnpm](https://pnpm.js.org)
 - [node.js](https://nodejs.org) >= 13
+- [wine](https://www.winehq.org/) (optional)
 
 ### Windows
 
@@ -20,7 +21,7 @@ Windows binaries of these dependencies can be found on the download pages of the
 ### Linux
 
 ```
-$ sudo apt install nodejs imagemagick advancecomp
+$ sudo apt install nodejs imagemagick advancecomp wine
 $ sudo npm install -g pnpm
 ```
 
@@ -52,7 +53,7 @@ $ sudo ldconfig /usr/local/lib
 Using [`brew`](https://brew.sh/) on  a macOS:
 
 ```
-$ brew cask install osxfuse
+$ brew cask install osxfuse wine-stable
 $ brew install tup imagemagick advancecomp
 ```
 
@@ -70,14 +71,19 @@ Build settings are configurable in `tup.config`.
 
 - `CONFIG_DEFAULT_OPTIPNG`: Command line to pass to `optipng`.
 - `CONFIG_DEFAULT_ADVPNG`: Command line to pass to `advpng`.
-- `CONFIG_TRAINERS_{OPTIPNG,ADVPNG}`: Compression options for `trainers/` only.
-- `CONFIG_DEX_{OPTIPNG,ADVPNG}`: Compression options for `dex/` only.
-- `CONFIG_MODELS_{OPTIPNG,ADVPNG}`: Compression options for `models/` only.
+- `CONFIG_USE_DEFLOPT`: Path to `DeflOpt.exe`. If using Wine, you have to copy it somewhere outside the Tup tree.
+
+There are src-specific versions of these settings:
+
+- `CONFIG_TRAINERS_<PROGRAM>`: Compression options for `trainers/` only.
+- `CONFIG_DEX_<PROGRAM>`: Compression options for `dex/` only.
+- `CONFIG_MODELS_<PROGRAM>`: Compression options for `models/` only.
 
 For example, these settings reflect the compression settings for the files chaos uploaded in `src/`:
 ```
 CONFIG_DEFAULT_OPTIPNG=-o7
 CONFIG_DEFAULT_ADVPNG=-z4 -i5000
+CONFIG_USE_DEFLOPT=/home/monsanto/.local/bin/DeflOpt.exe
 ```
 
 ## Filename Scheme
