@@ -16,8 +16,11 @@ Number of files rewritten  :        0
 Total number of bytes saved:        0
 2,097,357 cycles.
  */
-function parse(statusLine, output) {
-    const re = new RegExp(statusLine + " *: *([0-9]+)");
+
+const PROCESSED_RE = /Number of files processed  : *([0-9]+)/;
+const REWRITTEN_RE = /Number of files rewritten  : *([0-9]+)/;
+
+function parse(re, output) {
     const m = output.match(re);
     if (!m) {
         throw new Error(`Can't match output: ` + output);
@@ -38,7 +41,7 @@ export function deflopt(exe, file) {
          // Wine doesn't even like it when the current directory is on fuse!
          // What a persnickety program!
          cwd: '/'});
-    const processed = parse("Number of files processed", output);
-    const rewritten = parse("Number of files rewritten", output);
+    const processed = parse(PROCESSED_RE, output);
+    const rewritten = parse(REWRITTEN_RE, output);
     return {processed, rewritten};
 }
