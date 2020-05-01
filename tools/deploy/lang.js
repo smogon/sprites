@@ -2,111 +2,109 @@
 import pathlib from 'path';
 import fs from 'fs';
 import * as util from './util.js';
-import JSON5 from 'json5';
 import debugfn from 'debug';
+import vm from 'vm';
 
 const debug = debugfn('deploy');
 
-/*
-  Language:
-  e = {"src": "<file|dir>", "dst"?: "<file>", "recursive"?: true}
-    | {"chdir": "<dir>", "in": e}
-    | ("mount": "<dir>", "in": e)
-    | {"psSpriteId": e}
-    | {"smogonId": e}
-    | {"replace": "<regex>", "with": "<pattern>", "in": e} 
-    | {"bias": e}  # Collapse bias left-to-right
-    | {"merge": e}  
-    | [e]       (shorthand for merge)
-    | <string>  (shorthand for sel)
+let STATE;
 
-  "Primitive form" is just
-    [{"src": "<file>", "dst": "<new filename>"}]
- */
+function resetState(srcDir, map) {
+    STATE = {
+        dstDir: ".",
+        srcDir,
+        transform: (dst) => dst,
+        map,
+        allowOverwrite: false
+    };
+};
 
-function mapDst(list, f) {
-    return list.map(({src, dst}) => ({src, dst: f(dst)}));
+function addPair(src, dst) {
+    dst = STATE.transform(dst);
+    
+    if (pathlib.isAbsolute(dst)) {
+        throw new Error(`Absolute destination: ${dst}`);
+    }
+
+    dst = pathlib.join(STATE.destDir, dst);
+
+    if (STATE.map.has(dst) && !STATE.allowOverwrite) {
+        throw new Error(`Duplicate entry: ${dst}`);
+    }
+
+    STATE.map.set(dst, src);
 }
 
-function interpret(curDir, e) {
-    if (Array.isArray(e)) {
-        e = {merge: e};
-    } else if (typeof e === 'string') {
-        e = {src: e};
-    }
+const ENV = {
+    toPSSpriteID(dst) {
+        const parsed = pathlib.parse(dst);
+        delete parsed.base;
+        parsed.name = util.toPSSpriteID(util.decode(parsed.name));
+        return pathlib.format(parsed);
+    },
 
-    if (e.src) {
-        if (pathlib.isAbsolute(e.src)) {
-            throw new Error(`Absolute source: ${e.src}`);
+    toSmogonAlias(dst) {
+        const parsed = pathlib.parse(dst);
+        delete parsed.base;
+        parsed.name = util.toSmogonAlias(util.decode(parsed.name));
+        return pathlib.format(parsed);
+    },
+    
+    transform(f, body) {
+        const oldTransform = STATE.transform;
+        STATE.transform = f;
+        body();
+        STATE.transform = oldTransform;
+    },
+
+    overwrite(body) {
+        if (STATE.allowOverwrite) {
+            throw new Error("Already in overwrite mode");
         }
-        
-        const path = pathlib.join(curDir, e.src);
-        const results = [];
-        
-        // TODO implement recursive
-        if (fs.statSync(path).isDirectory()) {
-            for (const name of fs.readdirSync(path)) {
-                results.push({src: pathlib.join(path, name), dst: name});
+        STATE.allowOverwrite = true;
+        body();
+        STATE.allowOverwrite = false;
+    },
+
+    dest(path) {
+        STATE.destDir = path;
+    },
+
+    sel(...srcs) {
+        for (const src of srcs) {
+            if (pathlib.isAbsolute(src)) {
+                throw new Error(`Absolute source: ${src}`);
             }
-        } else {
-            results.push({src: path, dst: e.dst !== undefined ? e.dst : pathlib.baseName(path)});
-        }
+            
+            const path = pathlib.join(STATE.srcDir, src);
 
-        return results;
-    } else if (e.merge) {
-        const results = [];
-        for (const e2 of e.merge) {
-            results.push(...interpret(curDir, e2));
+            if (fs.statSync(path).isDirectory()) {
+                for (const name of fs.readdirSync(path)) {
+                    addPair(pathlib.join(path, name), name);
+                }
+            } else {
+                addPair(path, pathlib.baseName(path));
+            }
         }
-        return results;
-    } else if (e.chdir) {
-        return interpret(pathlib.join(curDir, e.chdir), e.in);
-    } else if (e.mount) {
-        return mapDst(interpret(curDir, e.in), dst => pathlib.join(e.mount, dst));
-    } else if (e.psSpriteId) {
-        return mapDst(interpret(curDir, e.psSpriteId), dst => {
-            const parsed = pathlib.parse(dst);
-            delete parsed.base;
-            parsed.name = util.toPSSpriteID(util.decode(parsed.name));
-            return pathlib.format(parsed);
-        });
-    } else if (e.smogonId) {
-        return mapDst(interpret(curDir, e.smogonId), dst => {
-            const parsed = pathlib.parse(dst);
-            delete parsed.base;
-            parsed.name = util.toSmogonID(util.decode(parsed.name));
-            return pathlib.format(parsed);
-        });
-    } else if (e.replace) {
-        const re = new RegExp(e.replace);
-        return mapDst(interpret(curDir, e.in), dst => dst.replace(re, e.with));
-    } else if (e.bias) {
-        return Array.from(new Set(interpret(curDir, e)));
-    } else {
-        throw new Error(`Can't interpret (top-level keys of object: ${Object.keys(e)})`);
     }
+}
+
+function run1(file, map) {
+    const contents = fs.readFileSync(file, 'utf8');
+    const curDir = pathlib.dirname(file);
+    resetState(curDir, map);
+    debug(`Processing ${file}`);
+    vm.runInNewContext(contents, ENV);
 }
 
 export function run(files) {
-    const results = [];
+    const map = new Map;
     for (const file of files) {
-        const contents = fs.readFileSync(file, 'utf8');
-        const curDir = pathlib.dirname(file);
-        const e = JSON5.parse(contents);
-        debug(`Processing ${file}`);
-        results.push(...interpret(curDir, e));
+        run1(file, map);
     }
-    const seen = new Set;
-    for (const {dst} of results) {
-        if (pathlib.isAbsolute(dst)) {
-            throw new Error(`Absolute destination: ${dst}`);
-        }
-        
-        if (seen.has(dst)) {
-            throw new Error(`Duplicate output for ${dst}`);
-        }
-        
-        seen.add(dst);
+    const results = [];
+    for (const [dst, src] of map) {
+        results.push({src, dst});
     }
     return results;
 }

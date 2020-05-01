@@ -24,7 +24,7 @@ export function toPSSpriteID(name) {
     return result;
 }
 
-export function toSmogonID(name) {
+export function toSmogonAlias(name) {
     return name.toLowerCase().
         replace("--", "-").
         replace(/[ _]+/, "-").

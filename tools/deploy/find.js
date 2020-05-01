@@ -9,9 +9,9 @@ export function find(startDir, tag) {
     while (dir = stack.pop()) {
         for (const name of fs.readdirSync(dir)) {
             const path = pathlib.join(dir, name);
-            if (fs.statSync(path).isDirectory()) {
+            if (fs.lstatSync(path).isDirectory()) {
                 stack.push(path);
-            } else if (name === `${tag}.deploy.json`) {
+            } else if (name === `${tag}.deploy.js`) {
                 results.push(path);
             }
         }
