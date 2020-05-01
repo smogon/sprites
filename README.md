@@ -7,10 +7,11 @@
 This project depends on
 
 - [tup](http://gittup.org/tup/)
-- [ImageMagick](http://www.imagemagick.org/)
-- [AdvPng](http://www.advancemame.it/doc-advpng.html)
+- [ImageMagick](http://www.imagemagick.org/) >= 7
+- [AdvPng](http://www.advancemame.it/doc-advpng.html) (optional)
+- [OptiPNG](http://optipng.sourceforge.net/) (optional)
 - [pnpm](https://pnpm.js.org)
-- [node.js](https://nodejs.org)
+- [node.js](https://nodejs.org) >= 13
 
 ### Windows
 
