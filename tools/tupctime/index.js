@@ -1,8 +1,10 @@
 
-const fs = require('fs');
-const pathlib = require('path');
-const Database = require('better-sqlite3');
-const debug = require('debug')('tupctime');
+import fs from 'fs';
+import pathlib from 'path';
+import Database from 'better-sqlite3';
+import debugfn from 'debug';
+
+const debug = debugfn('tupctime');
 
 const start = process.argv[2];
 if (start !== undefined) {
