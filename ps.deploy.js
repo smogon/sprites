@@ -32,26 +32,26 @@ transform(toPSSpriteID, () => {
 
     dest("afd");
     sel(
-        "src/noncanonical/sprites/afd/front",
-        "src/noncanonical/sprites/afd/front-cosmetic",
+        "src/afd/sprites/front",
+        "src/afd/sprites/front-cosmetic",
     )
 
     dest("afd-shiny");
     sel(
-        "src/noncanonical/sprites/afd/front-shiny",
-        "src/noncanonical/sprites/afd/front-shiny-cosmetic",
+        "src/afd/sprites/front-shiny",
+        "src/afd/sprites/front-shiny-cosmetic",
     )
 
     dest("afd-back");
     sel(
-        "src/noncanonical/sprites/afd/back",
-        "src/noncanonical/sprites/afd/back-cosmetic",
+        "src/afd/sprites/back",
+        "src/afd/sprites/back-cosmetic",
     )
 
     dest("afd-back-shiny");
     sel(
-        "src/noncanonical/sprites/afd/back-shiny",
-        "src/noncanonical/sprites/afd/back-shiny-cosmetic",
+        "src/afd/sprites/back-shiny",
+        "src/afd/sprites/back-shiny-cosmetic",
     );
 
     dest("dex");
