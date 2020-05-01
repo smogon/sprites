@@ -57,7 +57,8 @@ twittersprite(files, "build/smogon/twittersprites/xy/%B.png")
 
 tup.foreach_rule(
     {"src/canonical/trainers/*"},
-    "^ pad trainer %f^ " .. makecmd{pad(80, 80, "%f", "%o"), compresspng("%f",  {})},
+    "^ pad trainer %f^ " .. makecmd{pad(80, 80, "%f", "%o"),
+                                    compresspng{config="TRAINERS"}},
     {"build/padded-trainers/canonical/%b"}
 )
 
@@ -66,7 +67,8 @@ tup.foreach_rule(
 for dir in iter{"front", "front-cosmetic", "front-shiny", "front-shiny-cosmetic"} do
     tup.foreach_rule(
         rep{"src/canonical/dex/{dir}/*", dir=dir},
-        "^ pad dex %f^ " .. makecmd{pad(120, 120, "%f", "%o"), compresspng("%f",  {})},
+        "^ pad dex %f^ " .. makecmd{pad(120, 120, "%f", "%o"),
+                                    compresspng{config="DEX"}},
         rep{"build/padded-dex/canonical/{dir}/%b", dir=dir}
     )
 end

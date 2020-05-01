@@ -13,15 +13,25 @@ function pad(w, h, input, output)
     }
 end
 
-function compresspng(filename, opts)
+local DEFAULT_OPTIPNG = getconfig("DEFAULT_OPTIPNG")
+local DEFAULT_ADVPNG = getconfig("DEFAULT_ADVPNG")
+
+function compresspng(opts)
     local cmds = {}
-    if opts.optipng then
-        cmds += rep{"optipng -q {opts} {filename}", opts=opts.optipng, filename=filename}
+    local output = opts.output or "%o"
+    local optipng = DEFAULT_OPTIPNG
+    if opts.config then
+        optipng = getconfig(opts.config .. "_OPTIPNG") or optipng;
     end
-    if opts.advpng then
-        cmds += rep{"advpng -q {opts} {filename}", opts=opts.advpng, filename=filename}
+    local advpng = DEFAULT_ADVPNG
+    if opts.config then
+        advpng = getconfig(opts.config .. "_ADVPNG") or advpng;
+    end
+    if optipng then
+        cmds += rep{"optipng -q {opts} {output}", opts=optipng, output=output}
+    end
+    if advpng then
+        cmds += rep{"advpng -q {opts} {output}", opts=advpng, output=output}
     end
     return cmds
 end
-
-
