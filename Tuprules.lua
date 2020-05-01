@@ -15,20 +15,31 @@ function pad(w, h, input, output)
     }
 end
 
+function asboolean(s)
+    if s == nil or s == "false" then
+        return false
+    elseif s == "true" then
+        return true
+    else
+        error("boolean config must be true, false, or empty")
+    end
+end
+
 local DEFAULT_OPTIPNG = getconfig("DEFAULT_OPTIPNG")
 local DEFAULT_ADVPNG = getconfig("DEFAULT_ADVPNG")
-local USE_DEFLOPT = getconfig("USE_DEFLOPT")
+local DEFLOPT_PATH = getconfig("DEFLOPT_PATH")
+local DEFAULT_DEFLOPT = asboolean(getconfig("DEFAULT_DEFLOPT"))
 
 function compresspng(opts)
     local cmds = {}
     local output = opts.output or "%o"
     local optipng = DEFAULT_OPTIPNG
     local advpng = DEFAULT_ADVPNG
-    local deflopt = USE_DEFLOPT
+    local deflopt = DEFAULT_DEFLOPT
     if opts.config then
         optipng = getconfig(opts.config .. "_OPTIPNG") or optipng;
         advpng = getconfig(opts.config .. "_ADVPNG") or advpng;
-        deflopt = getconfig(opts.config .. "_DEFLOPT") or deflopt;
+        deflopt = asboolean(getconfig(opts.config .. "_DEFLOPT")) or deflopt;
     end
 
     if optipng then
@@ -38,9 +49,12 @@ function compresspng(opts)
         cmds += rep{"advpng -q {opts} {output}", opts=advpng, output=output}
     end
     if deflopt then
+        if DEFLOPT_PATH == nil then
+            error("Need to set CONFIG_DEFLOPT_PATH")
+        end
         cmds += rep{"node {root}/tools/deflopt {deflopt} {output}",
                     root=ROOTDIR,
-                    deflopt=deflopt,
+                    deflopt=DEFLOPT_PATH,
                     output=output}
     end
     

@@ -71,7 +71,8 @@ Build settings are configurable in `tup.config`.
 
 - `CONFIG_DEFAULT_OPTIPNG`: Command line to pass to `optipng`.
 - `CONFIG_DEFAULT_ADVPNG`: Command line to pass to `advpng`.
-- `CONFIG_USE_DEFLOPT`: Path to `DeflOpt.exe`. If using Wine, you have to copy it somewhere outside the Tup tree.
+- `CONFIG_DEFLOPT_PATH`: Path to `DeflOpt.exe`. If using Wine, you have to copy it somewhere outside the Tup tree.
+- `CONFIG_DEFAULT_DEFLOPT`: `true`, `false`, or blank
 
 There are src-specific versions of these settings:
 
