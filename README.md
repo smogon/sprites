@@ -63,6 +63,21 @@ Install dependencies once with `pnpm install`. Then, to build:
 $ tup
 ```
 
+## Configuration
+
+Build settings are configurable in `tup.config`.
+
+- `CONFIG_DEFAULT_OPTIPNG`: Command line to pass to `optipng`.
+- `CONFIG_DEFAULT_ADVPNG`: Command line to pass to `advpng`.
+- `CONFIG_TRAINERS_{OPTIPNG,ADVPNG}`: Compression options for `trainers/` only.
+- `CONFIG_DEX_{OPTIPNG,ADVPNG}`: Compression options for `dex/` only.
+
+For example, these settings reflect the compression settings for the files chaos uploaded in `src/`:
+```
+CONFIG_DEFAULT_OPTIPNG=-o7
+CONFIG_DEFAULT_ADVPNG=-z4 -i5000
+```
+
 ## Filename Scheme
 
 Pokemon sprite filenames are in a 1-to-1 correspondence with the Pokemon's name, for ease of processing. Filenames may be directly substituted in shell commands without escaping. This naming scheme means that some of the filenames in `src/` are a little awkward looking to humans, but it means that no additional data beyond what is encoded in the filesystem is required to determine the correct name for any given Pokémon. 
