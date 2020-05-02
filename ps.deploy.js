@@ -5,8 +5,8 @@ transform(toPSSpriteID, () => {
         "src/canonical/models/front",
         "src/canonical/models/front-cosmetic",
         "src/canonical/models/front-misc",
-        "src/noncanonical/models/front",
-        "src/noncanonical/sprites/gen5/front"
+        "src/cap/models/front",
+        "src/cap/sprites/gen5/front"
     );
     
     dest("ani-back");
@@ -14,8 +14,8 @@ transform(toPSSpriteID, () => {
         "src/canonical/models/back",
         "src/canonical/models/back-cosmetic",
         "src/canonical/models/back-misc",
-        "src/noncanonical/models/back",
-        "src/noncanonical/sprites/gen5/back"
+        "src/cap/models/back",
+        "src/cap/sprites/gen5/back"
     );
     
     dest("ani-shiny");

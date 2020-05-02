@@ -1,11 +1,11 @@
 
 -- Generate uniform size minisprites
 
-for canon in iter{"canonical", "noncanonical"} do 
+for canon in iter{"canonical", "cap"} do 
     for dir in iter{"asymmetrical", "custom", "misc", "pokemon"} do
         -- TODO fix this, tup hates git's quirk of not creating directories when
         -- there aren't any files
-        if canon == "noncanonical" and dir ~= "pokemon" then
+        if canon == "cap" and dir ~= "pokemon" then
             goto continue
         end
 
@@ -22,8 +22,8 @@ end
 -- PS spritesheet
 
 tup.rule(
-    {"build/gen6-minisprites-padded/canonical/pokemon/*", "build/gen6-minisprites-padded/noncanonical/pokemon/*"},
-    "node tools/sprites/ps.js build/gen6-minisprites-padded/canonical/pokemon/ build/gen6-minisprites-padded/noncanonical/pokemon/ --output-image build/ps/pokemonicons-sheet.png --output-metadata build/ps/pokemonicons.json",
+    {"build/gen6-minisprites-padded/canonical/pokemon/*", "build/gen6-minisprites-padded/cap/pokemon/*"},
+    "node tools/sprites/ps.js build/gen6-minisprites-padded/canonical/pokemon/ build/gen6-minisprites-padded/cap/pokemon/ --output-image build/ps/pokemonicons-sheet.png --output-metadata build/ps/pokemonicons.json",
     {"build/ps/pokemonicons-sheet.png", "build/ps/pokemonicons.json"}
 )
 
@@ -48,9 +48,9 @@ function twittersprite(input, output)
 end
 
 local files =
-    {"src/canonical/models/front/*", "src/noncanonical/models/front/*",
+    {"src/canonical/models/front/*", "src/cap/models/front/*",
      -- TODO: only pick noncanonical that aren't already in models/
-     "src/noncanonical/sprites/gen5/front/*"}
+     "src/cap/sprites/gen5/front/*"}
 
 fbsprite(files, "build/smogon/fbsprites/xy/%B.png")
 twittersprite(files, "build/smogon/twittersprites/xy/%B.png")
