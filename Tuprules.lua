@@ -5,13 +5,13 @@ tup.include("util/tup-ext.lua")
 
 ROOTDIR = tup.getcwd()
 
-function pad(w, h, input, output)
+function pad(opts)
     return rep{
         "convert {input} -background transparent -gravity center -extent {w}x{h} {output}",
-        input = input,
-        output = output,
-        w = w,
-        h = h
+        input = opts.input or "%f",
+        output = opts.output or "%o",
+        w = opts.w,
+        h = opts.h
     }
 end
 

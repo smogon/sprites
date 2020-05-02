@@ -13,7 +13,7 @@ for canon in iter{"canonical", "cap"} do
             rep{"src/{canon}/minisprites/gen6/{dir}/*", canon=canon, dir=dir},
             makecmd{
                 display="pad g6 minisprite %f",
-                pad(40, 30, "%f", "%o")
+                pad{w=40, h=30}
             },
             rep{"build/gen6-minisprites-padded/{canon}/{dir}/%b",canon=canon,dir=dir}
         )
@@ -70,7 +70,7 @@ tup.foreach_rule(
     {"src/canonical/trainers/*"},
     makecmd{
         display="pad trainer %f",
-        pad(80, 80, "%f", "%o"),
+        pad{w=80, h=80},
         compresspng{config="TRAINERS"}
     },
     {"build/padded-trainers/canonical/%b"}
@@ -83,7 +83,7 @@ for dir in iter{"front", "front-cosmetic", "front-shiny", "front-shiny-cosmetic"
         rep{"src/canonical/dex/{dir}/*", dir=dir},
         makecmd{
             display="pad dex %f",
-            pad(120, 120, "%f", "%o"),
+            pad{w=120, h=120},
             compresspng{config="DEX"}
         },
         rep{"build/padded-dex/canonical/{dir}/%b", dir=dir}
