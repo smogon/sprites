@@ -30,6 +30,16 @@ transform(toPSSpriteID, () => {
         "src/canonical/models/back-shiny-cosmetic",
     );
 
+    dest("gen5ani");
+    sel(
+        "src/cap/sprites/gen5/front"
+    );
+
+    dest("gen5ani-back");
+    sel(
+        "src/cap/sprites/gen5/back"
+    );
+    
     dest("afd");
     sel(
         "src/afd/sprites/front",
