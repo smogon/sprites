@@ -22,12 +22,14 @@ transform(toPSSpriteID, () => {
     sel(
         "src/canonical/models/back",
         "src/canonical/models/back-cosmetic",
+        "src/cap/models/front-shiny",
     );
     
     dest("ani-back-shiny");
     sel(
         "src/canonical/models/back-shiny",
         "src/canonical/models/back-shiny-cosmetic",
+        "src/cap/models/back-shiny",
     );
 
     dest("gen5ani");
