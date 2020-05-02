@@ -4,7 +4,7 @@ transform(toPSSpriteID, () => {
     sel(
         "src/canonical/models/front",
         "src/canonical/models/front-cosmetic",
-        "src/canonical/models/front-misc",
+        "src/canonical/models/front-misc/Substitute.gif",
         "src/cap/models/front",
         "src/cap/sprites/gen5/front"
     );
@@ -13,7 +13,7 @@ transform(toPSSpriteID, () => {
     sel(
         "src/canonical/models/back",
         "src/canonical/models/back-cosmetic",
-        "src/canonical/models/back-misc",
+        "src/canonical/models/back-misc/Substitute.gif",
         "src/cap/models/back",
         "src/cap/sprites/gen5/back"
     );
