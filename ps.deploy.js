@@ -5,32 +5,50 @@ transform(toPSSpriteID, () => {
         "src/canonical/models/front",
         "src/canonical/models/front-cosmetic",
         "src/canonical/models/front-misc/Substitute.gif",
-        "src/cap/models/front",
-        "src/cap/sprites/gen5/front"
     );
+    overwrite(() => {
+        sel(
+            "src/cap/sprites/gen5/front",
+            "src/cap/models/front"
+        );
+    });
     
     dest("ani-back");
     sel(
         "src/canonical/models/back",
         "src/canonical/models/back-cosmetic",
         "src/canonical/models/back-misc/Substitute.gif",
-        "src/cap/models/back",
-        "src/cap/sprites/gen5/back"
     );
+    overwrite(() => {
+        sel(
+            "src/cap/sprites/gen5/back",
+            "src/cap/models/back"
+        );
+    });
     
     dest("ani-shiny");
     sel(
         "src/canonical/models/front-shiny",
         "src/canonical/models/front-shiny-cosmetic",
-        "src/cap/models/front-shiny",
     );
+    overwrite(() => {
+        sel(
+            "src/cap/sprites/gen5/front-shiny",
+            "src/cap/models/front-shiny"
+        );
+    });
     
     dest("ani-back-shiny");
     sel(
         "src/canonical/models/back-shiny",
         "src/canonical/models/back-shiny-cosmetic",
-        "src/cap/models/back-shiny",
     );
+    overwrite(() => {
+        sel(
+            "src/cap/sprites/gen5/back-shiny",
+            "src/cap/models/back-shiny"
+        );
+    });
 
     dest("gen5ani");
     sel(

@@ -51,4 +51,19 @@ function rep(str, vars)
     end))
 end
 
-
+-- Merge, preferring elem2 when f(elem1) == f(elem2) 
+function mergededup(table1, table2, f)
+    local seen = {}
+    for v in iter(table1) do
+        seen[f(v)] = v
+    end
+    for v in iter(table2) do
+        seen[f(v)] = v
+    end
+    local result = {}
+    -- Can't be iter, because non-numeric keys
+    for _, v in pairs(seen) do
+        table.insert(result, v)
+    end
+    return result
+end

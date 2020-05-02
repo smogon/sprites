@@ -56,10 +56,12 @@ function twittersprite(input, output)
     )
 end
 
-local files =
-    {"src/canonical/models/front/*", "src/cap/models/front/*",
-     -- TODO: only pick noncanonical that aren't already in models/
-     "src/cap/sprites/gen5/front/*"}
+-- TODO: nicer API
+local files = mergededup(
+    glob("src/cap/sprites/gen5/front/*"),
+    glob{"src/canonical/models/front/*", "src/cap/models/front/*"},
+    tup.base
+)
 
 fbsprite(files, "build/smogon/fbsprites/xy/%B.png")
 twittersprite(files, "build/smogon/twittersprites/xy/%B.png")
