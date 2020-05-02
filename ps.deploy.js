@@ -124,3 +124,6 @@ sel(
     "src/canonical/ui/categories/gen4",
     "src/noncanonical/ui/categories/undefined.png",
 );
+
+dest(".");
+sel("build/ps/pokemonicons-pokeball-sheet.png");

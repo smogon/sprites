@@ -30,6 +30,25 @@ tup.rule(
     {"build/ps/pokemonicons-sheet.png", "build/ps/pokemonicons.json"}
 )
 
+-- PS pokeball icons
+
+local balls = {
+    "src/noncanonical/ui/battle/Ball-Normal.png",
+    "src/noncanonical/ui/battle/Ball-Sick.png",
+    "src/noncanonical/ui/battle/Ball-Null.png",
+}
+
+tup.rule(
+    balls,
+    makecmd{
+        display="pokemonicons-pokeball-sheet",
+        [[
+convert -background transparent -gravity center -extent 40x30 %f +append %o
+]]
+    },
+    {"build/ps/pokemonicons-pokeball-sheet.png"}
+)
+
 -- Smogdex social images
 
 function fbsprite(input, output)
