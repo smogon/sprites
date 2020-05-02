@@ -65,6 +65,13 @@ transform(toPSSpriteID, () => {
         "build/padded-dex/canonical/front-shiny",
         "build/padded-dex/canonical/front-shiny-cosmetic",
     );
+
+    dest("misc");
+    sel(
+        "src/canonical/ui/battle/Alpha.png",
+        "src/canonical/ui/battle/Mega.png",
+        "src/canonical/ui/battle/Omega.png",
+    );
 });
 
 dest("trainers");
