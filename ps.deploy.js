@@ -118,3 +118,9 @@ transform(fixTypes, () => {
         "src/noncanonical/ui/types/gen4"
     );
 });
+
+dest("categories");
+sel(
+    "src/canonical/ui/categories/gen4",
+    "src/noncanonical/ui/categories/undefined.png",
+);
