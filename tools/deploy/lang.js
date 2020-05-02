@@ -83,7 +83,7 @@ const ENV = {
                     addPair(pathlib.join(path, name), name);
                 }
             } else {
-                addPair(path, pathlib.baseName(path));
+                addPair(path, pathlib.basename(path));
             }
         }
     }
