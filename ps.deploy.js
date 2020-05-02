@@ -20,8 +20,8 @@ transform(toPSSpriteID, () => {
     
     dest("ani-shiny");
     sel(
-        "src/canonical/models/back",
-        "src/canonical/models/back-cosmetic",
+        "src/canonical/models/front-shiny",
+        "src/canonical/models/front-shiny-cosmetic",
         "src/cap/models/front-shiny",
     );
     
