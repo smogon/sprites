@@ -11,7 +11,10 @@ for canon in iter{"canonical", "cap"} do
 
         tup.foreach_rule(
             rep{"src/{canon}/minisprites/gen6/{dir}/*", canon=canon, dir=dir},
-            "^ pad g6 minisprite %f^ " .. pad(40, 30, "%f", "%o"),
+            makecmd{
+                display="pad g6 minisprite %f",
+                pad(40, 30, "%f", "%o")
+            },
             rep{"build/gen6-minisprites-padded/{canon}/{dir}/%b",canon=canon,dir=dir}
         )
         
@@ -32,8 +35,11 @@ tup.rule(
 function fbsprite(input, output)
     tup.foreach_rule(
         input,
-        "^ fbsprite %f^ " .. makecmd{"tools/fbsprite.sh %f %o",
-                                     compresspng{config="MODELS"}},
+        makecmd{
+            display="fbsprite %f",
+            "tools/fbsprite.sh %f %o",
+            compresspng{config="MODELS"}
+        },
         output
     )
 end
@@ -41,8 +47,11 @@ end
 function twittersprite(input, output)
     tup.foreach_rule(
         input,
-        "^ twittersprite %f^ " .. makecmd{"tools/twittersprite.sh %f %o",
-                                         compresspng{config="MODELS"}},
+        makecmd{
+            display="twittersprite %f",
+            "tools/twittersprite.sh %f %o",
+            compresspng{config="MODELS"}
+        },
         output
     )
 end
@@ -59,8 +68,11 @@ twittersprite(files, "build/smogon/twittersprites/xy/%B.png")
 
 tup.foreach_rule(
     {"src/canonical/trainers/*"},
-    "^ pad trainer %f^ " .. makecmd{pad(80, 80, "%f", "%o"),
-                                    compresspng{config="TRAINERS"}},
+    makecmd{
+        display="pad trainer %f",
+        pad(80, 80, "%f", "%o"),
+        compresspng{config="TRAINERS"}
+    },
     {"build/padded-trainers/canonical/%b"}
 )
 
@@ -69,8 +81,11 @@ tup.foreach_rule(
 for dir in iter{"front", "front-cosmetic", "front-shiny", "front-shiny-cosmetic"} do
     tup.foreach_rule(
         rep{"src/canonical/dex/{dir}/*", dir=dir},
-        "^ pad dex %f^ " .. makecmd{pad(120, 120, "%f", "%o"),
-                                    compresspng{config="DEX"}},
+        makecmd{
+            display="pad dex %f",
+            pad(120, 120, "%f", "%o"),
+            compresspng{config="DEX"}
+        },
         rep{"build/padded-dex/canonical/{dir}/%b", dir=dir}
     )
 end

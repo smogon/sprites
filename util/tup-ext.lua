@@ -45,5 +45,11 @@ function symlink(input, output)
 end
 
 function makecmd(cmds)
-    return table.concat(flatten(cmds), " && ")
+    local cmd = ""
+    if cmds.display then
+        cmd = rep{"^ {display}^ ", display=cmds.display}
+        cmds.display = nil
+    end
+    cmd = cmd .. table.concat(flatten(cmds), " && ")
+    return cmd
 end
