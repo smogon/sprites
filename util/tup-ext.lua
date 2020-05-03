@@ -49,7 +49,7 @@ function makecmd(cmds)
     for newcmd in iter(flatten(cmds)) do
         newcmd = trim(newcmd)
         if cmd ~= "" then
-            cmd = cmd .. " && "
+            cmd = cmd .. " &&\n"
         end
         cmd = cmd .. newcmd
     end
