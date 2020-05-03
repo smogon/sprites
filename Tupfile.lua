@@ -3,14 +3,8 @@
 
 for canon in iter{"canonical", "cap"} do 
     for dir in iter{"asymmetrical", "custom", "misc", "pokemon"} do
-        -- TODO fix this, tup hates git's quirk of not creating directories when
-        -- there aren't any files
-        if canon == "cap" and dir ~= "pokemon" then
-            goto continue
-        end
-
         tup.foreach_rule(
-            rep{"src/{canon}/minisprites/gen6/{dir}/*", canon=canon, dir=dir},
+            rep{"src/{canon}/minisprites/gen6/{dir}/*.png", canon=canon, dir=dir},
             makecmd{
                 display="pad g6 minisprite %f",
                 pad{w=40, h=30}
