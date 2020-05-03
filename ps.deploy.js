@@ -88,12 +88,16 @@ transform(toPSSpriteID, () => {
     sel(
         "build/padded-dex/canonical/front",
         "build/padded-dex/canonical/front-cosmetic",
+        "build/padded-dex/cap/front",
+        "build/padded-dex/cap/front-cosmetic",
     );
 
     dest("dex-shiny");
     sel(
         "build/padded-dex/canonical/front-shiny",
         "build/padded-dex/canonical/front-shiny-cosmetic",
+        "build/padded-dex/cap/front",
+        "build/padded-dex/cap/front-cosmetic",
     );
 
     dest("misc");

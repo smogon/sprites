@@ -100,14 +100,36 @@ tup.foreach_rule(
 
 -- Padded Dex
 
-for dir in iter{"front", "front-cosmetic", "front-shiny", "front-shiny-cosmetic"} do
-    tup.foreach_rule(
-        rep{"src/canonical/dex/{dir}/*", dir=dir},
-        makecmd{
-            display="pad dex %f",
-            pad{w=120, h=120},
-            compresspng{config="DEX"}
-        },
-        rep{"build/padded-dex/canonical/{dir}/%b", dir=dir}
-    )
+for canon in iter{"canonical", "cap"} do
+    for dir in iter{"front", "front-cosmetic", "front-shiny", "front-shiny-cosmetic"} do
+        tup.foreach_rule(
+            rep{"src/{canon}/dex/{dir}/*", canon=canon, dir=dir},
+            makecmd{
+                display="pad dex %f",
+                pad{w=120, h=120},
+                compresspng{config="DEX"}
+            },
+            rep{"build/padded-dex/{canon}/{dir}/%b", canon=canon, dir=dir}
+        )
+    end
+end
+
+-- Build missing CAP dex
+
+for folder in iter({"front", "front-shiny", "front-cosmetic", "front-shiny-cosmetic"}) do
+    for file in iter(mergededup(glob(rep{"src/cap/models/{folder}/*.gif", folder=folder}),
+                                glob(rep{"src/cap/sprites/gen5/{folder}/*.gif", folder=folder}),
+                                tup.base)) do
+        if not fileexists(rep{"src/cap/dex/{folder}/{base}.png", folder=folder, base=tup.base(file)}) then
+            tup.rule(
+                file,
+                makecmd{
+                    display=rep{"missing dex cap {base} -> {folder}/{file}", folder=folder, base=tup.base(file), file=file},
+                    "convert %f'[0]' -trim %o",
+                    "mogrify -background transparent -gravity center -extent 120x120 %o"
+                },
+                rep{"build/padded-dex/cap/{folder}/{base}.png", folder=folder,base=tup.base(file)}
+            )
+        end
+    end
 end

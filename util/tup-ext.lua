@@ -58,3 +58,8 @@ function makecmd(cmds)
     end
     return cmd
 end
+
+function fileexists(file)
+    local matched = glob(file)
+    return #matched > 0
+end
