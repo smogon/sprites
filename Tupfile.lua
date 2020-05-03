@@ -126,7 +126,8 @@ for folder in iter({"front", "front-shiny", "front-cosmetic", "front-shiny-cosme
                 makecmd{
                     display=rep{"missing dex cap {base} -> {folder}/{file}", folder=folder, base=tup.base(file), file=file},
                     "convert %f'[0]' -trim %o",
-                    "mogrify -background transparent -gravity center -extent 120x120 %o"
+                    "mogrify -background transparent -gravity center -extent 120x120 %o",
+                    compresspng{config="DEX"}
                 },
                 rep{"build/padded-dex/cap/{folder}/{base}.png", folder=folder,base=tup.base(file)}
             )
