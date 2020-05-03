@@ -22,7 +22,7 @@ end
 
 -- Adapted from premake
 function flatten(arr)
-    local result = { }
+    local result = {}
     
     local function flatten(arr)
         for v in iter(arr) do
@@ -38,36 +38,14 @@ function flatten(arr)
     return result
 end
 
--- Adapted from lua wiki, originally called replace_vars
-function rep(str, vars)
-  -- Allow replace_vars{str, vars} syntax as well as replace_vars(str, {vars})
-  if not vars then
-    vars = str
-    str = vars[1]
-  end
-  return (str:gsub("({([^}]+)})",
-    function(whole,i)
-      return vars[i] or whole
-    end))
-end
-
--- Merge, preferring elem2 when f(elem1) == f(elem2) 
-function mergededup(table1, table2, f)
-    local seen = {}
-    for v in iter(table1) do
-        seen[f(v)] = v
-    end
-    for v in iter(table2) do
-        seen[f(v)] = v
-    end
-    local result = {}
-    -- Can't be iter, because non-numeric keys
-    for _, v in pairs(seen) do
-        table.insert(result, v)
-    end
-    return result
-end
-
 function trim(s)
     return s:gsub("^%s*(.-)%s*$", "%1")
+end
+
+function table_keys(t)
+    local result = {}
+    for k, v in pairs(t) do
+        table.insert(result, k)
+    end
+    return result
 end
