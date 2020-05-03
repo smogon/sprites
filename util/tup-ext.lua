@@ -46,10 +46,15 @@ end
 
 function makecmd(cmds)
     local cmd = ""
-    if cmds.display then
-        cmd = rep{"^ {display}^ ", display=cmds.display}
-        cmds.display = nil
+    for newcmd in iter(flatten(cmds)) do
+        newcmd = trim(newcmd)
+        if cmd ~= "" then
+            cmd = cmd .. " && "
+        end
+        cmd = cmd .. newcmd
     end
-    cmd = cmd .. table.concat(flatten(cmds), " && ")
+    if cmds.display then
+        cmd = rep{"^ {display}^ {cmd}", display=cmds.display, cmd=cmd}
+    end
     return cmd
 end

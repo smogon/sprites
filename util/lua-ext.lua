@@ -67,3 +67,7 @@ function mergededup(table1, table2, f)
     end
     return result
 end
+
+function trim(s)
+    return s:gsub("^%s*(.-)%s*$", "%1")
+end
