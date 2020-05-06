@@ -43,7 +43,8 @@ function glob(pat, opts)
     local key = opts and opts.key
     local seen = {}
     for pat in iter(globpat_normalize(pat)) do
-        local frame = push_frame()
+        local frame = {}
+        push_frame(frame)
         for file in iter(tup.glob(pat)) do
             -- Workaround a weird issue pre reported
             file = file:gsub("//", "/")
@@ -112,7 +113,8 @@ local function do_rule_frame(opts, foreach)
     if foreach then
         local input = glob(opts.input, opts)
         for i in iter(input) do
-            local frame = push_frame()
+            local frame = {}
+            push_frame(frame)
             frame.input = i
             local output = {}
             for v in iter(astable(opts.output)) do
@@ -123,7 +125,8 @@ local function do_rule_frame(opts, foreach)
             pop_frame()
         end
     else
-        local frame = push_frame()
+        local frame = {}
+        push_frame(frame)
         local input = glob(opts.input)
         frame.input = tostring(input)
         local output = {}

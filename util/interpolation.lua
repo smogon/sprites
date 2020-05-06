@@ -64,21 +64,12 @@ end
 
 local FRAMES = {}
 
-function push_frame()
-    local frame = {}
+function push_frame(frame)
     table.insert(FRAMES, frame)
-    return frame
 end
 
 function pop_frame()
     table.remove(FRAMES)
-end
-
-function adjust_frame(t)
-    local last_frame = FRAMES[#FRAMES]
-    for k, v in pairs(t) do
-        last_frame[k] = v
-    end
 end
 
 function print_frame()
@@ -107,15 +98,15 @@ function expand(str)
 end
 
 function with_rep(vars, f)
-    push_frame()
-    adjust_frame(vars)
+    push_frame(vars)
     local ret = f()
     pop_frame()
     return ret
 end
 
 function iter_rep(varspec, f)
-    local frame = push_frame()
+    local frame = {}
+    push_frame(frame)
     local keys = table_keys(varspec)
     local function loop(i)
         if #keys + 1 == i then
