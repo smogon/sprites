@@ -15,7 +15,7 @@ function resetState(srcDir, map) {
         srcDir,
         transform: (dst) => dst,
         map,
-        allowOverwrite: false
+        allowIgnore: false
     };
 };
 
@@ -28,11 +28,13 @@ function addPair(src, dst) {
 
     dst = pathlib.join(STATE.destDir, dst);
 
-    if (STATE.map.has(dst) && !STATE.allowOverwrite) {
-        throw new Error(`Duplicate entry: ${dst}`);
+    if (STATE.map.has(dst)) {
+        if (!STATE.allowIgnore) { 
+            throw new Error(`Duplicate entry: ${dst}`);
+        }
+    } else {
+        STATE.map.set(dst, src);
     }
-
-    STATE.map.set(dst, src);
 }
 
 const ENV = {
@@ -57,13 +59,13 @@ const ENV = {
         STATE.transform = oldTransform;
     },
 
-    overwrite(body) {
-        if (STATE.allowOverwrite) {
-            throw new Error("Already in overwrite mode");
+    ignore(body) {
+        if (STATE.allowIgnore) {
+            throw new Error("Already in ignore mode");
         }
-        STATE.allowOverwrite = true;
+        STATE.allowIgnore = true;
         body();
-        STATE.allowOverwrite = false;
+        STATE.allowIgnore = false;
     },
 
     dest(path) {

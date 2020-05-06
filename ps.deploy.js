@@ -6,10 +6,10 @@ transform(toPSSpriteID, () => {
         "src/canonical/models/front-cosmetic",
         "src/canonical/models/front-misc/Substitute.gif",
     );
-    overwrite(() => {
+    ignore(() => {
         sel(
+            "src/cap/models/front",
             "src/cap/sprites/gen5/front",
-            "src/cap/models/front"
         );
     });
     
@@ -19,10 +19,10 @@ transform(toPSSpriteID, () => {
         "src/canonical/models/back-cosmetic",
         "src/canonical/models/back-misc/Substitute.gif",
     );
-    overwrite(() => {
+    ignore(() => {
         sel(
+            "src/cap/models/back",
             "src/cap/sprites/gen5/back",
-            "src/cap/models/back"
         );
     });
     
@@ -31,10 +31,10 @@ transform(toPSSpriteID, () => {
         "src/canonical/models/front-shiny",
         "src/canonical/models/front-shiny-cosmetic",
     );
-    overwrite(() => {
+    ignore(() => {
         sel(
+            "src/cap/models/front-shiny",
             "src/cap/sprites/gen5/front-shiny",
-            "src/cap/models/front-shiny"
         );
     });
     
@@ -43,10 +43,10 @@ transform(toPSSpriteID, () => {
         "src/canonical/models/back-shiny",
         "src/canonical/models/back-shiny-cosmetic",
     );
-    overwrite(() => {
+    ignore(() => {
         sel(
-            "src/cap/sprites/gen5/back-shiny",
-            "src/cap/models/back-shiny"
+            "src/cap/models/back-shiny",
+            "src/cap/sprites/gen5/back-shiny"
         );
     });
 
