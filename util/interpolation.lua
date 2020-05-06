@@ -97,13 +97,6 @@ function expand(str)
     )
 end
 
-function with_rep(vars, f)
-    push_frame(vars)
-    local ret = f()
-    pop_frame()
-    return ret
-end
-
 function iter_rep(varspec, f)
     local frame = {}
     push_frame(frame)
