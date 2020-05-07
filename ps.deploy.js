@@ -64,6 +64,7 @@ transform(toPSSpriteID, () => {
     sel(
         "src/afd/sprites/front",
         "src/afd/sprites/front-cosmetic",
+        "src/afd/sprites/front-misc/Substitute.png",
     )
 
     dest("afd-shiny");
@@ -76,6 +77,7 @@ transform(toPSSpriteID, () => {
     sel(
         "src/afd/sprites/back",
         "src/afd/sprites/back-cosmetic",
+        "src/afd/sprites/back-misc/Substitute.png",
     )
 
     dest("afd-back-shiny");
