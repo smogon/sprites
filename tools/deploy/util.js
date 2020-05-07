@@ -4,7 +4,7 @@ export function decode(s) {
 }
 
 export function decomposeName(name) {
-    const [num, formeNum, base, forme=null] = name.split("--");
+    const [num, formeNum, base, forme=null] = name.split("-").map(s => s.replace(/~/g, "-"));
     return {num: parseInt(num, 10), formeNum: parseInt(formeNum, 10), base, forme};
 }
 
@@ -26,7 +26,6 @@ export function toPSSpriteID(name) {
 
 export function toSmogonAlias(name) {
     return name.toLowerCase().
-        replace("--", "-").
         replace(/[ _]+/, "-").
         replace(/[^a-z0-9-]+/g, '');
 }
