@@ -5,7 +5,7 @@ export function decode(s) {
 
 export function decomposeName(name) {
     const [num, formeNum, base, forme=null] = name.split("--");
-    return {num, formeNum, base, forme};
+    return {num: parseInt(num, 10), formeNum: parseInt(formeNum, 10), base, forme};
 }
 
 export function toPSID(name) {
