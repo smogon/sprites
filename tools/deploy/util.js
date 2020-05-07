@@ -4,8 +4,8 @@ export function decode(s) {
 }
 
 export function decomposeName(name) {
-    const [base, forme=null] = name.split("--");
-    return {base, forme};
+    const [num, formeNum, base, forme=null] = name.split("--");
+    return {num, formeNum, base, forme};
 }
 
 export function toPSID(name) {
@@ -29,4 +29,13 @@ export function toSmogonAlias(name) {
         replace("--", "-").
         replace(/[ _]+/, "-").
         replace(/[^a-z0-9-]+/g, '');
+}
+
+export function toSmogonSpriteAlias(name) {
+    const info = decomposeName(name);
+    let result = toSmogonAlias(info.base);
+    if (info.forme !== null) {
+        result += '-' + toSmogonAlias(info.forme);
+    }
+    return result;
 }

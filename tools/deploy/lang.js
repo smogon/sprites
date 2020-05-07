@@ -38,6 +38,13 @@ function addPair(src, dst) {
 }
 
 const ENV = {
+    toPSID(dst) {
+        const parsed = pathlib.parse(dst);
+        delete parsed.base;
+        parsed.name = util.toPSID(util.decode(parsed.name));
+        return pathlib.format(parsed);
+    },
+    
     toPSSpriteID(dst) {
         const parsed = pathlib.parse(dst);
         delete parsed.base;
@@ -49,6 +56,13 @@ const ENV = {
         const parsed = pathlib.parse(dst);
         delete parsed.base;
         parsed.name = util.toSmogonAlias(util.decode(parsed.name));
+        return pathlib.format(parsed);
+    },
+
+    toSmogonSpriteAlias(dst) {
+        const parsed = pathlib.parse(dst);
+        delete parsed.base;
+        parsed.name = util.toSmogonSpriteAlias(util.decode(parsed.name));
         return pathlib.format(parsed);
     },
     

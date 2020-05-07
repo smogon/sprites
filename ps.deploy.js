@@ -4,7 +4,6 @@ transform(toPSSpriteID, () => {
     sel(
         "src/canonical/models/front",
         "src/canonical/models/front-cosmetic",
-        "src/canonical/models/front-misc/Substitute.gif",
     );
     ignore(() => {
         sel(
@@ -17,7 +16,6 @@ transform(toPSSpriteID, () => {
     sel(
         "src/canonical/models/back",
         "src/canonical/models/back-cosmetic",
-        "src/canonical/models/back-misc/Substitute.gif",
     );
     ignore(() => {
         sel(
@@ -64,7 +62,6 @@ transform(toPSSpriteID, () => {
     sel(
         "src/afd/sprites/front",
         "src/afd/sprites/front-cosmetic",
-        "src/afd/sprites/front-misc/Substitute.png",
     )
 
     dest("afd-shiny");
@@ -77,7 +74,6 @@ transform(toPSSpriteID, () => {
     sel(
         "src/afd/sprites/back",
         "src/afd/sprites/back-cosmetic",
-        "src/afd/sprites/back-misc/Substitute.png",
     )
 
     dest("afd-back-shiny");
@@ -101,6 +97,20 @@ transform(toPSSpriteID, () => {
         "build/padded-dex/cap/front",
         "build/padded-dex/cap/front-cosmetic",
     );
+});
+
+transform(toPSID, () => {
+    dest("ani");
+    sel("src/canonical/models/front-misc/Substitute.gif");
+
+    dest("ani-back");
+    sel("src/canonical/models/back-misc/Substitute.gif");
+
+    dest("afd");
+    sel("src/afd/sprites/front-misc/Substitute.png");
+    
+    dest("afd-back");
+    sel("src/afd/sprites/back-misc/Substitute.png");
 
     dest("misc");
     sel(

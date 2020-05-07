@@ -1,5 +1,5 @@
 
-transform(toSmogonAlias, () => {
+transform(toSmogonSpriteAlias, () => {
     dest("forumsprites");
     sel(
         "build/gen6-minisprites-padded/canonical/pokemon",
