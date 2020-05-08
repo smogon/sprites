@@ -57,31 +57,33 @@ transform(toPSSpriteID, () => {
     sel(
         "src/cap/sprites/gen5/back"
     );
+
+    for (const canon of ["canonical", "cap"]) {
+        dest("afd");
+        sel(
+            `src/afd/sprites-${canon}/front`,
+            `src/afd/sprites-${canon}/front-cosmetic`,
+        )
+
+        dest("afd-shiny");
+        sel(
+            `src/afd/sprites-${canon}/front-shiny`,
+            `src/afd/sprites-${canon}/front-shiny-cosmetic`,
+        )
+
+        dest("afd-back");
+        sel(
+            `src/afd/sprites-${canon}/back`,
+            `src/afd/sprites-${canon}/back-cosmetic`,
+        )
+
+        dest("afd-back-shiny");
+        sel(
+            `src/afd/sprites-${canon}/back-shiny`,
+            `src/afd/sprites-${canon}/back-shiny-cosmetic`,
+        );
+    }
     
-    dest("afd");
-    sel(
-        "src/afd/sprites/front",
-        "src/afd/sprites/front-cosmetic",
-    )
-
-    dest("afd-shiny");
-    sel(
-        "src/afd/sprites/front-shiny",
-        "src/afd/sprites/front-shiny-cosmetic",
-    )
-
-    dest("afd-back");
-    sel(
-        "src/afd/sprites/back",
-        "src/afd/sprites/back-cosmetic",
-    )
-
-    dest("afd-back-shiny");
-    sel(
-        "src/afd/sprites/back-shiny",
-        "src/afd/sprites/back-shiny-cosmetic",
-    );
-
     dest("dex");
     sel(
         "build/padded-dex/canonical/front",
@@ -107,10 +109,10 @@ transform(toPSID, () => {
     sel("src/canonical/models/back-misc/Substitute.gif");
 
     dest("afd");
-    sel("src/afd/sprites/front-misc/Substitute.png");
+    sel("src/afd/sprites-canonical/front-misc/Substitute.png");
     
     dest("afd-back");
-    sel("src/afd/sprites/back-misc/Substitute.png");
+    sel("src/afd/sprites-canonical/back-misc/Substitute.png");
 
     dest("misc");
     sel(
