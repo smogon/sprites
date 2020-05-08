@@ -1,7 +1,7 @@
 
 import pathlib from 'path';
 import fs from 'fs';
-import * as util from './util.js';
+import * as spritepath from './spritepath.js';
 import debugfn from 'debug';
 import vm from 'vm';
 
@@ -39,26 +39,26 @@ function addPair(src, dst) {
 
 const ENV = {
     toPSID(dst) {
-        const parsed = util.parse(dst);
-        parsed.name = util.toPSID(parsed.data[0]);
+        const parsed = spritepath.parse(dst);
+        parsed.name = spritepath.toPSID(parsed.data[0]);
         return pathlib.format(parsed);
     },
     
     toPSSpriteID(dst) {
-        const parsed = util.parse(dst);
-        parsed.name = util.toPSSpriteID(parsed.data);
+        const parsed = spritepath.parse(dst);
+        parsed.name = spritepath.toPSSpriteID(parsed.data);
         return pathlib.format(parsed);
     },
 
     toSmogonAlias(dst) {
-        const parsed = util.parse(dst);
-        parsed.name = util.toSmogonAlias(parsed.data[0]);
+        const parsed = spritepath.parse(dst);
+        parsed.name = spritepath.toSmogonAlias(parsed.data[0]);
         return pathlib.format(parsed);
     },
 
     toSmogonSpriteAlias(dst) {
-        const parsed = util.parse(dst);
-        parsed.name = util.toSmogonSpriteAlias(parsed.data);
+        const parsed = spritepath.parse(dst);
+        parsed.name = spritepath.toSmogonSpriteAlias(parsed.data);
         return pathlib.format(parsed);
     },
     
