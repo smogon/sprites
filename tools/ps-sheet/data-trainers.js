@@ -1,4 +1,5 @@
 
+// Derived from pokemon-showdown-client/src/battle-dex-data.ts
 export default {
 	1: 'lucas',
 	2: 'dawn',
