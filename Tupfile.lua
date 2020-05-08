@@ -7,8 +7,8 @@ foreach_rule{
     command=pad{w=40, h=30},
     output="build/gen6-minisprites-padded/%{canon}/%{dir}/%b",
     dimensions={
-        canon={"canonical", "cap"},
-        dir={"asymmetrical", "custom", "misc", "pokemon"}
+        canon={"canonical", "noncanonical", "cap"},
+        dir={"asymmetrical", "misc", "pokemon"}
     }
 }
 
@@ -16,7 +16,9 @@ foreach_rule{
 
 rule{
     input={"build/gen6-minisprites-padded/canonical/pokemon/*",
-           "build/gen6-minisprites-padded/cap/pokemon/*"},
+           "build/gen6-minisprites-padded/cap/pokemon/*",
+           "build/gen6-minisprites-padded/noncanonical/pokemon/*",
+    },
     command="node tools/sprites/ps.js build/gen6-minisprites-padded/canonical/pokemon/ build/gen6-minisprites-padded/cap/pokemon/ --output-image build/ps/pokemonicons-sheet.png --output-metadata build/ps/pokemonicons.json",
     output={"build/ps/pokemonicons-sheet.png",
             "build/ps/pokemonicons.json"}
