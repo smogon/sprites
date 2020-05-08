@@ -39,30 +39,26 @@ function addPair(src, dst) {
 
 const ENV = {
     toPSID(dst) {
-        const parsed = pathlib.parse(dst);
-        delete parsed.base;
-        parsed.name = util.toPSID(util.decode(parsed.name));
+        const parsed = util.parse(dst);
+        parsed.name = util.toPSID(parsed.data[0]);
         return pathlib.format(parsed);
     },
     
     toPSSpriteID(dst) {
-        const parsed = pathlib.parse(dst);
-        delete parsed.base;
-        parsed.name = util.toPSSpriteID(util.decode(parsed.name));
+        const parsed = util.parse(dst);
+        parsed.name = util.toPSSpriteID(parsed.data);
         return pathlib.format(parsed);
     },
 
     toSmogonAlias(dst) {
-        const parsed = pathlib.parse(dst);
-        delete parsed.base;
-        parsed.name = util.toSmogonAlias(util.decode(parsed.name));
+        const parsed = util.parse(dst);
+        parsed.name = util.toSmogonAlias(parsed.data[0]);
         return pathlib.format(parsed);
     },
 
     toSmogonSpriteAlias(dst) {
-        const parsed = pathlib.parse(dst);
-        delete parsed.base;
-        parsed.name = util.toSmogonSpriteAlias(util.decode(parsed.name));
+        const parsed = util.parse(dst);
+        parsed.name = util.toSmogonSpriteAlias(parsed.data);
         return pathlib.format(parsed);
     },
     
