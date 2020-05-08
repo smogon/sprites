@@ -22,6 +22,16 @@ rule{
             "build/ps/pokemonicons.json"}
 }
 
+rule{
+    display="ps trainers sheet",
+    input={},
+    command={
+        "node tools/ps-trainers-sheet src/canonical/trainers %o",
+        compresspng{config="SPRITESHEET"}
+    },
+    output={"build/ps/trainers-sheet.png"}
+}
+
 -- PS pokeball icons
 
 local balls = {
