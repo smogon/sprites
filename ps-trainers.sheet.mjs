@@ -1,6 +1,11 @@
 
+import fs from 'fs';
+import path from 'path';
+import {fileURLToPath} from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
 // Derived from pokemon-showdown-client/src/battle-dex-data.ts
-export default {
+const BattleAvatarNumbers = {
 	1: 'lucas',
 	2: 'dawn',
 	3: 'youngster-gen4',
@@ -297,3 +302,17 @@ export default {
     // Not in the existing trainer sheet...
 	// 294: 'ash',
 }
+
+
+const entries = [];
+
+for (const [num, id] of Object.entries(BattleAvatarNumbers)) {
+    entries[num - 1] = path.join(__dirname, "src/canonical/trainers", id + ".png");
+}
+
+export default {
+    width: 80,
+    height: 80,
+    tile: 16,
+    entries
+};

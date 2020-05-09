@@ -26,9 +26,9 @@ rule{
 
 rule{
     display="ps trainers sheet",
-    input={},
+    input={"ps-trainers.sheet.mjs"},
     command={
-        "node tools/ps-sheet trainers src/canonical/trainers %o",
+        "node tools/sheet %f %o",
         compresspng{config="SPRITESHEET"}
     },
     output={"build/ps/trainers-sheet.png"}
