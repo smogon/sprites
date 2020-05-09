@@ -34,6 +34,16 @@ rule{
     output={"build/ps/trainers-sheet.png"}
 }
 
+rule{
+    display="ps items sheet",
+    input={"ps-items.sheet.mjs"},
+    command={
+        "node tools/sheet %f %o",
+        compresspng{config="SPRITESHEET"}
+    },
+    output={"build/ps/itemicons-sheet.png"}
+}
+
 -- PS pokeball icons
 
 local balls = {

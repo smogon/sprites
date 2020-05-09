@@ -146,3 +146,4 @@ sel(
 dest(".");
 sel("build/ps/pokemonicons-pokeball-sheet.png");
 sel("build/ps/trainers-sheet.png");
+sel("build/ps/itemicons-sheet.png");
