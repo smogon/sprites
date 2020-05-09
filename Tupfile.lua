@@ -15,13 +15,13 @@ foreach_rule{
 -- PS spritesheet
 
 rule{
-    input={"build/gen6-minisprites-padded/canonical/pokemon/*",
-           "build/gen6-minisprites-padded/cap/pokemon/*",
-           "build/gen6-minisprites-padded/noncanonical/pokemon/*",
+    display="ps pokemon sheet",
+    input={"ps-pokemon.sheet.mjs"},
+    command={
+        "node tools/sheet %f %o",
+        compresspng{config="SPRITESHEET"}
     },
-    command="node tools/sprites/ps.js build/gen6-minisprites-padded/canonical/pokemon/ build/gen6-minisprites-padded/cap/pokemon/ --output-image build/ps/pokemonicons-sheet.png --output-metadata build/ps/pokemonicons.json",
-    output={"build/ps/pokemonicons-sheet.png",
-            "build/ps/pokemonicons.json"}
+    output={"build/ps/pokemonicons-sheet.png"}
 }
 
 rule{
