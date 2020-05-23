@@ -65,27 +65,33 @@ rule{
 
 -- Smogdex social images
 
-foreach_rule{
-    display="fbsprite %f",
-    input={"src/cap/models/front/*", "src/cap/sprites/gen5/front/*", "src/canonical/models/front/*"},
-    key="%B",
-    command={
-        "tools/fbsprite.sh %f %o",
-        compresspng{config="MODELS"}
-    },
-    output="build/smogon/fbsprites/xy/%B.png"
-}
+for file in iglob("newsrc/models/*") do
+    if tup.base(file):find("b") or tup.base(file):find("s") then
+        goto continue
+    end
+    
+    rule{
+        display="fbsprite %f",
+        input={file},
+        command={
+            "tools/fbsprite.sh %f %o",
+            compresspng{config="MODELS"}
+        },
+        output="build/smogon/fbsprites/xy/%B.png"
+    }
 
-foreach_rule{
-    display="twittersprite %f",
-    input={"src/cap/models/front/*", "src/cap/sprites/gen5/front/*", "src/canonical/models/front/*"},
-    key="%B",
-    command={
-        "tools/twittersprite.sh %f %o",
-        compresspng{config="MODELS"}
-    },
-    output="build/smogon/twittersprites/xy/%B.png"
-}
+    rule{
+        display="twittersprite %f",
+        input={file},
+        command={
+            "tools/twittersprite.sh %f %o",
+            compresspng{config="MODELS"}
+        },
+        output="build/smogon/twittersprites/xy/%B.png"
+    }
+
+    ::continue::
+end
 
 
 -- Trainers
