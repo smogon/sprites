@@ -12,7 +12,7 @@
 --     }
 -- }
 
--- TODO: misc, noncanonical
+-- TODO: misc
 foreach_rule{
     display="pad g6 minisprite %f",
     input="newsrc/minisprites/pokemon/gen6/*.png",
