@@ -24,15 +24,16 @@ rule{
     output={"build/ps/pokemonicons-sheet.png"}
 }
 
-rule{
-    display="ps trainers sheet",
-    input={"ps-trainers.sheet.mjs"},
-    command={
-        "node tools/sheet %f %o",
-        compresspng{config="SPRITESHEET"}
-    },
-    output={"build/ps/trainers-sheet.png"}
-}
+-- TODO: reenable when trainers are moved
+-- rule{
+--     display="ps trainers sheet",
+--     input={"ps-trainers.sheet.mjs"},
+--     command={
+--         "node tools/sheet %f %o",
+--         compresspng{config="SPRITESHEET"}
+--     },
+--     output={"build/ps/trainers-sheet.png"}
+-- }
 
 rule{
     display="ps items sheet",
@@ -89,15 +90,16 @@ foreach_rule{
 
 -- Trainers
 
-foreach_rule{
-    display="pad trainer %f",
-    input={"src/canonical/trainers/*"},
-    command={
-        pad{w=80, h=80},
-        compresspng{config="TRAINERS"}
-    },
-    output={"build/padded-trainers/canonical/%b"}
-}
+-- TODO: reenable when trainers are moved
+-- foreach_rule{
+--     display="pad trainer %f",
+--     input={"src/canonical/trainers/*"},
+--     command={
+--         pad{w=80, h=80},
+--         compresspng{config="TRAINERS"}
+--     },
+--     output={"build/padded-trainers/canonical/%b"}
+-- }
 
 -- Padded Dex
 

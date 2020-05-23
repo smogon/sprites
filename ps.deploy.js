@@ -122,8 +122,9 @@ transform(toPSID, () => {
     );
 });
 
-dest("trainers");
-sel("build/padded-trainers/canonical");
+// TODO: reenable when trainers are moved
+// dest("trainers");
+// sel("build/padded-trainers/canonical");
 
 function fixTypes(dst) {
     return dst.replace("Unknown", "???");
@@ -145,5 +146,6 @@ sel(
 
 dest(".");
 sel("build/ps/pokemonicons-pokeball-sheet.png");
-sel("build/ps/trainers-sheet.png");
+// TODO
+//sel("build/ps/trainers-sheet.png");
 sel("build/ps/itemicons-sheet.png");
