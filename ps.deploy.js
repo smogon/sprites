@@ -1,52 +1,52 @@
 
 transform(toPSSpriteID, () => {
-    dest("ani");
-    sel(
-        "src/canonical/models/front",
-        "src/canonical/models/front-cosmetic",
-    );
-    ignore(() => {
-        sel(
-            "src/cap/models/front",
-            "src/cap/sprites/gen5/front",
-        );
-    });
+    // dest("ani");
+    // sel(
+    //     "src/canonical/models/front",
+    //     "src/canonical/models/front-cosmetic",
+    // );
+    // ignore(() => {
+    //     sel(
+    //         "src/cap/models/front",
+    //         "src/cap/sprites/gen5/front",
+    //     );
+    // });
     
-    dest("ani-back");
-    sel(
-        "src/canonical/models/back",
-        "src/canonical/models/back-cosmetic",
-    );
-    ignore(() => {
-        sel(
-            "src/cap/models/back",
-            "src/cap/sprites/gen5/back",
-        );
-    });
+    // dest("ani-back");
+    // sel(
+    //     "src/canonical/models/back",
+    //     "src/canonical/models/back-cosmetic",
+    // );
+    // ignore(() => {
+    //     sel(
+    //         "src/cap/models/back",
+    //         "src/cap/sprites/gen5/back",
+    //     );
+    // });
     
-    dest("ani-shiny");
-    sel(
-        "src/canonical/models/front-shiny",
-        "src/canonical/models/front-shiny-cosmetic",
-    );
-    ignore(() => {
-        sel(
-            "src/cap/models/front-shiny",
-            "src/cap/sprites/gen5/front-shiny",
-        );
-    });
+    // dest("ani-shiny");
+    // sel(
+    //     "src/canonical/models/front-shiny",
+    //     "src/canonical/models/front-shiny-cosmetic",
+    // );
+    // ignore(() => {
+    //     sel(
+    //         "src/cap/models/front-shiny",
+    //         "src/cap/sprites/gen5/front-shiny",
+    //     );
+    // });
     
-    dest("ani-back-shiny");
-    sel(
-        "src/canonical/models/back-shiny",
-        "src/canonical/models/back-shiny-cosmetic",
-    );
-    ignore(() => {
-        sel(
-            "src/cap/models/back-shiny",
-            "src/cap/sprites/gen5/back-shiny"
-        );
-    });
+    // dest("ani-back-shiny");
+    // sel(
+    //     "src/canonical/models/back-shiny",
+    //     "src/canonical/models/back-shiny-cosmetic",
+    // );
+    // ignore(() => {
+    //     sel(
+    //         "src/cap/models/back-shiny",
+    //         "src/cap/sprites/gen5/back-shiny"
+    //     );
+    // });
 
     dest("gen5ani");
     sel(
