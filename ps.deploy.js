@@ -58,31 +58,31 @@ transform(toPSSpriteID, () => {
         "src/cap/sprites/gen5/back"
     );
 
-    for (const canon of ["canonical", "cap"]) {
-        dest("afd");
-        sel(
-            `src/afd/sprites-${canon}/front`,
-            `src/afd/sprites-${canon}/front-cosmetic`,
-        )
+    // for (const canon of ["canonical", "cap"]) {
+    //     dest("afd");
+    //     sel(
+    //         `src/afd/sprites-${canon}/front`,
+    //         `src/afd/sprites-${canon}/front-cosmetic`,
+    //     )
 
-        dest("afd-shiny");
-        sel(
-            `src/afd/sprites-${canon}/front-shiny`,
-            `src/afd/sprites-${canon}/front-shiny-cosmetic`,
-        )
+    //     dest("afd-shiny");
+    //     sel(
+    //         `src/afd/sprites-${canon}/front-shiny`,
+    //         `src/afd/sprites-${canon}/front-shiny-cosmetic`,
+    //     )
 
-        dest("afd-back");
-        sel(
-            `src/afd/sprites-${canon}/back`,
-            `src/afd/sprites-${canon}/back-cosmetic`,
-        )
+    //     dest("afd-back");
+    //     sel(
+    //         `src/afd/sprites-${canon}/back`,
+    //         `src/afd/sprites-${canon}/back-cosmetic`,
+    //     )
 
-        dest("afd-back-shiny");
-        sel(
-            `src/afd/sprites-${canon}/back-shiny`,
-            `src/afd/sprites-${canon}/back-shiny-cosmetic`,
-        );
-    }
+    //     dest("afd-back-shiny");
+    //     sel(
+    //         `src/afd/sprites-${canon}/back-shiny`,
+    //         `src/afd/sprites-${canon}/back-shiny-cosmetic`,
+    //     );
+    // }
 
     // TODO
     // dest("dex");
