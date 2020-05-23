@@ -103,37 +103,37 @@ foreach_rule{
 
 -- Padded Dex
 
-foreach_rule{
-    display="pad dex %f",
-    input="src/%{canon}/dex/%{dir}/*",
-    command={
-        pad{w=120, h=120},
-        compresspng{config="DEX"}
-    },
-    output="build/padded-dex/%{canon}/%{dir}/%b",
-    dimensions={
-        canon={"canonical", "cap"},
-        dir={"front", "front-cosmetic", "front-shiny", "front-shiny-cosmetic"}
-    }
-}
+-- foreach_rule{
+--     display="pad dex %f",
+--     input="src/%{canon}/dex/%{dir}/*",
+--     command={
+--         pad{w=120, h=120},
+--         compresspng{config="DEX"}
+--     },
+--     output="build/padded-dex/%{canon}/%{dir}/%b",
+--     dimensions={
+--         canon={"canonical", "cap"},
+--         dir={"front", "front-cosmetic", "front-shiny", "front-shiny-cosmetic"}
+--     }
+-- }
 
 -- Build missing CAP dex
 
-foreach_rule{
-    input={"src/cap/sprites/gen5/%{folder}/*.gif", "src/cap/models/%{folder}/*.gif"},
-    display="missing dex cap %B -> %{folder}/%f",
-    command={
-        "convert %f'[0]' -trim %o",
-        "mogrify -background transparent -gravity center -extent 120x120 %o",
-        compresspng{config="DEX"}
-    },
-    key="%B",
-    filter=function()
-        return not glob_matches("src/cap/dex/%{folder}/%B.png")
-    end,
-    output="build/padded-dex/cap/%{folder}/%B.png",
-    dimensions={
-        folder={"front", "front-shiny", "front-cosmetic", "front-shiny-cosmetic"}
-    }
-}
+-- foreach_rule{
+--     input={"src/cap/sprites/gen5/%{folder}/*.gif", "src/cap/models/%{folder}/*.gif"},
+--     display="missing dex cap %B -> %{folder}/%f",
+--     command={
+--         "convert %f'[0]' -trim %o",
+--         "mogrify -background transparent -gravity center -extent 120x120 %o",
+--         compresspng{config="DEX"}
+--     },
+--     key="%B",
+--     filter=function()
+--         return not glob_matches("src/cap/dex/%{folder}/%B.png")
+--     end,
+--     output="build/padded-dex/cap/%{folder}/%B.png",
+--     dimensions={
+--         folder={"front", "front-shiny", "front-cosmetic", "front-shiny-cosmetic"}
+--     }
+-- }
 
