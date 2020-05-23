@@ -103,19 +103,15 @@ foreach_rule{
 
 -- Padded Dex
 
--- foreach_rule{
---     display="pad dex %f",
---     input="src/%{canon}/dex/%{dir}/*",
---     command={
---         pad{w=120, h=120},
---         compresspng{config="DEX"}
---     },
---     output="build/padded-dex/%{canon}/%{dir}/%b",
---     dimensions={
---         canon={"canonical", "cap"},
---         dir={"front", "front-cosmetic", "front-shiny", "front-shiny-cosmetic"}
---     }
--- }
+foreach_rule{
+    display="pad dex %f",
+    input="newsrc/dex/*",
+    command={
+        pad{w=120, h=120},
+        compresspng{config="DEX"}
+    },
+    output="build/padded-dex/%b",
+}
 
 -- Build missing CAP dex
 
