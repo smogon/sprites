@@ -1,28 +1,36 @@
 
 -- Generate uniform size minisprites
 
+-- foreach_rule{
+--     display="pad g6 minisprite %f",
+--     input="src/%{canon}/minisprites/gen6/%{dir}/*.png",
+--     command=pad{w=40, h=30},
+--     output="build/gen6-minisprites-padded/%{canon}/%{dir}/%b",
+--     dimensions={
+--         canon={"canonical", "noncanonical", "cap"},
+--         dir={"asymmetrical", "misc", "pokemon"}
+--     }
+-- }
+
+-- TODO: asymmetrical, misc, noncanonical
 foreach_rule{
     display="pad g6 minisprite %f",
-    input="src/%{canon}/minisprites/gen6/%{dir}/*.png",
+    input="newsrc/minisprites/pokemon/gen6/*.png",
     command=pad{w=40, h=30},
-    output="build/gen6-minisprites-padded/%{canon}/%{dir}/%b",
-    dimensions={
-        canon={"canonical", "noncanonical", "cap"},
-        dir={"asymmetrical", "misc", "pokemon"}
-    }
+    output="build/gen6-minisprites-padded/%b"
 }
 
 -- PS spritesheet
 
-rule{
-    display="ps pokemon sheet",
-    input={"ps-pokemon.sheet.mjs"},
-    command={
-        "node tools/sheet %f %o",
-        compresspng{config="SPRITESHEET"}
-    },
-    output={"build/ps/pokemonicons-sheet.png"}
-}
+-- rule{
+--     display="ps pokemon sheet",
+--     input={"ps-pokemon.sheet.mjs"},
+--     command={
+--         "node tools/sheet %f %o",
+--         compresspng{config="SPRITESHEET"}
+--     },
+--     output={"build/ps/pokemonicons-sheet.png"}
+-- }
 
 -- TODO: reenable when trainers are moved
 -- rule{
