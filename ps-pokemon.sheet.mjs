@@ -132,6 +132,8 @@ const BattlePokemonIconIndexes = {
 	furfroustar: 900 + 114,
 	meowsticf: 900 + 115,
 	aegislashblade: 900 + 116,
+    // Added
+	xerneasneutral: 900 + 117,
 	hoopaunbound: 900 + 118,
 	rattataalola: 900 + 119,
 	raticatealola: 900 + 120,
