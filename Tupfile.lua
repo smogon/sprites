@@ -129,21 +129,18 @@ foreach_rule{
 
 -- Build missing CAP dex
 
--- foreach_rule{
---     input={"src/cap/sprites/gen5/%{folder}/*.gif", "src/cap/models/%{folder}/*.gif"},
---     display="missing dex cap %B -> %{folder}/%f",
---     command={
---         "convert %f'[0]' -trim %o",
---         "mogrify -background transparent -gravity center -extent 120x120 %o",
---         compresspng{config="DEX"}
---     },
---     key="%B",
---     filter=function()
---         return not glob_matches("src/cap/dex/%{folder}/%B.png")
---     end,
---     output="build/padded-dex/cap/%{folder}/%B.png",
---     dimensions={
---         folder={"front", "front-shiny", "front-cosmetic", "front-shiny-cosmetic"}
---     }
--- }
+foreach_rule{
+    input={"newsrc/sprites/gen5/*.gif", "newsrc/models/*.gif"},
+    display="missing dex %B",
+    command={
+        "convert %f'[0]' -trim %o",
+        "mogrify -background transparent -gravity center -resize '120x120>' -extent 120x120 %o",
+        compresspng{config="DEX"}
+    },
+    key="%B",
+    filter=function()
+        return not ((expand("%B")):find("b") or (expand("%B")):find("s")) and not glob_matches("newsrc/dex/%B.png")
+    end,
+    output="build/padded-dex/%B-missing.png",
+}
 
