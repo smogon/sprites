@@ -103,17 +103,17 @@ transform(toPSSpriteID, () => {
 });
 
 transform(toPSID, () => {
-    dest("ani");
-    sel("src/canonical/models/front-misc/Substitute.gif");
+    // dest("ani");
+    // sel("src/canonical/models/front-misc/Substitute.gif");
 
-    dest("ani-back");
-    sel("src/canonical/models/back-misc/Substitute.gif");
+    // dest("ani-back");
+    // sel("src/canonical/models/back-misc/Substitute.gif");
 
-    dest("afd");
-    sel("src/afd/sprites-canonical/front-misc/Substitute.png");
+    // dest("afd");
+    // sel("src/afd/sprites-canonical/front-misc/Substitute.png");
     
-    dest("afd-back");
-    sel("src/afd/sprites-canonical/back-misc/Substitute.png");
+    // dest("afd-back");
+    // sel("src/afd/sprites-canonical/back-misc/Substitute.png");
 
     dest("misc");
     sel(
