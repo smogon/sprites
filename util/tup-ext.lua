@@ -95,68 +95,27 @@ local function cspec2cmd(cmdSpec)
         end
         cmd = cmd .. newcmd
     end
+    -- Abstract over tup's arcane display override
+    if cmdSpec.display then
+        cmd = rep{"^ ${display}^ ${cmd}", display=cmdSpec.display, cmd=cmd}
+    end
     return cmd
 end
 
--- Abstract over tup's arcane display override
-local function display_cmd(display, cmd)
-    if display == nil then
-        return cmd
-    else
-        return rep{"^ ${display}^ ${cmd}", display=display, cmd=cmd}
-    end
-end
-
-local function do_rule_frame(opts, foreach)
-    local cspec = opts.command
-    local cmd = display_cmd(opts.display, cspec2cmd(cspec))
+local function do_rule(input, cspec, output, foreach)
+    local cmd = cspec2cmd(cspec)
     if foreach then
-        local input = glob(opts.input, opts)
-        for i in iter(input) do
-            local frame = {}
-            push_frame(frame)
-            frame.input = i
-            local output = {}
-            for v in iter(astable(opts.output)) do
-                table.insert(output, expand(v))
-            end
-            frame.output = tostring(output)
-            tup.rule(i, expand(cmd), output)
-            pop_frame()
-        end
+        tup.foreach_rule(input, cmd, output)
     else
-        local frame = {}
-        push_frame(frame)
-        local input = glob(opts.input)
-        frame.input = tostring(input)
-        local output = {}
-        for v in iter(astable(opts.output)) do
-            table.insert(output, expand(v))
-        end
-        frame.output = tostring(output)
-        tup.rule(input, expand(cmd), output)
-        pop_frame()
+        tup.rule(input, cmd, output)
     end
 end
 
-local function do_rule(opts, foreach)
-    local dimensions = opts.dimensions or {}
-    local ret = {}
-    iter_rep(dimensions,
-             function()
-                 for v in iter{do_rule_frame(opts, foreach, ret)} do
-                     table.insert(ret, v)
-                 end
-             end
-    )
-    return ret
+function rule(input, cmd, output)
+    return do_rule(input, cmd, output, false)
 end
 
-function rule(opts)
-    return do_rule(opts, false)
-end
-
-function foreach_rule(opts)
-    return do_rule(opts, true)
+function foreach_rule(input, cmd, output)
+    return do_rule(input, cmd, output, true)
 end
 
