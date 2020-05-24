@@ -870,14 +870,14 @@
     "2656": {
         "num": 83,
         "formeNum": 0,
-        "base": "Farfetch'd",
+        "base": "Farfetch’d",
         "forme": "",
         "sid": 2656
     },
     "2657": {
         "num": 83,
         "formeNum": 1,
-        "base": "Farfetch'd",
+        "base": "Farfetch’d",
         "forme": "Galar",
         "sid": 2657
     },
@@ -8143,7 +8143,7 @@
     "27680": {
         "num": 865,
         "formeNum": 0,
-        "base": "Sirfetch'd",
+        "base": "Sirfetch’d",
         "forme": "",
         "sid": 27680
     },
