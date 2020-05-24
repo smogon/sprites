@@ -4,22 +4,9 @@ import path from 'path';
 import {fileURLToPath} from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// From tools/deploy/spritepath, factor this out into separate library eventually?
-function decodeComponent(s) {
-    return s
-        .replace(/([^_])_([^_])/g, "$1 $2")
-        .replace(/~/g, "-")
-        // Must occur last, or escaped ~/_ will be transformed
-        .replace(/__(....)/g, (_, m) => String.fromCharCode(parseInt(m, 16)));
-}
-
-function decode(s) {
-    return s.split("-").map(c => decodeComponent(c));
-}
-
-function parsePokemonFilename([num, formeNum, base, forme=null]) {
-    return {num: parseInt(num, 10), formeNum: parseInt(formeNum, 10), base, forme};
-}
+const srcDir = path.join(__dirname, "newsrc");
+const json = path.join(srcDir, "species.json");
+const spritesDir = path.join(srcDir, "minisprites/pokemon/gen6");
 
 function toPSID(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -491,57 +478,56 @@ const BattlePokemonIconIndexesLeft = {
 	blacephalon: 1188 + 105,
 };
 
-const SEARCH = [
-    "src/canonical/minisprites/gen6/pokemon",
-    "src/canonical/minisprites/gen6/misc",
-    "src/noncanonical/minisprites/gen6/pokemon",
-    "src/cap/minisprites/gen6/pokemon",
-    "src/canonical/minisprites/gen6/asymmetrical",
-];
+const table = JSON.parse(fs.readFileSync(json, 'utf8'));
 
 const entries = [];
 
-for (const dir of SEARCH) {
-    for (const name of fs.readdirSync(dir)) {
-        let index;
-        if (dir.includes("/misc")) {
-            const id = toPSID(decodeComponent(path.parse(name).name));
-            index = BattlePokemonIconIndexes[id];
-            BattlePokemonIconIndexes[id] = 'found';
-        } else if (dir.includes("/asymmetrical") || dir.includes("/pokemon")) {
-            const {num, formeNum, base, forme} =
-                  parsePokemonFilename(decode(path.parse(name).name));
-            const id = toPSID(base + (forme === 'Female' ? "f" : forme ?? ""));
-            if (dir.includes("/pokemon")) {
-                index = BattlePokemonIconIndexes[id];
-                BattlePokemonIconIndexes[id] = 'found';
-            } else {
-                index = BattlePokemonIconIndexesLeft[id];
-                BattlePokemonIconIndexesLeft[id] = 'found';
-            }
+for (const name of fs.readdirSync(spritesDir)) {
+    // if (dir.includes("/misc")) {
+    //     const id = toPSID(decodeComponent(path.parse(name).name));
+    //     index = BattlePokemonIconIndexes[id];
+    //     BattlePokemonIconIndexes[id] = 'found';
+    // } else
 
-            if (!index) {
-                index = num;
-            }
-        } else {
-            throw new Error(`unknown minisprite dir: ${dir}`);
-        }
-         
-        entries[index] = path.join(dir, name);
+    const parsed = path.parse(name);
+    const m = parsed.name.match(/^(\d+)([a-z]*)(-\w+)?$/);
+    if (!m) {
+        throw new Error(`can't parse ${name}`);
     }
+    const [, sid, flags, vendor] = m;
+
+    const entry = table[sid];
+
+    let id = toPSID(entry.base + entry.forme);
+    if (flags.includes("f")) id += 'f';
+    if (flags.includes("g")) id += 'gmax';
+    
+    let index;
+    if (flags.includes("a")) {
+        index = BattlePokemonIconIndexesLeft[id];
+        BattlePokemonIconIndexesLeft[id] = 'found';
+    } else {
+        index = BattlePokemonIconIndexes[id];
+        BattlePokemonIconIndexes[id] = 'found';
+    }
+    if (!index) {
+        index = entry.num;
+    }
+    
+    entries[index] = path.join(spritesDir, name);
 }
 
-for (const [id, num] of Object.entries(BattlePokemonIconIndexes)) {
-    if (num !== 'found') {
-        throw new Error(`didn't find ${id}`)
-    }
-}
+// for (const [id, num] of Object.entries(BattlePokemonIconIndexes)) {
+//     if (num !== 'found') {
+//         throw new Error(`didn't find ${id}`);
+//     }
+// }
 
-for (const [id, num] of Object.entries(BattlePokemonIconIndexesLeft)) {
-    if (num !== 'found') {
-        throw new Error(`didn't find left ${id}`)
-    }
-}
+// for (const [id, num] of Object.entries(BattlePokemonIconIndexesLeft)) {
+//     if (num !== 'found') {
+//         throw new Error(`didn't find left ${id}`);
+//     }
+// }
 
 for (let i = 0; i < entries.length; i++) {
     if (entries[i] === undefined)

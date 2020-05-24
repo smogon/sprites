@@ -22,15 +22,15 @@ foreach_rule{
 
 -- PS spritesheet
 
--- rule{
---     display="ps pokemon sheet",
---     input={"ps-pokemon.sheet.mjs"},
---     command={
---         "node tools/sheet %f %o",
---         compresspng{config="SPRITESHEET"}
---     },
---     output={"build/ps/pokemonicons-sheet.png"}
--- }
+rule{
+    display="ps pokemon sheet",
+    input={"ps-pokemon.sheet.mjs"},
+    command={
+        "node tools/sheet %f %o",
+        compresspng{config="SPRITESHEET"}
+    },
+    output={"build/ps/pokemonicons-sheet.png"}
+}
 
 -- TODO: reenable when trainers are moved
 -- rule{
