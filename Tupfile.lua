@@ -1,18 +1,6 @@
 
 -- Generate uniform size minisprites
 
--- foreach_rule{
---     display="pad g6 minisprite %f",
---     input="src/%{canon}/minisprites/gen6/%{dir}/*.png",
---     command=pad{w=40, h=30},
---     output="build/gen6-minisprites-padded/%{canon}/%{dir}/%b",
---     dimensions={
---         canon={"canonical", "noncanonical", "cap"},
---         dir={"asymmetrical", "misc", "pokemon"}
---     }
--- }
-
--- TODO: misc
 foreach_rule{
     display="pad g6 minisprite %f",
     input="newsrc/minisprites/pokemon/gen6/*.png",
