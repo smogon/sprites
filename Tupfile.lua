@@ -63,33 +63,27 @@ rule(
 
 -- Smogdex social images
 
-for file in iglob("newsrc/models/*") do
-    if tup.base(file):find("-b") or tup.base(file):find("-s") then
-        goto continue
-    end
-    
-    rule(
-        file,
-        {
-            display="fbsprite %f",
-            "tools/fbsprite.sh %f %o",
-            compresspng{config="MODELS"}
-        },
-        "build/smogon/fbsprites/xy/%B.png"
-    )
+local input = glob("newsrc/models/*", {filter=function() return not (expand("%B"):find("-b") or expand("%B"):find("-s")) end})
 
-    rule(
-        file,
-        {
-            display="twittersprite %f",
-            "tools/twittersprite.sh %f %o",
-            compresspng{config="MODELS"}
-        },
-        "build/smogon/twittersprites/xy/%B.png"
-    )
+foreach_rule(
+    input,
+    {
+        display="fbsprite %f",
+        "tools/fbsprite.sh %f %o",
+        compresspng{config="MODELS"}
+    },
+    "build/smogon/fbsprites/xy/%B.png"
+)
 
-    ::continue::
-end
+foreach_rule(
+    input,
+    {
+        display="twittersprite %f",
+        "tools/twittersprite.sh %f %o",
+        compresspng{config="MODELS"}
+    },
+    "build/smogon/twittersprites/xy/%B.png"
+)
 
 
 -- Trainers
