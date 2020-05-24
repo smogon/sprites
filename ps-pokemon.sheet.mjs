@@ -485,35 +485,39 @@ const table = JSON.parse(fs.readFileSync(json, 'utf8'));
 const entries = [];
 
 for (const name of fs.readdirSync(spritesDir)) {
-    // if (dir.includes("/misc")) {
-    //     const id = toPSID(decodeComponent(path.parse(name).name));
-    //     index = BattlePokemonIconIndexes[id];
-    //     BattlePokemonIconIndexes[id] = 'found';
-    // } else
-
     const parsed = path.parse(name);
-    const m = parsed.name.match(/^(\d+)([a-z]*)(-\w+)?$/);
+    const m = parsed.name.match(/^([^-]+)(.*)$/);
     if (!m) {
         throw new Error(`can't parse ${name}`);
     }
-    const [, sid, flags, vendor] = m;
+    const [, sid, flagstr] = m;
 
+    const flags = new Map;
+    for (let [, flag, data] of flagstr.matchAll(/-([a-z])([^-]*)/g)) {
+        flags.set(flag, data);
+    }
+    
     const entry = table[sid];
-
-    let id = toPSID(entry.base + entry.forme);
-    if (flags.includes("f")) id += 'f';
-    if (flags.includes("g")) id += 'gmax';
+    let id = toPSID(entry ? entry.base + entry.forme : sid);
+    
+    if (flags.has("f")) id += 'f';
+    if (flags.has("g")) id += 'gmax';
     
     let index;
-    if (flags.includes("a")) {
+    if (flags.has("a")) {
         index = BattlePokemonIconIndexesLeft[id];
         BattlePokemonIconIndexesLeft[id] = 'found';
     } else {
         index = BattlePokemonIconIndexes[id];
         BattlePokemonIconIndexes[id] = 'found';
     }
-    if (!index) {
-        index = entry.num;
+    
+    if (index === undefined) {
+        if (entry) {
+            index = entry.num;
+        } else {
+            throw new Error(`can't find ${name}`)
+        }
     }
     
     entries[index] = path.join(spritesDir, name);
@@ -525,11 +529,11 @@ for (const name of fs.readdirSync(spritesDir)) {
 //     }
 // }
 
-// for (const [id, num] of Object.entries(BattlePokemonIconIndexesLeft)) {
-//     if (num !== 'found') {
-//         throw new Error(`didn't find left ${id}`);
-//     }
-// }
+for (const [id, num] of Object.entries(BattlePokemonIconIndexesLeft)) {
+    if (num !== 'found') {
+        throw new Error(`didn't find left ${id}`);
+    }
+}
 
 for (let i = 0; i < entries.length; i++) {
     if (entries[i] === undefined)

@@ -74,7 +74,7 @@ rule{
 -- Smogdex social images
 
 for file in iglob("newsrc/models/*") do
-    if tup.base(file):find("b") or tup.base(file):find("s") then
+    if tup.base(file):find("-b") or tup.base(file):find("-s") then
         goto continue
     end
     
@@ -139,7 +139,7 @@ foreach_rule{
     },
     key="%B",
     filter=function()
-        return not ((expand("%B")):find("b") or (expand("%B")):find("s")) and not glob_matches("newsrc/dex/%B.png")
+        return not ((expand("%B")):find("-b") or (expand("%B")):find("-s")) and not glob_matches("newsrc/dex/%B.png")
     end,
     output="build/padded-dex/%B-missing.png",
 }
