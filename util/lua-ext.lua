@@ -42,6 +42,21 @@ function trim(s)
     return s:gsub("^%s*(.-)%s*$", "%1")
 end
 
+function rep(args)
+    local str = args[1]
+    local vars = args
+    local function fn(var)
+        local v = vars[var]
+        if v == nil then
+            error("unknown substitution: " .. var)
+        end
+        return v
+    end
+    -- Note: not equivalent to return str:gsub(...) due to multiple return values!
+    str = str:gsub("${(%a+)}", fn)
+    return str
+end
+
 function table_keys(t)
     local result = {}
     for k, v in pairs(t) do

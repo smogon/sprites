@@ -1,7 +1,6 @@
 
 tup.include("util/strict.lua")
 tup.include("util/lua-ext.lua")
-tup.include("util/interpolation.lua")
 tup.include("util/tup-ext.lua")
 
 ROOTDIR = tup.getcwd()
