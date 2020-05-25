@@ -18,14 +18,11 @@ end
 --
 
 -- A glob pattern is either an interpolated string, or a table of glob patterns
---
--- A normalized glob pattern is a table of strings, with interpolation resolved.
 -- globpat_normalize("foo/*") --> {"foo/*"}
 -- globpat_normalize({"foo/*"}) --> {"foo/*"}
--- globpat_normalize({"foo/*", {"{bar}/*"}}) --> {"foo/*", "baz_value/*"}
 local function globpat_normalize(pat)
     if type(pat) == "string" then
-        return {expand(pat)}
+        return {pat}
     elseif type(pat) == 'table' then
         local result = {}
         for x in iter(pat) do
@@ -43,15 +40,12 @@ function glob(pat, opts)
     local key = opts and opts.key
     local seen = {}
     for pat in iter(globpat_normalize(pat)) do
-        local frame = {}
-        push_frame(frame)
         for file in iter(tup.glob(pat)) do
             -- Workaround a weird issue pre reported
             file = file:gsub("//", "/")
-            frame.input = file
             
             if key then
-                local k = expand(key)
+                local k = key(file)
                 if seen[k] then
                     goto continue
                 end
@@ -59,7 +53,7 @@ function glob(pat, opts)
             end
 
             if filter then
-                if not filter() then
+                if not filter(file) then
                     goto continue
                 end
             end
@@ -67,7 +61,6 @@ function glob(pat, opts)
             table.insert(results, file)
             ::continue::
         end
-        pop_frame()
     end
     return results
 end

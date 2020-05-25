@@ -63,7 +63,14 @@ rule(
 
 -- Smogdex social images
 
-local input = glob("newsrc/models/*", {filter=function() return not (expand("%B"):find("-b") or expand("%B"):find("-s")) end})
+local input = glob(
+    "newsrc/models/*",
+    {
+        filter=function(file)
+            return not (file:find("-b") or file:find("-s"))
+        end
+    }
+)
 
 foreach_rule(
     input,
@@ -113,9 +120,16 @@ foreach_rule(
 
 -- Build missing CAP dex
 
-local input = glob({"newsrc/sprites/gen5/*.gif", "newsrc/models/*.gif"}, {filter=function()
-        return not ((expand("%B")):find("-b") or (expand("%B")):find("-s")) and not glob_matches("newsrc/dex/%B.png")
-    end, key="%B"})
+local input = glob({"newsrc/sprites/gen5/*.gif", "newsrc/models/*.gif"}, {
+        filter=function(file)
+            return not (
+                file:find("-b") or
+                file:find("-s") or
+                glob_matches(rep{"newsrc/dex/${base}.png", base=tup.base(file)})
+            )
+        end,
+        key=tup.base
+})
 
 foreach_rule(
     input,
