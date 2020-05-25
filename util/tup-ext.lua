@@ -72,13 +72,6 @@ function glob(pat, opts)
     return results
 end
 
--- Convenience iterator so you can do
--- `for path in iglob{...}` instead of `for path in iter(glob{...})`
-function iglob(pat, opts)
-    return iter(glob(pat, opts))
-end
-
-
 function glob_matches(pat, opts)
     local matched = glob(pat, opts)
     return #matched > 0
