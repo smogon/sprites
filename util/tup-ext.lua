@@ -72,6 +72,8 @@ function glob(pat, opts)
     return results
 end
 
+
+
 function glob_matches(pat, opts)
     local matched = glob(pat, opts)
     return #matched > 0
@@ -98,9 +100,9 @@ end
 local function do_rule(input, cspec, output, foreach)
     local cmd = cspec2cmd(cspec)
     if foreach then
-        tup.foreach_rule(input, cmd, output)
+        return tup.foreach_rule(input, cmd, output)
     else
-        tup.rule(input, cmd, output)
+        return tup.rule(input, cmd, output)
     end
 end
 
