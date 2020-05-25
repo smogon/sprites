@@ -57,10 +57,3 @@ function rep(args)
     return str
 end
 
-function table_keys(t)
-    local result = {}
-    for k, v in pairs(t) do
-        table.insert(result, k)
-    end
-    return result
-end
