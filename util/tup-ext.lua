@@ -17,6 +17,16 @@ end
 -- Globs
 --
 
+-- Workaround weird bug pre reported, where final path segment has two //
+local old_tup_glob = tup.glob
+function tup.glob(pat)
+    local results = old_tup_glob(pat)
+    for i = 1, #results do
+        results[i] = results[i]:gsub("//", "/")
+    end
+    return results
+end
+
 -- A glob pattern is either an interpolated string, or a table of glob patterns
 -- globpat_normalize("foo/*") --> {"foo/*"}
 -- globpat_normalize({"foo/*"}) --> {"foo/*"}
@@ -41,9 +51,6 @@ function glob(pat, opts)
     local seen = {}
     for pat in iter(globpat_normalize(pat)) do
         for file in iter(tup.glob(pat)) do
-            -- Workaround a weird issue pre reported
-            file = file:gsub("//", "/")
-            
             if key then
                 local k = key(file)
                 if seen[k] then
