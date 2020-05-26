@@ -13,3 +13,19 @@ function spritedata(basename)
     end
     return result
 end
+
+function spriteglob(pat, flagspec)
+    local results = glob(pat)
+    local function fn(filename)
+        local sd = spritedata(tup.base(filename))
+        for k, v in pairs(flagspec) do
+            -- Make sure both are booleans
+            if not not v ~= not not sd.data[k] then
+                return false
+            end
+        end
+        return true
+    end
+    filter(results, fn)
+    return results
+end

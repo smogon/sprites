@@ -63,15 +63,7 @@ rule(
 
 -- Smogdex social images
 
-local input = {}
-for file in iter(glob{"newsrc/models/*"}) do
-    local sd = spritedata(tup.base(file))
-    if sd.data.b or sd.data.s then
-        goto continue
-    end
-    input += file
-    ::continue::
-end
+local input = spriteglob("newsrc/models/*", {b = false, s = false})
 
 foreach_rule(
     input,
@@ -128,10 +120,11 @@ for file in iter(dexOutput) do
 end
 
 local dexMissing = {}
-for file in iter(glob{"newsrc/sprites/gen5/*.gif", "newsrc/models/*.gif"}) do
+for file in iter(spriteglob(
+                     {"newsrc/sprites/gen5/*.gif", "newsrc/models/*.gif"},
+                     {b = false, s = false})) do
     local base = tup.base(file)
-    local sd = spritedata(base)
-    if sd.data.b or sd.data.s or dexSet[base] then
+    if dexSet[base] then
         goto continue
     end
     dexMissing += file
