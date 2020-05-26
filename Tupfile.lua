@@ -63,14 +63,15 @@ rule(
 
 -- Smogdex social images
 
-local input = glob(
-    "newsrc/models/*",
-    {
-        filter=function(file)
-            return not (file:find("-b") or file:find("-s"))
-        end
-    }
-)
+local input = {}
+for file in iter(glob{"newsrc/models/*"}) do
+    local base = tup.base(file)
+    if base:find("-b") or base:find("-s") then
+        goto continue
+    end
+    input += file
+    ::continue::
+end
 
 foreach_rule(
     input,
@@ -108,7 +109,7 @@ foreach_rule(
 
 -- Padded Dex
 
-foreach_rule(
+local dexOutput = foreach_rule(
     "newsrc/dex/*",
     {
         display="pad dex %f",
@@ -118,21 +119,27 @@ foreach_rule(
     "build/padded-dex/%b"
 )
 
+
 -- Build missing CAP dex
 
-local input = glob({"newsrc/sprites/gen5/*.gif", "newsrc/models/*.gif"}, {
-        filter=function(file)
-            return not (
-                file:find("-b") or
-                file:find("-s") or
-                glob_matches(rep{"newsrc/dex/${base}.png", base=tup.base(file)})
-            )
-        end,
-        key=tup.base
-})
+local dexSet = {}
+for file in iter(dexOutput) do
+    dexSet[tup.base(file)] = true
+end
+
+local dexMissing = {}
+for file in iter(glob{"newsrc/sprites/gen5/*.gif", "newsrc/models/*.gif"}) do
+    local base = tup.base(file)
+    if base:find("-b") or base:find("-s") or dexSet[base] then
+        goto continue
+    end
+    dexMissing += file
+    dexSet[base] = true
+    ::continue::    
+end
 
 foreach_rule(
-    input,
+    dexMissing,
     {
         display="missing dex %B",
         "convert %f'[0]' -trim %o",
@@ -141,4 +148,3 @@ foreach_rule(
     },
     "build/padded-dex/%B-missing.png"
 )
-
