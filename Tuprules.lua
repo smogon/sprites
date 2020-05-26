@@ -2,6 +2,7 @@
 tup.include("util/strict.lua")
 tup.include("util/lua-ext.lua")
 tup.include("util/tup-ext.lua")
+tup.include("util/sprites.lua")
 
 ROOTDIR = tup.getcwd()
 
