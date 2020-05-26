@@ -1,4 +1,31 @@
 
+--
+-- Strings
+--
+
+function trim(s)
+    return s:gsub("^%s*(.-)%s*$", "%1")
+end
+
+function rep(args)
+    local str = args[1]
+    local vars = args
+    local function fn(var)
+        local v = vars[var]
+        if v == nil then
+            error("unknown substitution: " .. var)
+        end
+        return v
+    end
+    -- Note: not equivalent to return str:gsub(...) due to multiple return values!
+    str = str:gsub("${(%a+)}", fn)
+    return str
+end
+
+--
+-- Tables
+--
+
 -- Allow `for v in iter(table)` instead of `for _, v in ipairs(table)`
 function iter(table)
     local i = 1
@@ -37,23 +64,3 @@ function flatten(arr)
     flatten(arr)
     return result
 end
-
-function trim(s)
-    return s:gsub("^%s*(.-)%s*$", "%1")
-end
-
-function rep(args)
-    local str = args[1]
-    local vars = args
-    local function fn(var)
-        local v = vars[var]
-        if v == nil then
-            error("unknown substitution: " .. var)
-        end
-        return v
-    end
-    -- Note: not equivalent to return str:gsub(...) due to multiple return values!
-    str = str:gsub("${(%a+)}", fn)
-    return str
-end
-
