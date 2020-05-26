@@ -140,5 +140,5 @@ foreach_rule(
         "mogrify -background transparent -gravity center -resize '120x120>' -extent 120x120 %o",
         compresspng{config="DEX"}
     },
-    "build/padded-dex/%B-missing.png"
+    "build/padded-dex/%B.png"
 )
