@@ -46,38 +46,14 @@ end
 
 function glob(pat, opts)
     local results = {}
-    local filter = opts and opts.filter
-    local key = opts and opts.key
-    local seen = {}
     for pat in iter(globpat_normalize(pat)) do
         for file in iter(tup.glob(pat)) do
-            if key then
-                local k = key(file)
-                if seen[k] then
-                    goto continue
-                end
-                seen[k] = true
-            end
-
-            if filter then
-                if not filter(file) then
-                    goto continue
-                end
-            end
-
             table.insert(results, file)
-            ::continue::
         end
     end
     return results
 end
 
-
-
-function glob_matches(pat, opts)
-    local matched = glob(pat, opts)
-    return #matched > 0
-end
 
 -- Commands
 
