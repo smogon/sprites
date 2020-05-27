@@ -129,7 +129,7 @@ for file in iter(spriteglob(
     end
     dexMissing += file
     dexSet[base] = true
-    ::continue::    
+    ::continue::
 end
 
 foreach_rule(
