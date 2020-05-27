@@ -13,6 +13,17 @@ function getconfig(str)
     end
 end
 
+function booleanconfig(str)
+    local v = getconfig(str)
+    if v == nil or v == "false" then
+        return false
+    elseif v == "true" then
+        return true
+    else
+        error("boolean config must be true, false, or empty")
+    end
+end
+
 --
 -- Globs
 --

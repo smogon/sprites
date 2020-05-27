@@ -16,20 +16,10 @@ function pad(opts)
     }
 end
 
-function asboolean(s)
-    if s == nil or s == "false" then
-        return false
-    elseif s == "true" then
-        return true
-    else
-        error("boolean config must be true, false, or empty")
-    end
-end
-
 local DEFAULT_OPTIPNG = getconfig("DEFAULT_OPTIPNG")
 local DEFAULT_ADVPNG = getconfig("DEFAULT_ADVPNG")
 local DEFLOPT_PATH = getconfig("DEFLOPT_PATH")
-local DEFAULT_DEFLOPT = asboolean(getconfig("DEFAULT_DEFLOPT"))
+local DEFAULT_DEFLOPT = booleanconfig("DEFAULT_DEFLOPT")
 
 function compresspng(opts)
     local cmds = {}
@@ -40,7 +30,7 @@ function compresspng(opts)
     if opts.config then
         optipng = getconfig(opts.config .. "_OPTIPNG") or optipng;
         advpng = getconfig(opts.config .. "_ADVPNG") or advpng;
-        deflopt = asboolean(getconfig(opts.config .. "_DEFLOPT")) or deflopt;
+        deflopt = booleanconfig(opts.config .. "_DEFLOPT") or deflopt;
     end
 
     if optipng then
