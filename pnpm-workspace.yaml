@@ -3,3 +3,4 @@ packages:
     - 'tools/tupctime'
     - 'tools/deploy'
     - 'tools/deflopt'
+    - 'tools/trim'

@@ -17,6 +17,11 @@ importers:
       commander: ^5.0.0
       make-promises-safe: ^5.1.0
       spritesmith: ^3.4.0
+  tools/trim:
+    dependencies:
+      commander: 5.1.0
+    specifiers:
+      commander: ^5.1.0
   tools/tupctime:
     dependencies:
       better-sqlite3: 7.0.1
