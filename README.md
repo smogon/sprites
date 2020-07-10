@@ -21,7 +21,7 @@ Windows binaries of these dependencies can be found on the download pages of the
 ### Linux
 
 ```
-$ sudo apt install nodejs imagemagick advancecomp wine
+$ sudo apt install nodejs imagemagick advancecomp optipng wine
 $ sudo npm install -g pnpm
 ```
 
@@ -54,7 +54,7 @@ Using [`brew`](https://brew.sh/) on  a macOS:
 
 ```
 $ brew cask install osxfuse wine-stable
-$ brew install tup imagemagick advancecomp
+$ brew install tup imagemagick advancecomp optipng
 ```
 
 ## Building
