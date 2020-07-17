@@ -11,11 +11,15 @@ importers:
     specifiers: {}
   tools/deploy:
     dependencies:
+      '@smogon/sprite-data': 'link:../../data/lib'
+      '@types/node': 14.0.23
       commander: 5.1.0
       debug: 4.1.1
     devDependencies:
       typescript: 3.9.7
     specifiers:
+      '@smogon/sprite-data': ''
+      '@types/node': ^14.0.23
       commander: ^5.1.0
       debug: ^4.1.1
       typescript: ^3.9.7
