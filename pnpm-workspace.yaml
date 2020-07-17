@@ -3,5 +3,6 @@ packages:
     - 'tools/tupctime'
     - 'tools/deploy'
     - 'tools/deflopt'
+    - 'tools/sheet'
     - 'tools/trim'
     - "data/lib"
