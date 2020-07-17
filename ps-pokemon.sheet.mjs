@@ -5,7 +5,7 @@ import {fileURLToPath} from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const srcDir = path.join(__dirname, "newsrc");
-const json = path.join(srcDir, "species.json");
+const json = path.join(__dirname, "data", "species.json");
 const spritesDir = path.join(srcDir, "minisprites/pokemon/gen6");
 
 function toPSID(name) {
