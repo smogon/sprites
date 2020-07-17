@@ -2,7 +2,7 @@
 import fs from 'fs';
 import pathlib from 'path';
 
-export function find(startDir, tag) {
+export function find(startDir : string, tag : string) {
     const stack = [startDir];
     const results = [];
     let dir;
