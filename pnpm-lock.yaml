@@ -40,9 +40,14 @@ importers:
       spritesmith: ^3.4.0
   tools/trim:
     dependencies:
+      '@types/node': 14.0.23
       commander: 5.1.0
+    devDependencies:
+      typescript: 3.9.7
     specifiers:
+      '@types/node': ^14.0.23
       commander: ^5.1.0
+      typescript: ^3.9.7
   tools/tupctime:
     dependencies:
       better-sqlite3: 7.0.1

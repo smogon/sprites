@@ -1,6 +1,14 @@
 {
     "dependencies": {
+        "@types/node": "^14.0.23",
         "commander": "^5.1.0"
     },
-    "type": "module"
+    "type": "module",
+    "main": "./dist/index.js",
+    "scripts": {
+        "prepare": "tsc"
+    },
+    "devDependencies": {
+        "typescript": "^3.9.7"
+    }
 }

@@ -1,7 +1,7 @@
 
 import cp from 'child_process';
 
-export function getDims(input) {
+export function getDims(input : string) {
     const info = cp.execFileSync('convert', [input, '-format', "%w+%h+%@", 'info:'],
                                  {encoding:'utf8'});
 
@@ -21,13 +21,13 @@ export function getDims(input) {
     }
 }
 
-export function crop(input, {width, height, left, top}, output) {
+export function crop(input : string, {width, height, left, top} : {width : number, height: number, left: number, top: number}, output : string) {
     cp.execFileSync('convert', [input, '+repage', '-crop', `${width}x${height}+${left}+${top}`, output]);
 }
 
 // Trim, preserving displacement from center
 // Returns crop coords
-export function losslessTrim(dims) {
+export function losslessTrim(dims : {width : number, height: number, left: number, top: number, bottom: number, right: number}) {
     return {
         left: Math.min(dims.left, dims.right),
         width: dims.width + Math.abs(dims.left - dims.right),
