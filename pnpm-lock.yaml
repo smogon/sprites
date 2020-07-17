@@ -8,7 +8,13 @@ importers:
       '@types/node': ^14.0.23
       typescript: ^3.9.7
   tools/deflopt:
-    specifiers: {}
+    dependencies:
+      '@types/node': 14.0.23
+    devDependencies:
+      typescript: 3.9.7
+    specifiers:
+      '@types/node': ^14.0.23
+      typescript: ^3.9.7
   tools/deploy:
     dependencies:
       '@smogon/sprite-data': 'link:../../data/lib'

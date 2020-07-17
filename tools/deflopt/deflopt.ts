@@ -20,7 +20,7 @@ Total number of bytes saved:        0
 const PROCESSED_RE = /Number of files processed  : *([0-9]+)/;
 const REWRITTEN_RE = /Number of files rewritten  : *([0-9]+)/;
 
-function parse(re, output) {
+function parse(re : RegExp, output : string) {
     const m = output.match(re);
     if (!m) {
         throw new Error(`Can't match output: ` + output);
@@ -29,7 +29,7 @@ function parse(re, output) {
     return num;
 }
 
-export function deflopt(exe, file) {
+export function deflopt(exe : string, file : string) {
     // DeflOpt doesn't like absolute paths, it thinks they are Windows-style
     // command line switches.
     file = file.replace(/\//g, "\\");
