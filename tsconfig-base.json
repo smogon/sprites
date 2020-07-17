@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "incremental": true,
+        "target": "es2018",
+        "lib": ["es2018"],
+        "module": "esnext",
+        "jsx": "react",
+        "strict": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "isolatedModules": true,
+        "composite": true
+    }
+}

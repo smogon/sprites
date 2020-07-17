@@ -1,4 +1,12 @@
 importers:
+  data/lib:
+    dependencies:
+      '@types/node': 14.0.23
+    devDependencies:
+      typescript: 3.9.7
+    specifiers:
+      '@types/node': ^14.0.23
+      typescript: ^3.9.7
   tools/deflopt:
     specifiers: {}
   tools/deploy:
@@ -31,6 +39,10 @@ importers:
       debug: ^4.1.1
 lockfileVersion: 5.1
 packages:
+  /@types/node/14.0.23:
+    dev: false
+    resolution:
+      integrity: sha512-Z4U8yDAl5TFkmYsZdFPdjeMa57NOvnaf1tljHzhouaPEp7LCj2JKkejpI1ODviIAQuW4CcQmxkQ77rnLsOOoKw==
   /ajv/6.12.0:
     dependencies:
       fast-deep-equal: 3.1.1
@@ -1026,6 +1038,13 @@ packages:
     dev: false
     resolution:
       integrity: sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+  /typescript/3.9.7:
+    dev: true
+    engines:
+      node: '>=4.2.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
   /uniq/1.0.1:
     dev: false
     resolution:

@@ -4,3 +4,4 @@ packages:
     - 'tools/deploy'
     - 'tools/deflopt'
     - 'tools/trim'
+    - "data/lib"
