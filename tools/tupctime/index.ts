@@ -40,7 +40,7 @@ AND name NOT IN ('^', '$')`);
 const updateQuery = db.prepare(`UPDATE node SET mtime = ? WHERE id = ?`);
 
 function update() {
-    const stack = [{isDir: true, id: 0, path: "."}];
+    const stack : {isDir: boolean, id : number, path: string, ctime?: bigint, name?: string}[] = [{isDir: true, id: 0, path: "."}];
 
     let item;
     while (item = stack.pop()) {
@@ -57,11 +57,16 @@ function update() {
             }
         } else {
             // bigint calculation is necessary to avoid rounding errors/spurious update
+            //
+            // typescript doesn't understand second argument to lstatSync, or
+            // that division can work between a number and bigint, so ignore
+            //
+            // @ts-ignore
             const ctime = fs.lstatSync(item.path, {bigint: true}).ctimeMs / 1000n;
             if (ctime !== item.ctime) {
                 debug(`Updating ${item.path}: ${ctime}, ${item.ctime}`);
                 if (updateQuery.run(ctime, item.id).changes !== 1)
-                    throw new Error(`Couldn't update ${path}`);
+                    throw new Error(`Couldn't update ${item.path}`);
             }
         }
     }
