@@ -8,5 +8,8 @@
     "devDependencies": {
         "typescript": "^3.9.7"
     },
+    "scripts": {
+        "prepare": "tsc"
+    },
     "type": "module"
 }
