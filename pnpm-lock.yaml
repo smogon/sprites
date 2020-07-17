@@ -13,9 +13,12 @@ importers:
     dependencies:
       commander: 5.1.0
       debug: 4.1.1
+    devDependencies:
+      typescript: 3.9.7
     specifiers:
       commander: ^5.1.0
       debug: ^4.1.1
+      typescript: ^3.9.7
   tools/sprites:
     dependencies:
       commander: 5.0.0
