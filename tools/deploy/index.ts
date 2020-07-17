@@ -7,7 +7,7 @@ import {link} from './deploy.js';
 program
     .command('deploy <tag> <outputDir>')
     .option('-d, --dir [dir]', 'Directory')
-    .action((tag, outputDir, opts) => {
+    .action((tag : string, outputDir : string, opts) => {
         const dir = opts.dir || '.';
         const results = run(find(dir, tag));
         link(results, outputDir);
@@ -17,7 +17,7 @@ program
     .command('print <tag>')
     .option('-d, --dir [dir]', 'Directory')
     .option('--json', 'As JSON')
-    .action((tag, opts) => {
+    .action((tag : string, opts) => {
         const dir = opts.dir || '.';
         const results = run(find(dir, tag));
         if (opts.json) {
