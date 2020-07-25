@@ -11,5 +11,6 @@
     "scripts": {
         "prepare": "tsc"
     },
-    "type": "module"
+    "type": "module",
+    "main": "dist/index.js"
 }
