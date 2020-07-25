@@ -10,7 +10,7 @@ program
     .action((tag : string, outputDir : string, opts) => {
         const dir = opts.dir || '.';
         const results = run(find(dir, tag));
-        link(results, outputDir);
+        link(results, outputDir, 'link');
     });
 
 program
