@@ -1,33 +1,40 @@
 
 import pathlib from 'path';
 
-type PathAttrs = {dir : string, name : string, ext : string | null};
+const toPathStringSym = Symbol('toPathStringSym');
 
-export class Path {
-    public readonly dir : string;
-    public readonly name : string;
-    public readonly ext : string | null;
-    
-    constructor({dir, name, ext} : PathAttrs) {
-        this.dir = dir;
-        this.name = name;
-        this.ext = ext;
-    }
+export interface IPath {
+    [toPathStringSym](): string;
+}
 
-    static parse(x : string) {
-        const {dir, name, ext} = pathlib.parse(x);
-        return new Path({dir, name, ext: ext === "" ? null : ext.slice(1)});
-    }
-    
-    update({dir, name, ext} : Partial<PathAttrs>) {
-        return new Path({dir: dir ?? this.dir,
-                         name : name ?? this.name,
-                         ext : ext === undefined ? this.ext : ext});
-    }
+export type PathLike = IPath | string;
 
-    format() {
+class PathClass {
+    constructor(public readonly dir : string,
+                public readonly name : string,
+                public readonly ext : string | null) {}
+   
+    [toPathStringSym]() {
         return pathlib.format({dir : this.dir,
                                name : this.name,
                                ext : this.ext === null ? "" : `.${this.ext}`});
     }
+}
+
+export type Path = PathClass;
+export type PathDelta = {dir? : string, name? : string, ext? : string | null};
+
+export function path(p : PathLike, delta : PathDelta = {}) : Path {
+    const s = typeof p === 'string' ? p : p[toPathStringSym]();
+    let {dir, name, ext: dotext} = pathlib.parse(s);
+    let ext;
+    if (dotext === "") {
+        ext = null;
+    } else {
+        ext = dotext.slice(1);
+    }
+    dir = delta.dir ?? dir;
+    name = delta.name ?? name;
+    ext = delta.ext === undefined ? ext : delta.ext;
+    return new PathClass(dir, name, ext);
 }
