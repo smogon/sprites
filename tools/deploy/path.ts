@@ -1,31 +1,10 @@
 
 import pathlib from 'path';
 
-const toPathStringSym = Symbol('toPathStringSym');
+// Slight variation of pathlib parse, less fields, different ext handling
+export type Path = {dir : string, name : string, ext : string | null};
 
-export interface IPath {
-    [toPathStringSym](): string;
-}
-
-export type PathLike = IPath | string;
-
-class PathClass {
-    constructor(public readonly dir : string,
-                public readonly name : string,
-                public readonly ext : string | null) {}
-   
-    [toPathStringSym]() {
-        return pathlib.format({dir : this.dir,
-                               name : this.name,
-                               ext : this.ext === null ? "" : `.${this.ext}`});
-    }
-}
-
-export type Path = PathClass;
-export type PathDelta = {dir? : string, name? : string, ext? : string | null};
-
-export function path(p : PathLike, delta : PathDelta = {}) : Path {
-    const s = typeof p === 'string' ? p : p[toPathStringSym]();
+export function parse(s : string) : Path {
     let {dir, name, ext: dotext} = pathlib.parse(s);
     let ext;
     if (dotext === "") {
@@ -33,8 +12,31 @@ export function path(p : PathLike, delta : PathDelta = {}) : Path {
     } else {
         ext = dotext.slice(1);
     }
-    dir = delta.dir ?? dir;
-    name = delta.name ?? name;
-    ext = delta.ext === undefined ? ext : delta.ext;
-    return new PathClass(dir, name, ext);
+    return {dir, name, ext};
+}
+
+export function format({dir, name, ext} : Path) {
+    const dotext = ext === null ? "" : `.${ext}`;
+    return pathlib.format({dir, name, ext : dotext});
+}
+
+export type Delta = Partial<Path>;
+
+export function update({dir, name, ext} : Path, delta : Delta) : Path {
+    return {
+        dir: delta.dir ?? dir,
+        name: delta.name ?? name,
+        ext: delta.ext === undefined ? ext : delta.ext
+    };
+}
+
+// Convenience function
+
+export type PathLike = Path | string;
+
+export function path(p : PathLike, delta? : Delta) : Path {
+    let parsed = typeof p === 'string' ? parse(p) : p;
+    if (delta !== undefined)
+        parsed = update(parsed, delta);
+    return parsed;
 }
