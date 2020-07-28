@@ -3,7 +3,8 @@ import program from 'commander';
 import {run} from './lang.js';
 import {find} from './find.js';
 import {link} from './deploy.js';
-import {imp} from './import.js';
+import * as script from './script.js';
+import * as pathlib from './path.js';
 import fs from 'fs';
 
 function collect(value : string, previous : string[]) {
@@ -27,8 +28,17 @@ program
             throw new Error(`one of -e or -m must be provided`);
         }
 
-        const result = imp(files, code);
-        link(result, outputDir, 'copy');
+        const aq = new script.ActionQueue;
+        const scr = new script.Script(code);
+
+        for (const file of files) {
+            const src = pathlib.path(file);
+            const dst = pathlib.path(src, scr.runOnFile(src));
+            aq.copy(src, dst);
+        }
+
+        // TODO: output
+        aq.run('copy');
     });
 
 program
