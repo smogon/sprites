@@ -11,7 +11,7 @@ function collect(value : string, previous : string[]) {
 }
 
 program
-    .command('import [files...]')
+    .command('copy [files...]')
     .option('-o, --output <dir>', 'Output directory')
     // TODO: default toID
     .option('-e, --eval <expr>', 'Expr')
