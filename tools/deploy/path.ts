@@ -20,6 +20,10 @@ export function format({dir, name, ext} : Path) {
     return pathlib.format({dir, name, ext : dotext});
 }
 
+export function join(s : string, {dir, name, ext} : Path) : Path {
+    return {dir: pathlib.join(s, dir), name, ext};
+}
+
 export type Delta = Partial<Path>;
 
 export function update({dir, name, ext} : Path, delta : Delta) : Path {
