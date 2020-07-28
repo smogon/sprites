@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import vm from 'vm';
-import pathlib from 'path';
+import * as pathlib from './path.js';
 
 export function imp(files: string[], code : string) {
     const script = new vm.Script(code);
@@ -9,16 +9,13 @@ export function imp(files: string[], code : string) {
     const results = [];
     for (const file of files) {
         const parsed = pathlib.parse(file);
-        const obj = {dir: parsed.dir,
-                     base: parsed.name,
-                     ext: parsed.ext === "" ? null : parsed.ext.slice(1)
-                    };
-        const output = script.runInNewContext({path: obj, ...obj});
-        if (typeof output === 'string') {
-            const dest = pathlib.format({name: output, ext: parsed.ext});
+        const delta = script.runInNewContext({path: parsed, ...parsed});
+        if (delta) {
+            const result = pathlib.path(parsed, delta);
+            const dest = pathlib.format(result);
             results.push({src: file, dst: dest});
         } else {
-            throw new Error(`result of eval on ${file} not string`);
+            throw new Error(`result of eval on ${file} falsy`);
         }
     }
     return results;
