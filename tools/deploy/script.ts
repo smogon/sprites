@@ -22,7 +22,7 @@ export class ActionQueue {
 
     run(mode : 'link' | 'copy') {
         for (const {src, dst} of this.queue) {
-            fs.mkdirSync(src.dir, {recursive: true});
+            fs.mkdirSync(dst.dir, {recursive: true});
             if (mode === 'link') {
                 fs.linkSync(pathlib.format(src), pathlib.format(dst));
             } else {
