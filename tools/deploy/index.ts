@@ -35,7 +35,8 @@ program
 
         for (const file of files) {
             const src = pathlib.path(file);
-            const dst = pathlib.join(outputDir, pathlib.path(src, scr.runOnFile(src)));
+            const result = scr.runOnFile(src);
+            const dst = pathlib.join(outputDir, pathlib.path(src, result));
             aq.copy(src, dst);
         }
         
