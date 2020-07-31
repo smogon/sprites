@@ -13,7 +13,7 @@ function collect(value : string, previous : string[]) {
 
 program
     .command('copy [files...]')
-    .option('-o, --output <dir>', 'Output directory')
+    .requiredOption('-o, --output <dir>', 'Output directory')
     // TODO: default toID
     .option('-e, --eval <expr>', 'Expr')
     .option('-m, --module <mod>', 'Module')
@@ -33,7 +33,7 @@ program
 
         for (const file of files) {
             const src = pathlib.path(file);
-            const dst = pathlib.path(src, scr.runOnFile(src));
+            const dst = pathlib.join(outputDir, pathlib.path(src, scr.runOnFile(src)));
             aq.copy(src, dst);
         }
 
