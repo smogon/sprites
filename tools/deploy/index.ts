@@ -23,7 +23,7 @@ program
     .action(async (files : string[], {eval: expr, module: mod, output: outputDir, tag: tags, act}) => {
         let code : string;
         if (expr !== undefined) {
-            code = expr;
+            code = `(${expr})`;
         } else if (mod !== undefined) {
             code = fs.readFileSync(mod, 'utf8');
         } else {
