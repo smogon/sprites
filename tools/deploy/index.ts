@@ -18,7 +18,9 @@ program
     .option('-e, --eval <expr>', 'Expr')
     .option('-m, --module <mod>', 'Module')
     .option('-t, --tag <tag>', 'Tag', collect, [])
-    .action(async (files : string[], {eval: expr, module: mod, output: outputDir, tag: tags}) => {
+    // from rename(1)
+    .option('-n, --no-act', 'No act')
+    .action(async (files : string[], {eval: expr, module: mod, output: outputDir, tag: tags, act}) => {
         let code : string;
         if (expr !== undefined) {
             code = expr;
@@ -36,9 +38,14 @@ program
             const dst = pathlib.join(outputDir, pathlib.path(src, scr.runOnFile(src)));
             aq.copy(src, dst);
         }
-
-        // TODO: output
-        aq.run('copy');
+        
+        if (act) {
+            aq.run('copy');
+        } else {
+            for (const {src, dst} of aq.describe()) {
+                console.log(`${pathlib.format(src)} ==> ${pathlib.format(dst)}`);
+            } 
+        }
     });
 
 program
