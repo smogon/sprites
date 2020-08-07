@@ -17,10 +17,11 @@ program
     // TODO: default toID
     .option('-e, --eval <expr>', 'Expr')
     .option('-m, --module <mod>', 'Module')
-    .option('-t, --tag <tag>', 'Tag', collect, [])
+    // TODO
+    // .option('-t, --tag <tag>', 'Tag', collect, [])
     // from rename(1)
     .option('-n, --no-act', 'No act')
-    .action(async (files : string[], {eval: expr, module: mod, output: outputDir, tag: tags, act}) => {
+    .action(async (files : string[], {eval: expr, module: mod, output: outputDir, /*tag: tags,*/ act}) => {
         let code : string;
         if (expr !== undefined) {
             code = `(${expr})`;
