@@ -3,6 +3,7 @@ import fs from 'fs';
 import nodePath from 'path';
 import vm from 'vm';
 import * as pathlib from './path.js';
+import * as _spritename from './spritename.js';
 
 export class ActionQueue {
     private queue: {src : pathlib.Path, dst : pathlib.Path}[];
@@ -45,6 +46,10 @@ class Env {
         return result;
     }
 
+    get spritename() {
+        return _spritename;
+    }
+
     copy(src : pathlib.PathLike, dst : pathlib.PathLike) {
         const srcp = pathlib.path(src);
         const dstp = pathlib.path(dst);
@@ -60,7 +65,7 @@ export class Script {
     }
 
     runOnFile(p : pathlib.Path) : any {
-        return this.script.runInNewContext({path: p, ...p});
+        return this.script.runInNewContext({spritename: _spritename, path: p, ...p});
     }
 
     run(srcDir : string, dstDir : string, queue : ActionQueue) {
