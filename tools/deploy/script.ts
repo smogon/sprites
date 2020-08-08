@@ -64,8 +64,18 @@ export class Script {
         this.script = new vm.Script(code);
     }
 
-    runOnFile(p : pathlib.Path) : any {
-        return this.script.runInNewContext({spritename: _spritename, path: p, ...p});
+    runOnFile(src : pathlib.Path) : pathlib.Path {
+        const input = pathlib.update(src, {dir: ""});
+        const result = this.script.runInNewContext({
+            spritename: _spritename,
+            path: input,
+            ...input
+        });
+        if (result === undefined) {
+            throw new Error(`undefined output on ${pathlib.format(src)}`);
+        }
+        const output = pathlib.path(input, result);
+        return output;
     }
 
     run(srcDir : string, dstDir : string, queue : ActionQueue) {

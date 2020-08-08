@@ -36,12 +36,7 @@ program
 
         for (const file of files) {
             const src = pathlib.path(file);
-            const input = pathlib.update(src, {dir: ""});
-            const result = scr.runOnFile(input);
-            if (result === undefined) {
-                throw new Error(`undefined output on ${file}`);
-            }
-            const output = pathlib.path(input, result);
+            const output = scr.runOnFile(src);
             const dst = pathlib.join(outputDir, output);
             aq.copy(src, dst);
         }
