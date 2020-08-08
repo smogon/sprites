@@ -6,6 +6,9 @@ export default {
     moduleNameMapper: {
         '^(.*).js$': '$1'
     },
+    testPathIgnorePatterns: [
+        "dist"
+    ],
     globals: {
         'ts-jest': {
             packageJson: 'package.json'
