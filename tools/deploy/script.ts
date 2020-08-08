@@ -3,7 +3,7 @@ import fs from 'fs';
 import nodePath from 'path';
 import vm from 'vm';
 import * as pathlib from './path.js';
-import * as _spritename from './spritename.js';
+import * as spritename from './spritename.js';
 
 export class ActionQueue {
     private queue: {src : pathlib.Path, dst : pathlib.Path}[];
@@ -33,27 +33,27 @@ export class ActionQueue {
     }
 }
 
-class Env {
-    constructor(private srcDir : string,
-                private dstDir : string,
-                private queue : ActionQueue) {}
-    
-    list(dir : string) : pathlib.Path[] {
-        const result = [];
-        for (const filename of fs.readdirSync(nodePath.join(this.srcDir, dir))) {
-            result.push(pathlib.path(filename, {dir}));
+const ENV_PROTO = {
+    spritename
+};
+
+function makeEnv(srcDir : string, dstDir : string, queue: ActionQueue) {
+    return {
+        __proto__: ENV_PROTO,
+        
+        list(dir : string) : pathlib.Path[] {
+            const result = [];
+            for (const filename of fs.readdirSync(nodePath.join(srcDir, dir))) {
+                result.push(pathlib.path(filename, {dir}));
+            }
+            return result;
+        },
+        
+        copy(src : pathlib.PathLike, dst : pathlib.PathLike) {
+            const srcp = pathlib.path(src);
+            const dstp = pathlib.path(dst);
+            queue.copy(pathlib.join(srcDir, srcp), pathlib.join(dstDir, dstp));
         }
-        return result;
-    }
-
-    get spritename() {
-        return _spritename;
-    }
-
-    copy(src : pathlib.PathLike, dst : pathlib.PathLike) {
-        const srcp = pathlib.path(src);
-        const dstp = pathlib.path(dst);
-        this.queue.copy(pathlib.join(this.srcDir, srcp), pathlib.join(this.dstDir, dstp));
     }
 }
 
@@ -67,7 +67,7 @@ export class Script {
     runOnFile(src : pathlib.Path) : pathlib.Path {
         const input = pathlib.update(src, {dir: ""});
         const result = this.script.runInNewContext({
-            spritename: _spritename,
+            __proto__: ENV_PROTO,
             path: input,
             ...input
         });
@@ -79,7 +79,7 @@ export class Script {
     }
 
     run(srcDir : string, dstDir : string, queue : ActionQueue) {
-        this.script.runInNewContext(new Env(srcDir, dstDir, queue));
+        this.script.runInNewContext(makeEnv(srcDir, dstDir, queue));
     }
 }
 
