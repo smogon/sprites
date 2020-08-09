@@ -21,6 +21,12 @@ export class ActionQueue {
         return this.queue;
     }
 
+    print() {
+        for (const {src, dst} of this.queue) {
+            console.log(`${pathlib.format(src)} ==> ${pathlib.format(dst)}`);
+        } 
+    }
+
     run(mode : 'link' | 'copy') {
         for (const {src, dst} of this.queue) {
             fs.mkdirSync(dst.dir, {recursive: true});

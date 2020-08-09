@@ -44,9 +44,7 @@ program
         if (act) {
             aq.run('copy');
         } else {
-            for (const {src, dst} of aq.describe()) {
-                console.log(`${pathlib.format(src)} ==> ${pathlib.format(dst)}`);
-            } 
+            aq.print();
         }
     });
 
