@@ -1,10 +1,8 @@
 
 import program from 'commander';
-import {run} from './lang.js';
-import {find} from './find.js';
-import {link} from './deploy.js';
 import * as script from './script.js';
 import * as pathlib from './path.js';
+import nodePath from 'path';
 import fs from 'fs';
 
 function collect(value : string, previous : string[]) {
@@ -49,27 +47,22 @@ program
     });
 
 program
-    .command('deploy <tag> <outputDir>')
-    .option('-d, --dir [dir]', 'Directory')
-    .action((tag : string, outputDir : string, opts) => {
-        const dir = opts.dir || '.';
-        const results = run(find(dir, tag));
-        link(results, outputDir, 'link');
-    });
+    .command('run [scripts...]')
+    .requiredOption('-o, --output <dir>', 'Output directory')
+    .option('-n, --no-act', 'No act')
+    .action((scripts : string[], {output: outputDir, act}) => {
+        const aq = new script.ActionQueue;
 
-program
-    .command('print <tag>')
-    .option('-d, --dir [dir]', 'Directory')
-    .option('--json', 'As JSON')
-    .action((tag : string, opts) => {
-        const dir = opts.dir || '.';
-        const results = run(find(dir, tag));
-        if (opts.json) {
-            process.stdout.write(JSON.stringify(results, null, '  ') + "\n");
+        for (const file of scripts) {
+            const code = fs.readFileSync(file, 'utf8');
+            const scr = new script.Script(code);
+            scr.run(nodePath.dirname(file), outputDir, aq);
+        }
+        
+        if (act) {
+            aq.run('link');
         } else {
-            for (const {src, dst} of results) {
-                console.log(`${src} ==> ${dst}`);
-            } 
+            aq.print();
         }
     });
 
