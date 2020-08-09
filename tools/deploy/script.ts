@@ -21,6 +21,12 @@ export class ActionQueue {
         return this.queue;
     }
 
+    join(dir : string) {
+        for (const pair of this.queue) {
+            pair.dst = pathlib.join(dir, pair.dst);
+        }
+    }
+
     print() {
         for (const {src, dst} of this.queue) {
             console.log(`${pathlib.format(src)} ==> ${pathlib.format(dst)}`);
@@ -43,7 +49,7 @@ const ENV_PROTO = {
     spritename
 };
 
-function makeEnv(srcDir : string, dstDir : string, queue: ActionQueue) {
+function makeEnv(srcDir : string, queue: ActionQueue) {
     return {
         __proto__: ENV_PROTO,
         
@@ -58,7 +64,7 @@ function makeEnv(srcDir : string, dstDir : string, queue: ActionQueue) {
         copy(src : pathlib.PathLike, dst : pathlib.PathLike) {
             const srcp = pathlib.path(src);
             const dstp = pathlib.path(dst);
-            queue.copy(pathlib.join(srcDir, srcp), pathlib.join(dstDir, dstp));
+            queue.copy(pathlib.join(srcDir, srcp), dstp);
         }
     }
 }
@@ -84,8 +90,8 @@ export class Script {
         return output;
     }
 
-    run(srcDir : string, dstDir : string, queue : ActionQueue) {
-        this.script.runInNewContext(makeEnv(srcDir, dstDir, queue));
+    run(srcDir : string, queue : ActionQueue) {
+        this.script.runInNewContext(makeEnv(srcDir, queue));
     }
 }
 

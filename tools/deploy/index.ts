@@ -56,8 +56,10 @@ program
         for (const file of scripts) {
             const code = fs.readFileSync(file, 'utf8');
             const scr = new script.Script(code);
-            scr.run(nodePath.dirname(file), outputDir, aq);
+            scr.run(nodePath.dirname(file), aq);
         }
+
+        aq.join(outputDir);
         
         if (act) {
             aq.run('link');

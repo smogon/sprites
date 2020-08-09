@@ -16,10 +16,10 @@ for (const p of list(".")) {
     copy(p, p);
 }
     `);
-    scr.run("testsrc", "testdst", aq);
+    scr.run("testsrc", aq);
     expect(aq.describe()).toEqual(expect.arrayContaining([
-        {src: pathlib.path('testsrc/32.png'), dst: pathlib.path("testdst/32.png")},
-        {src: pathlib.path('testsrc/192-g-vsmogon.png'), dst: pathlib.path("testdst/192-g-vsmogon.png")},
+        {src: pathlib.path('testsrc/32.png'), dst: pathlib.path("./32.png")},
+        {src: pathlib.path('testsrc/192-g-vsmogon.png'), dst: pathlib.path("./192-g-vsmogon.png")},
     ]));
 });
 
