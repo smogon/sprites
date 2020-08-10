@@ -6,35 +6,49 @@ import * as pathlib from './path.js';
 import * as spritename from './spritename.js';
 
 export class ActionQueue {
-    private queue: {src : string, dst : string}[];
+    private map: Map<string, string>;
     
     constructor() {
-        this.queue = [];
+        this.map = new Map;
     }
 
     copy(src : string, dst : string) {
         // TODO: detect conflicts
-        this.queue.push({src, dst});
+        dst = nodePath.normalize(dst);
+        if (nodePath.isAbsolute(dst)) {
+            throw new Error(`destination ${dst} is absolute`);
+        }
+        const result = this.map.get(dst);
+        if (result !== undefined) {
+            throw new Error(`already copying ${result} to ${dst}`);
+        }
+        this.map.set(dst, src);
     }
 
     describe() : {src : string, dst : string}[] {
-        return this.queue;
+        const result = [];
+        for (const [dst, src] of this.map) {
+            result.push({src,dst});
+        }
+        return result;
     }
 
     join(dir : string) {
-        for (const pair of this.queue) {
-            pair.dst = nodePath.join(dir, pair.dst);
+        const newMap = new Map;
+        for (const [dst, src] of this.map) {
+            newMap.set(nodePath.join(dir, dst), src);
         }
+        this.map = newMap;
     }
 
     print() {
-        for (const {src, dst} of this.queue) {
+        for (const {src, dst} of this.describe()) {
             console.log(`${src} ==> ${dst}`);
         }
     }
 
     run(mode : 'link' | 'copy') {
-        for (const {src, dst} of this.queue) {
+        for (const {src, dst} of this.describe()) {
             fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
             if (mode === 'link') {
                 fs.linkSync(src, dst);
