@@ -30,11 +30,10 @@ program
 
         const aq = new script.ActionQueue;
         
-        for (const file of files) {
-            const src = pathlib.path(file);
+        for (const src of files) {
             const output = script.runOnFile(scr, src);
-            const dst = pathlib.join(outputDir, output);
-            aq.copy(pathlib.format(src), pathlib.format(dst));
+            const dst = nodePath.join(outputDir, output);
+            aq.copy(src, dst);
         }
         
         if (act) {

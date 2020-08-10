@@ -101,18 +101,19 @@ function makeEnv(srcDir : string, queue: ActionQueue) {
     }
 }
 
-export function runOnFile(scr : Script, src : pathlib.Path) : pathlib.Path {
-    const input = pathlib.update(src, {dir: ""});
+export function runOnFile(scr : Script, src : string) : string {
+    const input = pathlib.path(src, {dir: ""});
     const result = scr.runInNewContext({
         __proto__: ENV_PROTO,
         path: input,
         ...input
     });
     if (result === undefined) {
-        throw new Error(`undefined output on ${pathlib.format(src)}`);
+        throw new Error(`undefined output on ${src}`);
     }
-    const output = pathlib.path(input, result);
-    return output;
+    const output = pathlib.update(input, result);
+    const dst = pathlib.format(output);
+    return dst;
 }
 
 export function run(scr : Script, srcDir : string, queue : ActionQueue) {

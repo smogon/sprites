@@ -13,9 +13,8 @@ test('aq', () => {
 
 test('runOnFile', () => {
     const scr = new script.Script('({name: "25"})', 'expr');
-    const src = pathlib.path('/foo/bar/pikachu.png');
-    const dst = script.runOnFile(scr, src);
-    expect(dst).toEqual(pathlib.path('25.png'));
+    const dst = script.runOnFile(scr, '/foo/bar/pikachu.png');
+    expect(dst).toEqual('25.png');
 });
 
 test('run identity', () => {
