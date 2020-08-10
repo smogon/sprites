@@ -6,40 +6,40 @@ import * as pathlib from './path.js';
 import * as spritename from './spritename.js';
 
 export class ActionQueue {
-    private queue: {src : pathlib.Path, dst : pathlib.Path}[];
+    private queue: {src : string, dst : string}[];
     
     constructor() {
         this.queue = [];
     }
 
-    copy(src : pathlib.Path, dst : pathlib.Path) {
+    copy(src : string, dst : string) {
         // TODO: detect conflicts
         this.queue.push({src, dst});
     }
 
-    describe() : {src : pathlib.Path, dst : pathlib.Path}[] {
+    describe() : {src : string, dst : string}[] {
         return this.queue;
     }
 
     join(dir : string) {
         for (const pair of this.queue) {
-            pair.dst = pathlib.join(dir, pair.dst);
+            pair.dst = nodePath.join(dir, pair.dst);
         }
     }
 
     print() {
         for (const {src, dst} of this.queue) {
-            console.log(`${pathlib.format(src)} ==> ${pathlib.format(dst)}`);
+            console.log(`${src} ==> ${dst}`);
         }
     }
 
     run(mode : 'link' | 'copy') {
         for (const {src, dst} of this.queue) {
-            fs.mkdirSync(dst.dir, {recursive: true});
+            fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
             if (mode === 'link') {
-                fs.linkSync(pathlib.format(src), pathlib.format(dst));
+                fs.linkSync(src, dst);
             } else {
-                fs.copyFileSync(pathlib.format(src), pathlib.format(dst));
+                fs.copyFileSync(src, dst);
             }
         }
     }
@@ -82,7 +82,7 @@ function makeEnv(srcDir : string, queue: ActionQueue) {
         copy(src : pathlib.PathLike, dst : pathlib.PathLike) {
             const srcp = pathlib.path(src);
             const dstp = pathlib.path(dst);
-            queue.copy(pathlib.join(srcDir, srcp), dstp);
+            queue.copy(pathlib.format(pathlib.join(srcDir, srcp)), pathlib.format(dstp));
         }
     }
 }

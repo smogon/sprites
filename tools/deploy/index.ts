@@ -34,7 +34,7 @@ program
             const src = pathlib.path(file);
             const output = script.runOnFile(scr, src);
             const dst = pathlib.join(outputDir, output);
-            aq.copy(src, dst);
+            aq.copy(pathlib.format(src), pathlib.format(dst));
         }
         
         if (act) {
