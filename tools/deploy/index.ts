@@ -1,7 +1,6 @@
 
 import program from 'commander';
 import * as script from './script.js';
-import * as pathlib from './path.js';
 import nodePath from 'path';
 
 function collect(value : string, previous : string[]) {
