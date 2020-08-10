@@ -30,7 +30,7 @@ export class ActionQueue {
     print() {
         for (const {src, dst} of this.queue) {
             console.log(`${pathlib.format(src)} ==> ${pathlib.format(dst)}`);
-        } 
+        }
     }
 
     run(mode : 'link' | 'copy') {
@@ -42,6 +42,24 @@ export class ActionQueue {
                 fs.copyFileSync(pathlib.format(src), pathlib.format(dst));
             }
         }
+    }
+}
+
+export class Script extends vm.Script {
+    public readonly filename : string | null;
+
+    constructor(x : string, type : 'file' | 'expr') {
+        let code : string;
+        let filename : string | null = null;
+        if (type === 'expr') {
+            // Force expression parsing
+            code = `(${x})`;
+        } else {
+            code = fs.readFileSync(x, 'utf8');
+            filename = x;
+        }
+        super(code, filename !== null ? {filename} : undefined);
+        this.filename = filename;
     }
 }
 
@@ -69,29 +87,20 @@ function makeEnv(srcDir : string, queue: ActionQueue) {
     }
 }
 
-export class Script {
-    private script : vm.Script;
-    
-    constructor(code : string) {
-        this.script = new vm.Script(code);
+export function runOnFile(scr : Script, src : pathlib.Path) : pathlib.Path {
+    const input = pathlib.update(src, {dir: ""});
+    const result = scr.runInNewContext({
+        __proto__: ENV_PROTO,
+        path: input,
+        ...input
+    });
+    if (result === undefined) {
+        throw new Error(`undefined output on ${pathlib.format(src)}`);
     }
-
-    runOnFile(src : pathlib.Path) : pathlib.Path {
-        const input = pathlib.update(src, {dir: ""});
-        const result = this.script.runInNewContext({
-            __proto__: ENV_PROTO,
-            path: input,
-            ...input
-        });
-        if (result === undefined) {
-            throw new Error(`undefined output on ${pathlib.format(src)}`);
-        }
-        const output = pathlib.path(input, result);
-        return output;
-    }
-
-    run(srcDir : string, queue : ActionQueue) {
-        this.script.runInNewContext(makeEnv(srcDir, queue));
-    }
+    const output = pathlib.path(input, result);
+    return output;
 }
 
+export function run(scr : Script, srcDir : string, queue : ActionQueue) {
+    scr.runInNewContext(makeEnv(srcDir, queue));
+}
