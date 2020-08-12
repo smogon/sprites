@@ -30,10 +30,11 @@ program
         const aq = new script.ActionQueue;
         
         for (const src of files) {
-            const output = script.runOnFile(scr, src);
-            const dst = nodePath.join(outputDir, output);
+            const dst = script.runOnFile(scr, src);
             aq.copy(src, dst);
         }
+
+        aq.join(outputDir);
         
         if (act) {
             aq.run('copy');
