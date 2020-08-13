@@ -25,30 +25,22 @@ export class ActionQueue {
         this.map.set(dst, src);
     }
 
-    describe() : {src : string, dst : string}[] {
+    describe(dir : string) : {src : string, dst : string}[] {
         const result = [];
         for (const [dst, src] of this.map) {
-            result.push({src,dst});
+            result.push({src,dst: nodePath.join(dir, dst)});
         }
         return result;
     }
 
-    join(dir : string) {
-        const newMap = new Map;
-        for (const [dst, src] of this.map) {
-            newMap.set(nodePath.join(dir, dst), src);
-        }
-        this.map = newMap;
-    }
-
-    print() {
-        for (const {src, dst} of this.describe()) {
+    print(dir : string) {
+        for (const {src, dst} of this.describe(dir)) {
             console.log(`${src} ==> ${dst}`);
         }
     }
 
-    run(mode : 'link' | 'copy') {
-        for (const {src, dst} of this.describe()) {
+    run(dir : string, mode : 'link' | 'copy') {
+        for (const {src, dst} of this.describe(dir)) {
             fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
             if (mode === 'link') {
                 fs.linkSync(src, dst);

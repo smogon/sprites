@@ -33,13 +33,11 @@ program
             const dst = script.runOnFile(scr, src);
             aq.copy(src, dst);
         }
-
-        aq.join(outputDir);
         
         if (act) {
-            aq.run('copy');
+            aq.run(outputDir, 'copy');
         } else {
-            aq.print();
+            aq.print(outputDir);
         }
     });
 
@@ -54,13 +52,11 @@ program
             const scr = new script.Script(file, 'file');
             script.run(scr, nodePath.dirname(file), aq);
         }
-
-        aq.join(outputDir);
         
         if (act) {
-            aq.run('link');
+            aq.run(outputDir, 'link');
         } else {
-            aq.print();
+            aq.print(outputDir);
         }
     });
 
