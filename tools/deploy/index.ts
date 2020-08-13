@@ -9,15 +9,14 @@ function collect(value : string, previous : string[]) {
 
 program
     .command('copy [files...]')
-    .requiredOption('-o, --output <dir>', 'Output directory')
+    .option('-o, --output <dir>', 'Output directory')
     // TODO: default toID
     .option('-e, --eval <expr>', 'Expr')
     .option('-m, --module <mod>', 'Module')
     // TODO
     // .option('-t, --tag <tag>', 'Tag', collect, [])
     // from rename(1)
-    .option('-n, --no-act', 'No act')
-    .action(async (files : string[], {eval: expr, module: mod, output: outputDir, /*tag: tags,*/ act}) => {
+    .action(async (files : string[], {eval: expr, module: mod, output: outputDir}) => {
         let scr;
         if (expr !== undefined) {
             scr = new script.Script(expr, 'expr');
@@ -34,18 +33,17 @@ program
             aq.copy(src, dst);
         }
         
-        if (act) {
+        if (outputDir) {
             aq.run(outputDir, 'copy');
         } else {
-            aq.print(outputDir);
+            aq.print(".");
         }
     });
 
 program
     .command('run [scripts...]')
-    .requiredOption('-o, --output <dir>', 'Output directory')
-    .option('-n, --no-act', 'No act')
-    .action((scripts : string[], {output: outputDir, act}) => {
+    .option('-o, --output <dir>', 'Output directory')
+    .action((scripts : string[], {output: outputDir}) => {
         const aq = new script.ActionQueue;
 
         for (const file of scripts) {
@@ -53,10 +51,10 @@ program
             script.run(scr, nodePath.dirname(file), aq);
         }
         
-        if (act) {
+        if (outputDir) {
             aq.run(outputDir, 'link');
         } else {
-            aq.print(outputDir);
+            aq.print(".");
         }
     });
 
