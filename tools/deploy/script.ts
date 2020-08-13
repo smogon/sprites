@@ -85,10 +85,15 @@ function makeEnv(srcDir : string, queue: ActionQueue) {
             return result;
         },
         
-        copy(src : pathlib.PathLike, dst : pathlib.PathLike) {
-            const srcp = pathlib.path(src);
-            const dstp = pathlib.path(dst);
-            queue.copy(pathlib.format(pathlib.join(srcDir, srcp)), pathlib.format(dstp));
+        copy(srcp : pathlib.PathLike, dstp : string | pathlib.Delta /* todo deltalike */) {
+            const src = pathlib.format(pathlib.path(srcp));
+            let dst : string;
+            if (typeof dstp === 'string') {
+                dst = dstp;
+            } else {
+                dst = pathlib.format(pathlib.path(srcp, dstp));
+            }
+            queue.copy(nodePath.join(srcDir, src), dst);
         }
     }
 }

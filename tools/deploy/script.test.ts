@@ -27,3 +27,15 @@ test('run identity', () => {
     ]));
 });
 
+test('run delta', () => {
+    const aq = new script.ActionQueue();
+    const scr = new script.Script(` list(".").forEach(p => copy(p, {dir: "dest"}))`, 'expr');
+    script.run(scr, "testsrc", aq);
+    expect(aq.describe(".")).toEqual(expect.arrayContaining([
+        {src: 'testsrc/32.png', dst: "dest/32.png"},
+        {src: 'testsrc/192-g-vsmogon.png', dst: "dest/192-g-vsmogon.png"},
+    ]));
+});
+
+
+
