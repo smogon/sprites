@@ -34,9 +34,13 @@ program
         }
         
         if (outputDir) {
+            if (!aq.valid) {
+                aq.print();
+                process.exit(1);
+            }
             aq.run(outputDir, 'copy');
         } else {
-            aq.print(".");
+            aq.print();
         }
     });
 
@@ -52,9 +56,13 @@ program
         }
         
         if (outputDir) {
+            if (!aq.valid) {
+                aq.print();
+                process.exit(1);
+            }
             aq.run(outputDir, 'link');
         } else {
-            aq.print(".");
+            aq.print();
         }
     });
 

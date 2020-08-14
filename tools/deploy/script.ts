@@ -5,42 +5,68 @@ import vm from 'vm';
 import * as pathlib from './path.js';
 import * as spritename from './spritename.js';
 
+export type LogEntry = {
+    type : 'Copy',
+    src : string,
+    dst : string,
+    valid : 'Success' | 'Absolute' | 'Multiple'
+};
+
 export class ActionQueue {
-    private map: Map<string, string>;
+    private seen : Map<string, LogEntry | 'MoreThan1'>;
+    // Have an accessor for this in the future? idk
+    public log : LogEntry[];
+    public valid : boolean;
     
     constructor() {
-        this.map = new Map;
+        this.seen = new Map;
+        this.log = [];
+        this.valid = true;
     }
 
     copy(src : string, dst : string) {
-        // TODO: detect conflicts
         dst = nodePath.normalize(dst);
+        let entry : LogEntry = {
+            type : 'Copy',
+            src,
+            dst,
+            valid : 'Success'
+        };
+        this.log.push(entry);
         if (nodePath.isAbsolute(dst)) {
-            throw new Error(`destination ${dst} is absolute`);
+            this.valid = false;
+            entry.valid = 'Absolute';
+        } else {
+            const lastEntry = this.seen.get(dst);
+            if (lastEntry === undefined) {
+                this.seen.set(dst, entry);
+            } else {
+                this.valid = false;
+                entry.valid = 'Multiple';
+                if (lastEntry !== 'MoreThan1') {
+                    lastEntry.valid = 'Multiple';
+                }
+            }
         }
-        const result = this.map.get(dst);
-        if (result !== undefined) {
-            throw new Error(`already copying ${result} to ${dst}`);
-        }
-        this.map.set(dst, src);
     }
-
-    describe(dir : string) : {src : string, dst : string}[] {
-        const result = [];
-        for (const [dst, src] of this.map) {
-            result.push({src,dst: nodePath.join(dir, dst)});
-        }
-        return result;
-    }
-
-    print(dir : string) {
-        for (const {src, dst} of this.describe(dir)) {
-            console.log(`${src} ==> ${dst}`);
+    
+    print() {
+        for (const entry of this.log) {
+            if (entry.type === 'Copy') {
+                let addendum = '';
+                if (entry.valid !== 'Success') {
+                    addendum = ` ($entry.valid)`;
+                }
+                console.log(`${entry.src} ==> ${entry.dst}${addendum}`);
+            }
         }
     }
 
     run(dir : string, mode : 'link' | 'copy') {
-        for (const {src, dst} of this.describe(dir)) {
+        if (!this.valid)
+            throw new Error(`Invalid ActionQueue`);
+        for (let {src, dst} of this.log) {
+            dst = nodePath.join(dir, dst);
             fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
             if (mode === 'link') {
                 fs.linkSync(src, dst);

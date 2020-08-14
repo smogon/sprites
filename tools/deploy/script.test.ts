@@ -4,11 +4,16 @@ import * as script from './script.js';
 
 test('aq', () => {
     const aq = new script.ActionQueue();
-    expect(() => {
-        aq.copy("foo", "bar");
-        aq.copy("baz", "./bar");
-    }).toThrow();
-    expect(() => aq.copy("foo", "/bar")).toThrow();
+    aq.copy("foo", "bar");
+    aq.copy("baz", "./bar");
+    aq.copy("baz", "/bar")
+    
+    expect(aq.log).toEqual(expect.arrayContaining([
+        {type: 'Copy', src: 'foo', dst: "bar", valid: 'Multiple'},
+        {type: 'Copy', src: 'baz', dst: "bar", valid: 'Multiple'},
+        {type: 'Copy', src: 'baz', dst: "/bar", valid: 'Absolute'},
+    ]));
+    
 });
 
 test('runOnFile', () => {
@@ -21,9 +26,9 @@ test('run identity', () => {
     const aq = new script.ActionQueue();
     const scr = new script.Script(` list(".").forEach(p => copy(p, p))`, 'expr');
     script.run(scr, "testsrc", aq);
-    expect(aq.describe(".")).toEqual(expect.arrayContaining([
-        {src: 'testsrc/32.png', dst: "32.png"},
-        {src: 'testsrc/192-g-vsmogon.png', dst: "192-g-vsmogon.png"},
+    expect(aq.log).toEqual(expect.arrayContaining([
+        {type: 'Copy', src: 'testsrc/32.png', dst: "32.png", valid: 'Success'},
+        {type: 'Copy', src: 'testsrc/192-g-vsmogon.png', dst: "192-g-vsmogon.png", valid: 'Success'},
     ]));
 });
 
@@ -31,9 +36,9 @@ test('run delta', () => {
     const aq = new script.ActionQueue();
     const scr = new script.Script(` list(".").forEach(p => copy(p, {dir: "dest"}))`, 'expr');
     script.run(scr, "testsrc", aq);
-    expect(aq.describe(".")).toEqual(expect.arrayContaining([
-        {src: 'testsrc/32.png', dst: "dest/32.png"},
-        {src: 'testsrc/192-g-vsmogon.png', dst: "dest/192-g-vsmogon.png"},
+    expect(aq.log).toEqual(expect.arrayContaining([
+        {type: 'Copy', src: 'testsrc/32.png', dst: "dest/32.png", valid: 'Success'},
+        {type: 'Copy', src: 'testsrc/192-g-vsmogon.png', dst: "dest/192-g-vsmogon.png", valid: 'Success'},
     ]));
 });
 
