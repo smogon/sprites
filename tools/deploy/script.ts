@@ -55,7 +55,7 @@ export class ActionQueue {
             if (entry.type === 'Copy') {
                 let addendum = '';
                 if (entry.valid !== 'Success') {
-                    addendum = ` ($entry.valid)`;
+                    addendum = ` (${entry.valid})`;
                 }
                 console.log(`${entry.src} ==> ${entry.dst}${addendum}`);
             }
