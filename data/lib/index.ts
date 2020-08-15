@@ -21,5 +21,13 @@ for (const entry of Object.values(species)) {
     result.set(entry.sid, entry);
 }
 
-export default result;
+export function get(id : number) : Type {
+    const entry = result.get(id);
+    if (entry === undefined)
+        throw new Error(`No id for ${id}`);
+    return entry;
+}
 
+export function entries() : [number, Type][] {
+    return Array.from(result.entries());
+}

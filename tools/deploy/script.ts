@@ -4,7 +4,7 @@ import nodePath from 'path';
 import vm from 'vm';
 import * as pathlib from './path.js';
 import * as spritename from './spritename.js';
-import spritedata from '@smogon/sprite-data';
+import * as spritedata from '@smogon/sprite-data';
 
 type CopyEntry = {
     type : 'Copy',
