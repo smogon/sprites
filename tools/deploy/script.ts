@@ -4,6 +4,7 @@ import nodePath from 'path';
 import vm from 'vm';
 import * as pathlib from './path.js';
 import * as spritename from './spritename.js';
+import spritedata from '@smogon/sprite-data';
 
 type CopyEntry = {
     type : 'Copy',
@@ -110,7 +111,8 @@ export class Script extends vm.Script {
 }
 
 const ENV_PROTO = {
-    spritename
+    spritename,
+    spritedata
 };
 
 function makeEnv(srcDir : string, queue: ActionQueue) {
