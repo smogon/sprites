@@ -5,15 +5,20 @@ import vm from 'vm';
 import * as pathlib from './path.js';
 import * as spritename from './spritename.js';
 
-export type LogEntry = {
+type CopyEntry = {
     type : 'Copy',
     src : string,
     dst : string,
     valid : 'Success' | 'Absolute' | 'Multiple'
 };
 
+export type LogEntry = CopyEntry | {
+    type : 'Debug',
+    obj : any
+};
+
 export class ActionQueue {
-    private seen : Map<string, LogEntry | 'MoreThan1'>;
+    private seen : Map<string, CopyEntry | 'MoreThan1'>;
     // Have an accessor for this in the future? idk
     public log : LogEntry[];
     public valid : boolean;
@@ -24,9 +29,13 @@ export class ActionQueue {
         this.valid = true;
     }
 
+    debug(obj : any) {
+        this.log.push(obj);
+    }
+
     copy(src : string, dst : string) {
         dst = nodePath.normalize(dst);
-        let entry : LogEntry = {
+        const entry : CopyEntry = {
             type : 'Copy',
             src,
             dst,
@@ -58,6 +67,8 @@ export class ActionQueue {
                     addendum = ` (${entry.valid})`;
                 }
                 console.log(`${entry.src} ==> ${entry.dst}${addendum}`);
+            } else if (entry.type === 'Debug') {
+                console.log("DEBUG: ", entry.obj);
             }
         }
     }
@@ -65,13 +76,16 @@ export class ActionQueue {
     run(dir : string, mode : 'link' | 'copy') {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
-        for (let {src, dst} of this.log) {
-            dst = nodePath.join(dir, dst);
-            fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
-            if (mode === 'link') {
-                fs.linkSync(src, dst);
-            } else {
-                fs.copyFileSync(src, dst);
+        for (const entry of this.log) {
+            if (entry.type === 'Copy') {
+                let {src, dst} = entry;
+                dst = nodePath.join(dir, dst);
+                fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
+                if (mode === 'link') {
+                    fs.linkSync(src, dst);
+                } else {
+                    fs.copyFileSync(src, dst);
+                }
             }
         }
     }
@@ -120,6 +134,10 @@ function makeEnv(srcDir : string, queue: ActionQueue) {
                 dst = pathlib.format(pathlib.path(srcp, dstp));
             }
             queue.copy(nodePath.join(srcDir, src), dst);
+        },
+
+        debug(obj : any) {
+            queue.debug(obj);
         }
     }
 }
