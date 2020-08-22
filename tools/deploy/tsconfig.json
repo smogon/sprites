@@ -2,6 +2,7 @@
     "extends": "../../tsconfig-base",
     "compilerOptions": {
         "outDir": "dist",
-        "allowJs": true
-    }
+        "allowJs": true,
+    },
+    "exclude": ["test", "dist", "node_modules"]
 }
