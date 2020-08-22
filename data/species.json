@@ -853,6 +853,13 @@
         "forme": "Mega",
         "sid": 2561
     },
+    "2562": {
+        "num": 80,
+        "formeNum": 2,
+        "base": "Slowbro",
+        "forme": "Galar",
+        "sid": 2562
+    },
     "2592": {
         "num": 81,
         "formeNum": 0,
@@ -8419,6 +8426,41 @@
         "base": "Eternatus",
         "forme": "Eternamax",
         "sid": 28481
+    },
+    "28512": {
+        "num": 891,
+        "formeNum": 0,
+        "base": "Kubfu",
+        "forme": "",
+        "sid": 28512
+    },
+    "28544": {
+        "num": 892,
+        "formeNum": 0,
+        "base": "Urshifu",
+        "forme": "",
+        "sid": 28544
+    },
+    "28545": {
+        "num": 892,
+        "formeNum": 1,
+        "base": "Urshifu",
+        "forme": "Rapid-Strike",
+        "sid": 28545
+    },
+    "28576": {
+        "num": 893,
+        "formeNum": 0,
+        "base": "Zarude",
+        "forme": "",
+        "sid": 28576
+    },
+    "28577": {
+        "num": 893,
+        "formeNum": 1,
+        "base": "Zarude",
+        "forme": "Dada",
+        "sid": 28577
     },
     "536870944": {
         "num": -1,
