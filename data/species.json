@@ -304,43 +304,50 @@
         "num": 25,
         "formeNum": 9,
         "base": "Pikachu",
-        "forme": "Rock-Star",
+        "forme": "World",
         "sid": 809
     },
     "810": {
         "num": 25,
         "formeNum": 10,
         "base": "Pikachu",
-        "forme": "Belle",
+        "forme": "Rock-Star",
         "sid": 810
     },
     "811": {
         "num": 25,
         "formeNum": 11,
         "base": "Pikachu",
-        "forme": "Pop-Star",
+        "forme": "Belle",
         "sid": 811
     },
     "812": {
         "num": 25,
         "formeNum": 12,
         "base": "Pikachu",
-        "forme": "PhD",
+        "forme": "Pop-Star",
         "sid": 812
     },
     "813": {
         "num": 25,
         "formeNum": 13,
         "base": "Pikachu",
-        "forme": "Libre",
+        "forme": "PhD",
         "sid": 813
     },
     "814": {
         "num": 25,
         "formeNum": 14,
         "base": "Pikachu",
-        "forme": "Cosplay",
+        "forme": "Libre",
         "sid": 814
+    },
+    "815": {
+        "num": 25,
+        "formeNum": 15,
+        "base": "Pikachu",
+        "forme": "Cosplay",
+        "sid": 815
     },
     "832": {
         "num": 26,
