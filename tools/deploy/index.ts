@@ -29,8 +29,13 @@ program
         const aq = new script.ActionQueue;
         
         for (const src of files) {
-            const dst = script.runOnFile(scr, src);
-            aq.copy(src, dst);
+            try {
+                const dst = script.runOnFile(scr, src);
+                aq.copy(src, dst);
+            } catch(e) {
+                // Move to script.runOnFile?
+                aq.throw(e);
+            }
         }
         
         if (outputDir) {
@@ -51,8 +56,13 @@ program
         const aq = new script.ActionQueue;
 
         for (const file of scripts) {
-            const scr = new script.Script(file, 'file');
-            script.run(scr, nodePath.dirname(file), aq);
+            try {
+                const scr = new script.Script(file, 'file');
+                script.run(scr, nodePath.dirname(file), aq);
+            } catch(e) {
+                // Move to script.run?
+                aq.throw(e);
+            }
         }
         
         if (outputDir) {

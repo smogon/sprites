@@ -30,6 +30,11 @@ export class ActionQueue {
         this.valid = true;
     }
 
+    throw(obj : Error) {
+        this.debug(obj);
+        this.valid = false;
+    }
+
     debug(obj : unknown) {
         this.log.push({type: 'Debug', obj});
     }
