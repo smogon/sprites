@@ -30,8 +30,8 @@ export class ActionQueue {
         this.valid = true;
     }
 
-    debug(obj : any) {
-        this.log.push(obj);
+    debug(obj : unknown) {
+        this.log.push({type: 'Debug', obj});
     }
 
     copy(src : string, dst : string) {
@@ -138,7 +138,7 @@ function makeEnv(srcDir : string, queue: ActionQueue) {
             queue.copy(nodePath.join(srcDir, src), dst);
         },
 
-        debug(obj : any) {
+        debug(obj : unknown) {
             queue.debug(obj);
         }
     }
