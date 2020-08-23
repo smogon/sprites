@@ -12,7 +12,7 @@
     },
     "scripts": {
         "prepare": "tsc",
-        "test": "tsc && mocha dist/test"
+        "test": "tsc && mocha test"
     },
     "type": "module",
     "main": "dist/index.js"
