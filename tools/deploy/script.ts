@@ -6,22 +6,30 @@ import * as pathlib from './path.js';
 import * as spritename from './spritename.js';
 import * as spritedata from '@smogon/sprite-data';
 
-type CopyEntry = {
-    type : 'Copy',
-    src : string,
+type DstEntry = {
     dst : string,
     valid : 'Success' | 'Absolute' | 'Multiple',
     debugObjs : unknown[]
 };
 
-export type LogEntry = CopyEntry | {
+type CopyEntry = {
+    type : 'Copy',
+    src : string,
+} & DstEntry;
+
+type WriteEntry = {
+    type : 'Write',
+    data : string,
+} & DstEntry;
+
+export type LogEntry = CopyEntry | WriteEntry | {
     type : 'Debug',
     obj : unknown,
     stray : boolean
 };
 
 export class ActionQueue {
-    private seen : Map<string, CopyEntry | 'MoreThan1'>;
+    private seen : Map<string, DstEntry | 'MoreThan1'>;
     // Have an accessor for this in the future? idk
     public log : LogEntry[];
     public valid : boolean;
@@ -75,6 +83,34 @@ export class ActionQueue {
         }
     }
 
+    write(data : string, dst : string) {
+        dst = nodePath.normalize(dst);
+        const entry : WriteEntry = {
+            type : 'Write',
+            data,
+            dst,
+            valid : 'Success',
+            debugObjs : this.debugBuffer
+        };
+        this.log.push(entry);
+        this.debugBuffer = [];
+        if (nodePath.isAbsolute(dst)) {
+            this.valid = false;
+            entry.valid = 'Absolute';
+        } else {
+            const lastEntry = this.seen.get(dst);
+            if (lastEntry === undefined) {
+                this.seen.set(dst, entry);
+            } else {
+                this.valid = false;
+                entry.valid = 'Multiple';
+                if (lastEntry !== 'MoreThan1') {
+                    lastEntry.valid = 'Multiple';
+                }
+            }
+        }
+    }
+
     skip() {
         for (const obj of this.debugBuffer) {
             this.gdebug(obj, true);
@@ -94,7 +130,18 @@ export class ActionQueue {
                 for (const obj of entry.debugObjs) {
                     console.log("DEBUG: ", obj);
                 }
-                console.log(`${entry.src} ==> ${entry.dst}${addendum}`);
+                console.log(`COPY: ${entry.src} ==> ${entry.dst}${addendum}`);
+            } else if (entry.type === 'Write') {
+                if (entry.valid === 'Success' && level === 'errors')
+                    continue;
+                let addendum = '';
+                if (entry.valid !== 'Success') {
+                    addendum = ` (${entry.valid})`;
+                }
+                for (const obj of entry.debugObjs) {
+                    console.log("DEBUG: ", obj);
+                }
+                console.log(`WRITE: ${entry.dst}${addendum}`);
             } else if (entry.type === 'Debug') {
                 let addendum = '';
                 if (entry.stray) {
@@ -118,6 +165,11 @@ export class ActionQueue {
                 } else {
                     fs.copyFileSync(src, dst);
                 }
+            } else if (entry.type === 'Write') {
+                let {data, dst} = entry;
+                dst = nodePath.join(dir, dst);
+                fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
+                fs.writeFileSync(dst, data);
             }
         }
     }
@@ -193,6 +245,11 @@ function makeEnv2(srcDir : string, queue: ActionQueue) {
             const src = pathlib.format(pathlib.path(srcp));
             return fs.readFileSync(nodePath.join(srcDir, src), 'utf8');
         },
+
+        write(dstp : pathlib.PathLike, data : string) {
+            const dst = pathlib.format(pathlib.path(dstp));
+            queue.write(data, dst);
+        }
     }
 }
 
