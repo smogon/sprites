@@ -55,16 +55,15 @@ export class ActionQueue {
         this.log.push({type: 'Debug', obj, stray});
     }
 
-    copy(src : string, dst : string) {
+    procDst(dst : string) : DstEntry {
         dst = nodePath.normalize(dst);
-        const entry : CopyEntry = {
-            type : 'Copy',
-            src,
+        const entry : DstEntry = {
             dst,
             valid : 'Success',
             debugObjs : this.debugBuffer
         };
-        this.log.push(entry);
+        // Caller must mutate this into a LogEntry.
+        this.log.push(entry as LogEntry);
         this.debugBuffer = [];
         if (nodePath.isAbsolute(dst)) {
             this.valid = false;
@@ -81,34 +80,19 @@ export class ActionQueue {
                 }
             }
         }
+        return entry;
+    }
+
+    copy(src : string, dst : string) {
+        const entry = this.procDst(dst) as CopyEntry;
+        entry.type = 'Copy';
+        entry.src = src;
     }
 
     write(data : string, dst : string) {
-        dst = nodePath.normalize(dst);
-        const entry : WriteEntry = {
-            type : 'Write',
-            data,
-            dst,
-            valid : 'Success',
-            debugObjs : this.debugBuffer
-        };
-        this.log.push(entry);
-        this.debugBuffer = [];
-        if (nodePath.isAbsolute(dst)) {
-            this.valid = false;
-            entry.valid = 'Absolute';
-        } else {
-            const lastEntry = this.seen.get(dst);
-            if (lastEntry === undefined) {
-                this.seen.set(dst, entry);
-            } else {
-                this.valid = false;
-                entry.valid = 'Multiple';
-                if (lastEntry !== 'MoreThan1') {
-                    lastEntry.valid = 'Multiple';
-                }
-            }
-        }
+        const entry = this.procDst(dst) as WriteEntry;
+        entry.type = 'Write';
+        entry.data = data;
     }
 
     skip() {
