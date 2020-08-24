@@ -167,20 +167,28 @@ function makeEnv(srcDir : string, queue: ActionQueue) {
 }
 
 export function runOnFile(scr : Script, src : string, queue: ActionQueue) {
-    const input = pathlib.path(src, {dir: ""});
-    const result = scr.runInNewContext({
-        __proto__: ENV_PROTO,
-        path: input,
-        ...input
-    });
-    if (result === undefined) {
-        throw new Error(`undefined output on ${src}`);
+    try {
+        const input = pathlib.path(src, {dir: ""});
+        const result = scr.runInNewContext({
+            __proto__: ENV_PROTO,
+            path: input,
+            ...input
+        });
+        if (result === undefined) {
+            throw new Error(`undefined output on ${src}`);
+        }
+        const output = pathlib.update(input, result);
+        const dst = pathlib.format(output);
+        queue.copy(src, dst);
+    } catch(e) {
+        queue.throw(e);
     }
-    const output = pathlib.update(input, result);
-    const dst = pathlib.format(output);
-    queue.copy(src, dst);
 }
 
 export function run(scr : Script, srcDir : string, queue : ActionQueue) {
-    scr.runInNewContext(makeEnv(srcDir, queue));
+    try {
+        scr.runInNewContext(makeEnv(srcDir, queue));
+    } catch(e) {
+        queue.throw(e);
+    }
 }
