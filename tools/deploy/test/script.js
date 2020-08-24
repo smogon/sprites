@@ -14,9 +14,9 @@ it('aq', () => {
     aq.copy("baz", "/bar")
     
     expect(aq.log).toEqual(expect.arrayContaining([
-        {type: 'Copy', src: 'foo', dst: "bar", valid: 'Multiple'},
-        {type: 'Copy', src: 'baz', dst: "bar", valid: 'Multiple'},
-        {type: 'Copy', src: 'baz', dst: "/bar", valid: 'Absolute'},
+        {type: 'Copy', src: 'foo', dst: "bar", valid: 'Multiple', debugObjs: []},
+        {type: 'Copy', src: 'baz', dst: "bar", valid: 'Multiple', debugObjs: []},
+        {type: 'Copy', src: 'baz', dst: "/bar", valid: 'Absolute', debugObjs: []},
     ]));
     
 });
@@ -32,8 +32,8 @@ it('run identity', () => {
     const scr = new script.Script(` list(".").forEach(p => copy(p, p))`, 'expr');
     script.run(scr, spriteSrc, aq);
     expect(aq.log).toEqual(expect.arrayContaining([
-        {type: 'Copy', src: path.join(spriteSrc, '32.png'), dst: "32.png", valid: 'Success'},
-        {type: 'Copy', src: path.join(spriteSrc, '192-g-vsmogon.png'), dst: "192-g-vsmogon.png", valid: 'Success'},
+        {type: 'Copy', src: path.join(spriteSrc, '32.png'), dst: "32.png", valid: 'Success', debugObjs: []},
+        {type: 'Copy', src: path.join(spriteSrc, '192-g-vsmogon.png'), dst: "192-g-vsmogon.png", valid: 'Success', debugObjs: []},
     ]));
 });
 
@@ -42,8 +42,8 @@ it('run delta', () => {
     const scr = new script.Script(` list(".").forEach(p => copy(p, {dir: "dest"}))`, 'expr');
     script.run(scr, spriteSrc, aq);
     expect(aq.log).toEqual(expect.arrayContaining([
-        {type: 'Copy', src: path.join(spriteSrc, '32.png'), dst: "dest/32.png", valid: 'Success'},
-        {type: 'Copy', src: path.join(spriteSrc, '192-g-vsmogon.png'), dst: "dest/192-g-vsmogon.png", valid: 'Success'},
+        {type: 'Copy', src: path.join(spriteSrc, '32.png'), dst: "dest/32.png", valid: 'Success', debugObjs: []},
+        {type: 'Copy', src: path.join(spriteSrc, '192-g-vsmogon.png'), dst: "dest/192-g-vsmogon.png", valid: 'Success', debugObjs: []},
     ]));
 });
 

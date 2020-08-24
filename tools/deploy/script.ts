@@ -10,7 +10,8 @@ type CopyEntry = {
     type : 'Copy',
     src : string,
     dst : string,
-    valid : 'Success' | 'Absolute' | 'Multiple'
+    valid : 'Success' | 'Absolute' | 'Multiple',
+    debugObjs : unknown[]
 };
 
 export type LogEntry = CopyEntry | {
@@ -23,11 +24,13 @@ export class ActionQueue {
     // Have an accessor for this in the future? idk
     public log : LogEntry[];
     public valid : boolean;
+    private debugBuffer : unknown[];
     
     constructor() {
         this.seen = new Map;
         this.log = [];
         this.valid = true;
+        this.debugBuffer = [];
     }
 
     throw(obj : Error) {
@@ -36,6 +39,10 @@ export class ActionQueue {
     }
 
     debug(obj : unknown) {
+        this.debugBuffer.push(obj);
+    }
+
+    gdebug(obj : unknown) {
         this.log.push({type: 'Debug', obj});
     }
 
@@ -45,9 +52,11 @@ export class ActionQueue {
             type : 'Copy',
             src,
             dst,
-            valid : 'Success'
+            valid : 'Success',
+            debugObjs : this.debugBuffer
         };
         this.log.push(entry);
+        this.debugBuffer = [];
         if (nodePath.isAbsolute(dst)) {
             this.valid = false;
             entry.valid = 'Absolute';
@@ -72,10 +81,16 @@ export class ActionQueue {
                 if (entry.valid !== 'Success') {
                     addendum = ` (${entry.valid})`;
                 }
+                for (const obj of entry.debugObjs) {
+                    console.log("DEBUG: ", obj);
+                }
                 console.log(`${entry.src} ==> ${entry.dst}${addendum}`);
             } else if (entry.type === 'Debug') {
-                console.log("DEBUG: ", entry.obj);
+                console.log("GDEBUG: ", entry.obj);
             }
+        }
+        for (const obj of this.debugBuffer) {
+            console.log("STRAY DEBUG: ", obj);
         }
     }
 
