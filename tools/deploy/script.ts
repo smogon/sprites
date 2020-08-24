@@ -15,7 +15,7 @@ type CopyEntry = {
 
 export type LogEntry = CopyEntry | {
     type : 'Debug',
-    obj : any
+    obj : unknown
 };
 
 export class ActionQueue {
