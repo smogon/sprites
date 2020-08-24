@@ -188,6 +188,11 @@ function makeEnv2(srcDir : string, queue: ActionQueue) {
             }
             queue.copy(nodePath.join(srcDir, src), dst);
         },
+
+        read(srcp : pathlib.PathLike) : string {
+            const src = pathlib.format(pathlib.path(srcp));
+            return fs.readFileSync(nodePath.join(srcDir, src), 'utf8');
+        },
     }
 }
 
