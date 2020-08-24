@@ -50,8 +50,7 @@ program
         
         for (const src of files) {
             try {
-                const dst = script.runOnFile(scr, src);
-                aq.copy(src, dst);
+                script.runOnFile(scr, src, aq);
             } catch(e) {
                 // Move to script.runOnFile?
                 aq.throw(e);

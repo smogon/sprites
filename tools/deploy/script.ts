@@ -166,7 +166,7 @@ function makeEnv(srcDir : string, queue: ActionQueue) {
     }
 }
 
-export function runOnFile(scr : Script, src : string) : string {
+export function runOnFile(scr : Script, src : string, queue: ActionQueue) {
     const input = pathlib.path(src, {dir: ""});
     const result = scr.runInNewContext({
         __proto__: ENV_PROTO,
@@ -178,7 +178,7 @@ export function runOnFile(scr : Script, src : string) : string {
     }
     const output = pathlib.update(input, result);
     const dst = pathlib.format(output);
-    return dst;
+    queue.copy(src, dst);
 }
 
 export function run(scr : Script, srcDir : string, queue : ActionQueue) {

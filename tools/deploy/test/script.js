@@ -24,8 +24,11 @@ it('aq', () => {
 
 it('runOnFile', () => {
     const scr = new script.Script('({name: "25"})', 'expr');
-    const dst = script.runOnFile(scr, '/foo/bar/pikachu.png');
-    expect(dst).toEqual('25.png');
+    const aq = new script.ActionQueue();
+    script.runOnFile(scr, '/foo/bar/pikachu.png', aq);
+    expect(aq.log).toEqual(expect.arrayContaining([
+        {type: 'Copy', src: '/foo/bar/pikachu.png', dst: "25.png", valid: 'Success', debugObjs: []},
+    ]));
 });
 
 it('run identity', () => {
