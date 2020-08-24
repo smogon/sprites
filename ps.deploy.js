@@ -1,152 +1,74 @@
 
-transform(toPSSpriteID, () => {
-    // dest("ani");
-    // sel(
-    //     "src/canonical/models/front",
-    //     "src/canonical/models/front-cosmetic",
-    // );
-    // ignore(() => {
-    //     sel(
-    //         "src/cap/models/front",
-    //         "src/cap/sprites/gen5/front",
-    //     );
-    // });
-    
-    // dest("ani-back");
-    // sel(
-    //     "src/canonical/models/back",
-    //     "src/canonical/models/back-cosmetic",
-    // );
-    // ignore(() => {
-    //     sel(
-    //         "src/cap/models/back",
-    //         "src/cap/sprites/gen5/back",
-    //     );
-    // });
-    
-    // dest("ani-shiny");
-    // sel(
-    //     "src/canonical/models/front-shiny",
-    //     "src/canonical/models/front-shiny-cosmetic",
-    // );
-    // ignore(() => {
-    //     sel(
-    //         "src/cap/models/front-shiny",
-    //         "src/cap/sprites/gen5/front-shiny",
-    //     );
-    // });
-    
-    // dest("ani-back-shiny");
-    // sel(
-    //     "src/canonical/models/back-shiny",
-    //     "src/canonical/models/back-shiny-cosmetic",
-    // );
-    // ignore(() => {
-    //     sel(
-    //         "src/cap/models/back-shiny",
-    //         "src/cap/sprites/gen5/back-shiny"
-    //     );
-    // });
+function toID(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
 
-    dest("gen5ani");
-    sel(
-        "src/cap/sprites/gen5/front"
-    );
+function spritecopy(f, {dir, ext}) {
+    const sn = spritename.parse(f.name);
+    let name;
+    if (typeof sn.id === 'string') {
+        name = toID(sn.id);
+    } else {
+        const sd = spritedata.get(sn.id);
+        debug(sd);
+        name = toID(sd.base);
+        if (sd.forme) {
+            name += `-${toID(sd.forme)}`;
+        }
+    }
+    if (sn.extra.has("f")) {
+        name += "-f";
+    }
+    if (sn.extra.has("g")) {
+        name += "-gmax";
+    }
+    if (sn.extra.has("b")) {
+        dir += "-back";
+    }
+    if (sn.extra.has("s")) {
+        dir += "-shiny";
+    }
+    copy(f, {dir, ext, name});
+}
 
-    dest("gen5ani-back");
-    sel(
-        "src/cap/sprites/gen5/back"
-    );
+for (const f of list("newsrc/models")) {
+    spritecopy(f, {dir: "ani"});
+}
 
-    // for (const canon of ["canonical", "cap"]) {
-    //     dest("afd");
-    //     sel(
-    //         `src/afd/sprites-${canon}/front`,
-    //         `src/afd/sprites-${canon}/front-cosmetic`,
-    //     )
+for (const f of list("newsrc/sprites/gen5")) {
+    spritecopy(f, {dir: "gen5ani"});
+}
 
-    //     dest("afd-shiny");
-    //     sel(
-    //         `src/afd/sprites-${canon}/front-shiny`,
-    //         `src/afd/sprites-${canon}/front-shiny-cosmetic`,
-    //     )
+for (const f of list("newsrc/afd")) {
+    spritecopy(f, {dir: "afd"});
+}
 
-    //     dest("afd-back");
-    //     sel(
-    //         `src/afd/sprites-${canon}/back`,
-    //         `src/afd/sprites-${canon}/back-cosmetic`,
-    //     )
+for (const f of list("build/padded-dex")) {
+    spritecopy(f, {dir: "dex"});
+}
 
-    //     dest("afd-back-shiny");
-    //     sel(
-    //         `src/afd/sprites-${canon}/back-shiny`,
-    //         `src/afd/sprites-${canon}/back-shiny-cosmetic`,
-    //     );
-    // }
+function fixType(name) {
+    return name.replace("Unknown", "???");
+}
 
-    // TODO
-    // dest("dex");
-    // sel(
-    //     "build/padded-dex/canonical/front",
-    //     "build/padded-dex/canonical/front-cosmetic",
-    //     "build/padded-dex/cap/front",
-    //     "build/padded-dex/cap/front-cosmetic",
-    // );
+for (const f of list("src/canonical/ui/types/gen4").concat(list("src/noncanonical/ui/types/gen4"))) {
+    copy(f, {dir: "types", name: fixType(f.name)});
+}
 
-    // dest("dex-shiny");
-    // sel(
-    //     "build/padded-dex/canonical/front-shiny",
-    //     "build/padded-dex/canonical/front-shiny-cosmetic",
-    //     "build/padded-dex/cap/front",
-    //     "build/padded-dex/cap/front-cosmetic",
-    // );
-});
+for (const f of list("src/canonical/ui/categories/gen4")) {
+    copy(f, {dir: "categories"});
+}
+copy("src/noncanonical/ui/categories/undefined.png", {dir: "categories"});
 
-transform(toPSID, () => {
-    // dest("ani");
-    // sel("src/canonical/models/front-misc/Substitute.gif");
-
-    // dest("ani-back");
-    // sel("src/canonical/models/back-misc/Substitute.gif");
-
-    // dest("afd");
-    // sel("src/afd/sprites-canonical/front-misc/Substitute.png");
-    
-    // dest("afd-back");
-    // sel("src/afd/sprites-canonical/back-misc/Substitute.png");
-
-    dest("misc");
-    sel(
-        "src/canonical/ui/battle/Alpha.png",
-        "src/canonical/ui/battle/Mega.png",
-        "src/canonical/ui/battle/Omega.png",
-    );
-});
-
+copy("src/canonical/ui/battle/Alpha.png", {dir: "misc"});
+copy("src/canonical/ui/battle/Mega.png", {dir: "misc"});
+copy("src/canonical/ui/battle/Omega.png", {dir: "misc"});
+        
 // TODO: reenable when trainers are moved
 // dest("trainers");
 // sel("build/padded-trainers/canonical");
 
-function fixTypes(dst) {
-    return dst.replace("Unknown", "???");
-}
-
-dest("types");
-transform(fixTypes, () => {
-    sel(
-        "src/canonical/ui/types/gen4",
-        "src/noncanonical/ui/types/gen4"
-    );
-});
-
-dest("categories");
-sel(
-    "src/canonical/ui/categories/gen4",
-    "src/noncanonical/ui/categories/undefined.png",
-);
-
-dest(".");
-//sel("build/ps/pokemonicons-pokeball-sheet.png");
-// TODO
-//sel("build/ps/trainers-sheet.png");
-sel("build/ps/itemicons-sheet.png");
+copy("build/ps/pokemonicons-pokeball-sheet.png", {dir: "."});
+copy("build/ps/pokemonicons-sheet.png", {dir: "."});
+//copy("build/ps/trainers-sheet.png", {dir: "."});
+copy("build/ps/itemicons-sheet.png", {dir: "."});
