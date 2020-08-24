@@ -67,7 +67,6 @@ export class ActionQueue {
             valid : 'Success',
             debugObjs : this.debugBuffer
         };
-        // Caller must mutate this into a LogEntry.
         this.log.push(entry);
         this.debugBuffer = [];
         if (nodePath.isAbsolute(dst)) {
