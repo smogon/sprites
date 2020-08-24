@@ -16,7 +16,8 @@ type CopyEntry = {
 
 export type LogEntry = CopyEntry | {
     type : 'Debug',
-    obj : unknown
+    obj : unknown,
+    stray : boolean
 };
 
 export class ActionQueue {
@@ -34,7 +35,7 @@ export class ActionQueue {
     }
 
     throw(obj : Error) {
-        this.gdebug(obj);
+        this.gdebug(obj, false);
         this.valid = false;
     }
 
@@ -42,8 +43,8 @@ export class ActionQueue {
         this.debugBuffer.push(obj);
     }
 
-    gdebug(obj : unknown) {
-        this.log.push({type: 'Debug', obj});
+    gdebug(obj : unknown, stray : boolean) {
+        this.log.push({type: 'Debug', obj, stray});
     }
 
     copy(src : string, dst : string) {
@@ -73,6 +74,13 @@ export class ActionQueue {
             }
         }
     }
+
+    skip() {
+        for (const obj of this.debugBuffer) {
+            this.gdebug(obj, true);
+        }
+        this.debugBuffer = [];
+    }
     
     print(level : 'errors' | 'all') {
         for (const entry of this.log) {
@@ -88,11 +96,12 @@ export class ActionQueue {
                 }
                 console.log(`${entry.src} ==> ${entry.dst}${addendum}`);
             } else if (entry.type === 'Debug') {
-                console.log("GDEBUG: ", entry.obj);
+                let addendum = '';
+                if (entry.stray) {
+                    addendum = ` (stray)`;
+                }
+                console.log("GDEBUG${addendum}: ", entry.obj);
             }
-        }
-        for (const obj of this.debugBuffer) {
-            console.log("STRAY DEBUG: ", obj);
         }
     }
 
@@ -134,7 +143,7 @@ export class Script extends vm.Script {
 
 const SKIP = {};
 
-const ENV_PROTO = {
+const ENV0 = {
     spritename,
     spritedata,
     SKIP,
@@ -144,9 +153,22 @@ const ENV_PROTO = {
     }
 };
 
-function makeEnv(srcDir : string, queue: ActionQueue) {
+function makeEnv1(queue: ActionQueue) {
     return {
-        __proto__: ENV_PROTO,
+        __proto__: ENV0,
+        debug(obj : unknown) {
+            queue.debug(obj);
+        },
+        
+        gdebug(obj : unknown) {
+            queue.gdebug(obj, false);
+        }
+    }
+};
+
+function makeEnv2(srcDir : string, queue: ActionQueue) {
+    return {
+        __proto__: makeEnv1(queue),
         
         list(dir : string) : pathlib.Path[] {
             const result = [];
@@ -166,10 +188,6 @@ function makeEnv(srcDir : string, queue: ActionQueue) {
             }
             queue.copy(nodePath.join(srcDir, src), dst);
         },
-
-        debug(obj : unknown) {
-            queue.debug(obj);
-        }
     }
 }
 
@@ -177,7 +195,7 @@ export function runOnFile(scr : Script, src : string, queue: ActionQueue) {
     try {
         const input = pathlib.path(src, {dir: ""});
         const result = scr.runInNewContext({
-            __proto__: ENV_PROTO,
+            __proto__: makeEnv1(queue),
             path: input,
             ...input
         });
@@ -188,16 +206,22 @@ export function runOnFile(scr : Script, src : string, queue: ActionQueue) {
         const dst = pathlib.format(output);
         queue.copy(src, dst);
     } catch(e) {
-        if (e === SKIP) return;
+        if (e === SKIP) {
+            queue.skip();
+            return;
+        }
         queue.throw(e);
     }
 }
 
 export function run(scr : Script, srcDir : string, queue : ActionQueue) {
     try {
-        scr.runInNewContext(makeEnv(srcDir, queue));
+        scr.runInNewContext(makeEnv2(srcDir, queue));
     } catch(e) {
-        if (e === SKIP) return;
+        if (e === SKIP) {
+            queue.skip();
+            return;
+        }
         queue.throw(e);
     }
 }
