@@ -132,9 +132,16 @@ export class Script extends vm.Script {
     }
 }
 
+const SKIP = {};
+
 const ENV_PROTO = {
     spritename,
-    spritedata
+    spritedata,
+    SKIP,
+    // Because throw SKIP isn't an expression
+    skip() {
+        throw SKIP;
+    }
 };
 
 function makeEnv(srcDir : string, queue: ActionQueue) {
@@ -181,6 +188,7 @@ export function runOnFile(scr : Script, src : string, queue: ActionQueue) {
         const dst = pathlib.format(output);
         queue.copy(src, dst);
     } catch(e) {
+        if (e === SKIP) return;
         queue.throw(e);
     }
 }
@@ -189,6 +197,7 @@ export function run(scr : Script, srcDir : string, queue : ActionQueue) {
     try {
         scr.runInNewContext(makeEnv(srcDir, queue));
     } catch(e) {
+        if (e === SKIP) return;
         queue.throw(e);
     }
 }

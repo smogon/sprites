@@ -23,9 +23,11 @@ it('aq', () => {
 });
 
 it('runOnFile', () => {
-    const scr = new script.Script('({name: "25"})', 'expr');
+    const scr = new script.Script('name === "rhydont" ? skip() : {name: "25"}', 'expr');
     const aq = new script.ActionQueue();
     script.runOnFile(scr, '/foo/bar/pikachu.png', aq);
+    script.runOnFile(scr, '/foo/bar/rhydont.png', aq);
+    expect(aq.log.length).toBe(1);
     expect(aq.log).toEqual(expect.arrayContaining([
         {type: 'Copy', src: '/foo/bar/pikachu.png', dst: "25.png", valid: 'Success', debugObjs: []},
     ]));
