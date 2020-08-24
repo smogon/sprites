@@ -74,9 +74,11 @@ export class ActionQueue {
         }
     }
     
-    print() {
+    print(level : 'errors' | 'all') {
         for (const entry of this.log) {
             if (entry.type === 'Copy') {
+                if (entry.valid === 'Success' && level === 'errors')
+                    continue;
                 let addendum = '';
                 if (entry.valid !== 'Success') {
                     addendum = ` (${entry.valid})`;

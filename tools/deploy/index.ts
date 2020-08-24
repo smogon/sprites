@@ -13,10 +13,11 @@ program
     // TODO: default toID
     .option('-e, --eval <expr>', 'Expr')
     .option('-m, --module <mod>', 'Module')
+    .option('-v, --verbose', 'Verbose')
     // TODO
     // .option('-t, --tag <tag>', 'Tag', collect, [])
     // from rename(1)
-    .action(async (files : string[], {eval: expr, module: mod, output: outputDir}) => {
+    .action(async (files : string[], {eval: expr, module: mod, output: outputDir, verbose}) => {
         let scr;
         if (expr !== undefined) {
             scr = new script.Script(expr, 'expr');
@@ -37,22 +38,25 @@ program
                 aq.throw(e);
             }
         }
+
+        const level = verbose ? 'all' : 'errors';
         
         if (outputDir) {
             if (!aq.valid) {
-                aq.print();
+                aq.print(level);
                 process.exit(1);
             }
             aq.run(outputDir, 'copy');
         } else {
-            aq.print();
+            aq.print(level);
         }
     });
 
 program
     .command('run [scripts...]')
     .option('-o, --output <dir>', 'Output directory')
-    .action((scripts : string[], {output: outputDir}) => {
+    .option('-v, --verbose', 'Verbose')
+    .action((scripts : string[], {output: outputDir, verbose}) => {
         const aq = new script.ActionQueue;
 
         for (const file of scripts) {
@@ -64,15 +68,17 @@ program
                 aq.throw(e);
             }
         }
-        
+
+        const level = verbose ? 'all' : 'errors';
+
         if (outputDir) {
             if (!aq.valid) {
-                aq.print();
+                aq.print(level);
                 process.exit(1);
             }
             aq.run(outputDir, 'link');
         } else {
-            aq.print();
+            aq.print(level);
         }
     });
 
