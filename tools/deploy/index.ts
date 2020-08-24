@@ -7,6 +7,23 @@ function collect(value : string, previous : string[]) {
     return previous.concat([value]);
 }
 
+function runAq(aq : script.ActionQueue, outputDir : undefined | string, verbose : undefined | true) {
+    const level = verbose ? 'all' : 'errors';
+    if (!aq.valid) {
+        aq.print(level);
+        process.exit(1);
+    }
+    if (outputDir !== undefined) {
+        aq.run(outputDir, 'copy');
+    } else {
+        if (level === 'errors') {
+            console.log(`Success, but nothing to do. Please rerun with -v or -o`);
+        } else {
+            aq.print('all');
+        }
+    }
+}
+
 program
     .command('copy [files...]')
     .option('-o, --output <dir>', 'Output directory')
@@ -39,17 +56,7 @@ program
             }
         }
 
-        const level = verbose ? 'all' : 'errors';
-        
-        if (outputDir) {
-            if (!aq.valid) {
-                aq.print(level);
-                process.exit(1);
-            }
-            aq.run(outputDir, 'copy');
-        } else {
-            aq.print(level);
-        }
+        runAq(aq, outputDir, verbose);
     });
 
 program
@@ -68,18 +75,8 @@ program
                 aq.throw(e);
             }
         }
-
-        const level = verbose ? 'all' : 'errors';
-
-        if (outputDir) {
-            if (!aq.valid) {
-                aq.print(level);
-                process.exit(1);
-            }
-            aq.run(outputDir, 'link');
-        } else {
-            aq.print(level);
-        }
+        
+        runAq(aq, outputDir, verbose);
     });
 
 program.parse(process.argv);
