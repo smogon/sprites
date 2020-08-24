@@ -10,12 +10,13 @@ const spriteSrc = path.join(__dirname, "src");
 it('aq', () => {
     const aq = new script.ActionQueue();
     aq.copy("foo", "bar");
+    aq.debug("test");
     aq.copy("baz", "./bar");
     aq.copy("baz", "/bar")
     
     expect(aq.log).toEqual(expect.arrayContaining([
         {type: 'Copy', src: 'foo', dst: "bar", valid: 'Multiple', debugObjs: []},
-        {type: 'Copy', src: 'baz', dst: "bar", valid: 'Multiple', debugObjs: []},
+        {type: 'Copy', src: 'baz', dst: "bar", valid: 'Multiple', debugObjs: ["test"]},
         {type: 'Copy', src: 'baz', dst: "/bar", valid: 'Absolute', debugObjs: []},
     ]));
     
