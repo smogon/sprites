@@ -6,30 +6,33 @@ import * as pathlib from './path.js';
 import * as spritename from './spritename.js';
 import * as spritedata from '@smogon/sprite-data';
 
-type DstEntry = {
+
+type Op = {
+    type : 'Write',
+    data : string,
+} | {
+    type : 'Copy',
+    src : string,
+};
+
+type OpEntry = {
+    type : 'Op',
+    op : Op,
     dst : string,
     valid : 'Success' | 'Absolute' | 'Multiple',
     debugObjs : unknown[]
 };
 
-type CopyEntry = {
-    type : 'Copy',
-    src : string,
-} & DstEntry;
-
-type WriteEntry = {
-    type : 'Write',
-    data : string,
-} & DstEntry;
-
-export type LogEntry = CopyEntry | WriteEntry | {
+type DebugEntry = {
     type : 'Debug',
     obj : unknown,
     stray : boolean
 };
 
+export type LogEntry = OpEntry | DebugEntry;
+
 export class ActionQueue {
-    private seen : Map<string, DstEntry | 'MoreThan1'>;
+    private seen : Map<string, OpEntry | 'MoreThan1'>;
     // Have an accessor for this in the future? idk
     public log : LogEntry[];
     public valid : boolean;
@@ -55,15 +58,17 @@ export class ActionQueue {
         this.log.push({type: 'Debug', obj, stray});
     }
 
-    procDst(dst : string) : DstEntry {
+    private procDst(op: Op, dst : string) {
         dst = nodePath.normalize(dst);
-        const entry : DstEntry = {
+        const entry : OpEntry = {
+            type : 'Op',
+            op,
             dst,
             valid : 'Success',
             debugObjs : this.debugBuffer
         };
         // Caller must mutate this into a LogEntry.
-        this.log.push(entry as LogEntry);
+        this.log.push(entry);
         this.debugBuffer = [];
         if (nodePath.isAbsolute(dst)) {
             this.valid = false;
@@ -80,19 +85,14 @@ export class ActionQueue {
                 }
             }
         }
-        return entry;
     }
 
     copy(src : string, dst : string) {
-        const entry = this.procDst(dst) as CopyEntry;
-        entry.type = 'Copy';
-        entry.src = src;
+        this.procDst({type: 'Copy', src}, dst);
     }
 
     write(data : string, dst : string) {
-        const entry = this.procDst(dst) as WriteEntry;
-        entry.type = 'Write';
-        entry.data = data;
+        this.procDst({type: 'Write', data}, dst);
     }
 
     skip() {
@@ -104,7 +104,8 @@ export class ActionQueue {
     
     print(level : 'errors' | 'all') {
         for (const entry of this.log) {
-            if (entry.type === 'Copy') {
+            if (entry.type === 'Op') {
+                const op = entry.op;
                 if (entry.valid === 'Success' && level === 'errors')
                     continue;
                 let addendum = '';
@@ -114,24 +115,17 @@ export class ActionQueue {
                 for (const obj of entry.debugObjs) {
                     console.log("DEBUG: ", obj);
                 }
-                console.log(`COPY: ${entry.src} ==> ${entry.dst}${addendum}`);
-            } else if (entry.type === 'Write') {
-                if (entry.valid === 'Success' && level === 'errors')
-                    continue;
-                let addendum = '';
-                if (entry.valid !== 'Success') {
-                    addendum = ` (${entry.valid})`;
+                if (op.type === 'Copy') {
+                    console.log(`COPY: ${op.src} ==> ${entry.dst}${addendum}`);
+                } else if (op.type === 'Write') {
+                    console.log(`WRITE: ${entry.dst}${addendum}`);
                 }
-                for (const obj of entry.debugObjs) {
-                    console.log("DEBUG: ", obj);
-                }
-                console.log(`WRITE: ${entry.dst}${addendum}`);
             } else if (entry.type === 'Debug') {
                 let addendum = '';
                 if (entry.stray) {
                     addendum = ` (stray)`;
                 }
-                console.log("GDEBUG${addendum}: ", entry.obj);
+                console.log(`GDEBUG${addendum}: `, entry.obj);
             }
         }
     }
@@ -140,20 +134,19 @@ export class ActionQueue {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
         for (const entry of this.log) {
-            if (entry.type === 'Copy') {
-                let {src, dst} = entry;
-                dst = nodePath.join(dir, dst);
+            if (entry.type === 'Op') {
+                const op = entry.op;
+                const dst = nodePath.join(dir, entry.dst);
                 fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
-                if (mode === 'link') {
-                    fs.linkSync(src, dst);
-                } else {
-                    fs.copyFileSync(src, dst);
+                if (op.type === 'Copy'){
+                    if (mode === 'link') {
+                        fs.linkSync(op.src, dst);
+                    } else {
+                        fs.copyFileSync(op.src, dst);
+                    }
+                } else if (op.type === 'Write') {
+                    fs.writeFileSync(dst, op.data);
                 }
-            } else if (entry.type === 'Write') {
-                let {data, dst} = entry;
-                dst = nodePath.join(dir, dst);
-                fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
-                fs.writeFileSync(dst, data);
             }
         }
     }
