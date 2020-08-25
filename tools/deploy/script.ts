@@ -117,7 +117,7 @@ export class ActionQueue {
                 if (op.type === 'Copy') {
                     console.log(`COPY: ${op.src} ==> ${entry.dst}${addendum}`);
                 } else if (op.type === 'Write') {
-                    console.log(`WRITE: ${entry.dst}${addendum}`);
+                    console.log(`WRITE: ${op.data.length} characters ==> ${entry.dst}${addendum}`);
                 }
             } else if (entry.type === 'Debug') {
                 let addendum = '';
