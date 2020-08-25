@@ -2,10 +2,10 @@
 import fs from 'fs';
 import path from 'path';
 import {fileURLToPath} from 'url';
+import * as spritedata from '@smogon/sprite-data';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const srcDir = path.join(__dirname, "newsrc");
-const json = path.join(__dirname, "data", "species.json");
 const spritesDir = path.join(srcDir, "minisprites/pokemon/gen6");
 
 function toPSID(name) {
@@ -480,8 +480,6 @@ const BattlePokemonIconIndexesLeft = {
 	blacephalon: 1188 + 105,
 };
 
-const table = JSON.parse(fs.readFileSync(json, 'utf8'));
-
 const entries = [];
 
 for (const name of fs.readdirSync(spritesDir)) {
@@ -497,7 +495,10 @@ for (const name of fs.readdirSync(spritesDir)) {
         flags.set(flag, data);
     }
     
-    const entry = table[sid];
+    let entry;
+    try {
+        entry = spritedata.get(parseInt(sid));
+    } catch(e) {}
     let id = toPSID(entry ? entry.base + entry.forme : sid);
     
     if (flags.has("f")) id += 'f';
