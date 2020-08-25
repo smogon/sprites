@@ -58,7 +58,7 @@ export class ActionQueue {
         this.log.push({type: 'Debug', obj, stray});
     }
 
-    private procDst(op: Op, dst : string) {
+    private pushOp(op: Op, dst : string) {
         dst = nodePath.normalize(dst);
         const entry : OpEntry = {
             type : 'Op',
@@ -87,11 +87,11 @@ export class ActionQueue {
     }
 
     copy(src : string, dst : string) {
-        this.procDst({type: 'Copy', src}, dst);
+        this.pushOp({type: 'Copy', src}, dst);
     }
 
     write(data : string, dst : string) {
-        this.procDst({type: 'Write', data}, dst);
+        this.pushOp({type: 'Write', data}, dst);
     }
 
     skip() {
