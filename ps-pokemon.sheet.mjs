@@ -484,28 +484,22 @@ const entries = [];
 
 for (const name of fs.readdirSync(spritesDir)) {
     const parsed = path.parse(name);
-    const m = parsed.name.match(/^([^-]+)(.*)$/);
-    if (!m) {
+    const sn = spritedata.parseFilename(parsed.name);
+    if (!sn) {
         throw new Error(`can't parse ${name}`);
-    }
-    const [, sid, flagstr] = m;
-
-    const flags = new Map;
-    for (let [, flag, data] of flagstr.matchAll(/-([a-z])([^-]*)/g)) {
-        flags.set(flag, data);
     }
     
     let entry;
     try {
-        entry = spritedata.get(parseInt(sid));
+        entry = spritedata.get(parseInt(sn.id));
     } catch(e) {}
-    let id = toPSID(entry ? entry.base + entry.forme : sid);
+    let id = toPSID(entry ? entry.base + entry.forme : sn.id);
     
-    if (flags.has("f")) id += 'f';
-    if (flags.has("g")) id += 'gmax';
+    if (sn.extra.has("f")) id += 'f';
+    if (sn.extra.has("g")) id += 'gmax';
     
     let index;
-    if (flags.has("a")) {
+    if (sn.extra.has("a")) {
         index = BattlePokemonIconIndexesLeft[id];
         BattlePokemonIconIndexesLeft[id] = 'found';
     } else {
