@@ -4,7 +4,7 @@ function toID(name) {
 }
 
 function spritecopy(f, {dir, ext}) {
-    const sn = spritename.parse(f.name);
+    const sn = spritedata.parseFilename(f.name);
     let name;
     if (typeof sn.id === 'string') {
         name = toID(sn.id);

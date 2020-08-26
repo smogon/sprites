@@ -6,7 +6,7 @@ function toSmogonAlias(name) {
 }
 
 function spritecopy(f, {dir, ext}) {
-    const sn = spritename.parse(f.name);
+    const sn = spritedata.parseFilename(f.name);
     let name;
 
     // Skip asymmetrical for now

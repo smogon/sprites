@@ -3,7 +3,6 @@ import fs from 'fs';
 import nodePath from 'path';
 import vm from 'vm';
 import * as pathlib from './path.js';
-import * as spritename from './spritename.js';
 import * as spritedata from '@smogon/sprite-data';
 
 
@@ -172,7 +171,6 @@ export class Script extends vm.Script {
 const SKIP = {};
 
 const ENV0 = {
-    spritename,
     spritedata,
     SKIP,
     // Because throw SKIP isn't an expression
