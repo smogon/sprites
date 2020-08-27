@@ -6,8 +6,7 @@
     },
     "devDependencies": {
         "expect": "^26.4.1",
-        "mocha": "^8.1.1",
-        "typescript": "^3.9.7"
+        "mocha": "^8.1.1"
     },
     "scripts": {
         "prepare": "tsc",

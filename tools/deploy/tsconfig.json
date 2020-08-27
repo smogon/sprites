@@ -4,5 +4,8 @@
         "outDir": "dist",
         "allowJs": true,
     },
-    "exclude": ["test", "dist", "node_modules"]
+    "exclude": ["test", "dist", "node_modules"],
+    "references": [
+        {"path": "../../data/lib"},
+    ]
 }

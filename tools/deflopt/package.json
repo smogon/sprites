@@ -6,8 +6,5 @@
     "main": "./dist/index.js",
     "scripts": {
         "prepare": "tsc"
-    },
-    "devDependencies": {
-        "typescript": "^3.9.7"
     }
 }

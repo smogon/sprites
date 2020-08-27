@@ -1,5 +1,11 @@
 {
     "dependencies": {
         "@smogon/sprite-data": ""
+    },
+    "scripts": {
+        "build": "tsc --build tsconfig-workspace.json"
+    },
+    "devDependencies": {
+        "typescript": "^4.0.2"
     }
 }

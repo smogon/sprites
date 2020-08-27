@@ -3,9 +3,6 @@
     "scripts": {
         "prepare": "tsc"
     },
-    "devDependencies": {
-        "typescript": "^3.9.7"
-    },
     "dependencies": {
         "@types/node": "^14.0.23"
     },
