@@ -8850,9 +8850,30 @@
     "536872640": {
         "num": -54,
         "formeNum": 0,
-        "base": "Equilibra",
+        "base": "Justyke",
         "forme": "",
         "sid": 536872640
+    },
+    "536872672": {
+        "num": -55,
+        "formeNum": 0,
+        "base": "Equilibra",
+        "forme": "",
+        "sid": 536872672
+    },
+    "536872704": {
+        "num": -56,
+        "formeNum": 0,
+        "base": "Solotl",
+        "forme": "",
+        "sid": 536872704
+    },
+    "536872736": {
+        "num": -57,
+        "formeNum": 0,
+        "base": "Astrolotl",
+        "forme": "",
+        "sid": 536872736
     },
     "537030912": {
         "num": -5000,
