@@ -1,17 +1,6 @@
 
-import fs from 'fs';
 import path from 'path';
-import {fileURLToPath} from 'url';
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-// From tools/deploy/spritepath, factor this out into separate library eventually?
-function decodeComponent(s) {
-    return s
-        .replace(/([^_])_([^_])/g, "$1 $2")
-        .replace(/~/g, "-")
-        // Must occur last, or escaped ~/_ will be transformed
-        .replace(/__(....)/g, (_, m) => String.fromCharCode(parseInt(m, 16)));
-}
+import * as spritedata from '@smogon/sprite-data';
 
 function toPSID(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -535,24 +524,11 @@ const ITEMS = {
 	"tr92": 738,
 };
 
-const SEARCH = [
-    "src/canonical/minisprites/items/battle",
-    "src/canonical/minisprites/items/misc",
-    "src/canonical/minisprites/items/nonbattle",
-    "src/canonical/minisprites/items/other",
-    "src/cap/minisprites/items/battle",
-];
-
 const found = new Map;
 
-for (const dir of SEARCH) {
-    for (const name of fs.readdirSync(dir)) {
-        const id = toPSID(decodeComponent(path.parse(name).name));
-        if (found.has(id)) {
-            throw new Error(`duplicate: ${id}`);
-        }
-        found.set(id, path.join(dir, name));
-    }
+for (const [num, {sid, name}] of spritedata.itemEntries()) {
+    const id = toPSID(name);
+    found.set(id, path.join("newsrc/minisprites/items", sid + ".png"));
 }
 
 const entries = [];
