@@ -4198,5 +4198,10 @@
         "sid": 839,
         "name": "TR-Water",
         "martyCategory": "types"
+    },
+    "840": {
+        "sid": 840,
+        "name": "Crucibellite",
+        "martyCategory": "battle"
     }
 }
