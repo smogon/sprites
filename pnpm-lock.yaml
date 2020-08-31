@@ -34,8 +34,10 @@ importers:
   tools/sheet:
     dependencies:
       '@types/node': 14.0.23
+      make-promises-safe: 5.1.0
     specifiers:
       '@types/node': ^14.0.23
+      make-promises-safe: ^5.1.0
   tools/sprites:
     dependencies:
       commander: 5.0.0
