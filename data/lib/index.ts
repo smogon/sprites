@@ -7,7 +7,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const libdir = path.join(__dirname, "../..");
 
-export type Type = {
+export type SpecieEntry = {
     num: number,
     formeNum: number,
     base: string,
@@ -15,24 +15,45 @@ export type Type = {
     sid: number
 };
 
-const species : Record<number, Type> = JSON.parse(fs.readFileSync(path.join(libdir, "species.json"), 'utf8'));
+export type ItemEntry = {
+    sid : number,
+    name : string
+};
 
-const result = new Map<number, Type>();
-
+const species : Record<number, SpecieEntry> = JSON.parse(fs.readFileSync(path.join(libdir, "species.json"), 'utf8'));
+const speciesMap = new Map<number, SpecieEntry>();
 for (const entry of Object.values(species)) {
-    result.set(entry.sid, entry);
+    speciesMap.set(entry.sid, entry);
 }
 
-export function get(id : number) : Type {
-    const entry = result.get(id);
+export function get(id : number) : SpecieEntry {
+    const entry = speciesMap.get(id);
     if (entry === undefined)
         throw new Error(`No id for ${id}`);
     return entry;
 }
 
-export function entries() : [number, Type][] {
-    return Array.from(result.entries());
+export function entries() : [number, SpecieEntry][] {
+    return Array.from(speciesMap.entries());
 }
+
+
+// TODO: needs cleanup!!!
+const items : Record<number, ItemEntry> = JSON.parse(fs.readFileSync(path.join(libdir, "items.json"), 'utf8'));
+const itemsMap = new Map<number, ItemEntry>();
+for (const entry of Object.values(items)) {
+    itemsMap.set(entry.sid, entry);
+}
+export function getItem(id : number) : ItemEntry {
+    const entry = itemsMap.get(id);
+    if (entry === undefined)
+        throw new Error(`No id for ${id}`);
+    return entry;
+}
+export function itemEntries() : [number, ItemEntry][] {
+    return Array.from(itemsMap.entries());
+}
+
 
 // TODO Moved here from deploy/spritename.ts, better place to put these??
 export type SpriteFilename = {id : number | string, extra : Map<string, string>};
