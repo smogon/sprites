@@ -15,7 +15,8 @@ function spritecopy(f, {dir, ext}) {
     }
     
     if (typeof sn.id === 'string') {
-        name = toSmogonAlias(sn.id);
+        // Skip this, we don't use Unknown/Substitute
+        return;
     } else {
         const sd = spritedata.get(sn.id);
         name = toSmogonAlias(sd.base);
@@ -33,8 +34,20 @@ function spritecopy(f, {dir, ext}) {
     copy(f, {dir, ext, name});
 }
 
+// TODO: merge with above
+function itemspritecopy(f, {dir, ext}) {
+    const sn = spritedata.parseFilename(f.name);
+    const sd = spritedata.getItem(sn.id);
+    const name = toSmogonAlias(sd.name);
+    copy(f, {dir, ext, name});
+}
+
 for (const f of list("build/gen6-minisprites-padded")) {
     spritecopy(f, {dir: "forumsprites"});
+}
+
+for (const f of list("build/item-minisprites-padded")) {
+    itemspritecopy(f, {dir: "forumsprites"});
 }
 
 for (const f of list("build/smogon/fbsprites/xy")) {

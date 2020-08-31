@@ -10,6 +10,15 @@ foreach_rule(
     "build/gen6-minisprites-padded/%b"
 )
 
+foreach_rule(
+    "newsrc/minisprites/items/*.png",
+    {
+        display="pad item minisprite %f",
+        pad{w=24, h=24}
+    },
+    "build/item-minisprites-padded/%b"
+)
+
 -- PS spritesheet
 
 rule(
