@@ -1,6 +1,9 @@
 
 import path from 'path';
 import * as spritedata from '@smogon/sprite-data';
+import { fileURLToPath } from 'url';
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function toPSID(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
@@ -528,7 +531,7 @@ const found = new Map;
 
 for (const [num, {sid, name}] of spritedata.itemEntries()) {
     const id = toPSID(name);
-    found.set(id, path.join("newsrc/minisprites/items", sid + ".png"));
+    found.set(id, path.join(__dirname, "newsrc/minisprites/items", sid + ".png"));
 }
 
 const entries = [];
