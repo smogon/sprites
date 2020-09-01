@@ -80,6 +80,7 @@ There are src-specific versions of these settings:
 - `CONFIG_DEX_<PROGRAM>`: Compression options for `dex/` only.
 - `CONFIG_MODELS_<PROGRAM>`: Compression options for `models/` only.
 - `CONFIG_SPRITESHEET_<PROGRAM>`: Compression options for spritesheets only.
+- `CONFIG_MINISPRITE_<PROGRAM>`: Compression options for `minisprites/` only.
 
 For example, these settings reflect the compression settings for the files chaos uploaded in `src/`:
 ```

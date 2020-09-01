@@ -5,7 +5,8 @@ foreach_rule(
     "newsrc/minisprites/pokemon/gen6/*.png",
     {
         display="pad g6 minisprite %f",
-        pad{w=40, h=30}
+        pad{w=40, h=30},
+        compresspng{config="MINISPRITE"}
     },
     "build/gen6-minisprites-padded/%b"
 )
@@ -14,7 +15,8 @@ foreach_rule(
     "newsrc/minisprites/items/*.png",
     {
         display="pad item minisprite %f",
-        pad{w=24, h=24}
+        pad{w=24, h=24},
+        compresspng{config="MINISPRITE"}
     },
     "build/item-minisprites-padded/%b"
 )
