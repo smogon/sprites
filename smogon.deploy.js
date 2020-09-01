@@ -42,12 +42,20 @@ function itemspritecopy(f, {dir, ext}) {
     copy(f, {dir, ext, name});
 }
 
-for (const f of list("build/gen6-minisprites-padded")) {
-    spritecopy(f, {dir: "forumsprites"});
+for (const f of list("newsrc/minisprites/pokemon/gen6")) {
+    spritecopy(f, {dir: "xyicons"});
+}
+
+for (const f of list("newsrc/minisprites/items")) {
+    itemspritecopy(f, {dir: "xyitems"});
 }
 
 for (const f of list("build/item-minisprites-padded")) {
     itemspritecopy(f, {dir: "forumsprites"});
+}
+
+for (const f of list("build/gen6-minisprites-padded")) {
+    spritecopy(f, {dir: "forumsprites"});
 }
 
 for (const f of list("build/smogon/fbsprites/xy")) {
