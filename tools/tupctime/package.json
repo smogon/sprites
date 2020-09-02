@@ -7,8 +7,5 @@
         "debug": "^4.1.1"
     },
     "type": "module",
-    "scripts": {
-        "prepare": "tsc"
-    },
     "main": "./dist/index.js"
 }

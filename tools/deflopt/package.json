@@ -3,8 +3,5 @@
     "dependencies": {
         "@types/node": "^14.0.23"
     },
-    "main": "./dist/index.js",
-    "scripts": {
-        "prepare": "tsc"
-    }
+    "main": "./dist/index.js"
 }

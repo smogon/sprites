@@ -1,8 +1,5 @@
 {
     "type": "module",
-    "scripts": {
-        "prepare": "tsc"
-    },
     "dependencies": {
         "@types/node": "^14.0.23",
         "make-promises-safe": "^5.1.0"

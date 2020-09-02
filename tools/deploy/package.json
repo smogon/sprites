@@ -9,7 +9,6 @@
         "mocha": "^8.1.1"
     },
     "scripts": {
-        "prepare": "tsc",
         "test": "tsc && mocha test"
     },
     "type": "module",
