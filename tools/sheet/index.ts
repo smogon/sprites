@@ -7,7 +7,7 @@ const sheetjs = process.argv[2];
 const dest = process.argv[3];
 
 if (!sheetjs || !dest) {
-    throw new Error(`node tools/ps-sheet <file.sheet.js> <dest>`);
+    throw new Error(`node tools/sheet <file.sheet.js> <dest>`);
 }
 
 // Top-level await?
