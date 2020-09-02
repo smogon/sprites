@@ -42,11 +42,11 @@ function itemspritecopy(f, {dir, ext}) {
     copy(f, {dir, ext, name});
 }
 
-for (const f of list("newsrc/minisprites/pokemon/gen6")) {
+for (const f of list("build/gen6-minisprites-trimmed")) {
     spritecopy(f, {dir: "xyicons"});
 }
 
-for (const f of list("newsrc/minisprites/items")) {
+for (const f of list("build/item-minisprites-trimmed")) {
     itemspritecopy(f, {dir: "xyitems"});
 }
 

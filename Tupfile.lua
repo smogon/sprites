@@ -21,6 +21,26 @@ foreach_rule(
     "build/item-minisprites-padded/%b"
 )
 
+foreach_rule(
+    "newsrc/minisprites/pokemon/gen6/*.png",
+    {
+        display="trim g6 minisprite %f",
+        trimimg{},
+        compresspng{config="MINISPRITE"}
+    },
+    "build/gen6-minisprites-trimmed/%b"
+)
+
+foreach_rule(
+    "newsrc/minisprites/items/*.png",
+    {
+        display="trim item minisprite %f",
+        trimimg{},
+        compresspng{config="MINISPRITE"}
+    },
+    "build/item-minisprites-trimmed/%b"
+)
+
 -- PS spritesheet
 
 rule(

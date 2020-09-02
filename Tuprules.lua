@@ -16,6 +16,14 @@ function pad(opts)
     }
 end
 
+function trimimg(opts) -- Can't just be trim because of the string function...
+    return rep{
+        "convert ${input} -trim ${output}",
+        input = opts.input or "%f",
+        output = opts.output or "%o",
+    }
+end
+
 local DEFAULT_OPTIPNG = getconfig("DEFAULT_OPTIPNG")
 local DEFAULT_ADVPNG = getconfig("DEFAULT_ADVPNG")
 local DEFLOPT_PATH = getconfig("DEFLOPT_PATH")
