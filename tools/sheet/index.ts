@@ -21,7 +21,8 @@ for (let i = 0; i < sheet.entries.length; i++) {
     }
 }
 
-cp.execFileSync("montage", [
+cp.execFileSync("magick", [
+    "montage",
     ...sheet.entries,
     "-background", "transparent",
     "-geometry", `${sheet.width}x${sheet.height}>`,

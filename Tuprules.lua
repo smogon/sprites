@@ -8,7 +8,7 @@ ROOTDIR = tup.getcwd()
 
 function pad(opts)
     return rep{
-        "convert ${input} -background transparent -gravity center -extent ${w}x${h} ${output}",
+        "magick convert ${input} -background transparent -gravity center -extent ${w}x${h} ${output}",
         input = opts.input or "%f",
         output = opts.output or "%o",
         w = opts.w,
@@ -18,7 +18,7 @@ end
 
 function trimimg(opts) -- Can't just be trim because of the string function...
     return rep{
-        "convert ${input} -trim ${output}",
+        "magick convert ${input} -trim ${output}",
         input = opts.input or "%f",
         output = opts.output or "%o",
     }
