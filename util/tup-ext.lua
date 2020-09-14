@@ -29,11 +29,12 @@ end
 --
 
 -- Workaround weird bug pre reported, where final path segment has two //
+-- EDIT: AND workaround a bug Marty reported on Windows, where final path segment has a /\
 local old_tup_glob = tup.glob
 function tup.glob(pat)
     local results = old_tup_glob(pat)
     for i = 1, #results do
-        results[i] = results[i]:gsub("//", "/")
+        results[i] = results[i]:gsub("/\\", "/"):gsub("//", "/")
     end
     return results
 end
