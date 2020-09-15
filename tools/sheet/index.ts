@@ -2,8 +2,6 @@
 import 'make-promises-safe';
 import cp from 'child_process';
 import path from 'path';
-import fs from 'fs';
-import crypto from 'crypto';
 
 const sheetjs = process.argv[2];
 const dest = process.argv[3];
