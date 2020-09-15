@@ -11,10 +11,12 @@ if (src === undefined || exe === undefined) {
     throw new Error('tools/deflopt <path to DeflOpt.exe> <file>');
 }
 
-asTmp("deflopt", src, (dst : string) => {
+const ret = asTmp("deflopt", src, (dst : string) => {
     const {processed, rewritten} = deflopt(exe, dst);
-    if (processed !== 1) {
-        throw new Error(`Didn't process any files.`);
-    }
-    return {changed: rewritten > 0, ret : null};
+    return {changed: rewritten > 0, ret : processed === 1};
 });
+
+if (!ret) {
+    console.error(`Didn't process any files.`);
+    process.exit(1);
+}
