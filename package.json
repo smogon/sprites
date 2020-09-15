@@ -1,6 +1,7 @@
 {
     "dependencies": {
-        "@smogon/sprite-data": ""
+        "@smogon/sprite-data": "",
+        "@smogon/sprite-root": ""
     },
     "scripts": {
         "build": "tsc --build tsconfig-workspace.json"

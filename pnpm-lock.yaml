@@ -2,16 +2,23 @@ importers:
   .:
     dependencies:
       '@smogon/sprite-data': 'link:data/lib'
+      '@smogon/sprite-root': 'link:lib/root'
     devDependencies:
       typescript: 4.0.2
     specifiers:
       '@smogon/sprite-data': ''
+      '@smogon/sprite-root': ''
       typescript: ^4.0.2
   data/lib:
     dependencies:
       '@types/node': 14.0.23
     specifiers:
       '@types/node': ^14.0.23
+  lib/root:
+    dependencies:
+      '@types/node': 14.10.1
+    specifiers:
+      '@types/node': ^14.10.1
   tools/deflopt:
     dependencies:
       '@types/node': 14.0.23
@@ -137,6 +144,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Z4U8yDAl5TFkmYsZdFPdjeMa57NOvnaf1tljHzhouaPEp7LCj2JKkejpI1ODviIAQuW4CcQmxkQ77rnLsOOoKw==
+  /@types/node/14.10.1:
+    dev: false
+    resolution:
+      integrity: sha512-aYNbO+FZ/3KGeQCEkNhHFRIzBOUgc7QvcVNKXbfnhDkSfwUv91JsQQa10rDgKSTSLkXZ1UIyPe4FJJNVgw1xWQ==
   /@types/node/14.6.0:
     dev: true
     resolution:

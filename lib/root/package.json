@@ -1,0 +1,7 @@
+{
+    "name": "@smogon/sprite-root",
+    "dependencies": {
+        "@types/node": "^14.10.1"
+    },
+    "main": "dist/index.js"
+}

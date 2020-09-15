@@ -1,0 +1,9 @@
+{
+    "extends": "../../tsconfig-base",
+    "compilerOptions": {
+        "outDir": "dist",
+        // We need commonjs for __dirname
+        "module": "commonjs",
+        "esModuleInterop": false
+    }
+}
