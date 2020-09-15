@@ -1,11 +1,9 @@
 
 import path from 'path';
-import { fileURLToPath } from 'url';
 import fs from 'fs';
+import root from '@smogon/sprite-root';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-
-const libdir = path.join(__dirname, "../..");
+const libdir = path.join(root, "data");
 
 export type SpecieEntry = {
     num: number,
