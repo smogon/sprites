@@ -12,7 +12,8 @@ if (!sheetjs || !dest) {
     throw new Error(`node tools/sheet <file.sheet.js> <dest>`);
 }
 
-const {default: sheet} = await import(path.join(process.cwd(), sheetjs));
+// Must have file:/// for Windows
+const {default: sheet} = await import(path.join("file:///", process.cwd(), sheetjs));
 
 for (let i = 0; i < sheet.entries.length; i++) {
     if (sheet.entries[i] === undefined)
