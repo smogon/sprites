@@ -32,18 +32,18 @@ function parse(re : RegExp, output : string) {
 
 const DEFLOPT_EXE = `${root}/vendor/DeflOpt.exe`;
 
-export function deflopt({file, wine}: {file : string, wine: boolean}) {
+export function deflopt(file : string) {
     file = file.replace(/\//g, "\\");
 
     let cmd, args;
-    if (wine) {
+    if (process.platform === 'win32') {
+        cmd = DEFLOPT_EXE;
+        args = [file];
+    } else {
         cmd = "wine";
         // DeflOpt doesn't like absolute paths, it thinks they are Windows-style
         // command line switches.
         args = [DEFLOPT_EXE, file];
-    } else {
-        cmd = DEFLOPT_EXE;
-        args = [file];
     }
 
     const output = cp.execFileSync(cmd, args, {encoding: 'utf8'});
