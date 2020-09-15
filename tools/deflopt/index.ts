@@ -1,14 +1,16 @@
 
+import program from 'commander';
+
 import {deflopt} from './deflopt.js';
 
-const src = process.argv[2];
-if (src === undefined) {
-    throw new Error('tools/deflopt <file>');
-}
+program
+    .option('--wine', 'Run executable with Wine')
+    .arguments('<file>')
+    .action((file : string, {wine} : {wine?: boolean}) => {
+        const {processed, rewritten} = deflopt({file, wine: !!wine});
+        if (processed !== 1) {
+            console.error(`Didn't process any files.`);
+            process.exit(1);
+        }
+    }).parse(process.argv);
 
-const {processed, rewritten} = deflopt(src);
-
-if (processed !== 1) {
-    console.error(`Didn't process any files.`);
-    process.exit(1);
-}

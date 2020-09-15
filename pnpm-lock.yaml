@@ -22,8 +22,10 @@ importers:
   tools/deflopt:
     dependencies:
       '@types/node': 14.0.23
+      commander: 6.1.0
     specifiers:
       '@types/node': ^14.0.23
+      commander: ^6.1.0
   tools/deploy:
     dependencies:
       '@types/node': 14.0.23
@@ -474,6 +476,12 @@ packages:
       node: '>= 6'
     resolution:
       integrity: sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
+  /commander/6.1.0:
+    dev: false
+    engines:
+      node: '>= 6'
+    resolution:
+      integrity: sha512-wl7PNrYWd2y5mp1OK/LhTlv8Ff4kQJQRXXAvF+uU/TPNiVJUxZLRYGj/B0y/lPGAVcSbJqH2Za/cvHmrPMC8mA==
   /concat-map/0.0.1:
     dev: true
     resolution:

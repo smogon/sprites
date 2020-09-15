@@ -48,7 +48,7 @@ function compresspng(opts)
         cmds += rep{"advpng -q ${opts} ${output}", opts=advpng, output=output}
     end
     if deflopt then
-        cmds += rep{"node ${root}/tools/deflopt ${output}",
+        cmds += rep{"node ${root}/tools/deflopt --wine ${output}",
                     root=ROOTDIR,
                     output=output}
     end
