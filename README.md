@@ -113,6 +113,8 @@ Pokemon sprite filenames are in a 1-to-1 correspondence with the Pokemon's name,
 
 - Tup, like Git, tracks files, not directories. If you `readdir()` and forget to declare a dependency it won't catch it, like it would for `read()`. You can work around this by having build tools `stat()` any filenames they acquire.
 
+- Using DeflOpt requires a custom build of tup. Checkout the repo and `git am vendor/tup-remove-fuse-context-check.patch`, and run with environment variable `TUP_NO_NAMESPACING=1`.
+
 - DeflOpt performance can suffer under Wine due to repeatedly starting/shutting down `wineserver`. You can specify the server timeout with `wineserver -p<n>`, where `n` is the # of seconds (default 3). If you don't specify `n` it never shuts down. Sometimes wine will hang so you may want to instead pick something high like 30 seconds.
 
 ## License
