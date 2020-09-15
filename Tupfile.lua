@@ -100,7 +100,7 @@ foreach_rule(
     input,
     {
         display="fbsprite %f",
-        "tools/fbsprite.sh %f %o",
+        "magick convert \"%f[0]\" -trim -resize 150x150 -background white -gravity center -extent 198x198 -bordercolor black -border 1 %o",
         compresspng{config="MODELS"}
     },
     "build/smogon/fbsprites/xy/%B.png"
@@ -110,7 +110,7 @@ foreach_rule(
     input,
     {
         display="twittersprite %f",
-        "tools/twittersprite.sh %f %o",
+        "magick convert \"%f[0]\" -trim -resize 115x115 -background white -gravity center -extent 120x120 %o",
         compresspng{config="MODELS"}
     },
     "build/smogon/twittersprites/xy/%B.png"
