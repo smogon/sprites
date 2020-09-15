@@ -167,8 +167,8 @@ foreach_rule(
     dexMissing,
     {
         display="missing dex %B",
-        "magick convert %f'[0]' -trim %o",
-        "magick mogrify -background transparent -gravity center -resize '120x120>' -extent 120x120 %o",
+        "magick convert \"%f[0]\" -trim %o",
+        "magick mogrify -background transparent -gravity center -resize \"120x120>\" -extent 120x120 %o",
         compresspng{config="DEX"}
     },
     "build/padded-dex/%B.png"
