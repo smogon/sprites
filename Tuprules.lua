@@ -48,12 +48,8 @@ function compresspng(opts)
         cmds += rep{"advpng -q ${opts} ${output}", opts=advpng, output=output}
     end
     if deflopt then
-        if DEFLOPT_PATH == nil then
-            error("Need to set CONFIG_DEFLOPT_PATH")
-        end
-        cmds += rep{"node ${root}/tools/deflopt ${deflopt} ${output}",
+        cmds += rep{"node ${root}/tools/deflopt ${output}",
                     root=ROOTDIR,
-                    deflopt=DEFLOPT_PATH,
                     output=output}
     end
     

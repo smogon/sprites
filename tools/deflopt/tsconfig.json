@@ -1,7 +1,9 @@
 {
     "extends": "../../tsconfig-base",
     "compilerOptions": {
-        "outDir": "dist",
-        "allowJs": true
-    }
+        "outDir": "dist"
+    },
+    "references": [
+        {"path": "../../lib/root"}
+    ]
 }

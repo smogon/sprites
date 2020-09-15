@@ -1,5 +1,6 @@
 
 import cp from 'child_process';
+import root from '@smogon/sprite-root';
 
 /*
   Output looks something like:
@@ -29,18 +30,14 @@ function parse(re : RegExp, output : string) {
     return num;
 }
 
-export function deflopt(exe : string, file : string) {
+const DEFLOPT_EXE = `${root}/vendor/DeflOpt.exe`;
+
+export function deflopt(file : string) {
     // DeflOpt doesn't like absolute paths, it thinks they are Windows-style
     // command line switches.
     file = file.replace(/\//g, "\\");
     
-    const output = cp.execFileSync(
-        "wine",
-        [exe, file],
-        {encoding: 'utf8',
-         // Wine doesn't even like it when the current directory is on fuse!
-         // What a persnickety program!
-         cwd: '/'});
+    const output = cp.execFileSync("wine", [DEFLOPT_EXE, file], {encoding: 'utf8'});
     const processed = parse(PROCESSED_RE, output);
     const rewritten = parse(REWRITTEN_RE, output);
     return {processed, rewritten};

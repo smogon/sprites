@@ -71,7 +71,6 @@ Build settings are configurable in `tup.config`.
 
 - `CONFIG_DEFAULT_OPTIPNG`: Command line to pass to `optipng`.
 - `CONFIG_DEFAULT_ADVPNG`: Command line to pass to `advpng`.
-- `CONFIG_DEFLOPT_PATH`: Path to `DeflOpt.exe`. If using Wine, you have to copy it somewhere outside the Tup tree.
 - `CONFIG_DEFAULT_DEFLOPT`: `true`, `false`, or blank
 
 There are src-specific versions of these settings:
@@ -86,7 +85,6 @@ For example, these settings reflect the compression settings for the files chaos
 ```
 CONFIG_DEFAULT_OPTIPNG=-o7
 CONFIG_DEFAULT_ADVPNG=-z4 -i5000
-CONFIG_DEFLOPT_PATH=/home/monsanto/.local/bin/DeflOpt.exe
 CONFIG_DEFAULT_DEFLOPT=true
 ```
 
