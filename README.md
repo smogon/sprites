@@ -10,6 +10,7 @@ This project depends on
 - [ImageMagick](http://www.imagemagick.org/) >= 7
 - [AdvPng](http://www.advancemame.it/doc-advpng.html) (optional)
 - [OptiPNG](http://optipng.sourceforge.net/) (optional)
+- [pngquant](https://pngquant.org/) (optional)
 - [pnpm](https://pnpm.js.org)
 - [node.js](https://nodejs.org) >= 13
 - [wine](https://www.winehq.org/) (optional)
@@ -21,7 +22,7 @@ Windows binaries of these dependencies can be found on the download pages of the
 ### Linux
 
 ```
-$ sudo apt install nodejs imagemagick advancecomp optipng wine
+$ sudo apt install nodejs imagemagick advancecomp optipng pngquant wine
 $ sudo npm install -g pnpm
 ```
 
@@ -54,7 +55,7 @@ Using [`brew`](https://brew.sh/) on  a macOS:
 
 ```
 $ brew cask install osxfuse wine-stable
-$ brew install tup imagemagick advancecomp optipng
+$ brew install tup imagemagick advancecomp optipng pngquant
 ```
 
 ## Building
@@ -71,6 +72,7 @@ Build settings are configurable in `tup.config`.
 
 - `CONFIG_DEFAULT_OPTIPNG`: Command line to pass to `optipng`.
 - `CONFIG_DEFAULT_ADVPNG`: Command line to pass to `advpng`.
+- `CONFIG_DEFAULT_PNGQUANT`: Command line to pass to `pngquant`.
 - `CONFIG_DEFAULT_DEFLOPT`: `true`, `false`, or blank
 
 There are src-specific versions of these settings:

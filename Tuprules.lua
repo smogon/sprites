@@ -24,22 +24,23 @@ function trimimg(opts) -- Can't just be trim because of the string function...
     }
 end
 
-local DEFAULT_OPTIPNG = getconfig("DEFAULT_OPTIPNG")
-local DEFAULT_ADVPNG = getconfig("DEFAULT_ADVPNG")
-local DEFAULT_DEFLOPT = booleanconfig("DEFAULT_DEFLOPT")
-
 function compresspng(opts)
     local cmds = {}
     local output = opts.output or "%o"
-    local optipng = DEFAULT_OPTIPNG
-    local advpng = DEFAULT_ADVPNG
-    local deflopt = DEFAULT_DEFLOPT
+    local pngquant = getconfig("DEFAULT_PNGQUANT")
+    local optipng = getconfig("DEFAULT_OPTIPNG")
+    local advpng = getconfig("DEFAULT_ADVPNG")
+    local deflopt = booleanconfig("DEFAULT_DEFLOPT")
     if opts.config then
+        pngquant = getconfig(opts.config .. "_PNGQUANT") or pngquant;
         optipng = getconfig(opts.config .. "_OPTIPNG") or optipng;
         advpng = getconfig(opts.config .. "_ADVPNG") or advpng;
         deflopt = booleanconfig(opts.config .. "_DEFLOPT") or deflopt;
     end
 
+    if pngquant then
+        cmds += rep{"pngquant ${opts} ${output}", opts=pngquant, output=output}
+    end
     if optipng then
         cmds += rep{"optipng -q ${opts} ${output}", opts=optipng, output=output}
     end
