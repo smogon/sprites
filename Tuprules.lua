@@ -40,7 +40,8 @@ function compresspng(opts)
         compressopts(opts.config, copts)
     end
     if copts.pngquant then
-        cmds += rep{"pngquant ${opts} ${output}", opts=copts.pngquant, output=output}
+        -- -f -o necessary to overwrite existing file
+        cmds += rep{"pngquant -f -o ${output} ${opts} ${output}", opts=copts.pngquant, output=output}
     end
     if copts.optipng then
         cmds += rep{"optipng -q ${opts} ${output}", opts=copts.optipng, output=output}
