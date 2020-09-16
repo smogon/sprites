@@ -13,7 +13,7 @@ function toPSID(name) {
 
 // Derived from pokemon-showdown-client/src/battle-dex-data.ts
 const BattlePokemonIconIndexes = {
-    unknown: 0,
+	unknown: 0,
     
 	egg: 900 + 1,
 	pikachubelle: 900 + 2,
@@ -131,7 +131,7 @@ const BattlePokemonIconIndexes = {
 	furfroustar: 900 + 114,
 	meowsticf: 900 + 115,
 	aegislashblade: 900 + 116,
-    // Added
+	// Added
 	xerneasneutral: 900 + 117,
 	hoopaunbound: 900 + 118,
 	rattataalola: 900 + 119,
@@ -165,7 +165,7 @@ const BattlePokemonIconIndexes = {
 	minioryellow: 900 + 147,
 	miniorgreen: 900 + 148,
 	miniorblue: 900 + 149,
-    miniorindigo: 900 + 150,
+	miniorindigo: 900 + 150,
 	miniorviolet: 900 + 151,
 	magearnaoriginal: 900 + 152,
 	pikachuoriginal: 900 + 153,
@@ -214,6 +214,9 @@ const BattlePokemonIconIndexes = {
 	zaciancrowned: 900 + 194,
 	zamazentacrowned: 900 + 195,
 	slowpokegalar: 900 + 196,
+	slowbrogalar: 900 + 197,
+	zarudedada: 900 + 198,
+	pikachuworld: 900 + 199,
 
 	//gumshoostotem: 735,
 	//raticatealolatotem: 900 + 120,
@@ -336,6 +339,7 @@ const BattlePokemonIconIndexes = {
 	smokomodo: 1296 + 26,
 	snaelstrom: 1296 + 27,
 	equilibra: 1296 + 28,
+	astrolotl: 1296 + 29,
 
 	syclar: 1332 + 0,
 	embirch: 1332 + 1,
@@ -358,7 +362,7 @@ const BattlePokemonIconIndexes = {
 	//nohface: 1332 + 18,
 	//monohm: 1332 + 19,
 	//duohm: 1332 + 20,
-	// protowatt: 1332 + 21,
+	//protowatt: 1332 + 21,
 	voodoll: 1332 + 22,
 	mumbao: 1332 + 23,
 	fawnifer: 1332 + 24,
@@ -367,7 +371,8 @@ const BattlePokemonIconIndexes = {
 	smoguana: 1332 + 27,
 	swirlpool: 1332 + 28,
 	coribalis: 1332 + 29,
-	//justyke: 1332 + 30,
+	justyke: 1332 + 30,
+	solotl: 1332 + 31,
 };
 
 const BattlePokemonIconIndexesLeft = {
@@ -465,7 +470,7 @@ const BattlePokemonIconIndexesLeft = {
 	minioryellow: 1188 + 91,
 	miniorgreen: 1188 + 92,
 	miniorblue: 1188 + 93,
-    miniorindigo: 1188 + 94,
+	miniorindigo: 1188 + 94,
 	miniorviolet: 1188 + 95,
 	dhelmise: 1188 + 96,
 	necrozma: 1188 + 97,
