@@ -26,7 +26,6 @@ end
 
 local DEFAULT_OPTIPNG = getconfig("DEFAULT_OPTIPNG")
 local DEFAULT_ADVPNG = getconfig("DEFAULT_ADVPNG")
-local DEFLOPT_PATH = getconfig("DEFLOPT_PATH")
 local DEFAULT_DEFLOPT = booleanconfig("DEFAULT_DEFLOPT")
 
 function compresspng(opts)
