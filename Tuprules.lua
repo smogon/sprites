@@ -24,30 +24,31 @@ function trimimg(opts) -- Can't just be trim because of the string function...
     }
 end
 
+local function compressopts(program, copts)
+    copts.pngquant = getconfig(program .. "_PNGQUANT") or copts.pngquant
+    copts.optipng = getconfig(program .. "_OPTIPNG") or copts.optipng
+    copts.advpng = getconfig(program .. "_ADVPNG") or copts.advpng
+    copts.deflopt = booleanconfig(program .. "_DEFLOPT") or copts.deflopt
+end
+
 function compresspng(opts)
     local cmds = {}
     local output = opts.output or "%o"
-    local pngquant = getconfig("DEFAULT_PNGQUANT")
-    local optipng = getconfig("DEFAULT_OPTIPNG")
-    local advpng = getconfig("DEFAULT_ADVPNG")
-    local deflopt = booleanconfig("DEFAULT_DEFLOPT")
+    local copts = {}
+    compressopts("DEFAULT", copts)
     if opts.config then
-        pngquant = getconfig(opts.config .. "_PNGQUANT") or pngquant;
-        optipng = getconfig(opts.config .. "_OPTIPNG") or optipng;
-        advpng = getconfig(opts.config .. "_ADVPNG") or advpng;
-        deflopt = booleanconfig(opts.config .. "_DEFLOPT") or deflopt;
+        compressopts(opts.config, copts)
     end
-
-    if pngquant then
-        cmds += rep{"pngquant ${opts} ${output}", opts=pngquant, output=output}
+    if copts.pngquant then
+        cmds += rep{"pngquant ${opts} ${output}", opts=copts.pngquant, output=output}
     end
-    if optipng then
-        cmds += rep{"optipng -q ${opts} ${output}", opts=optipng, output=output}
+    if copts.optipng then
+        cmds += rep{"optipng -q ${opts} ${output}", opts=copts.optipng, output=output}
     end
-    if advpng then
-        cmds += rep{"advpng -q ${opts} ${output}", opts=advpng, output=output}
+    if copts.advpng then
+        cmds += rep{"advpng -q ${opts} ${output}", opts=copts.advpng, output=output}
     end
-    if deflopt then
+    if copts.deflopt then
         cmds += rep{"node ${root}/tools/deflopt ${output}",
                     root=ROOTDIR,
                     output=output}
