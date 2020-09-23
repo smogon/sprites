@@ -523,6 +523,7 @@ const ITEMS = {
 	"tr95": 737,
 	"tr90": 738,
 	"tr92": 738,
+	"galaricacuff": 739,
 };
 
 const found = new Map;

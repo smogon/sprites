@@ -4203,5 +4203,10 @@
         "sid": 840,
         "name": "Crucibellite",
         "martyCategory": "battle"
+    },
+    "841": {
+        "sid": 841,
+        "name": "Galarica Cuff",
+        "martyCategory": "nonbattle"
     }
 }
