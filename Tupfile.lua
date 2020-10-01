@@ -86,7 +86,7 @@ rule(
     balls,
     {
         display="pokemonicons-pokeball-sheet",
-        "convert -background transparent -gravity center -extent 40x30 %f +append %o",
+        "magick convert -background transparent -gravity center -extent 40x30 %f +append %o",
         compresspng{config="SPRITESHEET"}
     },
     "build/ps/pokemonicons-pokeball-sheet.png"
