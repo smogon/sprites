@@ -40,7 +40,13 @@ const proc = cp.spawn("magick", [
 
 // Write one at a time to avoid "malloc(): corrupted top size" error
 for (const entry of sheet.entries) {
-    proc.stdin.write(entry + "\n");
+    if (!proc.stdin.write(entry + "\n")) {
+        // imagick doesn't like it when it receives the input too fast. This
+        // seems to avoid a realloc() invalid next size error.
+        await new Promise(resolve => {
+            proc.stdin.once('drain', resolve);
+        });
+    }
 }
 proc.stdin.end();
 
