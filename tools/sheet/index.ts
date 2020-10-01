@@ -44,6 +44,8 @@ for (const entry of sheet.entries) {
 }
 proc.stdin.end();
 
-proc.on('close', (code) => {
-    process.exit(code);
+proc.on('exit', (code, signal) => {
+    if (code || signal) {
+        process.exitCode = 1;
+    }
 });
