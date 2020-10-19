@@ -309,6 +309,13 @@ const BattlePokemonIconIndexes = {
 	copperajahgmax: 1104 + 74,
 	duraludongmax: 1104 + 75,
 	eternatuseternamax: 1104 + 76,
+	venusaurgmax: 1104 + 77,
+	blastoisegmax: 1104 + 78,
+	rillaboomgmax: 1104 + 79,
+	cinderacegmax: 1104 + 80,
+	inteleongmax: 1104 + 81,
+	urshifugmax: 1104 + 82,
+	urshifurapidstrikegmax: 1104 + 83,
 
 	syclant: 1296 + 0,
 	revenankh: 1296 + 1,
@@ -340,6 +347,7 @@ const BattlePokemonIconIndexes = {
 	snaelstrom: 1296 + 27,
 	equilibra: 1296 + 28,
 	astrolotl: 1296 + 29,
+	miasmaw: 1296 + 30,
 
 	syclar: 1332 + 0,
 	embirch: 1332 + 1,
