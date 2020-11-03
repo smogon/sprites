@@ -1413,6 +1413,13 @@
         "forme": "",
         "sid": 4608
     },
+    "4609": {
+        "num": 144,
+        "formeNum": 1,
+        "base": "Articuno",
+        "forme": "Galar",
+        "sid": 4609
+    },
     "4640": {
         "num": 145,
         "formeNum": 0,
@@ -1420,12 +1427,26 @@
         "forme": "",
         "sid": 4640
     },
+    "4641": {
+        "num": 145,
+        "formeNum": 1,
+        "base": "Zapdos",
+        "forme": "Galar",
+        "sid": 4641
+    },
     "4672": {
         "num": 146,
         "formeNum": 0,
         "base": "Moltres",
         "forme": "",
         "sid": 4672
+    },
+    "4673": {
+        "num": 146,
+        "formeNum": 1,
+        "base": "Moltres",
+        "forme": "Galar",
+        "sid": 4673
     },
     "4704": {
         "num": 147,
@@ -1825,6 +1846,13 @@
         "base": "Slowking",
         "forme": "",
         "sid": 6368
+    },
+    "6369": {
+        "num": 199,
+        "formeNum": 1,
+        "base": "Slowking",
+        "forme": "Galar",
+        "sid": 6369
     },
     "6400": {
         "num": 200,
@@ -8468,6 +8496,55 @@
         "base": "Zarude",
         "forme": "Dada",
         "sid": 28577
+    },
+    "28608": {
+        "num": 894,
+        "formeNum": 0,
+        "base": "Regieleki",
+        "forme": "",
+        "sid": 28608
+    },
+    "28640": {
+        "num": 895,
+        "formeNum": 0,
+        "base": "Regidrago",
+        "forme": "",
+        "sid": 28640
+    },
+    "28672": {
+        "num": 896,
+        "formeNum": 0,
+        "base": "Glastrier",
+        "forme": "",
+        "sid": 28672
+    },
+    "28704": {
+        "num": 897,
+        "formeNum": 0,
+        "base": "Spectrier",
+        "forme": "",
+        "sid": 28704
+    },
+    "28736": {
+        "num": 898,
+        "formeNum": 0,
+        "base": "Calyrex",
+        "forme": "",
+        "sid": 28736
+    },
+    "28737": {
+        "num": 898,
+        "formeNum": 1,
+        "base": "Calyrex",
+        "forme": "Ice",
+        "sid": 28737
+    },
+    "28738": {
+        "num": 898,
+        "formeNum": 2,
+        "base": "Calyrex",
+        "forme": "Shadow",
+        "sid": 28738
     },
     "536870944": {
         "num": -1,
