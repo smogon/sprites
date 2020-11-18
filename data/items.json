@@ -4208,5 +4208,10 @@
         "sid": 841,
         "name": "Galarica Cuff",
         "martyCategory": "nonbattle"
+    },
+    "842": {
+        "sid": 842,
+        "name": "Galarica Wreath",
+        "martyCategory": "nonbattle"
     }
 }
