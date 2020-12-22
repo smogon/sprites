@@ -10,7 +10,7 @@ function spritecopy(f, {dir, ext}) {
     let name;
 
     // Skip asymmetrical for now
-    if (sn.extra.has("a")) {
+    if (sn.extra.has("a") || sn.extra.has("b") || sn.extra.has("s")) {
         return;
     }
     
@@ -40,6 +40,10 @@ function itemspritecopy(f, {dir, ext}) {
     const sd = spritedata.getItem(sn.id);
     const name = toSmogonAlias(sd.name);
     copy(f, {dir, ext, name});
+}
+
+for (const f of list("newsrc/models")) {
+    spritecopy(f, {dir: "xy"});
 }
 
 for (const f of list("build/gen6-minisprites-trimmed")) {
