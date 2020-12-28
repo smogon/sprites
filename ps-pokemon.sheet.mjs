@@ -387,6 +387,7 @@ const BattlePokemonIconIndexes = {
 	coribalis: 1344 + 29,
 	justyke: 1344 + 30,
 	solotl: 1344 + 31,
+	miasmite: 1344 + 32,
 };
 
 const BattlePokemonIconIndexesLeft = {
