@@ -45,7 +45,7 @@ $ wget https://imagemagick.org/download/ImageMagick.tar.gz
 $ tar xf ImageMagick.tar.gz
 $ cd ImageMagick-*
 $ ./configure --with-modules --enable-shared --with-perl
-$ sudo make install
+$ sudo make -j install
 $ sudo ldconfig /usr/local/lib
 ```
 
