@@ -29,7 +29,7 @@ $ sudo npm install -g pnpm
 Build tup from source:
 
 ```
-$ sudo apt install build-essential pkg-config libfuse-dev
+$ sudo apt install build-essential pkg-config fuse3 libfuse3-dev libpcre3-dev
 $ git clone git://github.com/gittup/tup.git
 $ cd tup
 $ ./bootstrap.sh
