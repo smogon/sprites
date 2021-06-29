@@ -40,7 +40,7 @@ $ sudo cp tup.1 /usr/local/share/man
 You may have to build imagemagick from source to get version 7.
 
 ```
-$ sudo apt install build-essential pkg-config libltdl-dev libperl-dev libpng-dev
+$ sudo apt install build-essential pkg-config libltdl-dev libperl-dev libpng-dev libjpeg-dev
 $ wget https://imagemagick.org/download/ImageMagick.tar.gz
 $ tar xf ImageMagick.tar.gz
 $ cd ImageMagick-*
