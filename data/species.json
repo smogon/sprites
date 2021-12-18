@@ -8973,6 +8973,55 @@
         "forme": "",
         "sid": 536872832
     },
+    "536872864": {
+        "num": -61,
+        "formeNum": 0,
+        "base": "Nohface",
+        "forme": "",
+        "sid": 536872864
+    },
+    "536872896": {
+        "num": -62,
+        "formeNum": 0,
+        "base": "Monohm",
+        "forme": "",
+        "sid": 536872896
+    },
+    "536872928": {
+        "num": -63,
+        "formeNum": 0,
+        "base": "Duohm",
+        "forme": "",
+        "sid": 536872928
+    },
+    "536872960": {
+        "num": -64,
+        "formeNum": 0,
+        "base": "Dorsoil",
+        "forme": "",
+        "sid": 536872960
+    },
+    "536872992": {
+        "num": -65,
+        "formeNum": 0,
+        "base": "Protowatt",
+        "forme": "",
+        "sid": 536872992
+    },
+    "536873024": {
+        "num": -66,
+        "formeNum": 0,
+        "base": "Venomicon",
+        "forme": "",
+        "sid": 536873024
+    },
+    "536873025": {
+        "num": -66,
+        "formeNum": 1,
+        "base": "Venomicon",
+        "forme": "Epilogue",
+        "sid": 536873025
+    },
     "537030912": {
         "num": -5000,
         "formeNum": 0,

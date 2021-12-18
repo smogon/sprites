@@ -355,6 +355,8 @@ const BattlePokemonIconIndexes = {
 	astrolotl: 1308 + 29,
 	miasmaw: 1308 + 30,
 	chromera: 1308 + 31,
+	venomicon: 1308 + 32,
+	venomiconepilogue: 1308 + 33,
 
 	syclar: 1344 + 0,
 	embirch: 1344 + 1,
@@ -374,10 +376,10 @@ const BattlePokemonIconIndexes = {
 	rebble: 1344 + 15,
 	tactite: 1344 + 16,
 	privatyke: 1344 + 17,
-	//nohface: 1344 + 18,
-	//monohm: 1344 + 19,
-	//duohm: 1344 + 20,
-	//protowatt: 1344 + 21,
+	nohface: 1344 + 18,
+	monohm: 1344 + 19,
+	duohm: 1344 + 20,
+	protowatt: 1344 + 21,
 	voodoll: 1344 + 22,
 	mumbao: 1344 + 23,
 	fawnifer: 1344 + 24,
@@ -389,6 +391,7 @@ const BattlePokemonIconIndexes = {
 	justyke: 1344 + 30,
 	solotl: 1344 + 31,
 	miasmite: 1344 + 32,
+	dorsoil: 1344 + 33,
 };
 
 const BattlePokemonIconIndexesLeft = {
