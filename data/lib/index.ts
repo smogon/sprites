@@ -5,75 +5,106 @@ import root from '@smogon/sprite-root';
 
 const libdir = path.join(root, "data");
 
+export type Id = string;
+
 export type SpecieEntry = {
+    type : 'specie',
     num: number,
     formeNum: number,
     base: string,
     forme: string,
-    sid: number
+    sid: string
 };
 
 export type ItemEntry = {
-    sid : number,
+    type : 'item',
+    sid : string,
     name : string
 };
 
-const species : Record<number, SpecieEntry> = JSON.parse(fs.readFileSync(path.join(libdir, "species.json"), 'utf8'));
-const speciesMap = new Map<number, SpecieEntry>();
-for (const entry of Object.values(species)) {
-    speciesMap.set(entry.sid, entry);
+export type Entry = SpecieEntry | ItemEntry;
+
+const objects : Record<Id, Entry> = {};
+Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, "species.json"), 'utf8')));
+Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, "items.json"), 'utf8')));
+
+const map = new Map<Id, Entry>();
+for (const entry of Object.values(objects)) {
+    map.set(entry.sid, entry);
 }
 
-export function get(id : number) : SpecieEntry {
-    const entry = speciesMap.get(id);
+export function get(id : Id) : Entry {
+    const entry = map.get(id);
     if (entry === undefined)
         throw new Error(`No id for ${id}`);
     return entry;
 }
 
-export function entries() : [number, SpecieEntry][] {
-    return Array.from(speciesMap.entries());
-}
-
-
-// TODO: needs cleanup!!!
-const items : Record<number, ItemEntry> = JSON.parse(fs.readFileSync(path.join(libdir, "items.json"), 'utf8'));
-const itemsMap = new Map<number, ItemEntry>();
-for (const entry of Object.values(items)) {
-    itemsMap.set(entry.sid, entry);
-}
-export function getItem(id : number) : ItemEntry {
-    const entry = itemsMap.get(id);
-    if (entry === undefined)
-        throw new Error(`No id for ${id}`);
-    return entry;
-}
-export function itemEntries() : [number, ItemEntry][] {
-    return Array.from(itemsMap.entries());
+export function entries() : Entry[] {
+    return Array.from(map.values());
 }
 
 
 // TODO Moved here from deploy/spritename.ts, better place to put these??
-export type SpriteFilename = {id : number | string, extra : Map<string, string>};
+export type SpriteFilename = ({
+    extension : true,
+    name : string
+} | {
+    extension : false,
+    id : Id
+}) & {
+    extra : Map<string, string>
+};
+
+export type InputSpriteFilename = ({
+    extension : true,
+    name : string
+} | {
+    extension? : false,
+    id : Id
+}) & {
+    extra? : Map<string, string>
+};
 
 export function parseFilename(s : string) : SpriteFilename {
+    if (s.length < 2)
+        throw new Error(`Filename ${s} needs to be at least 2 characters'`);
+
+    const prefix = s[0];
+    if (!prefix.match(/[a-z]/))
+        throw new Error(`Filename ${s} must start with alpha character`);
+
     const parts = s.split("-");
-    const id = parts[0].match(/^[0-9]+$/) ? parseInt(parts[0], 10) : parts[0];
     const extra = new Map<string, string>();
     for (const part of parts.slice(1)) {
         if (part.length === 0)
             throw new Error(`Can't parse ${s}`);
         extra.set(part[0], part.slice(1));
     }
-    return {id, extra};
+    
+    if (prefix === 'x') {
+        const name = parts[0].slice(1);
+        return {extension: true, name, extra};
+    } else {
+        const id = parts[0];
+        return {extension: false, id, extra};
+    }
 }
 
-export function formatFilename(si : SpriteFilename) {
-    let s = si.id.toString();
+export function formatFilename(si : InputSpriteFilename) {
+    let s : string;
+    if (si.extension) {
+        s = `x${si.name}`;
+    } else {
+        s = si.id;
+    }
     const extra = [];
-    for (const [k, v] of si.extra.entries()) {
-        extra.push(`-${k}${v}`);
+    if (si.extra) {
+        for (const [k, v] of si.extra.entries()) {
+            extra.push(`-${k}${v}`);
+        }
     }
     extra.sort();
-    return s + extra.join('');
+    s += extra.join();
+    return s;
 }

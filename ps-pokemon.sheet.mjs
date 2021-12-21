@@ -508,15 +508,12 @@ const entries = [];
 for (const name of fs.readdirSync(spritesDir)) {
     const parsed = path.parse(name);
     const sn = spritedata.parseFilename(parsed.name);
-    if (!sn) {
-        throw new Error(`can't parse ${name}`);
-    }
-    
+
     let entry;
-    try {
-        entry = spritedata.get(parseInt(sn.id));
-    } catch(e) {}
-    let id = toPSID(entry ? entry.base + entry.forme : sn.id);
+    if (!sn.extension) {
+        entry = spritedata.get(sn.id);
+    }
+    let id = toPSID(entry ? entry.base + entry.forme : sn.name);
     
     if (sn.extra.has("f")) id += 'f';
     if (sn.extra.has("g")) id += 'gmax';

@@ -14,7 +14,7 @@ function spritecopy(f, {dir, ext}) {
         return;
     }
     
-    if (typeof sn.id === 'string') {
+    if (sn.extension) {
         // Skip this, we don't use Unknown/Substitute
         return;
     } else {
@@ -37,7 +37,7 @@ function spritecopy(f, {dir, ext}) {
 // TODO: merge with above
 function itemspritecopy(f, {dir, ext}) {
     const sn = spritedata.parseFilename(f.name);
-    const sd = spritedata.getItem(sn.id);
+    const sd = spritedata.get(sn.id);
     const name = toSmogonAlias(sd.name);
     copy(f, {dir, ext, name});
 }

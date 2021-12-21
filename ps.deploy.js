@@ -6,8 +6,8 @@ function toID(name) {
 function spritecopy(f, {dir, ext}) {
     const sn = spritedata.parseFilename(f.name);
     let name;
-    if (typeof sn.id === 'string') {
-        name = toID(sn.id);
+    if (sn.extension) {
+        name = toID(sn.name);
     } else {
         const sd = spritedata.get(sn.id);
         debug(sd);
