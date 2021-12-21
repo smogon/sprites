@@ -539,11 +539,11 @@ for (const name of fs.readdirSync(spritesDir)) {
     entries[index] = path.join(spritesDir, name);
 }
 
-// for (const [id, num] of Object.entries(BattlePokemonIconIndexes)) {
-//     if (num !== 'found') {
-//         throw new Error(`didn't find ${id}`);
-//     }
-// }
+for (const [id, num] of Object.entries(BattlePokemonIconIndexes)) {
+    if (num !== 'found') {
+        throw new Error(`didn't find ${id}`);
+    }
+}
 
 for (const [id, num] of Object.entries(BattlePokemonIconIndexesLeft)) {
     if (num !== 'found') {
