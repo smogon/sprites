@@ -368,13 +368,13 @@
     "i61": {
         "type": "item",
         "sid": "i61",
-        "name": "Deep Sea_Scale",
+        "name": "Deep Sea Scale",
         "martyCategory": "battle"
     },
     "i62": {
         "type": "item",
         "sid": "i62",
-        "name": "Deep Sea_Tooth",
+        "name": "Deep Sea Tooth",
         "martyCategory": "battle"
     },
     "i63": {
@@ -2132,7 +2132,7 @@
     "i355": {
         "type": "item",
         "sid": "i355",
-        "name": "Gold Bottle_Cap",
+        "name": "Gold Bottle Cap",
         "martyCategory": "nonbattle"
     },
     "i356": {
@@ -2252,7 +2252,7 @@
     "i375": {
         "type": "item",
         "sid": "i375",
-        "name": "Poké Ball",
+        "name": "Poke Ball",
         "martyCategory": "nonbattle"
     },
     "i376": {
