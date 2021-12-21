@@ -19,7 +19,7 @@ export type SpecieEntry = {
 export type ItemEntry = {
     type : 'item',
     sid : string,
-    name : string
+    names : string[]
 };
 
 export type Entry = SpecieEntry | ItemEntry;

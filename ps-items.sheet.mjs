@@ -529,11 +529,13 @@ const ITEMS = {
 
 const found = new Map;
 
-for (const {type, sid, name} of spritedata.entries()) {
+for (const {type, sid, names} of spritedata.entries()) {
     if (type !== 'item') continue;
-    const id = toPSID(name);
-    const filename = spritedata.formatFilename({id: sid});
-    found.set(id, path.join(root, "newsrc/minisprites/items", filename + ".png"));
+    for (let name of names) {
+        const id = toPSID(name);
+        const filename = spritedata.formatFilename({id: sid});
+        found.set(id, path.join(root, "newsrc/minisprites/items", filename + ".png"));
+    }
 }
 
 const entries = [];

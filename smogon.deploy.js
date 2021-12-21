@@ -38,8 +38,10 @@ function spritecopy(f, {dir, ext}) {
 function itemspritecopy(f, {dir, ext}) {
     const sn = spritedata.parseFilename(f.name);
     const sd = spritedata.get(sn.id);
-    const name = toSmogonAlias(sd.name);
-    copy(f, {dir, ext, name});
+    for (const n of sd.names) {
+        const name = toSmogonAlias(n);
+        copy(f, {dir, ext, name});
+    }
 }
 
 for (const f of list("newsrc/models")) {
