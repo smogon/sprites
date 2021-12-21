@@ -505,6 +505,7 @@ const BattlePokemonIconIndexesLeft = {
 
 const entries = [];
 
+// Need to figure out how to remove this readdir; tup doesn't like it
 for (const name of fs.readdirSync(spritesDir)) {
     const parsed = path.parse(name);
     const sn = spritedata.parseFilename(parsed.name);
