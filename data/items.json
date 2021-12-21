@@ -1,5060 +1,3536 @@
 {
-    "i0": {
-        "type": "item",
-        "sid": "i0",
-        "name": "Abomasite",
-        "martyCategory": "battle"
-    },
-    "i1": {
-        "type": "item",
-        "sid": "i1",
-        "name": "Absolite",
-        "martyCategory": "battle"
-    },
-    "i2": {
-        "type": "item",
-        "sid": "i2",
-        "name": "Absorb Bulb",
-        "martyCategory": "battle"
-    },
-    "i3": {
-        "type": "item",
-        "sid": "i3",
-        "name": "Adamant Orb",
-        "martyCategory": "battle"
-    },
-    "i4": {
-        "type": "item",
-        "sid": "i4",
-        "name": "Adrenaline Orb",
-        "martyCategory": "battle"
-    },
-    "i5": {
-        "type": "item",
-        "sid": "i5",
-        "name": "Aerodactylite",
-        "martyCategory": "battle"
-    },
-    "i6": {
-        "type": "item",
-        "sid": "i6",
-        "name": "Aggronite",
-        "martyCategory": "battle"
-    },
-    "i7": {
-        "type": "item",
-        "sid": "i7",
-        "name": "Aguav Berry",
-        "martyCategory": "battle"
-    },
-    "i8": {
-        "type": "item",
-        "sid": "i8",
-        "name": "Air Balloon",
-        "martyCategory": "battle"
-    },
-    "i9": {
-        "type": "item",
-        "sid": "i9",
-        "name": "Alakazite",
-        "martyCategory": "battle"
-    },
-    "i10": {
-        "type": "item",
-        "sid": "i10",
-        "name": "Aloraichium Z",
-        "martyCategory": "battle"
-    },
-    "i11": {
-        "type": "item",
-        "sid": "i11",
-        "name": "Altarianite",
-        "martyCategory": "battle"
-    },
-    "i12": {
-        "type": "item",
-        "sid": "i12",
-        "name": "Ampharosite",
-        "martyCategory": "battle"
-    },
-    "i13": {
-        "type": "item",
-        "sid": "i13",
-        "name": "Apicot Berry",
-        "martyCategory": "battle"
-    },
-    "i14": {
-        "type": "item",
-        "sid": "i14",
-        "name": "Aspear Berry",
-        "martyCategory": "battle"
-    },
-    "i15": {
-        "type": "item",
-        "sid": "i15",
-        "name": "Assault Vest",
-        "martyCategory": "battle"
-    },
-    "i16": {
-        "type": "item",
-        "sid": "i16",
-        "name": "Audinite",
-        "martyCategory": "battle"
-    },
-    "i17": {
-        "type": "item",
-        "sid": "i17",
-        "name": "Babiri Berry",
-        "martyCategory": "battle"
-    },
-    "i18": {
-        "type": "item",
-        "sid": "i18",
-        "name": "Banettite",
-        "martyCategory": "battle"
-    },
-    "i19": {
-        "type": "item",
-        "sid": "i19",
-        "name": "Beedrillite",
-        "martyCategory": "battle"
-    },
-    "i20": {
-        "type": "item",
-        "sid": "i20",
-        "name": "Belue Berry",
-        "martyCategory": "battle"
-    },
-    "i21": {
-        "type": "item",
-        "sid": "i21",
-        "name": "Berry Juice",
-        "martyCategory": "battle"
-    },
-    "i22": {
-        "type": "item",
-        "sid": "i22",
-        "name": "Berserk Gene",
-        "martyCategory": "battle"
-    },
-    "i23": {
-        "type": "item",
-        "sid": "i23",
-        "name": "Big Root",
-        "martyCategory": "battle"
-    },
-    "i24": {
-        "type": "item",
-        "sid": "i24",
-        "name": "Binding Band",
-        "martyCategory": "battle"
-    },
-    "i25": {
-        "type": "item",
-        "sid": "i25",
-        "name": "Black Belt",
-        "martyCategory": "battle"
-    },
-    "i26": {
-        "type": "item",
-        "sid": "i26",
-        "name": "Black Glasses",
-        "martyCategory": "battle"
-    },
-    "i27": {
-        "type": "item",
-        "sid": "i27",
-        "name": "Black Sludge",
-        "martyCategory": "battle"
-    },
-    "i28": {
-        "type": "item",
-        "sid": "i28",
-        "name": "Blastoisinite",
-        "martyCategory": "battle"
-    },
-    "i29": {
-        "type": "item",
-        "sid": "i29",
-        "name": "Blazikenite",
-        "martyCategory": "battle"
-    },
-    "i30": {
-        "type": "item",
-        "sid": "i30",
-        "name": "Blue Orb",
-        "martyCategory": "battle"
-    },
-    "i31": {
-        "type": "item",
-        "sid": "i31",
-        "name": "Bluk Berry",
-        "martyCategory": "battle"
-    },
-    "i32": {
-        "type": "item",
-        "sid": "i32",
-        "name": "Blunder Policy",
-        "martyCategory": "battle"
-    },
-    "i33": {
-        "type": "item",
-        "sid": "i33",
-        "name": "Bright Powder",
-        "martyCategory": "battle"
-    },
-    "i34": {
-        "type": "item",
-        "sid": "i34",
-        "name": "Bug Gem",
-        "martyCategory": "battle"
-    },
-    "i35": {
-        "type": "item",
-        "sid": "i35",
-        "name": "Bug Memory",
-        "martyCategory": "battle"
-    },
-    "i36": {
-        "type": "item",
-        "sid": "i36",
-        "name": "Buginium Z",
-        "martyCategory": "battle"
-    },
-    "i37": {
-        "type": "item",
-        "sid": "i37",
-        "name": "Burn Drive",
-        "martyCategory": "battle"
-    },
-    "i38": {
-        "type": "item",
-        "sid": "i38",
-        "name": "Cameruptite",
-        "martyCategory": "battle"
-    },
-    "i39": {
-        "type": "item",
-        "sid": "i39",
-        "name": "Cell Battery",
-        "martyCategory": "battle"
-    },
-    "i40": {
-        "type": "item",
-        "sid": "i40",
-        "name": "Charcoal",
-        "martyCategory": "battle"
-    },
-    "i41": {
-        "type": "item",
-        "sid": "i41",
-        "name": "Charizardite X",
-        "martyCategory": "battle"
-    },
-    "i42": {
-        "type": "item",
-        "sid": "i42",
-        "name": "Charizardite Y",
-        "martyCategory": "battle"
-    },
-    "i43": {
-        "type": "item",
-        "sid": "i43",
-        "name": "Charti Berry",
-        "martyCategory": "battle"
-    },
-    "i44": {
-        "type": "item",
-        "sid": "i44",
-        "name": "Cheri Berry",
-        "martyCategory": "battle"
-    },
-    "i45": {
-        "type": "item",
-        "sid": "i45",
-        "name": "Chesto Berry",
-        "martyCategory": "battle"
-    },
-    "i46": {
-        "type": "item",
-        "sid": "i46",
-        "name": "Chilan Berry",
-        "martyCategory": "battle"
-    },
-    "i47": {
-        "type": "item",
-        "sid": "i47",
-        "name": "Chill Drive",
-        "martyCategory": "battle"
-    },
-    "i48": {
-        "type": "item",
-        "sid": "i48",
-        "name": "Choice Band",
-        "martyCategory": "battle"
-    },
-    "i49": {
-        "type": "item",
-        "sid": "i49",
-        "name": "Choice Scarf",
-        "martyCategory": "battle"
-    },
-    "i50": {
-        "type": "item",
-        "sid": "i50",
-        "name": "Choice Specs",
-        "martyCategory": "battle"
-    },
-    "i51": {
-        "type": "item",
-        "sid": "i51",
-        "name": "Chople Berry",
-        "martyCategory": "battle"
-    },
-    "i52": {
-        "type": "item",
-        "sid": "i52",
-        "name": "Coba Berry",
-        "martyCategory": "battle"
-    },
-    "i53": {
-        "type": "item",
-        "sid": "i53",
-        "name": "Colbur Berry",
-        "martyCategory": "battle"
-    },
-    "i54": {
-        "type": "item",
-        "sid": "i54",
-        "name": "Cornn Berry",
-        "martyCategory": "battle"
-    },
-    "i55": {
-        "type": "item",
-        "sid": "i55",
-        "name": "Custap Berry",
-        "martyCategory": "battle"
-    },
-    "i56": {
-        "type": "item",
-        "sid": "i56",
-        "name": "Damp Rock",
-        "martyCategory": "battle"
-    },
-    "i57": {
-        "type": "item",
-        "sid": "i57",
-        "name": "Dark Gem",
-        "martyCategory": "battle"
-    },
-    "i58": {
-        "type": "item",
-        "sid": "i58",
-        "name": "Dark Memory",
-        "martyCategory": "battle"
-    },
-    "i59": {
-        "type": "item",
-        "sid": "i59",
-        "name": "Darkinium Z",
-        "martyCategory": "battle"
-    },
-    "i60": {
-        "type": "item",
-        "sid": "i60",
-        "name": "Decidium Z",
-        "martyCategory": "battle"
-    },
-    "i61": {
-        "type": "item",
-        "sid": "i61",
-        "name": "Deep Sea Scale",
-        "martyCategory": "battle"
-    },
-    "i62": {
-        "type": "item",
-        "sid": "i62",
-        "name": "Deep Sea Tooth",
-        "martyCategory": "battle"
-    },
-    "i63": {
-        "type": "item",
-        "sid": "i63",
-        "name": "Destiny Knot",
-        "martyCategory": "battle"
-    },
-    "i64": {
-        "type": "item",
-        "sid": "i64",
-        "name": "Diancite",
-        "martyCategory": "battle"
-    },
-    "i65": {
-        "type": "item",
-        "sid": "i65",
-        "name": "Douse Drive",
-        "martyCategory": "battle"
-    },
-    "i66": {
-        "type": "item",
-        "sid": "i66",
-        "name": "Draco Plate",
-        "martyCategory": "battle"
-    },
-    "i67": {
-        "type": "item",
-        "sid": "i67",
-        "name": "Dragon Fang",
-        "martyCategory": "battle"
-    },
-    "i68": {
-        "type": "item",
-        "sid": "i68",
-        "name": "Dragon Gem",
-        "martyCategory": "battle"
-    },
-    "i69": {
-        "type": "item",
-        "sid": "i69",
-        "name": "Dragon Memory",
-        "martyCategory": "battle"
-    },
-    "i70": {
-        "type": "item",
-        "sid": "i70",
-        "name": "Dragon Scale",
-        "martyCategory": "battle"
-    },
-    "i71": {
-        "type": "item",
-        "sid": "i71",
-        "name": "Dragonium Z",
-        "martyCategory": "battle"
-    },
-    "i72": {
-        "type": "item",
-        "sid": "i72",
-        "name": "Dread Plate",
-        "martyCategory": "battle"
-    },
-    "i73": {
-        "type": "item",
-        "sid": "i73",
-        "name": "Durin Berry",
-        "martyCategory": "battle"
-    },
-    "i74": {
-        "type": "item",
-        "sid": "i74",
-        "name": "Earth Plate",
-        "martyCategory": "battle"
-    },
-    "i75": {
-        "type": "item",
-        "sid": "i75",
-        "name": "Eevium Z",
-        "martyCategory": "battle"
-    },
-    "i76": {
-        "type": "item",
-        "sid": "i76",
-        "name": "Eject Button",
-        "martyCategory": "battle"
-    },
-    "i77": {
-        "type": "item",
-        "sid": "i77",
-        "name": "Eject Pack",
-        "martyCategory": "battle"
-    },
-    "i78": {
-        "type": "item",
-        "sid": "i78",
-        "name": "Electric Gem",
-        "martyCategory": "battle"
-    },
-    "i79": {
-        "type": "item",
-        "sid": "i79",
-        "name": "Electric Memory",
-        "martyCategory": "battle"
-    },
-    "i80": {
-        "type": "item",
-        "sid": "i80",
-        "name": "Electric Seed",
-        "martyCategory": "battle"
-    },
-    "i81": {
-        "type": "item",
-        "sid": "i81",
-        "name": "Electrium Z",
-        "martyCategory": "battle"
-    },
-    "i82": {
-        "type": "item",
-        "sid": "i82",
-        "name": "Enigma Berry",
-        "martyCategory": "battle"
-    },
-    "i83": {
-        "type": "item",
-        "sid": "i83",
-        "name": "Eviolite",
-        "martyCategory": "battle"
-    },
-    "i84": {
-        "type": "item",
-        "sid": "i84",
-        "name": "Expert Belt",
-        "martyCategory": "battle"
-    },
-    "i85": {
-        "type": "item",
-        "sid": "i85",
-        "name": "Fairium Z",
-        "martyCategory": "battle"
-    },
-    "i86": {
-        "type": "item",
-        "sid": "i86",
-        "name": "Fairy Gem",
-        "martyCategory": "battle"
-    },
-    "i87": {
-        "type": "item",
-        "sid": "i87",
-        "name": "Fairy Memory",
-        "martyCategory": "battle"
-    },
-    "i88": {
-        "type": "item",
-        "sid": "i88",
-        "name": "Fighting Gem",
-        "martyCategory": "battle"
-    },
-    "i89": {
-        "type": "item",
-        "sid": "i89",
-        "name": "Fighting Memory",
-        "martyCategory": "battle"
-    },
-    "i90": {
-        "type": "item",
-        "sid": "i90",
-        "name": "Fightinium Z",
-        "martyCategory": "battle"
-    },
-    "i91": {
-        "type": "item",
-        "sid": "i91",
-        "name": "Figy Berry",
-        "martyCategory": "battle"
-    },
-    "i92": {
-        "type": "item",
-        "sid": "i92",
-        "name": "Fire Gem",
-        "martyCategory": "battle"
-    },
-    "i93": {
-        "type": "item",
-        "sid": "i93",
-        "name": "Fire Memory",
-        "martyCategory": "battle"
-    },
-    "i94": {
-        "type": "item",
-        "sid": "i94",
-        "name": "Firium Z",
-        "martyCategory": "battle"
-    },
-    "i95": {
-        "type": "item",
-        "sid": "i95",
-        "name": "Fist Plate",
-        "martyCategory": "battle"
-    },
-    "i96": {
-        "type": "item",
-        "sid": "i96",
-        "name": "Flame Orb",
-        "martyCategory": "battle"
-    },
-    "i97": {
-        "type": "item",
-        "sid": "i97",
-        "name": "Flame Plate",
-        "martyCategory": "battle"
-    },
-    "i98": {
-        "type": "item",
-        "sid": "i98",
-        "name": "Float Stone",
-        "martyCategory": "battle"
-    },
-    "i99": {
-        "type": "item",
-        "sid": "i99",
-        "name": "Flying Gem",
-        "martyCategory": "battle"
-    },
-    "i100": {
-        "type": "item",
-        "sid": "i100",
-        "name": "Flying Memory",
-        "martyCategory": "battle"
-    },
-    "i101": {
-        "type": "item",
-        "sid": "i101",
-        "name": "Flyinium Z",
-        "martyCategory": "battle"
-    },
-    "i102": {
-        "type": "item",
-        "sid": "i102",
-        "name": "Focus Band",
-        "martyCategory": "battle"
-    },
-    "i103": {
-        "type": "item",
-        "sid": "i103",
-        "name": "Focus Sash",
-        "martyCategory": "battle"
-    },
-    "i104": {
-        "type": "item",
-        "sid": "i104",
-        "name": "Full Incense",
-        "martyCategory": "battle"
-    },
-    "i105": {
-        "type": "item",
-        "sid": "i105",
-        "name": "Galladite",
-        "martyCategory": "battle"
-    },
-    "i106": {
-        "type": "item",
-        "sid": "i106",
-        "name": "Ganlon Berry",
-        "martyCategory": "battle"
-    },
-    "i107": {
-        "type": "item",
-        "sid": "i107",
-        "name": "Garchompite",
-        "martyCategory": "battle"
-    },
-    "i108": {
-        "type": "item",
-        "sid": "i108",
-        "name": "Gardevoirite",
-        "martyCategory": "battle"
-    },
-    "i109": {
-        "type": "item",
-        "sid": "i109",
-        "name": "Gengarite",
-        "martyCategory": "battle"
-    },
-    "i110": {
-        "type": "item",
-        "sid": "i110",
-        "name": "Ghost Gem",
-        "martyCategory": "battle"
-    },
-    "i111": {
-        "type": "item",
-        "sid": "i111",
-        "name": "Ghost Memory",
-        "martyCategory": "battle"
-    },
-    "i112": {
-        "type": "item",
-        "sid": "i112",
-        "name": "Ghostium Z",
-        "martyCategory": "battle"
-    },
-    "i113": {
-        "type": "item",
-        "sid": "i113",
-        "name": "Glalitite",
-        "martyCategory": "battle"
-    },
-    "i114": {
-        "type": "item",
-        "sid": "i114",
-        "name": "Grass Gem",
-        "martyCategory": "battle"
-    },
-    "i115": {
-        "type": "item",
-        "sid": "i115",
-        "name": "Grass Memory",
-        "martyCategory": "battle"
-    },
-    "i116": {
-        "type": "item",
-        "sid": "i116",
-        "name": "Grassium Z",
-        "martyCategory": "battle"
-    },
-    "i117": {
-        "type": "item",
-        "sid": "i117",
-        "name": "Grassy Seed",
-        "martyCategory": "battle"
-    },
-    "i118": {
-        "type": "item",
-        "sid": "i118",
-        "name": "Grepa Berry",
-        "martyCategory": "battle"
-    },
-    "i119": {
-        "type": "item",
-        "sid": "i119",
-        "name": "Grip Claw",
-        "martyCategory": "battle"
-    },
-    "i120": {
-        "type": "item",
-        "sid": "i120",
-        "name": "Griseous Orb",
-        "martyCategory": "battle"
-    },
-    "i121": {
-        "type": "item",
-        "sid": "i121",
-        "name": "Ground Gem",
-        "martyCategory": "battle"
-    },
-    "i122": {
-        "type": "item",
-        "sid": "i122",
-        "name": "Ground Memory",
-        "martyCategory": "battle"
-    },
-    "i123": {
-        "type": "item",
-        "sid": "i123",
-        "name": "Groundium Z",
-        "martyCategory": "battle"
-    },
-    "i124": {
-        "type": "item",
-        "sid": "i124",
-        "name": "Gyaradosite",
-        "martyCategory": "battle"
-    },
-    "i125": {
-        "type": "item",
-        "sid": "i125",
-        "name": "Haban Berry",
-        "martyCategory": "battle"
-    },
-    "i126": {
-        "type": "item",
-        "sid": "i126",
-        "name": "Hard Stone",
-        "martyCategory": "battle"
-    },
-    "i127": {
-        "type": "item",
-        "sid": "i127",
-        "name": "Heat Rock",
-        "martyCategory": "battle"
-    },
-    "i128": {
-        "type": "item",
-        "sid": "i128",
-        "name": "Heavy-Duty Boots",
-        "martyCategory": "battle"
-    },
-    "i129": {
-        "type": "item",
-        "sid": "i129",
-        "name": "Heracronite",
-        "martyCategory": "battle"
-    },
-    "i130": {
-        "type": "item",
-        "sid": "i130",
-        "name": "Hondew Berry",
-        "martyCategory": "battle"
-    },
-    "i131": {
-        "type": "item",
-        "sid": "i131",
-        "name": "Houndoominite",
-        "martyCategory": "battle"
-    },
-    "i132": {
-        "type": "item",
-        "sid": "i132",
-        "name": "Iapapa Berry",
-        "martyCategory": "battle"
-    },
-    "i133": {
-        "type": "item",
-        "sid": "i133",
-        "name": "Ice Gem",
-        "martyCategory": "battle"
-    },
-    "i134": {
-        "type": "item",
-        "sid": "i134",
-        "name": "Ice Memory",
-        "martyCategory": "battle"
-    },
-    "i135": {
-        "type": "item",
-        "sid": "i135",
-        "name": "Icicle Plate",
-        "martyCategory": "battle"
-    },
-    "i136": {
-        "type": "item",
-        "sid": "i136",
-        "name": "Icium Z",
-        "martyCategory": "battle"
-    },
-    "i137": {
-        "type": "item",
-        "sid": "i137",
-        "name": "Icy Rock",
-        "martyCategory": "battle"
-    },
-    "i138": {
-        "type": "item",
-        "sid": "i138",
-        "name": "Incinium Z",
-        "martyCategory": "battle"
-    },
-    "i139": {
-        "type": "item",
-        "sid": "i139",
-        "name": "Insect Plate",
-        "martyCategory": "battle"
-    },
-    "i140": {
-        "type": "item",
-        "sid": "i140",
-        "name": "Iron Ball",
-        "martyCategory": "battle"
-    },
-    "i141": {
-        "type": "item",
-        "sid": "i141",
-        "name": "Iron Plate",
-        "martyCategory": "battle"
-    },
-    "i142": {
-        "type": "item",
-        "sid": "i142",
-        "name": "Jaboca Berry",
-        "martyCategory": "battle"
-    },
-    "i143": {
-        "type": "item",
-        "sid": "i143",
-        "name": "Kangaskhanite",
-        "martyCategory": "battle"
-    },
-    "i144": {
-        "type": "item",
-        "sid": "i144",
-        "name": "Kasib Berry",
-        "martyCategory": "battle"
-    },
-    "i145": {
-        "type": "item",
-        "sid": "i145",
-        "name": "Kebia Berry",
-        "martyCategory": "battle"
-    },
-    "i146": {
-        "type": "item",
-        "sid": "i146",
-        "name": "Kee Berry",
-        "martyCategory": "battle"
-    },
-    "i147": {
-        "type": "item",
-        "sid": "i147",
-        "name": "Kelpsy Berry",
-        "martyCategory": "battle"
-    },
-    "i148": {
-        "type": "item",
-        "sid": "i148",
-        "name": "King's Rock",
-        "martyCategory": "battle"
-    },
-    "i149": {
-        "type": "item",
-        "sid": "i149",
-        "name": "Kommonium Z",
-        "martyCategory": "battle"
-    },
-    "i150": {
-        "type": "item",
-        "sid": "i150",
-        "name": "Lagging Tail",
-        "martyCategory": "battle"
-    },
-    "i151": {
-        "type": "item",
-        "sid": "i151",
-        "name": "Lansat Berry",
-        "martyCategory": "battle"
-    },
-    "i152": {
-        "type": "item",
-        "sid": "i152",
-        "name": "Latiasite",
-        "martyCategory": "battle"
-    },
-    "i153": {
-        "type": "item",
-        "sid": "i153",
-        "name": "Latiosite",
-        "martyCategory": "battle"
-    },
-    "i154": {
-        "type": "item",
-        "sid": "i154",
-        "name": "Lax Incense",
-        "martyCategory": "battle"
-    },
-    "i155": {
-        "type": "item",
-        "sid": "i155",
-        "name": "Leek",
-        "martyCategory": "battle"
-    },
-    "i156": {
-        "type": "item",
-        "sid": "i156",
-        "name": "Leftovers",
-        "martyCategory": "battle"
-    },
-    "i157": {
-        "type": "item",
-        "sid": "i157",
-        "name": "Leppa Berry",
-        "martyCategory": "battle"
-    },
-    "i158": {
-        "type": "item",
-        "sid": "i158",
-        "name": "Liechi Berry",
-        "martyCategory": "battle"
-    },
-    "i159": {
-        "type": "item",
-        "sid": "i159",
-        "name": "Life Orb",
-        "martyCategory": "battle"
-    },
-    "i160": {
-        "type": "item",
-        "sid": "i160",
-        "name": "Light Ball",
-        "martyCategory": "battle"
-    },
-    "i161": {
-        "type": "item",
-        "sid": "i161",
-        "name": "Light Clay",
-        "martyCategory": "battle"
-    },
-    "i162": {
-        "type": "item",
-        "sid": "i162",
-        "name": "Lopunnite",
-        "martyCategory": "battle"
-    },
-    "i163": {
-        "type": "item",
-        "sid": "i163",
-        "name": "Lucarionite",
-        "martyCategory": "battle"
-    },
-    "i164": {
-        "type": "item",
-        "sid": "i164",
-        "name": "Luck Incense",
-        "martyCategory": "battle"
-    },
-    "i165": {
-        "type": "item",
-        "sid": "i165",
-        "name": "Lucky Punch",
-        "martyCategory": "battle"
-    },
-    "i166": {
-        "type": "item",
-        "sid": "i166",
-        "name": "Lum Berry",
-        "martyCategory": "battle"
-    },
-    "i167": {
-        "type": "item",
-        "sid": "i167",
-        "name": "Luminous Moss",
-        "martyCategory": "battle"
-    },
-    "i168": {
-        "type": "item",
-        "sid": "i168",
-        "name": "Lunalium Z",
-        "martyCategory": "battle"
-    },
-    "i169": {
-        "type": "item",
-        "sid": "i169",
-        "name": "Lustrous Orb",
-        "martyCategory": "battle"
-    },
-    "i170": {
-        "type": "item",
-        "sid": "i170",
-        "name": "Lycanium Z",
-        "martyCategory": "battle"
-    },
-    "i171": {
-        "type": "item",
-        "sid": "i171",
-        "name": "Macho Brace",
-        "martyCategory": "battle"
-    },
-    "i172": {
-        "type": "item",
-        "sid": "i172",
-        "name": "Magnet",
-        "martyCategory": "battle"
-    },
-    "i173": {
-        "type": "item",
-        "sid": "i173",
-        "name": "Mago Berry",
-        "martyCategory": "battle"
-    },
-    "i174": {
-        "type": "item",
-        "sid": "i174",
-        "name": "Magost Berry",
-        "martyCategory": "battle"
-    },
-    "i175": {
-        "type": "item",
-        "sid": "i175",
-        "name": "Mail",
-        "martyCategory": "battle"
-    },
-    "i176": {
-        "type": "item",
-        "sid": "i176",
-        "name": "Manectite",
-        "martyCategory": "battle"
-    },
-    "i177": {
-        "type": "item",
-        "sid": "i177",
-        "name": "Maranga Berry",
-        "martyCategory": "battle"
-    },
-    "i178": {
-        "type": "item",
-        "sid": "i178",
-        "name": "Marshadium Z",
-        "martyCategory": "battle"
-    },
-    "i179": {
-        "type": "item",
-        "sid": "i179",
-        "name": "Mawilite",
-        "martyCategory": "battle"
-    },
-    "i180": {
-        "type": "item",
-        "sid": "i180",
-        "name": "Meadow Plate",
-        "martyCategory": "battle"
-    },
-    "i181": {
-        "type": "item",
-        "sid": "i181",
-        "name": "Medichamite",
-        "martyCategory": "battle"
-    },
-    "i182": {
-        "type": "item",
-        "sid": "i182",
-        "name": "Mental Herb",
-        "martyCategory": "battle"
-    },
-    "i183": {
-        "type": "item",
-        "sid": "i183",
-        "name": "Metagrossite",
-        "martyCategory": "battle"
-    },
-    "i184": {
-        "type": "item",
-        "sid": "i184",
-        "name": "Metal Coat",
-        "martyCategory": "battle"
-    },
-    "i185": {
-        "type": "item",
-        "sid": "i185",
-        "name": "Metal Powder",
-        "martyCategory": "battle"
-    },
-    "i186": {
-        "type": "item",
-        "sid": "i186",
-        "name": "Metronome",
-        "martyCategory": "battle"
-    },
-    "i187": {
-        "type": "item",
-        "sid": "i187",
-        "name": "Mewnium Z",
-        "martyCategory": "battle"
-    },
-    "i188": {
-        "type": "item",
-        "sid": "i188",
-        "name": "Mewtwonite X",
-        "martyCategory": "battle"
-    },
-    "i189": {
-        "type": "item",
-        "sid": "i189",
-        "name": "Mewtwonite Y",
-        "martyCategory": "battle"
-    },
-    "i190": {
-        "type": "item",
-        "sid": "i190",
-        "name": "Micle Berry",
-        "martyCategory": "battle"
-    },
-    "i191": {
-        "type": "item",
-        "sid": "i191",
-        "name": "Mimikium Z",
-        "martyCategory": "battle"
-    },
-    "i192": {
-        "type": "item",
-        "sid": "i192",
-        "name": "Mind Plate",
-        "martyCategory": "battle"
-    },
-    "i193": {
-        "type": "item",
-        "sid": "i193",
-        "name": "Miracle Seed",
-        "martyCategory": "battle"
-    },
-    "i194": {
-        "type": "item",
-        "sid": "i194",
-        "name": "Misty Seed",
-        "martyCategory": "battle"
-    },
-    "i195": {
-        "type": "item",
-        "sid": "i195",
-        "name": "Muscle Band",
-        "martyCategory": "battle"
-    },
-    "i196": {
-        "type": "item",
-        "sid": "i196",
-        "name": "Mystic Water",
-        "martyCategory": "battle"
-    },
-    "i197": {
-        "type": "item",
-        "sid": "i197",
-        "name": "Nanab Berry",
-        "martyCategory": "battle"
-    },
-    "i198": {
-        "type": "item",
-        "sid": "i198",
-        "name": "Nest Ball",
-        "martyCategory": "battle"
-    },
-    "i199": {
-        "type": "item",
-        "sid": "i199",
-        "name": "Net Ball",
-        "martyCategory": "battle"
-    },
-    "i200": {
-        "type": "item",
-        "sid": "i200",
-        "name": "Never-Melt Ice",
-        "martyCategory": "battle"
-    },
-    "i201": {
-        "type": "item",
-        "sid": "i201",
-        "name": "Nomel Berry",
-        "martyCategory": "battle"
-    },
-    "i202": {
-        "type": "item",
-        "sid": "i202",
-        "name": "Normal Gem",
-        "martyCategory": "battle"
-    },
-    "i203": {
-        "type": "item",
-        "sid": "i203",
-        "name": "Normalium Z",
-        "martyCategory": "battle"
-    },
-    "i204": {
-        "type": "item",
-        "sid": "i204",
-        "name": "Occa Berry",
-        "martyCategory": "battle"
-    },
-    "i205": {
-        "type": "item",
-        "sid": "i205",
-        "name": "Odd Incense",
-        "martyCategory": "battle"
-    },
-    "i206": {
-        "type": "item",
-        "sid": "i206",
-        "name": "Oran Berry",
-        "martyCategory": "battle"
-    },
-    "i207": {
-        "type": "item",
-        "sid": "i207",
-        "name": "Oval Stone",
-        "martyCategory": "battle"
-    },
-    "i208": {
-        "type": "item",
-        "sid": "i208",
-        "name": "Pamtre Berry",
-        "martyCategory": "battle"
-    },
-    "i209": {
-        "type": "item",
-        "sid": "i209",
-        "name": "Passho Berry",
-        "martyCategory": "battle"
-    },
-    "i210": {
-        "type": "item",
-        "sid": "i210",
-        "name": "Payapa Berry",
-        "martyCategory": "battle"
-    },
-    "i211": {
-        "type": "item",
-        "sid": "i211",
-        "name": "Pecha Berry",
-        "martyCategory": "battle"
-    },
-    "i212": {
-        "type": "item",
-        "sid": "i212",
-        "name": "Persim Berry",
-        "martyCategory": "battle"
-    },
-    "i213": {
-        "type": "item",
-        "sid": "i213",
-        "name": "Petaya Berry",
-        "martyCategory": "battle"
-    },
-    "i214": {
-        "type": "item",
-        "sid": "i214",
-        "name": "Pidgeotite",
-        "martyCategory": "battle"
-    },
-    "i215": {
-        "type": "item",
-        "sid": "i215",
-        "name": "Pikanium Z",
-        "martyCategory": "battle"
-    },
-    "i216": {
-        "type": "item",
-        "sid": "i216",
-        "name": "Pikashunium Z",
-        "martyCategory": "battle"
-    },
-    "i217": {
-        "type": "item",
-        "sid": "i217",
-        "name": "Pinap Berry",
-        "martyCategory": "battle"
-    },
-    "i218": {
-        "type": "item",
-        "sid": "i218",
-        "name": "Pinsirite",
-        "martyCategory": "battle"
-    },
-    "i219": {
-        "type": "item",
-        "sid": "i219",
-        "name": "Pixie Plate",
-        "martyCategory": "battle"
-    },
-    "i220": {
-        "type": "item",
-        "sid": "i220",
-        "name": "Poison Barb",
-        "martyCategory": "battle"
-    },
-    "i221": {
-        "type": "item",
-        "sid": "i221",
-        "name": "Poison Gem",
-        "martyCategory": "battle"
-    },
-    "i222": {
-        "type": "item",
-        "sid": "i222",
-        "name": "Poison Memory",
-        "martyCategory": "battle"
-    },
-    "i223": {
-        "type": "item",
-        "sid": "i223",
-        "name": "Poisonium Z",
-        "martyCategory": "battle"
-    },
-    "i224": {
-        "type": "item",
-        "sid": "i224",
-        "name": "Pomeg Berry",
-        "martyCategory": "battle"
-    },
-    "i225": {
-        "type": "item",
-        "sid": "i225",
-        "name": "Power Anklet",
-        "martyCategory": "battle"
-    },
-    "i226": {
-        "type": "item",
-        "sid": "i226",
-        "name": "Power Band",
-        "martyCategory": "battle"
-    },
-    "i227": {
-        "type": "item",
-        "sid": "i227",
-        "name": "Power Belt",
-        "martyCategory": "battle"
-    },
-    "i228": {
-        "type": "item",
-        "sid": "i228",
-        "name": "Power Bracer",
-        "martyCategory": "battle"
-    },
-    "i229": {
-        "type": "item",
-        "sid": "i229",
-        "name": "Power Herb",
-        "martyCategory": "battle"
-    },
-    "i230": {
-        "type": "item",
-        "sid": "i230",
-        "name": "Power Lens",
-        "martyCategory": "battle"
-    },
-    "i231": {
-        "type": "item",
-        "sid": "i231",
-        "name": "Power Weight",
-        "martyCategory": "battle"
-    },
-    "i232": {
-        "type": "item",
-        "sid": "i232",
-        "name": "Primarium Z",
-        "martyCategory": "battle"
-    },
-    "i233": {
-        "type": "item",
-        "sid": "i233",
-        "name": "Protective Pads",
-        "martyCategory": "battle"
-    },
-    "i234": {
-        "type": "item",
-        "sid": "i234",
-        "name": "Psychic Gem",
-        "martyCategory": "battle"
-    },
-    "i235": {
-        "type": "item",
-        "sid": "i235",
-        "name": "Psychic Memory",
-        "martyCategory": "battle"
-    },
-    "i236": {
-        "type": "item",
-        "sid": "i236",
-        "name": "Psychic Seed",
-        "martyCategory": "battle"
-    },
-    "i237": {
-        "type": "item",
-        "sid": "i237",
-        "name": "Psychium Z",
-        "martyCategory": "battle"
-    },
-    "i238": {
-        "type": "item",
-        "sid": "i238",
-        "name": "Qualot Berry",
-        "martyCategory": "battle"
-    },
-    "i239": {
-        "type": "item",
-        "sid": "i239",
-        "name": "Quick Claw",
-        "martyCategory": "battle"
-    },
-    "i240": {
-        "type": "item",
-        "sid": "i240",
-        "name": "Quick Powder",
-        "martyCategory": "battle"
-    },
-    "i241": {
-        "type": "item",
-        "sid": "i241",
-        "name": "Rabuta Berry",
-        "martyCategory": "battle"
-    },
-    "i242": {
-        "type": "item",
-        "sid": "i242",
-        "name": "Rawst Berry",
-        "martyCategory": "battle"
-    },
-    "i243": {
-        "type": "item",
-        "sid": "i243",
-        "name": "Razor Claw",
-        "martyCategory": "battle"
-    },
-    "i244": {
-        "type": "item",
-        "sid": "i244",
-        "name": "Razor Fang",
-        "martyCategory": "battle"
-    },
-    "i245": {
-        "type": "item",
-        "sid": "i245",
-        "name": "Razz Berry",
-        "martyCategory": "battle"
-    },
-    "i246": {
-        "type": "item",
-        "sid": "i246",
-        "name": "Red Card",
-        "martyCategory": "battle"
-    },
-    "i247": {
-        "type": "item",
-        "sid": "i247",
-        "name": "Red Orb",
-        "martyCategory": "battle"
-    },
-    "i248": {
-        "type": "item",
-        "sid": "i248",
-        "name": "Repel",
-        "martyCategory": "battle"
-    },
-    "i249": {
-        "type": "item",
-        "sid": "i249",
-        "name": "Rindo Berry",
-        "martyCategory": "battle"
-    },
-    "i250": {
-        "type": "item",
-        "sid": "i250",
-        "name": "Ring Target",
-        "martyCategory": "battle"
-    },
-    "i251": {
-        "type": "item",
-        "sid": "i251",
-        "name": "Rock Gem",
-        "martyCategory": "battle"
-    },
-    "i252": {
-        "type": "item",
-        "sid": "i252",
-        "name": "Rock Incense",
-        "martyCategory": "battle"
-    },
-    "i253": {
-        "type": "item",
-        "sid": "i253",
-        "name": "Rock Memory",
-        "martyCategory": "battle"
-    },
-    "i254": {
-        "type": "item",
-        "sid": "i254",
-        "name": "Rockium Z",
-        "martyCategory": "battle"
-    },
-    "i255": {
-        "type": "item",
-        "sid": "i255",
-        "name": "Rocky Helmet",
-        "martyCategory": "battle"
-    },
-    "i256": {
-        "type": "item",
-        "sid": "i256",
-        "name": "Room Service",
-        "martyCategory": "battle"
-    },
-    "i257": {
-        "type": "item",
-        "sid": "i257",
-        "name": "Rose Incense",
-        "martyCategory": "battle"
-    },
-    "i258": {
-        "type": "item",
-        "sid": "i258",
-        "name": "Roseli Berry",
-        "martyCategory": "battle"
-    },
-    "i259": {
-        "type": "item",
-        "sid": "i259",
-        "name": "Rowap Berry",
-        "martyCategory": "battle"
-    },
-    "i260": {
-        "type": "item",
-        "sid": "i260",
-        "name": "Rusted Shield",
-        "martyCategory": "battle"
-    },
-    "i261": {
-        "type": "item",
-        "sid": "i261",
-        "name": "Rusted Sword",
-        "martyCategory": "battle"
-    },
-    "i262": {
-        "type": "item",
-        "sid": "i262",
-        "name": "Sablenite",
-        "martyCategory": "battle"
-    },
-    "i263": {
-        "type": "item",
-        "sid": "i263",
-        "name": "Safety Goggles",
-        "martyCategory": "battle"
-    },
-    "i264": {
-        "type": "item",
-        "sid": "i264",
-        "name": "Salac Berry",
-        "martyCategory": "battle"
-    },
-    "i265": {
-        "type": "item",
-        "sid": "i265",
-        "name": "Salamencite",
-        "martyCategory": "battle"
-    },
-    "i266": {
-        "type": "item",
-        "sid": "i266",
-        "name": "Sceptilite",
-        "martyCategory": "battle"
-    },
-    "i267": {
-        "type": "item",
-        "sid": "i267",
-        "name": "Scizorite",
-        "martyCategory": "battle"
-    },
-    "i268": {
-        "type": "item",
-        "sid": "i268",
-        "name": "Scope Lens",
-        "martyCategory": "battle"
-    },
-    "i269": {
-        "type": "item",
-        "sid": "i269",
-        "name": "Sea Incense",
-        "martyCategory": "battle"
-    },
-    "i270": {
-        "type": "item",
-        "sid": "i270",
-        "name": "Sharp Beak",
-        "martyCategory": "battle"
-    },
-    "i271": {
-        "type": "item",
-        "sid": "i271",
-        "name": "Sharpedonite",
-        "martyCategory": "battle"
-    },
-    "i272": {
-        "type": "item",
-        "sid": "i272",
-        "name": "Shed Shell",
-        "martyCategory": "battle"
-    },
-    "i273": {
-        "type": "item",
-        "sid": "i273",
-        "name": "Shell Bell",
-        "martyCategory": "battle"
-    },
-    "i274": {
-        "type": "item",
-        "sid": "i274",
-        "name": "Shock Drive",
-        "martyCategory": "battle"
-    },
-    "i275": {
-        "type": "item",
-        "sid": "i275",
-        "name": "Shuca Berry",
-        "martyCategory": "battle"
-    },
-    "i276": {
-        "type": "item",
-        "sid": "i276",
-        "name": "Silk Scarf",
-        "martyCategory": "battle"
-    },
-    "i277": {
-        "type": "item",
-        "sid": "i277",
-        "name": "Silver Powder",
-        "martyCategory": "battle"
-    },
-    "i278": {
-        "type": "item",
-        "sid": "i278",
-        "name": "Sitrus Berry",
-        "martyCategory": "battle"
-    },
-    "i279": {
-        "type": "item",
-        "sid": "i279",
-        "name": "Sky Plate",
-        "martyCategory": "battle"
-    },
-    "i280": {
-        "type": "item",
-        "sid": "i280",
-        "name": "Slowbronite",
-        "martyCategory": "battle"
-    },
-    "i281": {
-        "type": "item",
-        "sid": "i281",
-        "name": "Smooth Rock",
-        "martyCategory": "battle"
-    },
-    "i282": {
-        "type": "item",
-        "sid": "i282",
-        "name": "Snorlium Z",
-        "martyCategory": "battle"
-    },
-    "i283": {
-        "type": "item",
-        "sid": "i283",
-        "name": "Snowball",
-        "martyCategory": "battle"
-    },
-    "i284": {
-        "type": "item",
-        "sid": "i284",
-        "name": "Soft Sand",
-        "martyCategory": "battle"
-    },
-    "i285": {
-        "type": "item",
-        "sid": "i285",
-        "name": "Solganium Z",
-        "martyCategory": "battle"
-    },
-    "i286": {
-        "type": "item",
-        "sid": "i286",
-        "name": "Soul Dew",
-        "martyCategory": "battle"
-    },
-    "i287": {
-        "type": "item",
-        "sid": "i287",
-        "name": "Spell Tag",
-        "martyCategory": "battle"
-    },
-    "i288": {
-        "type": "item",
-        "sid": "i288",
-        "name": "Spelon Berry",
-        "martyCategory": "battle"
-    },
-    "i289": {
-        "type": "item",
-        "sid": "i289",
-        "name": "Splash Plate",
-        "martyCategory": "battle"
-    },
-    "i290": {
-        "type": "item",
-        "sid": "i290",
-        "name": "Spooky Plate",
-        "martyCategory": "battle"
-    },
-    "i291": {
-        "type": "item",
-        "sid": "i291",
-        "name": "Starf Berry",
-        "martyCategory": "battle"
-    },
-    "i292": {
-        "type": "item",
-        "sid": "i292",
-        "name": "Steel Gem",
-        "martyCategory": "battle"
-    },
-    "i293": {
-        "type": "item",
-        "sid": "i293",
-        "name": "Steel Mail",
-        "martyCategory": "battle"
-    },
-    "i294": {
-        "type": "item",
-        "sid": "i294",
-        "name": "Steel Memory",
-        "martyCategory": "battle"
-    },
-    "i295": {
-        "type": "item",
-        "sid": "i295",
-        "name": "Steelium Z",
-        "martyCategory": "battle"
-    },
-    "i296": {
-        "type": "item",
-        "sid": "i296",
-        "name": "Steelixite",
-        "martyCategory": "battle"
-    },
-    "i297": {
-        "type": "item",
-        "sid": "i297",
-        "name": "Sticky Barb",
-        "martyCategory": "battle"
-    },
-    "i298": {
-        "type": "item",
-        "sid": "i298",
-        "name": "Stone Plate",
-        "martyCategory": "battle"
-    },
-    "i299": {
-        "type": "item",
-        "sid": "i299",
-        "name": "Swampertite",
-        "martyCategory": "battle"
-    },
-    "i300": {
-        "type": "item",
-        "sid": "i300",
-        "name": "Tamato Berry",
-        "martyCategory": "battle"
-    },
-    "i301": {
-        "type": "item",
-        "sid": "i301",
-        "name": "Tanga Berry",
-        "martyCategory": "battle"
-    },
-    "i302": {
-        "type": "item",
-        "sid": "i302",
-        "name": "Tapunium Z",
-        "martyCategory": "battle"
-    },
-    "i303": {
-        "type": "item",
-        "sid": "i303",
-        "name": "Terrain Extender",
-        "martyCategory": "battle"
-    },
-    "i304": {
-        "type": "item",
-        "sid": "i304",
-        "name": "Thick Club",
-        "martyCategory": "battle"
-    },
-    "i305": {
-        "type": "item",
-        "sid": "i305",
-        "name": "Throat Spray",
-        "martyCategory": "battle"
-    },
-    "i306": {
-        "type": "item",
-        "sid": "i306",
-        "name": "Toxic Orb",
-        "martyCategory": "battle"
-    },
-    "i307": {
-        "type": "item",
-        "sid": "i307",
-        "name": "Toxic Plate",
-        "martyCategory": "battle"
-    },
-    "i308": {
-        "type": "item",
-        "sid": "i308",
-        "name": "Twisted Spoon",
-        "martyCategory": "battle"
-    },
-    "i309": {
-        "type": "item",
-        "sid": "i309",
-        "name": "Tyranitarite",
-        "martyCategory": "battle"
-    },
-    "i310": {
-        "type": "item",
-        "sid": "i310",
-        "name": "Ultranecrozium Z",
-        "martyCategory": "battle"
-    },
-    "i311": {
-        "type": "item",
-        "sid": "i311",
-        "name": "Utility Umbrella",
-        "martyCategory": "battle"
-    },
-    "i312": {
-        "type": "item",
-        "sid": "i312",
-        "name": "Venusaurite",
-        "martyCategory": "battle"
-    },
-    "i313": {
-        "type": "item",
-        "sid": "i313",
-        "name": "Wacan Berry",
-        "martyCategory": "battle"
-    },
-    "i314": {
-        "type": "item",
-        "sid": "i314",
-        "name": "Water Gem",
-        "martyCategory": "battle"
-    },
-    "i315": {
-        "type": "item",
-        "sid": "i315",
-        "name": "Water Memory",
-        "martyCategory": "battle"
-    },
-    "i316": {
-        "type": "item",
-        "sid": "i316",
-        "name": "Waterium Z",
-        "martyCategory": "battle"
-    },
-    "i317": {
-        "type": "item",
-        "sid": "i317",
-        "name": "Watmel Berry",
-        "martyCategory": "battle"
-    },
-    "i318": {
-        "type": "item",
-        "sid": "i318",
-        "name": "Wave Incense",
-        "martyCategory": "battle"
-    },
-    "i319": {
-        "type": "item",
-        "sid": "i319",
-        "name": "Weakness Policy",
-        "martyCategory": "battle"
-    },
-    "i320": {
-        "type": "item",
-        "sid": "i320",
-        "name": "Wepear Berry",
-        "martyCategory": "battle"
-    },
-    "i321": {
-        "type": "item",
-        "sid": "i321",
-        "name": "White Herb",
-        "martyCategory": "battle"
-    },
-    "i322": {
-        "type": "item",
-        "sid": "i322",
-        "name": "Wide Lens",
-        "martyCategory": "battle"
-    },
-    "i323": {
-        "type": "item",
-        "sid": "i323",
-        "name": "Wiki Berry",
-        "martyCategory": "battle"
-    },
-    "i324": {
-        "type": "item",
-        "sid": "i324",
-        "name": "Wise Glasses",
-        "martyCategory": "battle"
-    },
-    "i325": {
-        "type": "item",
-        "sid": "i325",
-        "name": "Yache Berry",
-        "martyCategory": "battle"
-    },
-    "i326": {
-        "type": "item",
-        "sid": "i326",
-        "name": "Zap Plate",
-        "martyCategory": "battle"
-    },
-    "i327": {
-        "type": "item",
-        "sid": "i327",
-        "name": "Zoom Lens",
-        "martyCategory": "battle"
-    },
-    "i328": {
-        "type": "item",
-        "sid": "i328",
-        "name": "Unknown",
-        "martyCategory": "misc"
-    },
-    "i329": {
-        "type": "item",
-        "sid": "i329",
-        "name": "Armor Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i330": {
-        "type": "item",
-        "sid": "i330",
-        "name": "Beast Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i331": {
-        "type": "item",
-        "sid": "i331",
-        "name": "Berry Sweet",
-        "martyCategory": "nonbattle"
-    },
-    "i332": {
-        "type": "item",
-        "sid": "i332",
-        "name": "Bottle Cap",
-        "martyCategory": "nonbattle"
-    },
-    "i333": {
-        "type": "item",
-        "sid": "i333",
-        "name": "Cherish Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i334": {
-        "type": "item",
-        "sid": "i334",
-        "name": "Chipped Pot",
-        "martyCategory": "nonbattle"
-    },
-    "i335": {
-        "type": "item",
-        "sid": "i335",
-        "name": "Claw Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i336": {
-        "type": "item",
-        "sid": "i336",
-        "name": "Clover Sweet",
-        "martyCategory": "nonbattle"
-    },
-    "i337": {
-        "type": "item",
-        "sid": "i337",
-        "name": "Cover Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i338": {
-        "type": "item",
-        "sid": "i338",
-        "name": "Cracked Pot",
-        "martyCategory": "nonbattle"
-    },
-    "i339": {
-        "type": "item",
-        "sid": "i339",
-        "name": "Dawn Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i340": {
-        "type": "item",
-        "sid": "i340",
-        "name": "Dive Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i341": {
-        "type": "item",
-        "sid": "i341",
-        "name": "Dome Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i342": {
-        "type": "item",
-        "sid": "i342",
-        "name": "Dream Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i343": {
-        "type": "item",
-        "sid": "i343",
-        "name": "Dubious Disc",
-        "martyCategory": "nonbattle"
-    },
-    "i344": {
-        "type": "item",
-        "sid": "i344",
-        "name": "Dusk Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i345": {
-        "type": "item",
-        "sid": "i345",
-        "name": "Dusk Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i346": {
-        "type": "item",
-        "sid": "i346",
-        "name": "Electirizer",
-        "martyCategory": "nonbattle"
-    },
-    "i347": {
-        "type": "item",
-        "sid": "i347",
-        "name": "Fast Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i348": {
-        "type": "item",
-        "sid": "i348",
-        "name": "Fire Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i349": {
-        "type": "item",
-        "sid": "i349",
-        "name": "Flower Sweet",
-        "martyCategory": "nonbattle"
-    },
-    "i350": {
-        "type": "item",
-        "sid": "i350",
-        "name": "Fossilized Bird",
-        "martyCategory": "nonbattle"
-    },
-    "i351": {
-        "type": "item",
-        "sid": "i351",
-        "name": "Fossilized Dino",
-        "martyCategory": "nonbattle"
-    },
-    "i352": {
-        "type": "item",
-        "sid": "i352",
-        "name": "Fossilized Drake",
-        "martyCategory": "nonbattle"
-    },
-    "i353": {
-        "type": "item",
-        "sid": "i353",
-        "name": "Fossilized Fish",
-        "martyCategory": "nonbattle"
-    },
-    "i354": {
-        "type": "item",
-        "sid": "i354",
-        "name": "Friend Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i355": {
-        "type": "item",
-        "sid": "i355",
-        "name": "Gold Bottle Cap",
-        "martyCategory": "nonbattle"
-    },
-    "i356": {
-        "type": "item",
-        "sid": "i356",
-        "name": "Great Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i357": {
-        "type": "item",
-        "sid": "i357",
-        "name": "Heal Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i358": {
-        "type": "item",
-        "sid": "i358",
-        "name": "Heavy Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i359": {
-        "type": "item",
-        "sid": "i359",
-        "name": "Helix Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i360": {
-        "type": "item",
-        "sid": "i360",
-        "name": "Ice Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i361": {
-        "type": "item",
-        "sid": "i361",
-        "name": "Jaw Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i362": {
-        "type": "item",
-        "sid": "i362",
-        "name": "Leaf Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i363": {
-        "type": "item",
-        "sid": "i363",
-        "name": "Level Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i364": {
-        "type": "item",
-        "sid": "i364",
-        "name": "Love Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i365": {
-        "type": "item",
-        "sid": "i365",
-        "name": "Love Sweet",
-        "martyCategory": "nonbattle"
-    },
-    "i366": {
-        "type": "item",
-        "sid": "i366",
-        "name": "Lure Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i367": {
-        "type": "item",
-        "sid": "i367",
-        "name": "Luxury Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i368": {
-        "type": "item",
-        "sid": "i368",
-        "name": "Magmarizer",
-        "martyCategory": "nonbattle"
-    },
-    "i369": {
-        "type": "item",
-        "sid": "i369",
-        "name": "Master Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i370": {
-        "type": "item",
-        "sid": "i370",
-        "name": "Moon Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i371": {
-        "type": "item",
-        "sid": "i371",
-        "name": "Moon Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i372": {
-        "type": "item",
-        "sid": "i372",
-        "name": "Old Amber",
-        "martyCategory": "nonbattle"
-    },
-    "i373": {
-        "type": "item",
-        "sid": "i373",
-        "name": "Park Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i374": {
-        "type": "item",
-        "sid": "i374",
-        "name": "Plume Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i375": {
-        "type": "item",
-        "sid": "i375",
-        "name": "Poke Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i376": {
-        "type": "item",
-        "sid": "i376",
-        "name": "Premier Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i377": {
-        "type": "item",
-        "sid": "i377",
-        "name": "Prism Scale",
-        "martyCategory": "nonbattle"
-    },
-    "i378": {
-        "type": "item",
-        "sid": "i378",
-        "name": "Protector",
-        "martyCategory": "nonbattle"
-    },
-    "i379": {
-        "type": "item",
-        "sid": "i379",
-        "name": "Quick Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i380": {
-        "type": "item",
-        "sid": "i380",
-        "name": "Rare Bone",
-        "martyCategory": "nonbattle"
-    },
-    "i381": {
-        "type": "item",
-        "sid": "i381",
-        "name": "Reaper Cloth",
-        "martyCategory": "nonbattle"
-    },
-    "i382": {
-        "type": "item",
-        "sid": "i382",
-        "name": "Repeat Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i383": {
-        "type": "item",
-        "sid": "i383",
-        "name": "Ribbon Sweet",
-        "martyCategory": "nonbattle"
-    },
-    "i384": {
-        "type": "item",
-        "sid": "i384",
-        "name": "Root Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i385": {
-        "type": "item",
-        "sid": "i385",
-        "name": "Sachet",
-        "martyCategory": "nonbattle"
-    },
-    "i386": {
-        "type": "item",
-        "sid": "i386",
-        "name": "Safari Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i387": {
-        "type": "item",
-        "sid": "i387",
-        "name": "Sail Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i388": {
-        "type": "item",
-        "sid": "i388",
-        "name": "Shiny Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i389": {
-        "type": "item",
-        "sid": "i389",
-        "name": "Skull Fossil",
-        "martyCategory": "nonbattle"
-    },
-    "i390": {
-        "type": "item",
-        "sid": "i390",
-        "name": "Sport Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i391": {
-        "type": "item",
-        "sid": "i391",
-        "name": "Star Sweet",
-        "martyCategory": "nonbattle"
-    },
-    "i392": {
-        "type": "item",
-        "sid": "i392",
-        "name": "Strawberry Sweet",
-        "martyCategory": "nonbattle"
-    },
-    "i393": {
-        "type": "item",
-        "sid": "i393",
-        "name": "Sun Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i394": {
-        "type": "item",
-        "sid": "i394",
-        "name": "Sweet Apple",
-        "martyCategory": "nonbattle"
-    },
-    "i395": {
-        "type": "item",
-        "sid": "i395",
-        "name": "TR00",
-        "martyCategory": "nonbattle"
-    },
-    "i396": {
-        "type": "item",
-        "sid": "i396",
-        "name": "TR01",
-        "martyCategory": "nonbattle"
-    },
-    "i397": {
-        "type": "item",
-        "sid": "i397",
-        "name": "TR02",
-        "martyCategory": "nonbattle"
-    },
-    "i398": {
-        "type": "item",
-        "sid": "i398",
-        "name": "TR03",
-        "martyCategory": "nonbattle"
-    },
-    "i399": {
-        "type": "item",
-        "sid": "i399",
-        "name": "TR04",
-        "martyCategory": "nonbattle"
-    },
-    "i400": {
-        "type": "item",
-        "sid": "i400",
-        "name": "TR05",
-        "martyCategory": "nonbattle"
-    },
-    "i401": {
-        "type": "item",
-        "sid": "i401",
-        "name": "TR06",
-        "martyCategory": "nonbattle"
-    },
-    "i402": {
-        "type": "item",
-        "sid": "i402",
-        "name": "TR07",
-        "martyCategory": "nonbattle"
-    },
-    "i403": {
-        "type": "item",
-        "sid": "i403",
-        "name": "TR08",
-        "martyCategory": "nonbattle"
-    },
-    "i404": {
-        "type": "item",
-        "sid": "i404",
-        "name": "TR09",
-        "martyCategory": "nonbattle"
-    },
-    "i405": {
-        "type": "item",
-        "sid": "i405",
-        "name": "TR10",
-        "martyCategory": "nonbattle"
-    },
-    "i406": {
-        "type": "item",
-        "sid": "i406",
-        "name": "TR11",
-        "martyCategory": "nonbattle"
-    },
-    "i407": {
-        "type": "item",
-        "sid": "i407",
-        "name": "TR12",
-        "martyCategory": "nonbattle"
-    },
-    "i408": {
-        "type": "item",
-        "sid": "i408",
-        "name": "TR13",
-        "martyCategory": "nonbattle"
-    },
-    "i409": {
-        "type": "item",
-        "sid": "i409",
-        "name": "TR14",
-        "martyCategory": "nonbattle"
-    },
-    "i410": {
-        "type": "item",
-        "sid": "i410",
-        "name": "TR15",
-        "martyCategory": "nonbattle"
-    },
-    "i411": {
-        "type": "item",
-        "sid": "i411",
-        "name": "TR16",
-        "martyCategory": "nonbattle"
-    },
-    "i412": {
-        "type": "item",
-        "sid": "i412",
-        "name": "TR17",
-        "martyCategory": "nonbattle"
-    },
-    "i413": {
-        "type": "item",
-        "sid": "i413",
-        "name": "TR18",
-        "martyCategory": "nonbattle"
-    },
-    "i414": {
-        "type": "item",
-        "sid": "i414",
-        "name": "TR19",
-        "martyCategory": "nonbattle"
-    },
-    "i415": {
-        "type": "item",
-        "sid": "i415",
-        "name": "TR20",
-        "martyCategory": "nonbattle"
-    },
-    "i416": {
-        "type": "item",
-        "sid": "i416",
-        "name": "TR21",
-        "martyCategory": "nonbattle"
-    },
-    "i417": {
-        "type": "item",
-        "sid": "i417",
-        "name": "TR22",
-        "martyCategory": "nonbattle"
-    },
-    "i418": {
-        "type": "item",
-        "sid": "i418",
-        "name": "TR23",
-        "martyCategory": "nonbattle"
-    },
-    "i419": {
-        "type": "item",
-        "sid": "i419",
-        "name": "TR24",
-        "martyCategory": "nonbattle"
-    },
-    "i420": {
-        "type": "item",
-        "sid": "i420",
-        "name": "TR25",
-        "martyCategory": "nonbattle"
-    },
-    "i421": {
-        "type": "item",
-        "sid": "i421",
-        "name": "TR26",
-        "martyCategory": "nonbattle"
-    },
-    "i422": {
-        "type": "item",
-        "sid": "i422",
-        "name": "TR27",
-        "martyCategory": "nonbattle"
-    },
-    "i423": {
-        "type": "item",
-        "sid": "i423",
-        "name": "TR28",
-        "martyCategory": "nonbattle"
-    },
-    "i424": {
-        "type": "item",
-        "sid": "i424",
-        "name": "TR29",
-        "martyCategory": "nonbattle"
-    },
-    "i425": {
-        "type": "item",
-        "sid": "i425",
-        "name": "TR30",
-        "martyCategory": "nonbattle"
-    },
-    "i426": {
-        "type": "item",
-        "sid": "i426",
-        "name": "TR31",
-        "martyCategory": "nonbattle"
-    },
-    "i427": {
-        "type": "item",
-        "sid": "i427",
-        "name": "TR32",
-        "martyCategory": "nonbattle"
-    },
-    "i428": {
-        "type": "item",
-        "sid": "i428",
-        "name": "TR33",
-        "martyCategory": "nonbattle"
-    },
-    "i429": {
-        "type": "item",
-        "sid": "i429",
-        "name": "TR34",
-        "martyCategory": "nonbattle"
-    },
-    "i430": {
-        "type": "item",
-        "sid": "i430",
-        "name": "TR35",
-        "martyCategory": "nonbattle"
-    },
-    "i431": {
-        "type": "item",
-        "sid": "i431",
-        "name": "TR36",
-        "martyCategory": "nonbattle"
-    },
-    "i432": {
-        "type": "item",
-        "sid": "i432",
-        "name": "TR37",
-        "martyCategory": "nonbattle"
-    },
-    "i433": {
-        "type": "item",
-        "sid": "i433",
-        "name": "TR38",
-        "martyCategory": "nonbattle"
-    },
-    "i434": {
-        "type": "item",
-        "sid": "i434",
-        "name": "TR39",
-        "martyCategory": "nonbattle"
-    },
-    "i435": {
-        "type": "item",
-        "sid": "i435",
-        "name": "TR40",
-        "martyCategory": "nonbattle"
-    },
-    "i436": {
-        "type": "item",
-        "sid": "i436",
-        "name": "TR41",
-        "martyCategory": "nonbattle"
-    },
-    "i437": {
-        "type": "item",
-        "sid": "i437",
-        "name": "TR42",
-        "martyCategory": "nonbattle"
-    },
-    "i438": {
-        "type": "item",
-        "sid": "i438",
-        "name": "TR43",
-        "martyCategory": "nonbattle"
-    },
-    "i439": {
-        "type": "item",
-        "sid": "i439",
-        "name": "TR44",
-        "martyCategory": "nonbattle"
-    },
-    "i440": {
-        "type": "item",
-        "sid": "i440",
-        "name": "TR45",
-        "martyCategory": "nonbattle"
-    },
-    "i441": {
-        "type": "item",
-        "sid": "i441",
-        "name": "TR46",
-        "martyCategory": "nonbattle"
-    },
-    "i442": {
-        "type": "item",
-        "sid": "i442",
-        "name": "TR47",
-        "martyCategory": "nonbattle"
-    },
-    "i443": {
-        "type": "item",
-        "sid": "i443",
-        "name": "TR48",
-        "martyCategory": "nonbattle"
-    },
-    "i444": {
-        "type": "item",
-        "sid": "i444",
-        "name": "TR49",
-        "martyCategory": "nonbattle"
-    },
-    "i445": {
-        "type": "item",
-        "sid": "i445",
-        "name": "TR50",
-        "martyCategory": "nonbattle"
-    },
-    "i446": {
-        "type": "item",
-        "sid": "i446",
-        "name": "TR51",
-        "martyCategory": "nonbattle"
-    },
-    "i447": {
-        "type": "item",
-        "sid": "i447",
-        "name": "TR52",
-        "martyCategory": "nonbattle"
-    },
-    "i448": {
-        "type": "item",
-        "sid": "i448",
-        "name": "TR53",
-        "martyCategory": "nonbattle"
-    },
-    "i449": {
-        "type": "item",
-        "sid": "i449",
-        "name": "TR54",
-        "martyCategory": "nonbattle"
-    },
-    "i450": {
-        "type": "item",
-        "sid": "i450",
-        "name": "TR55",
-        "martyCategory": "nonbattle"
-    },
-    "i451": {
-        "type": "item",
-        "sid": "i451",
-        "name": "TR56",
-        "martyCategory": "nonbattle"
-    },
-    "i452": {
-        "type": "item",
-        "sid": "i452",
-        "name": "TR57",
-        "martyCategory": "nonbattle"
-    },
-    "i453": {
-        "type": "item",
-        "sid": "i453",
-        "name": "TR58",
-        "martyCategory": "nonbattle"
-    },
-    "i454": {
-        "type": "item",
-        "sid": "i454",
-        "name": "TR59",
-        "martyCategory": "nonbattle"
-    },
-    "i455": {
-        "type": "item",
-        "sid": "i455",
-        "name": "TR60",
-        "martyCategory": "nonbattle"
-    },
-    "i456": {
-        "type": "item",
-        "sid": "i456",
-        "name": "TR61",
-        "martyCategory": "nonbattle"
-    },
-    "i457": {
-        "type": "item",
-        "sid": "i457",
-        "name": "TR62",
-        "martyCategory": "nonbattle"
-    },
-    "i458": {
-        "type": "item",
-        "sid": "i458",
-        "name": "TR63",
-        "martyCategory": "nonbattle"
-    },
-    "i459": {
-        "type": "item",
-        "sid": "i459",
-        "name": "TR64",
-        "martyCategory": "nonbattle"
-    },
-    "i460": {
-        "type": "item",
-        "sid": "i460",
-        "name": "TR65",
-        "martyCategory": "nonbattle"
-    },
-    "i461": {
-        "type": "item",
-        "sid": "i461",
-        "name": "TR66",
-        "martyCategory": "nonbattle"
-    },
-    "i462": {
-        "type": "item",
-        "sid": "i462",
-        "name": "TR67",
-        "martyCategory": "nonbattle"
-    },
-    "i463": {
-        "type": "item",
-        "sid": "i463",
-        "name": "TR68",
-        "martyCategory": "nonbattle"
-    },
-    "i464": {
-        "type": "item",
-        "sid": "i464",
-        "name": "TR69",
-        "martyCategory": "nonbattle"
-    },
-    "i465": {
-        "type": "item",
-        "sid": "i465",
-        "name": "TR70",
-        "martyCategory": "nonbattle"
-    },
-    "i466": {
-        "type": "item",
-        "sid": "i466",
-        "name": "TR71",
-        "martyCategory": "nonbattle"
-    },
-    "i467": {
-        "type": "item",
-        "sid": "i467",
-        "name": "TR72",
-        "martyCategory": "nonbattle"
-    },
-    "i468": {
-        "type": "item",
-        "sid": "i468",
-        "name": "TR73",
-        "martyCategory": "nonbattle"
-    },
-    "i469": {
-        "type": "item",
-        "sid": "i469",
-        "name": "TR74",
-        "martyCategory": "nonbattle"
-    },
-    "i470": {
-        "type": "item",
-        "sid": "i470",
-        "name": "TR75",
-        "martyCategory": "nonbattle"
-    },
-    "i471": {
-        "type": "item",
-        "sid": "i471",
-        "name": "TR76",
-        "martyCategory": "nonbattle"
-    },
-    "i472": {
-        "type": "item",
-        "sid": "i472",
-        "name": "TR77",
-        "martyCategory": "nonbattle"
-    },
-    "i473": {
-        "type": "item",
-        "sid": "i473",
-        "name": "TR78",
-        "martyCategory": "nonbattle"
-    },
-    "i474": {
-        "type": "item",
-        "sid": "i474",
-        "name": "TR79",
-        "martyCategory": "nonbattle"
-    },
-    "i475": {
-        "type": "item",
-        "sid": "i475",
-        "name": "TR80",
-        "martyCategory": "nonbattle"
-    },
-    "i476": {
-        "type": "item",
-        "sid": "i476",
-        "name": "TR81",
-        "martyCategory": "nonbattle"
-    },
-    "i477": {
-        "type": "item",
-        "sid": "i477",
-        "name": "TR82",
-        "martyCategory": "nonbattle"
-    },
-    "i478": {
-        "type": "item",
-        "sid": "i478",
-        "name": "TR83",
-        "martyCategory": "nonbattle"
-    },
-    "i479": {
-        "type": "item",
-        "sid": "i479",
-        "name": "TR84",
-        "martyCategory": "nonbattle"
-    },
-    "i480": {
-        "type": "item",
-        "sid": "i480",
-        "name": "TR85",
-        "martyCategory": "nonbattle"
-    },
-    "i481": {
-        "type": "item",
-        "sid": "i481",
-        "name": "TR86",
-        "martyCategory": "nonbattle"
-    },
-    "i482": {
-        "type": "item",
-        "sid": "i482",
-        "name": "TR87",
-        "martyCategory": "nonbattle"
-    },
-    "i483": {
-        "type": "item",
-        "sid": "i483",
-        "name": "TR88",
-        "martyCategory": "nonbattle"
-    },
-    "i484": {
-        "type": "item",
-        "sid": "i484",
-        "name": "TR89",
-        "martyCategory": "nonbattle"
-    },
-    "i485": {
-        "type": "item",
-        "sid": "i485",
-        "name": "TR90",
-        "martyCategory": "nonbattle"
-    },
-    "i486": {
-        "type": "item",
-        "sid": "i486",
-        "name": "TR91",
-        "martyCategory": "nonbattle"
-    },
-    "i487": {
-        "type": "item",
-        "sid": "i487",
-        "name": "TR92",
-        "martyCategory": "nonbattle"
-    },
-    "i488": {
-        "type": "item",
-        "sid": "i488",
-        "name": "TR93",
-        "martyCategory": "nonbattle"
-    },
-    "i489": {
-        "type": "item",
-        "sid": "i489",
-        "name": "TR94",
-        "martyCategory": "nonbattle"
-    },
-    "i490": {
-        "type": "item",
-        "sid": "i490",
-        "name": "TR95",
-        "martyCategory": "nonbattle"
-    },
-    "i491": {
-        "type": "item",
-        "sid": "i491",
-        "name": "TR96",
-        "martyCategory": "nonbattle"
-    },
-    "i492": {
-        "type": "item",
-        "sid": "i492",
-        "name": "TR97",
-        "martyCategory": "nonbattle"
-    },
-    "i493": {
-        "type": "item",
-        "sid": "i493",
-        "name": "TR98",
-        "martyCategory": "nonbattle"
-    },
-    "i494": {
-        "type": "item",
-        "sid": "i494",
-        "name": "TR99",
-        "martyCategory": "nonbattle"
-    },
-    "i495": {
-        "type": "item",
-        "sid": "i495",
-        "name": "Tart Apple",
-        "martyCategory": "nonbattle"
-    },
-    "i496": {
-        "type": "item",
-        "sid": "i496",
-        "name": "Thunder Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i497": {
-        "type": "item",
-        "sid": "i497",
-        "name": "Timer Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i498": {
-        "type": "item",
-        "sid": "i498",
-        "name": "Ultra Ball",
-        "martyCategory": "nonbattle"
-    },
-    "i499": {
-        "type": "item",
-        "sid": "i499",
-        "name": "Up-Grade",
-        "martyCategory": "nonbattle"
-    },
-    "i500": {
-        "type": "item",
-        "sid": "i500",
-        "name": "Water Stone",
-        "martyCategory": "nonbattle"
-    },
-    "i501": {
-        "type": "item",
-        "sid": "i501",
-        "name": "Whipped Dream",
-        "martyCategory": "nonbattle"
-    },
-    "i502": {
-        "type": "item",
-        "sid": "i502",
-        "name": "Ability Urge",
-        "martyCategory": "other"
-    },
-    "i503": {
-        "type": "item",
-        "sid": "i503",
-        "name": "Acro Bike",
-        "martyCategory": "other"
-    },
-    "i504": {
-        "type": "item",
-        "sid": "i504",
-        "name": "Air Mail",
-        "martyCategory": "other"
-    },
-    "i505": {
-        "type": "item",
-        "sid": "i505",
-        "name": "Amulet Coin",
-        "martyCategory": "other"
-    },
-    "i506": {
-        "type": "item",
-        "sid": "i506",
-        "name": "Antidote",
-        "martyCategory": "other"
-    },
-    "i507": {
-        "type": "item",
-        "sid": "i507",
-        "name": "Apricorn Box",
-        "martyCategory": "other"
-    },
-    "i508": {
-        "type": "item",
-        "sid": "i508",
-        "name": "Aurora Ticket",
-        "martyCategory": "other"
-    },
-    "i509": {
-        "type": "item",
-        "sid": "i509",
-        "name": "Awakening",
-        "martyCategory": "other"
-    },
-    "i510": {
-        "type": "item",
-        "sid": "i510",
-        "name": "Azure Flute",
-        "martyCategory": "other"
-    },
-    "i511": {
-        "type": "item",
-        "sid": "i511",
-        "name": "Balm Mushroom",
-        "martyCategory": "other"
-    },
-    "i512": {
-        "type": "item",
-        "sid": "i512",
-        "name": "Basement Key",
-        "martyCategory": "other"
-    },
-    "i513": {
-        "type": "item",
-        "sid": "i513",
-        "name": "Bead Mail",
-        "martyCategory": "other"
-    },
-    "i514": {
-        "type": "item",
-        "sid": "i514",
-        "name": "Berry Pots",
-        "martyCategory": "other"
-    },
-    "i515": {
-        "type": "item",
-        "sid": "i515",
-        "name": "Berry Pouch",
-        "martyCategory": "other"
-    },
-    "i516": {
-        "type": "item",
-        "sid": "i516",
-        "name": "Bicycle",
-        "martyCategory": "other"
-    },
-    "i517": {
-        "type": "item",
-        "sid": "i517",
-        "name": "Big Mushroom",
-        "martyCategory": "other"
-    },
-    "i518": {
-        "type": "item",
-        "sid": "i518",
-        "name": "Big Nugget",
-        "martyCategory": "other"
-    },
-    "i519": {
-        "type": "item",
-        "sid": "i519",
-        "name": "Big Pearl",
-        "martyCategory": "other"
-    },
-    "i520": {
-        "type": "item",
-        "sid": "i520",
-        "name": "Bike Voucher",
-        "martyCategory": "other"
-    },
-    "i521": {
-        "type": "item",
-        "sid": "i521",
-        "name": "Black Apricorn",
-        "martyCategory": "other"
-    },
-    "i522": {
-        "type": "item",
-        "sid": "i522",
-        "name": "Black Flute",
-        "martyCategory": "other"
-    },
-    "i523": {
-        "type": "item",
-        "sid": "i523",
-        "name": "Bloom Mail",
-        "martyCategory": "other"
-    },
-    "i524": {
-        "type": "item",
-        "sid": "i524",
-        "name": "Blue Apricorn",
-        "martyCategory": "other"
-    },
-    "i525": {
-        "type": "item",
-        "sid": "i525",
-        "name": "Blue Card",
-        "martyCategory": "other"
-    },
-    "i526": {
-        "type": "item",
-        "sid": "i526",
-        "name": "Blue Flute",
-        "martyCategory": "other"
-    },
-    "i527": {
-        "type": "item",
-        "sid": "i527",
-        "name": "Blue Scarf",
-        "martyCategory": "other"
-    },
-    "i528": {
-        "type": "item",
-        "sid": "i528",
-        "name": "Blue Shard",
-        "martyCategory": "other"
-    },
-    "i529": {
-        "type": "item",
-        "sid": "i529",
-        "name": "Brick Mail",
-        "martyCategory": "other"
-    },
-    "i530": {
-        "type": "item",
-        "sid": "i530",
-        "name": "BridgeMail D",
-        "martyCategory": "other"
-    },
-    "i531": {
-        "type": "item",
-        "sid": "i531",
-        "name": "BridgeMail M",
-        "martyCategory": "other"
-    },
-    "i532": {
-        "type": "item",
-        "sid": "i532",
-        "name": "BridgeMail S",
-        "martyCategory": "other"
-    },
-    "i533": {
-        "type": "item",
-        "sid": "i533",
-        "name": "BridgeMail T",
-        "martyCategory": "other"
-    },
-    "i534": {
-        "type": "item",
-        "sid": "i534",
-        "name": "BridgeMail V",
-        "martyCategory": "other"
-    },
-    "i535": {
-        "type": "item",
-        "sid": "i535",
-        "name": "Bubble Mail",
-        "martyCategory": "other"
-    },
-    "i536": {
-        "type": "item",
-        "sid": "i536",
-        "name": "Burn Heal",
-        "martyCategory": "other"
-    },
-    "i537": {
-        "type": "item",
-        "sid": "i537",
-        "name": "Calcium",
-        "martyCategory": "other"
-    },
-    "i538": {
-        "type": "item",
-        "sid": "i538",
-        "name": "Carbos",
-        "martyCategory": "other"
-    },
-    "i539": {
-        "type": "item",
-        "sid": "i539",
-        "name": "Card Key",
-        "martyCategory": "other"
-    },
-    "i540": {
-        "type": "item",
-        "sid": "i540",
-        "name": "Casteliacone",
-        "martyCategory": "other"
-    },
-    "i541": {
-        "type": "item",
-        "sid": "i541",
-        "name": "Cleanse Tag",
-        "martyCategory": "other"
-    },
-    "i542": {
-        "type": "item",
-        "sid": "i542",
-        "name": "Clear Bell",
-        "martyCategory": "other"
-    },
-    "i543": {
-        "type": "item",
-        "sid": "i543",
-        "name": "Clever Wing",
-        "martyCategory": "other"
-    },
-    "i544": {
-        "type": "item",
-        "sid": "i544",
-        "name": "Coin Case",
-        "martyCategory": "other"
-    },
-    "i545": {
-        "type": "item",
-        "sid": "i545",
-        "name": "Comet Shard",
-        "martyCategory": "other"
-    },
-    "i546": {
-        "type": "item",
-        "sid": "i546",
-        "name": "Contest Pass",
-        "martyCategory": "other"
-    },
-    "i547": {
-        "type": "item",
-        "sid": "i547",
-        "name": "Coupon 1",
-        "martyCategory": "other"
-    },
-    "i548": {
-        "type": "item",
-        "sid": "i548",
-        "name": "Coupon 2",
-        "martyCategory": "other"
-    },
-    "i549": {
-        "type": "item",
-        "sid": "i549",
-        "name": "Coupon 3",
-        "martyCategory": "other"
-    },
-    "i550": {
-        "type": "item",
-        "sid": "i550",
-        "name": "Damp Mulch",
-        "martyCategory": "other"
-    },
-    "i551": {
-        "type": "item",
-        "sid": "i551",
-        "name": "Dark Stone",
-        "martyCategory": "other"
-    },
-    "i552": {
-        "type": "item",
-        "sid": "i552",
-        "name": "Data Card",
-        "martyCategory": "other"
-    },
-    "i553": {
-        "type": "item",
-        "sid": "i553",
-        "name": "Devon Goods",
-        "martyCategory": "other"
-    },
-    "i554": {
-        "type": "item",
-        "sid": "i554",
-        "name": "Devon Scope",
-        "martyCategory": "other"
-    },
-    "i555": {
-        "type": "item",
-        "sid": "i555",
-        "name": "Dire Hit",
-        "martyCategory": "other"
-    },
-    "i556": {
-        "type": "item",
-        "sid": "i556",
-        "name": "Dire Hit_2",
-        "martyCategory": "other"
-    },
-    "i557": {
-        "type": "item",
-        "sid": "i557",
-        "name": "Dire Hit_3",
-        "martyCategory": "other"
-    },
-    "i558": {
-        "type": "item",
-        "sid": "i558",
-        "name": "Dowsing Machine",
-        "martyCategory": "other"
-    },
-    "i559": {
-        "type": "item",
-        "sid": "i559",
-        "name": "Dragon Skull",
-        "martyCategory": "other"
-    },
-    "i560": {
-        "type": "item",
-        "sid": "i560",
-        "name": "Dream Mail",
-        "martyCategory": "other"
-    },
-    "i561": {
-        "type": "item",
-        "sid": "i561",
-        "name": "Elixir",
-        "martyCategory": "other"
-    },
-    "i562": {
-        "type": "item",
-        "sid": "i562",
-        "name": "Energy Powder",
-        "martyCategory": "other"
-    },
-    "i563": {
-        "type": "item",
-        "sid": "i563",
-        "name": "Energy Root",
-        "martyCategory": "other"
-    },
-    "i564": {
-        "type": "item",
-        "sid": "i564",
-        "name": "Enigma Stone",
-        "martyCategory": "other"
-    },
-    "i565": {
-        "type": "item",
-        "sid": "i565",
-        "name": "Eon Ticket",
-        "martyCategory": "other"
-    },
-    "i566": {
-        "type": "item",
-        "sid": "i566",
-        "name": "Escape Rope",
-        "martyCategory": "other"
-    },
-    "i567": {
-        "type": "item",
-        "sid": "i567",
-        "name": "Ether",
-        "martyCategory": "other"
-    },
-    "i568": {
-        "type": "item",
-        "sid": "i568",
-        "name": "Everstone",
-        "martyCategory": "other"
-    },
-    "i569": {
-        "type": "item",
-        "sid": "i569",
-        "name": "Exp. Share",
-        "martyCategory": "other"
-    },
-    "i570": {
-        "type": "item",
-        "sid": "i570",
-        "name": "Explorer Kit",
-        "martyCategory": "other"
-    },
-    "i571": {
-        "type": "item",
-        "sid": "i571",
-        "name": "Fab Mail",
-        "martyCategory": "other"
-    },
-    "i572": {
-        "type": "item",
-        "sid": "i572",
-        "name": "Fame Checker",
-        "martyCategory": "other"
-    },
-    "i573": {
-        "type": "item",
-        "sid": "i573",
-        "name": "Fashion Case",
-        "martyCategory": "other"
-    },
-    "i574": {
-        "type": "item",
-        "sid": "i574",
-        "name": "Favored Mail",
-        "martyCategory": "other"
-    },
-    "i575": {
-        "type": "item",
-        "sid": "i575",
-        "name": "Flame Mail",
-        "martyCategory": "other"
-    },
-    "i576": {
-        "type": "item",
-        "sid": "i576",
-        "name": "Fluffy Tail",
-        "martyCategory": "other"
-    },
-    "i577": {
-        "type": "item",
-        "sid": "i577",
-        "name": "Fresh Water",
-        "martyCategory": "other"
-    },
-    "i578": {
-        "type": "item",
-        "sid": "i578",
-        "name": "Full Heal",
-        "martyCategory": "other"
-    },
-    "i579": {
-        "type": "item",
-        "sid": "i579",
-        "name": "Full Restore",
-        "martyCategory": "other"
-    },
-    "i580": {
-        "type": "item",
-        "sid": "i580",
-        "name": "GB Sounds",
-        "martyCategory": "other"
-    },
-    "i581": {
-        "type": "item",
-        "sid": "i581",
-        "name": "Galactic Key",
-        "martyCategory": "other"
-    },
-    "i582": {
-        "type": "item",
-        "sid": "i582",
-        "name": "Genius Wing",
-        "martyCategory": "other"
-    },
-    "i583": {
-        "type": "item",
-        "sid": "i583",
-        "name": "Glitter Mail",
-        "martyCategory": "other"
-    },
-    "i584": {
-        "type": "item",
-        "sid": "i584",
-        "name": "Go-Goggles",
-        "martyCategory": "other"
-    },
-    "i585": {
-        "type": "item",
-        "sid": "i585",
-        "name": "God Stone",
-        "martyCategory": "other"
-    },
-    "i586": {
-        "type": "item",
-        "sid": "i586",
-        "name": "Gold Teeth",
-        "martyCategory": "other"
-    },
-    "i587": {
-        "type": "item",
-        "sid": "i587",
-        "name": "Good Rod",
-        "martyCategory": "other"
-    },
-    "i588": {
-        "type": "item",
-        "sid": "i588",
-        "name": "Gooey Mulch",
-        "martyCategory": "other"
-    },
-    "i589": {
-        "type": "item",
-        "sid": "i589",
-        "name": "Gracidea",
-        "martyCategory": "other"
-    },
-    "i590": {
-        "type": "item",
-        "sid": "i590",
-        "name": "Gram 1",
-        "martyCategory": "other"
-    },
-    "i591": {
-        "type": "item",
-        "sid": "i591",
-        "name": "Gram 2",
-        "martyCategory": "other"
-    },
-    "i592": {
-        "type": "item",
-        "sid": "i592",
-        "name": "Gram 3",
-        "martyCategory": "other"
-    },
-    "i593": {
-        "type": "item",
-        "sid": "i593",
-        "name": "Grass Mail",
-        "martyCategory": "other"
-    },
-    "i594": {
-        "type": "item",
-        "sid": "i594",
-        "name": "Green Apricorn",
-        "martyCategory": "other"
-    },
-    "i595": {
-        "type": "item",
-        "sid": "i595",
-        "name": "Green Scarf",
-        "martyCategory": "other"
-    },
-    "i596": {
-        "type": "item",
-        "sid": "i596",
-        "name": "Green Shard",
-        "martyCategory": "other"
-    },
-    "i597": {
-        "type": "item",
-        "sid": "i597",
-        "name": "Greet Mail",
-        "martyCategory": "other"
-    },
-    "i598": {
-        "type": "item",
-        "sid": "i598",
-        "name": "Growth Mulch",
-        "martyCategory": "other"
-    },
-    "i599": {
-        "type": "item",
-        "sid": "i599",
-        "name": "Guard Spec.",
-        "martyCategory": "other"
-    },
-    "i600": {
-        "type": "item",
-        "sid": "i600",
-        "name": "HP Up",
-        "martyCategory": "other"
-    },
-    "i601": {
-        "type": "item",
-        "sid": "i601",
-        "name": "Harbor Mail",
-        "martyCategory": "other"
-    },
-    "i602": {
-        "type": "item",
-        "sid": "i602",
-        "name": "Heal Powder",
-        "martyCategory": "other"
-    },
-    "i603": {
-        "type": "item",
-        "sid": "i603",
-        "name": "Health Wing",
-        "martyCategory": "other"
-    },
-    "i604": {
-        "type": "item",
-        "sid": "i604",
-        "name": "Heart Mail",
-        "martyCategory": "other"
-    },
-    "i605": {
-        "type": "item",
-        "sid": "i605",
-        "name": "Heart Scale",
-        "martyCategory": "other"
-    },
-    "i606": {
-        "type": "item",
-        "sid": "i606",
-        "name": "Honey",
-        "martyCategory": "other"
-    },
-    "i607": {
-        "type": "item",
-        "sid": "i607",
-        "name": "Hyper Potion",
-        "martyCategory": "other"
-    },
-    "i608": {
-        "type": "item",
-        "sid": "i608",
-        "name": "Ice Heal",
-        "martyCategory": "other"
-    },
-    "i609": {
-        "type": "item",
-        "sid": "i609",
-        "name": "Inquiry Mail",
-        "martyCategory": "other"
-    },
-    "i610": {
-        "type": "item",
-        "sid": "i610",
-        "name": "Iron",
-        "martyCategory": "other"
-    },
-    "i611": {
-        "type": "item",
-        "sid": "i611",
-        "name": "Item Drop",
-        "martyCategory": "other"
-    },
-    "i612": {
-        "type": "item",
-        "sid": "i612",
-        "name": "Item Urge",
-        "martyCategory": "other"
-    },
-    "i613": {
-        "type": "item",
-        "sid": "i613",
-        "name": "Itemfinder",
-        "martyCategory": "other"
-    },
-    "i614": {
-        "type": "item",
-        "sid": "i614",
-        "name": "Jade Orb",
-        "martyCategory": "other"
-    },
-    "i615": {
-        "type": "item",
-        "sid": "i615",
-        "name": "Journal",
-        "martyCategory": "other"
-    },
-    "i616": {
-        "type": "item",
-        "sid": "i616",
-        "name": "Key to_Room_1",
-        "martyCategory": "other"
-    },
-    "i617": {
-        "type": "item",
-        "sid": "i617",
-        "name": "Key to_Room_2",
-        "martyCategory": "other"
-    },
-    "i618": {
-        "type": "item",
-        "sid": "i618",
-        "name": "Key to_Room_4",
-        "martyCategory": "other"
-    },
-    "i619": {
-        "type": "item",
-        "sid": "i619",
-        "name": "Key to_Room_6",
-        "martyCategory": "other"
-    },
-    "i620": {
-        "type": "item",
-        "sid": "i620",
-        "name": "Lava Cookie",
-        "martyCategory": "other"
-    },
-    "i621": {
-        "type": "item",
-        "sid": "i621",
-        "name": "Lemonade",
-        "martyCategory": "other"
-    },
-    "i622": {
-        "type": "item",
-        "sid": "i622",
-        "name": "Letter",
-        "martyCategory": "other"
-    },
-    "i623": {
-        "type": "item",
-        "sid": "i623",
-        "name": "Liberty Pass",
-        "martyCategory": "other"
-    },
-    "i624": {
-        "type": "item",
-        "sid": "i624",
-        "name": "Lift Key",
-        "martyCategory": "other"
-    },
-    "i625": {
-        "type": "item",
-        "sid": "i625",
-        "name": "Light Stone",
-        "martyCategory": "other"
-    },
-    "i626": {
-        "type": "item",
-        "sid": "i626",
-        "name": "Like Mail",
-        "martyCategory": "other"
-    },
-    "i627": {
-        "type": "item",
-        "sid": "i627",
-        "name": "Lock Capsule",
-        "martyCategory": "other"
-    },
-    "i628": {
-        "type": "item",
-        "sid": "i628",
-        "name": "Loot Sack",
-        "martyCategory": "other"
-    },
-    "i629": {
-        "type": "item",
-        "sid": "i629",
-        "name": "Lost Item",
-        "martyCategory": "other"
-    },
-    "i630": {
-        "type": "item",
-        "sid": "i630",
-        "name": "Lucky Egg",
-        "martyCategory": "other"
-    },
-    "i631": {
-        "type": "item",
-        "sid": "i631",
-        "name": "Lunar Wing",
-        "martyCategory": "other"
-    },
-    "i632": {
-        "type": "item",
-        "sid": "i632",
-        "name": "Mach Bike",
-        "martyCategory": "other"
-    },
-    "i633": {
-        "type": "item",
-        "sid": "i633",
-        "name": "Machine Part",
-        "martyCategory": "other"
-    },
-    "i634": {
-        "type": "item",
-        "sid": "i634",
-        "name": "Magma Emblem",
-        "martyCategory": "other"
-    },
-    "i635": {
-        "type": "item",
-        "sid": "i635",
-        "name": "Magma Stone",
-        "martyCategory": "other"
-    },
-    "i636": {
-        "type": "item",
-        "sid": "i636",
-        "name": "Max Elixir",
-        "martyCategory": "other"
-    },
-    "i637": {
-        "type": "item",
-        "sid": "i637",
-        "name": "Max Ether",
-        "martyCategory": "other"
-    },
-    "i638": {
-        "type": "item",
-        "sid": "i638",
-        "name": "Max Potion",
-        "martyCategory": "other"
-    },
-    "i639": {
-        "type": "item",
-        "sid": "i639",
-        "name": "Max Repel",
-        "martyCategory": "other"
-    },
-    "i640": {
-        "type": "item",
-        "sid": "i640",
-        "name": "Max Revive",
-        "martyCategory": "other"
-    },
-    "i641": {
-        "type": "item",
-        "sid": "i641",
-        "name": "Mech Mail",
-        "martyCategory": "other"
-    },
-    "i642": {
-        "type": "item",
-        "sid": "i642",
-        "name": "Member Card",
-        "martyCategory": "other"
-    },
-    "i643": {
-        "type": "item",
-        "sid": "i643",
-        "name": "Meteorite",
-        "martyCategory": "other"
-    },
-    "i644": {
-        "type": "item",
-        "sid": "i644",
-        "name": "Moomoo Milk",
-        "martyCategory": "other"
-    },
-    "i645": {
-        "type": "item",
-        "sid": "i645",
-        "name": "Mosaic Mail",
-        "martyCategory": "other"
-    },
-    "i646": {
-        "type": "item",
-        "sid": "i646",
-        "name": "Muscle Wing",
-        "martyCategory": "other"
-    },
-    "i647": {
-        "type": "item",
-        "sid": "i647",
-        "name": "Mystery Egg",
-        "martyCategory": "other"
-    },
-    "i648": {
-        "type": "item",
-        "sid": "i648",
-        "name": "Mystic Ticket",
-        "martyCategory": "other"
-    },
-    "i649": {
-        "type": "item",
-        "sid": "i649",
-        "name": "Nugget",
-        "martyCategory": "other"
-    },
-    "i650": {
-        "type": "item",
-        "sid": "i650",
-        "name": "Oak's Letter",
-        "martyCategory": "other"
-    },
-    "i651": {
-        "type": "item",
-        "sid": "i651",
-        "name": "Oak's Parcel",
-        "martyCategory": "other"
-    },
-    "i652": {
-        "type": "item",
-        "sid": "i652",
-        "name": "Odd Keystone",
-        "martyCategory": "other"
-    },
-    "i653": {
-        "type": "item",
-        "sid": "i653",
-        "name": "Old Charm",
-        "martyCategory": "other"
-    },
-    "i654": {
-        "type": "item",
-        "sid": "i654",
-        "name": "Old Gateau",
-        "martyCategory": "other"
-    },
-    "i655": {
-        "type": "item",
-        "sid": "i655",
-        "name": "Old Rod",
-        "martyCategory": "other"
-    },
-    "i656": {
-        "type": "item",
-        "sid": "i656",
-        "name": "Old Sea_Map",
-        "martyCategory": "other"
-    },
-    "i657": {
-        "type": "item",
-        "sid": "i657",
-        "name": "Orange Mail",
-        "martyCategory": "other"
-    },
-    "i658": {
-        "type": "item",
-        "sid": "i658",
-        "name": "PP Max",
-        "martyCategory": "other"
-    },
-    "i659": {
-        "type": "item",
-        "sid": "i659",
-        "name": "PP Up",
-        "martyCategory": "other"
-    },
-    "i660": {
-        "type": "item",
-        "sid": "i660",
-        "name": "Pal Pad",
-        "martyCategory": "other"
-    },
-    "i661": {
-        "type": "item",
-        "sid": "i661",
-        "name": "Paralyze Heal",
-        "martyCategory": "other"
-    },
-    "i662": {
-        "type": "item",
-        "sid": "i662",
-        "name": "Parcel",
-        "martyCategory": "other"
-    },
-    "i663": {
-        "type": "item",
-        "sid": "i663",
-        "name": "Pass",
-        "martyCategory": "other"
-    },
-    "i664": {
-        "type": "item",
-        "sid": "i664",
-        "name": "Pass Orb",
-        "martyCategory": "other"
-    },
-    "i665": {
-        "type": "item",
-        "sid": "i665",
-        "name": "Pearl",
-        "martyCategory": "other"
-    },
-    "i666": {
-        "type": "item",
-        "sid": "i666",
-        "name": "Pearl String",
-        "martyCategory": "other"
-    },
-    "i667": {
-        "type": "item",
-        "sid": "i667",
-        "name": "Photo Album",
-        "martyCategory": "other"
-    },
-    "i668": {
-        "type": "item",
-        "sid": "i668",
-        "name": "Pink Apricorn",
-        "martyCategory": "other"
-    },
-    "i669": {
-        "type": "item",
-        "sid": "i669",
-        "name": "Pink Scarf",
-        "martyCategory": "other"
-    },
-    "i670": {
-        "type": "item",
-        "sid": "i670",
-        "name": "Poffin Case",
-        "martyCategory": "other"
-    },
-    "i671": {
-        "type": "item",
-        "sid": "i671",
-        "name": "Point Card",
-        "martyCategory": "other"
-    },
-    "i672": {
-        "type": "item",
-        "sid": "i672",
-        "name": "Poké Doll",
-        "martyCategory": "other"
-    },
-    "i673": {
-        "type": "item",
-        "sid": "i673",
-        "name": "Poké Flute",
-        "martyCategory": "other"
-    },
     "i674": {
         "type": "item",
-        "sid": "i674",
-        "name": "Poké Radar",
-        "martyCategory": "other"
-    },
-    "i675": {
-        "type": "item",
-        "sid": "i675",
-        "name": "Poké Toy",
-        "martyCategory": "other"
-    },
-    "i676": {
-        "type": "item",
-        "sid": "i676",
-        "name": "Pokéblock Case",
-        "martyCategory": "other"
+        "names": [
+            "Abomasite"
+        ],
+        "sid": "i674"
     },
     "i677": {
         "type": "item",
-        "sid": "i677",
-        "name": "Potion",
-        "martyCategory": "other"
+        "names": [
+            "Absolite"
+        ],
+        "sid": "i677"
     },
-    "i678": {
+    "i545": {
         "type": "item",
-        "sid": "i678",
-        "name": "Powder Jar",
-        "martyCategory": "other"
+        "names": [
+            "Absorb Bulb"
+        ],
+        "sid": "i545"
+    },
+    "i135": {
+        "type": "item",
+        "names": [
+            "Adamant Orb"
+        ],
+        "sid": "i135"
+    },
+    "i846": {
+        "type": "item",
+        "names": [
+            "Adrenaline Orb"
+        ],
+        "sid": "i846"
+    },
+    "i672": {
+        "type": "item",
+        "names": [
+            "Aerodactylite"
+        ],
+        "sid": "i672"
+    },
+    "i667": {
+        "type": "item",
+        "names": [
+            "Aggronite"
+        ],
+        "sid": "i667"
+    },
+    "i162": {
+        "type": "item",
+        "names": [
+            "Aguav Berry"
+        ],
+        "sid": "i162"
+    },
+    "i541": {
+        "type": "item",
+        "names": [
+            "Air Balloon"
+        ],
+        "sid": "i541"
     },
     "i679": {
         "type": "item",
-        "sid": "i679",
-        "name": "Pretty Wing",
-        "martyCategory": "other"
-    },
-    "i680": {
-        "type": "item",
-        "sid": "i680",
-        "name": "Prop Case",
-        "martyCategory": "other"
-    },
-    "i681": {
-        "type": "item",
-        "sid": "i681",
-        "name": "Protein",
-        "martyCategory": "other"
-    },
-    "i682": {
-        "type": "item",
-        "sid": "i682",
-        "name": "Pure Incense",
-        "martyCategory": "other"
-    },
-    "i683": {
-        "type": "item",
-        "sid": "i683",
-        "name": "RSVP Mail",
-        "martyCategory": "other"
-    },
-    "i684": {
-        "type": "item",
-        "sid": "i684",
-        "name": "Rage Candy_Bar",
-        "martyCategory": "other"
-    },
-    "i685": {
-        "type": "item",
-        "sid": "i685",
-        "name": "Rainbow Pass",
-        "martyCategory": "other"
-    },
-    "i686": {
-        "type": "item",
-        "sid": "i686",
-        "name": "Rainbow Wing",
-        "martyCategory": "other"
-    },
-    "i687": {
-        "type": "item",
-        "sid": "i687",
-        "name": "Rare Candy",
-        "martyCategory": "other"
-    },
-    "i688": {
-        "type": "item",
-        "sid": "i688",
-        "name": "Red Apricorn",
-        "martyCategory": "other"
-    },
-    "i689": {
-        "type": "item",
-        "sid": "i689",
-        "name": "Red Flute",
-        "martyCategory": "other"
-    },
-    "i690": {
-        "type": "item",
-        "sid": "i690",
-        "name": "Red Scale",
-        "martyCategory": "other"
-    },
-    "i691": {
-        "type": "item",
-        "sid": "i691",
-        "name": "Red Scarf",
-        "martyCategory": "other"
-    },
-    "i692": {
-        "type": "item",
-        "sid": "i692",
-        "name": "Red Shard",
-        "martyCategory": "other"
-    },
-    "i693": {
-        "type": "item",
-        "sid": "i693",
-        "name": "Relic Band",
-        "martyCategory": "other"
-    },
-    "i694": {
-        "type": "item",
-        "sid": "i694",
-        "name": "Relic Copper",
-        "martyCategory": "other"
-    },
-    "i695": {
-        "type": "item",
-        "sid": "i695",
-        "name": "Relic Crown",
-        "martyCategory": "other"
-    },
-    "i696": {
-        "type": "item",
-        "sid": "i696",
-        "name": "Relic Gold",
-        "martyCategory": "other"
-    },
-    "i697": {
-        "type": "item",
-        "sid": "i697",
-        "name": "Relic Silver",
-        "martyCategory": "other"
-    },
-    "i698": {
-        "type": "item",
-        "sid": "i698",
-        "name": "Relic Statue",
-        "martyCategory": "other"
-    },
-    "i699": {
-        "type": "item",
-        "sid": "i699",
-        "name": "Relic Vase",
-        "martyCategory": "other"
-    },
-    "i700": {
-        "type": "item",
-        "sid": "i700",
-        "name": "Reset Urge",
-        "martyCategory": "other"
-    },
-    "i701": {
-        "type": "item",
-        "sid": "i701",
-        "name": "Resist Wing",
-        "martyCategory": "other"
-    },
-    "i702": {
-        "type": "item",
-        "sid": "i702",
-        "name": "Retro Mail",
-        "martyCategory": "other"
-    },
-    "i703": {
-        "type": "item",
-        "sid": "i703",
-        "name": "Revival Herb",
-        "martyCategory": "other"
-    },
-    "i704": {
-        "type": "item",
-        "sid": "i704",
-        "name": "Revive",
-        "martyCategory": "other"
-    },
-    "i705": {
-        "type": "item",
-        "sid": "i705",
-        "name": "Ruby",
-        "martyCategory": "other"
-    },
-    "i706": {
-        "type": "item",
-        "sid": "i706",
-        "name": "Rule Book",
-        "martyCategory": "other"
-    },
-    "i707": {
-        "type": "item",
-        "sid": "i707",
-        "name": "SS Ticket",
-        "martyCategory": "other"
-    },
-    "i708": {
-        "type": "item",
-        "sid": "i708",
-        "name": "Sacred Ash",
-        "martyCategory": "other"
-    },
-    "i709": {
-        "type": "item",
-        "sid": "i709",
-        "name": "Sapphire",
-        "martyCategory": "other"
-    },
-    "i710": {
-        "type": "item",
-        "sid": "i710",
-        "name": "Scanner",
-        "martyCategory": "other"
-    },
-    "i711": {
-        "type": "item",
-        "sid": "i711",
-        "name": "Seal Bag",
-        "martyCategory": "other"
-    },
-    "i712": {
-        "type": "item",
-        "sid": "i712",
-        "name": "Seal Case",
-        "martyCategory": "other"
-    },
-    "i713": {
-        "type": "item",
-        "sid": "i713",
-        "name": "Secret Key",
-        "martyCategory": "other"
-    },
-    "i714": {
-        "type": "item",
-        "sid": "i714",
-        "name": "Secret Potion",
-        "martyCategory": "other"
-    },
-    "i715": {
-        "type": "item",
-        "sid": "i715",
-        "name": "Shadow Mail",
-        "martyCategory": "other"
-    },
-    "i716": {
-        "type": "item",
-        "sid": "i716",
-        "name": "Shoal Salt",
-        "martyCategory": "other"
-    },
-    "i717": {
-        "type": "item",
-        "sid": "i717",
-        "name": "Shoal Shell",
-        "martyCategory": "other"
-    },
-    "i718": {
-        "type": "item",
-        "sid": "i718",
-        "name": "Silph Scope",
-        "martyCategory": "other"
-    },
-    "i719": {
-        "type": "item",
-        "sid": "i719",
-        "name": "Silver Wing",
-        "martyCategory": "other"
-    },
-    "i720": {
-        "type": "item",
-        "sid": "i720",
-        "name": "Slowpoke Tail",
-        "martyCategory": "other"
-    },
-    "i721": {
-        "type": "item",
-        "sid": "i721",
-        "name": "Smoke Ball",
-        "martyCategory": "other"
-    },
-    "i722": {
-        "type": "item",
-        "sid": "i722",
-        "name": "Snow Mail",
-        "martyCategory": "other"
-    },
-    "i723": {
-        "type": "item",
-        "sid": "i723",
-        "name": "Soda Pop",
-        "martyCategory": "other"
-    },
-    "i724": {
-        "type": "item",
-        "sid": "i724",
-        "name": "Soot Sack",
-        "martyCategory": "other"
-    },
-    "i725": {
-        "type": "item",
-        "sid": "i725",
-        "name": "Soothe Bell",
-        "martyCategory": "other"
-    },
-    "i726": {
-        "type": "item",
-        "sid": "i726",
-        "name": "Space Mail",
-        "martyCategory": "other"
-    },
-    "i727": {
-        "type": "item",
-        "sid": "i727",
-        "name": "Sprayduck",
-        "martyCategory": "other"
-    },
-    "i728": {
-        "type": "item",
-        "sid": "i728",
-        "name": "Squirt Bottle",
-        "martyCategory": "other"
-    },
-    "i729": {
-        "type": "item",
-        "sid": "i729",
-        "name": "Stable Mulch",
-        "martyCategory": "other"
-    },
-    "i730": {
-        "type": "item",
-        "sid": "i730",
-        "name": "Star Piece",
-        "martyCategory": "other"
-    },
-    "i731": {
-        "type": "item",
-        "sid": "i731",
-        "name": "Stardust",
-        "martyCategory": "other"
-    },
-    "i732": {
-        "type": "item",
-        "sid": "i732",
-        "name": "Storage Key",
-        "martyCategory": "other"
-    },
-    "i733": {
-        "type": "item",
-        "sid": "i733",
-        "name": "Suite Key",
-        "martyCategory": "other"
-    },
-    "i734": {
-        "type": "item",
-        "sid": "i734",
-        "name": "Super Potion",
-        "martyCategory": "other"
-    },
-    "i735": {
-        "type": "item",
-        "sid": "i735",
-        "name": "Super Repel",
-        "martyCategory": "other"
-    },
-    "i736": {
-        "type": "item",
-        "sid": "i736",
-        "name": "Super Rod",
-        "martyCategory": "other"
-    },
-    "i737": {
-        "type": "item",
-        "sid": "i737",
-        "name": "Sweet Heart",
-        "martyCategory": "other"
-    },
-    "i738": {
-        "type": "item",
-        "sid": "i738",
-        "name": "Swift Wing",
-        "martyCategory": "other"
-    },
-    "i739": {
-        "type": "item",
-        "sid": "i739",
-        "name": "TM Case",
-        "martyCategory": "other"
-    },
-    "i740": {
-        "type": "item",
-        "sid": "i740",
-        "name": "Tea",
-        "martyCategory": "other"
-    },
-    "i741": {
-        "type": "item",
-        "sid": "i741",
-        "name": "Teachy TV",
-        "martyCategory": "other"
-    },
-    "i742": {
-        "type": "item",
-        "sid": "i742",
-        "name": "Thanks Mail",
-        "martyCategory": "other"
-    },
-    "i743": {
-        "type": "item",
-        "sid": "i743",
-        "name": "Tidal Bell",
-        "martyCategory": "other"
-    },
-    "i744": {
-        "type": "item",
-        "sid": "i744",
-        "name": "Tiny Mushroom",
-        "martyCategory": "other"
-    },
-    "i745": {
-        "type": "item",
-        "sid": "i745",
-        "name": "Town Map",
-        "martyCategory": "other"
-    },
-    "i746": {
-        "type": "item",
-        "sid": "i746",
-        "name": "Tri-Pass",
-        "martyCategory": "other"
-    },
-    "i747": {
-        "type": "item",
-        "sid": "i747",
-        "name": "Tropic Mail",
-        "martyCategory": "other"
-    },
-    "i748": {
-        "type": "item",
-        "sid": "i748",
-        "name": "Tunnel Mail",
-        "martyCategory": "other"
-    },
-    "i749": {
-        "type": "item",
-        "sid": "i749",
-        "name": "Unown Report",
-        "martyCategory": "other"
-    },
-    "i750": {
-        "type": "item",
-        "sid": "i750",
-        "name": "Vs. Recorder",
-        "martyCategory": "other"
-    },
-    "i751": {
-        "type": "item",
-        "sid": "i751",
-        "name": "Vs. Seeker",
-        "martyCategory": "other"
-    },
-    "i752": {
-        "type": "item",
-        "sid": "i752",
-        "name": "Wailmer Pail",
-        "martyCategory": "other"
-    },
-    "i753": {
-        "type": "item",
-        "sid": "i753",
-        "name": "Wave Mail",
-        "martyCategory": "other"
-    },
-    "i754": {
-        "type": "item",
-        "sid": "i754",
-        "name": "White Apricorn",
-        "martyCategory": "other"
-    },
-    "i755": {
-        "type": "item",
-        "sid": "i755",
-        "name": "White Flute",
-        "martyCategory": "other"
-    },
-    "i756": {
-        "type": "item",
-        "sid": "i756",
-        "name": "Wood Mail",
-        "martyCategory": "other"
-    },
-    "i757": {
-        "type": "item",
-        "sid": "i757",
-        "name": "Works Key",
-        "martyCategory": "other"
-    },
-    "i758": {
-        "type": "item",
-        "sid": "i758",
-        "name": "X Accuracy",
-        "martyCategory": "other"
-    },
-    "i759": {
-        "type": "item",
-        "sid": "i759",
-        "name": "X Accuracy_2",
-        "martyCategory": "other"
-    },
-    "i760": {
-        "type": "item",
-        "sid": "i760",
-        "name": "X Accuracy_3",
-        "martyCategory": "other"
-    },
-    "i761": {
-        "type": "item",
-        "sid": "i761",
-        "name": "X Accuracy_6",
-        "martyCategory": "other"
-    },
-    "i762": {
-        "type": "item",
-        "sid": "i762",
-        "name": "X Attack",
-        "martyCategory": "other"
-    },
-    "i763": {
-        "type": "item",
-        "sid": "i763",
-        "name": "X Attack_2",
-        "martyCategory": "other"
-    },
-    "i764": {
-        "type": "item",
-        "sid": "i764",
-        "name": "X Attack_3",
-        "martyCategory": "other"
-    },
-    "i765": {
-        "type": "item",
-        "sid": "i765",
-        "name": "X Attack_6",
-        "martyCategory": "other"
-    },
-    "i766": {
-        "type": "item",
-        "sid": "i766",
-        "name": "X Defense",
-        "martyCategory": "other"
-    },
-    "i767": {
-        "type": "item",
-        "sid": "i767",
-        "name": "X Defense_2",
-        "martyCategory": "other"
-    },
-    "i768": {
-        "type": "item",
-        "sid": "i768",
-        "name": "X Defense_3",
-        "martyCategory": "other"
-    },
-    "i769": {
-        "type": "item",
-        "sid": "i769",
-        "name": "X Defense_6",
-        "martyCategory": "other"
-    },
-    "i770": {
-        "type": "item",
-        "sid": "i770",
-        "name": "X Sp._Atk",
-        "martyCategory": "other"
-    },
-    "i771": {
-        "type": "item",
-        "sid": "i771",
-        "name": "X Sp._Atk_2",
-        "martyCategory": "other"
-    },
-    "i772": {
-        "type": "item",
-        "sid": "i772",
-        "name": "X Sp._Atk_3",
-        "martyCategory": "other"
-    },
-    "i773": {
-        "type": "item",
-        "sid": "i773",
-        "name": "X Sp._Atk_6",
-        "martyCategory": "other"
-    },
-    "i774": {
-        "type": "item",
-        "sid": "i774",
-        "name": "X Sp._Def",
-        "martyCategory": "other"
-    },
-    "i775": {
-        "type": "item",
-        "sid": "i775",
-        "name": "X Sp._Def_2",
-        "martyCategory": "other"
-    },
-    "i776": {
-        "type": "item",
-        "sid": "i776",
-        "name": "X Sp._Def_3",
-        "martyCategory": "other"
-    },
-    "i777": {
-        "type": "item",
-        "sid": "i777",
-        "name": "X Sp._Def_6",
-        "martyCategory": "other"
-    },
-    "i778": {
-        "type": "item",
-        "sid": "i778",
-        "name": "X Speed",
-        "martyCategory": "other"
-    },
-    "i779": {
-        "type": "item",
-        "sid": "i779",
-        "name": "X Speed_2",
-        "martyCategory": "other"
-    },
-    "i780": {
-        "type": "item",
-        "sid": "i780",
-        "name": "X Speed_3",
-        "martyCategory": "other"
-    },
-    "i781": {
-        "type": "item",
-        "sid": "i781",
-        "name": "X Speed_6",
-        "martyCategory": "other"
-    },
-    "i782": {
-        "type": "item",
-        "sid": "i782",
-        "name": "Xtransceiver",
-        "martyCategory": "other"
-    },
-    "i783": {
-        "type": "item",
-        "sid": "i783",
-        "name": "Yellow Apricorn",
-        "martyCategory": "other"
-    },
-    "i784": {
-        "type": "item",
-        "sid": "i784",
-        "name": "Yellow Flute",
-        "martyCategory": "other"
-    },
-    "i785": {
-        "type": "item",
-        "sid": "i785",
-        "name": "Yellow Scarf",
-        "martyCategory": "other"
-    },
-    "i786": {
-        "type": "item",
-        "sid": "i786",
-        "name": "Yellow Shard",
-        "martyCategory": "other"
-    },
-    "i787": {
-        "type": "item",
-        "sid": "i787",
-        "name": "Zinc",
-        "martyCategory": "other"
-    },
-    "i788": {
-        "type": "item",
-        "sid": "i788",
-        "name": "HM-Bug",
-        "martyCategory": "types"
-    },
-    "i789": {
-        "type": "item",
-        "sid": "i789",
-        "name": "HM-Dark",
-        "martyCategory": "types"
-    },
-    "i790": {
-        "type": "item",
-        "sid": "i790",
-        "name": "HM-Dragon",
-        "martyCategory": "types"
-    },
-    "i791": {
-        "type": "item",
-        "sid": "i791",
-        "name": "HM-Electric",
-        "martyCategory": "types"
-    },
-    "i792": {
-        "type": "item",
-        "sid": "i792",
-        "name": "HM-Fighting",
-        "martyCategory": "types"
-    },
-    "i793": {
-        "type": "item",
-        "sid": "i793",
-        "name": "HM-Fire",
-        "martyCategory": "types"
-    },
-    "i794": {
-        "type": "item",
-        "sid": "i794",
-        "name": "HM-Flying",
-        "martyCategory": "types"
-    },
-    "i795": {
-        "type": "item",
-        "sid": "i795",
-        "name": "HM-Ghost",
-        "martyCategory": "types"
-    },
-    "i796": {
-        "type": "item",
-        "sid": "i796",
-        "name": "HM-Grass",
-        "martyCategory": "types"
-    },
-    "i797": {
-        "type": "item",
-        "sid": "i797",
-        "name": "HM-Ground",
-        "martyCategory": "types"
-    },
-    "i798": {
-        "type": "item",
-        "sid": "i798",
-        "name": "HM-Ice",
-        "martyCategory": "types"
-    },
-    "i799": {
-        "type": "item",
-        "sid": "i799",
-        "name": "HM-Normal",
-        "martyCategory": "types"
-    },
-    "i800": {
-        "type": "item",
-        "sid": "i800",
-        "name": "HM-Poison",
-        "martyCategory": "types"
-    },
-    "i801": {
-        "type": "item",
-        "sid": "i801",
-        "name": "HM-Psychic",
-        "martyCategory": "types"
-    },
-    "i802": {
-        "type": "item",
-        "sid": "i802",
-        "name": "HM-Rock",
-        "martyCategory": "types"
+        "names": [
+            "Alakazite"
+        ],
+        "sid": "i679"
     },
     "i803": {
         "type": "item",
-        "sid": "i803",
-        "name": "HM-Steel",
-        "martyCategory": "types"
+        "names": [
+            "Aloraichium Z"
+        ],
+        "sid": "i803"
     },
-    "i804": {
+    "i755": {
         "type": "item",
-        "sid": "i804",
-        "name": "HM-Water",
-        "martyCategory": "types"
+        "names": [
+            "Altarianite"
+        ],
+        "sid": "i755"
+    },
+    "i658": {
+        "type": "item",
+        "names": [
+            "Ampharosite"
+        ],
+        "sid": "i658"
+    },
+    "i205": {
+        "type": "item",
+        "names": [
+            "Apicot Berry"
+        ],
+        "sid": "i205"
+    },
+    "i104": {
+        "type": "item",
+        "names": [
+            "Armor Fossil"
+        ],
+        "sid": "i104"
+    },
+    "i153": {
+        "type": "item",
+        "names": [
+            "Aspear Berry",
+            "Burnt Berry"
+        ],
+        "sid": "i153"
+    },
+    "i640": {
+        "type": "item",
+        "names": [
+            "Assault Vest"
+        ],
+        "sid": "i640"
+    },
+    "i757": {
+        "type": "item",
+        "names": [
+            "Audinite"
+        ],
+        "sid": "i757"
+    },
+    "i199": {
+        "type": "item",
+        "names": [
+            "Babiri Berry"
+        ],
+        "sid": "i199"
+    },
+    "i668": {
+        "type": "item",
+        "names": [
+            "Banettite"
+        ],
+        "sid": "i668"
+    },
+    "i851": {
+        "type": "item",
+        "names": [
+            "Beast Ball"
+        ],
+        "sid": "i851"
+    },
+    "i770": {
+        "type": "item",
+        "names": [
+            "Beedrillite"
+        ],
+        "sid": "i770"
+    },
+    "i183": {
+        "type": "item",
+        "names": [
+            "Belue Berry"
+        ],
+        "sid": "i183"
+    },
+    "i43": {
+        "type": "item",
+        "names": [
+            "Berry Juice"
+        ],
+        "sid": "i43"
+    },
+    "i1111": {
+        "type": "item",
+        "names": [
+            "Berry Sweet"
+        ],
+        "sid": "i1111"
+    },
+    "i296": {
+        "type": "item",
+        "names": [
+            "Big Root"
+        ],
+        "sid": "i296"
+    },
+    "i544": {
+        "type": "item",
+        "names": [
+            "Binding Band"
+        ],
+        "sid": "i544"
+    },
+    "i241": {
+        "type": "item",
+        "names": [
+            "Black Belt"
+        ],
+        "sid": "i241"
+    },
+    "i281": {
+        "type": "item",
+        "names": [
+            "Black Sludge"
+        ],
+        "sid": "i281"
+    },
+    "i240": {
+        "type": "item",
+        "names": [
+            "Black Glasses"
+        ],
+        "sid": "i240"
+    },
+    "i661": {
+        "type": "item",
+        "names": [
+            "Blastoisinite"
+        ],
+        "sid": "i661"
+    },
+    "i664": {
+        "type": "item",
+        "names": [
+            "Blazikenite"
+        ],
+        "sid": "i664"
+    },
+    "i535": {
+        "type": "item",
+        "names": [
+            "Blue Orb"
+        ],
+        "sid": "i535"
+    },
+    "i165": {
+        "type": "item",
+        "names": [
+            "Bluk Berry"
+        ],
+        "sid": "i165"
+    },
+    "i1121": {
+        "type": "item",
+        "names": [
+            "Blunder Policy"
+        ],
+        "sid": "i1121"
+    },
+    "i795": {
+        "type": "item",
+        "names": [
+            "Bottle Cap"
+        ],
+        "sid": "i795"
+    },
+    "i213": {
+        "type": "item",
+        "names": [
+            "Bright Powder"
+        ],
+        "sid": "i213"
+    },
+    "i558": {
+        "type": "item",
+        "names": [
+            "Bug Gem"
+        ],
+        "sid": "i558"
+    },
+    "i909": {
+        "type": "item",
+        "names": [
+            "Bug Memory"
+        ],
+        "sid": "i909"
+    },
+    "i787": {
+        "type": "item",
+        "names": [
+            "Buginium Z"
+        ],
+        "sid": "i787"
+    },
+    "i118": {
+        "type": "item",
+        "names": [
+            "Burn Drive"
+        ],
+        "sid": "i118"
+    },
+    "i767": {
+        "type": "item",
+        "names": [
+            "Cameruptite"
+        ],
+        "sid": "i767"
+    },
+    "i546": {
+        "type": "item",
+        "names": [
+            "Cell Battery"
+        ],
+        "sid": "i546"
+    },
+    "i249": {
+        "type": "item",
+        "names": [
+            "Charcoal"
+        ],
+        "sid": "i249"
+    },
+    "i660": {
+        "type": "item",
+        "names": [
+            "Charizardite X"
+        ],
+        "sid": "i660"
+    },
+    "i678": {
+        "type": "item",
+        "names": [
+            "Charizardite Y"
+        ],
+        "sid": "i678"
+    },
+    "i195": {
+        "type": "item",
+        "names": [
+            "Charti Berry"
+        ],
+        "sid": "i195"
+    },
+    "i149": {
+        "type": "item",
+        "names": [
+            "Cheri Berry",
+            "PRZ Cure Berry"
+        ],
+        "sid": "i149"
+    },
+    "i16": {
+        "type": "item",
+        "names": [
+            "Cherish Ball"
+        ],
+        "sid": "i16"
+    },
+    "i150": {
+        "type": "item",
+        "names": [
+            "Chesto Berry",
+            "Mint Berry"
+        ],
+        "sid": "i150"
+    },
+    "i200": {
+        "type": "item",
+        "names": [
+            "Chilan Berry"
+        ],
+        "sid": "i200"
+    },
+    "i119": {
+        "type": "item",
+        "names": [
+            "Chill Drive"
+        ],
+        "sid": "i119"
+    },
+    "i1254": {
+        "type": "item",
+        "names": [
+            "Chipped Pot"
+        ],
+        "sid": "i1254"
+    },
+    "i220": {
+        "type": "item",
+        "names": [
+            "Choice Band"
+        ],
+        "sid": "i220"
+    },
+    "i287": {
+        "type": "item",
+        "names": [
+            "Choice Scarf"
+        ],
+        "sid": "i287"
+    },
+    "i297": {
+        "type": "item",
+        "names": [
+            "Choice Specs"
+        ],
+        "sid": "i297"
+    },
+    "i189": {
+        "type": "item",
+        "names": [
+            "Chople Berry"
+        ],
+        "sid": "i189"
+    },
+    "i100": {
+        "type": "item",
+        "names": [
+            "Claw Fossil"
+        ],
+        "sid": "i100"
+    },
+    "i1112": {
+        "type": "item",
+        "names": [
+            "Clover Sweet"
+        ],
+        "sid": "i1112"
+    },
+    "i192": {
+        "type": "item",
+        "names": [
+            "Coba Berry"
+        ],
+        "sid": "i192"
+    },
+    "i198": {
+        "type": "item",
+        "names": [
+            "Colbur Berry"
+        ],
+        "sid": "i198"
+    },
+    "i175": {
+        "type": "item",
+        "names": [
+            "Cornn Berry"
+        ],
+        "sid": "i175"
+    },
+    "i572": {
+        "type": "item",
+        "names": [
+            "Cover Fossil"
+        ],
+        "sid": "i572"
+    },
+    "i1253": {
+        "type": "item",
+        "names": [
+            "Cracked Pot"
+        ],
+        "sid": "i1253"
+    },
+    "i210": {
+        "type": "item",
+        "names": [
+            "Custap Berry"
+        ],
+        "sid": "i210"
+    },
+    "i285": {
+        "type": "item",
+        "names": [
+            "Damp Rock"
+        ],
+        "sid": "i285"
+    },
+    "i562": {
+        "type": "item",
+        "names": [
+            "Dark Gem"
+        ],
+        "sid": "i562"
+    },
+    "i919": {
+        "type": "item",
+        "names": [
+            "Dark Memory"
+        ],
+        "sid": "i919"
+    },
+    "i791": {
+        "type": "item",
+        "names": [
+            "Darkinium Z"
+        ],
+        "sid": "i791"
+    },
+    "i109": {
+        "type": "item",
+        "names": [
+            "Dawn Stone"
+        ],
+        "sid": "i109"
+    },
+    "i798": {
+        "type": "item",
+        "names": [
+            "Decidium Z"
+        ],
+        "sid": "i798"
+    },
+    "i227": {
+        "type": "item",
+        "names": [
+            "Deep Sea Scale"
+        ],
+        "sid": "i227"
+    },
+    "i226": {
+        "type": "item",
+        "names": [
+            "Deep Sea Tooth"
+        ],
+        "sid": "i226"
+    },
+    "i280": {
+        "type": "item",
+        "names": [
+            "Destiny Knot"
+        ],
+        "sid": "i280"
+    },
+    "i764": {
+        "type": "item",
+        "names": [
+            "Diancite"
+        ],
+        "sid": "i764"
+    },
+    "i7": {
+        "type": "item",
+        "names": [
+            "Dive Ball"
+        ],
+        "sid": "i7"
+    },
+    "i102": {
+        "type": "item",
+        "names": [
+            "Dome Fossil"
+        ],
+        "sid": "i102"
+    },
+    "i116": {
+        "type": "item",
+        "names": [
+            "Douse Drive"
+        ],
+        "sid": "i116"
+    },
+    "i311": {
+        "type": "item",
+        "names": [
+            "Draco Plate"
+        ],
+        "sid": "i311"
+    },
+    "i250": {
+        "type": "item",
+        "names": [
+            "Dragon Fang"
+        ],
+        "sid": "i250"
+    },
+    "i561": {
+        "type": "item",
+        "names": [
+            "Dragon Gem"
+        ],
+        "sid": "i561"
+    },
+    "i918": {
+        "type": "item",
+        "names": [
+            "Dragon Memory"
+        ],
+        "sid": "i918"
+    },
+    "i235": {
+        "type": "item",
+        "names": [
+            "Dragon Scale"
+        ],
+        "sid": "i235"
+    },
+    "i790": {
+        "type": "item",
+        "names": [
+            "Dragonium Z"
+        ],
+        "sid": "i790"
+    },
+    "i312": {
+        "type": "item",
+        "names": [
+            "Dread Plate"
+        ],
+        "sid": "i312"
+    },
+    "i576": {
+        "type": "item",
+        "names": [
+            "Dream Ball"
+        ],
+        "sid": "i576"
+    },
+    "i324": {
+        "type": "item",
+        "names": [
+            "Dubious Disc"
+        ],
+        "sid": "i324"
+    },
+    "i182": {
+        "type": "item",
+        "names": [
+            "Durin Berry"
+        ],
+        "sid": "i182"
+    },
+    "i13": {
+        "type": "item",
+        "names": [
+            "Dusk Ball"
+        ],
+        "sid": "i13"
+    },
+    "i108": {
+        "type": "item",
+        "names": [
+            "Dusk Stone"
+        ],
+        "sid": "i108"
+    },
+    "i305": {
+        "type": "item",
+        "names": [
+            "Earth Plate"
+        ],
+        "sid": "i305"
     },
     "i805": {
         "type": "item",
-        "sid": "i805",
-        "name": "TM-Bug",
-        "martyCategory": "types"
+        "names": [
+            "Eevium Z"
+        ],
+        "sid": "i805"
+    },
+    "i547": {
+        "type": "item",
+        "names": [
+            "Eject Button"
+        ],
+        "sid": "i547"
+    },
+    "i1119": {
+        "type": "item",
+        "names": [
+            "Eject Pack"
+        ],
+        "sid": "i1119"
+    },
+    "i322": {
+        "type": "item",
+        "names": [
+            "Electirizer"
+        ],
+        "sid": "i322"
+    },
+    "i550": {
+        "type": "item",
+        "names": [
+            "Electric Gem"
+        ],
+        "sid": "i550"
+    },
+    "i915": {
+        "type": "item",
+        "names": [
+            "Electric Memory"
+        ],
+        "sid": "i915"
+    },
+    "i881": {
+        "type": "item",
+        "names": [
+            "Electric Seed"
+        ],
+        "sid": "i881"
+    },
+    "i779": {
+        "type": "item",
+        "names": [
+            "Electrium Z"
+        ],
+        "sid": "i779"
+    },
+    "i34": {
+        "type": "item",
+        "names": [
+            "Energy Powder"
+        ],
+        "sid": "i34"
+    },
+    "i208": {
+        "type": "item",
+        "names": [
+            "Enigma Berry"
+        ],
+        "sid": "i208"
+    },
+    "i538": {
+        "type": "item",
+        "names": [
+            "Eviolite"
+        ],
+        "sid": "i538"
+    },
+    "i268": {
+        "type": "item",
+        "names": [
+            "Expert Belt"
+        ],
+        "sid": "i268"
+    },
+    "i793": {
+        "type": "item",
+        "names": [
+            "Fairium Z"
+        ],
+        "sid": "i793"
+    },
+    "i715": {
+        "type": "item",
+        "names": [
+            "Fairy Gem"
+        ],
+        "sid": "i715"
+    },
+    "i920": {
+        "type": "item",
+        "names": [
+            "Fairy Memory"
+        ],
+        "sid": "i920"
+    },
+    "i492": {
+        "type": "item",
+        "names": [
+            "Fast Ball"
+        ],
+        "sid": "i492"
+    },
+    "i553": {
+        "type": "item",
+        "names": [
+            "Fighting Gem"
+        ],
+        "sid": "i553"
+    },
+    "i904": {
+        "type": "item",
+        "names": [
+            "Fighting Memory"
+        ],
+        "sid": "i904"
+    },
+    "i782": {
+        "type": "item",
+        "names": [
+            "Fightinium Z"
+        ],
+        "sid": "i782"
+    },
+    "i159": {
+        "type": "item",
+        "names": [
+            "Figy Berry"
+        ],
+        "sid": "i159"
+    },
+    "i548": {
+        "type": "item",
+        "names": [
+            "Fire Gem"
+        ],
+        "sid": "i548"
+    },
+    "i912": {
+        "type": "item",
+        "names": [
+            "Fire Memory"
+        ],
+        "sid": "i912"
+    },
+    "i82": {
+        "type": "item",
+        "names": [
+            "Fire Stone"
+        ],
+        "sid": "i82"
+    },
+    "i777": {
+        "type": "item",
+        "names": [
+            "Firium Z"
+        ],
+        "sid": "i777"
+    },
+    "i303": {
+        "type": "item",
+        "names": [
+            "Fist Plate"
+        ],
+        "sid": "i303"
+    },
+    "i273": {
+        "type": "item",
+        "names": [
+            "Flame Orb"
+        ],
+        "sid": "i273"
+    },
+    "i298": {
+        "type": "item",
+        "names": [
+            "Flame Plate"
+        ],
+        "sid": "i298"
+    },
+    "i539": {
+        "type": "item",
+        "names": [
+            "Float Stone"
+        ],
+        "sid": "i539"
+    },
+    "i1113": {
+        "type": "item",
+        "names": [
+            "Flower Sweet"
+        ],
+        "sid": "i1113"
+    },
+    "i556": {
+        "type": "item",
+        "names": [
+            "Flying Gem"
+        ],
+        "sid": "i556"
+    },
+    "i905": {
+        "type": "item",
+        "names": [
+            "Flying Memory"
+        ],
+        "sid": "i905"
+    },
+    "i785": {
+        "type": "item",
+        "names": [
+            "Flyinium Z"
+        ],
+        "sid": "i785"
+    },
+    "i230": {
+        "type": "item",
+        "names": [
+            "Focus Band"
+        ],
+        "sid": "i230"
+    },
+    "i275": {
+        "type": "item",
+        "names": [
+            "Focus Sash"
+        ],
+        "sid": "i275"
+    },
+    "i1105": {
+        "type": "item",
+        "names": [
+            "Fossilized Bird"
+        ],
+        "sid": "i1105"
+    },
+    "i1108": {
+        "type": "item",
+        "names": [
+            "Fossilized Dino"
+        ],
+        "sid": "i1108"
+    },
+    "i1107": {
+        "type": "item",
+        "names": [
+            "Fossilized Drake"
+        ],
+        "sid": "i1107"
+    },
+    "i1106": {
+        "type": "item",
+        "names": [
+            "Fossilized Fish"
+        ],
+        "sid": "i1106"
+    },
+    "i497": {
+        "type": "item",
+        "names": [
+            "Friend Ball"
+        ],
+        "sid": "i497"
+    },
+    "i316": {
+        "type": "item",
+        "names": [
+            "Full Incense"
+        ],
+        "sid": "i316"
+    },
+    "i1582": {
+        "type": "item",
+        "names": [
+            "Galarica Cuff"
+        ],
+        "sid": "i1582"
+    },
+    "i1592": {
+        "type": "item",
+        "names": [
+            "Galarica Wreath"
+        ],
+        "sid": "i1592"
+    },
+    "i756": {
+        "type": "item",
+        "names": [
+            "Galladite"
+        ],
+        "sid": "i756"
+    },
+    "i202": {
+        "type": "item",
+        "names": [
+            "Ganlon Berry"
+        ],
+        "sid": "i202"
+    },
+    "i683": {
+        "type": "item",
+        "names": [
+            "Garchompite"
+        ],
+        "sid": "i683"
+    },
+    "i657": {
+        "type": "item",
+        "names": [
+            "Gardevoirite"
+        ],
+        "sid": "i657"
+    },
+    "i656": {
+        "type": "item",
+        "names": [
+            "Gengarite"
+        ],
+        "sid": "i656"
+    },
+    "i560": {
+        "type": "item",
+        "names": [
+            "Ghost Gem"
+        ],
+        "sid": "i560"
+    },
+    "i910": {
+        "type": "item",
+        "names": [
+            "Ghost Memory"
+        ],
+        "sid": "i910"
+    },
+    "i789": {
+        "type": "item",
+        "names": [
+            "Ghostium Z"
+        ],
+        "sid": "i789"
+    },
+    "i763": {
+        "type": "item",
+        "names": [
+            "Glalitite"
+        ],
+        "sid": "i763"
+    },
+    "i796": {
+        "type": "item",
+        "names": [
+            "Gold Bottle Cap"
+        ],
+        "sid": "i796"
+    },
+    "i551": {
+        "type": "item",
+        "names": [
+            "Grass Gem"
+        ],
+        "sid": "i551"
+    },
+    "i914": {
+        "type": "item",
+        "names": [
+            "Grass Memory"
+        ],
+        "sid": "i914"
+    },
+    "i780": {
+        "type": "item",
+        "names": [
+            "Grassium Z"
+        ],
+        "sid": "i780"
+    },
+    "i884": {
+        "type": "item",
+        "names": [
+            "Grassy Seed"
+        ],
+        "sid": "i884"
+    },
+    "i3": {
+        "type": "item",
+        "names": [
+            "Great Ball"
+        ],
+        "sid": "i3"
+    },
+    "i173": {
+        "type": "item",
+        "names": [
+            "Grepa Berry"
+        ],
+        "sid": "i173"
+    },
+    "i286": {
+        "type": "item",
+        "names": [
+            "Grip Claw"
+        ],
+        "sid": "i286"
+    },
+    "i112": {
+        "type": "item",
+        "names": [
+            "Griseous Orb"
+        ],
+        "sid": "i112"
+    },
+    "i555": {
+        "type": "item",
+        "names": [
+            "Ground Gem"
+        ],
+        "sid": "i555"
+    },
+    "i907": {
+        "type": "item",
+        "names": [
+            "Ground Memory"
+        ],
+        "sid": "i907"
+    },
+    "i784": {
+        "type": "item",
+        "names": [
+            "Groundium Z"
+        ],
+        "sid": "i784"
+    },
+    "i676": {
+        "type": "item",
+        "names": [
+            "Gyaradosite"
+        ],
+        "sid": "i676"
+    },
+    "i197": {
+        "type": "item",
+        "names": [
+            "Haban Berry"
+        ],
+        "sid": "i197"
+    },
+    "i238": {
+        "type": "item",
+        "names": [
+            "Hard Stone"
+        ],
+        "sid": "i238"
+    },
+    "i14": {
+        "type": "item",
+        "names": [
+            "Heal Ball"
+        ],
+        "sid": "i14"
+    },
+    "i284": {
+        "type": "item",
+        "names": [
+            "Heat Rock"
+        ],
+        "sid": "i284"
+    },
+    "i495": {
+        "type": "item",
+        "names": [
+            "Heavy Ball"
+        ],
+        "sid": "i495"
+    },
+    "i1120": {
+        "type": "item",
+        "names": [
+            "Heavy-Duty Boots"
+        ],
+        "sid": "i1120"
+    },
+    "i101": {
+        "type": "item",
+        "names": [
+            "Helix Fossil"
+        ],
+        "sid": "i101"
+    },
+    "i680": {
+        "type": "item",
+        "names": [
+            "Heracronite"
+        ],
+        "sid": "i680"
+    },
+    "i172": {
+        "type": "item",
+        "names": [
+            "Hondew Berry"
+        ],
+        "sid": "i172"
+    },
+    "i666": {
+        "type": "item",
+        "names": [
+            "Houndoominite"
+        ],
+        "sid": "i666"
+    },
+    "i163": {
+        "type": "item",
+        "names": [
+            "Iapapa Berry"
+        ],
+        "sid": "i163"
+    },
+    "i552": {
+        "type": "item",
+        "names": [
+            "Ice Gem"
+        ],
+        "sid": "i552"
+    },
+    "i917": {
+        "type": "item",
+        "names": [
+            "Ice Memory"
+        ],
+        "sid": "i917"
+    },
+    "i849": {
+        "type": "item",
+        "names": [
+            "Ice Stone"
+        ],
+        "sid": "i849"
+    },
+    "i302": {
+        "type": "item",
+        "names": [
+            "Icicle Plate"
+        ],
+        "sid": "i302"
+    },
+    "i781": {
+        "type": "item",
+        "names": [
+            "Icium Z"
+        ],
+        "sid": "i781"
+    },
+    "i282": {
+        "type": "item",
+        "names": [
+            "Icy Rock"
+        ],
+        "sid": "i282"
+    },
+    "i799": {
+        "type": "item",
+        "names": [
+            "Incinium Z"
+        ],
+        "sid": "i799"
+    },
+    "i308": {
+        "type": "item",
+        "names": [
+            "Insect Plate"
+        ],
+        "sid": "i308"
+    },
+    "i278": {
+        "type": "item",
+        "names": [
+            "Iron Ball"
+        ],
+        "sid": "i278"
+    },
+    "i313": {
+        "type": "item",
+        "names": [
+            "Iron Plate"
+        ],
+        "sid": "i313"
+    },
+    "i211": {
+        "type": "item",
+        "names": [
+            "Jaboca Berry"
+        ],
+        "sid": "i211"
+    },
+    "i710": {
+        "type": "item",
+        "names": [
+            "Jaw Fossil"
+        ],
+        "sid": "i710"
+    },
+    "i196": {
+        "type": "item",
+        "names": [
+            "Kasib Berry"
+        ],
+        "sid": "i196"
+    },
+    "i190": {
+        "type": "item",
+        "names": [
+            "Kebia Berry"
+        ],
+        "sid": "i190"
+    },
+    "i687": {
+        "type": "item",
+        "names": [
+            "Kee Berry"
+        ],
+        "sid": "i687"
+    },
+    "i170": {
+        "type": "item",
+        "names": [
+            "Kelpsy Berry"
+        ],
+        "sid": "i170"
+    },
+    "i675": {
+        "type": "item",
+        "names": [
+            "Kangaskhanite"
+        ],
+        "sid": "i675"
+    },
+    "i221": {
+        "type": "item",
+        "names": [
+            "King's Rock"
+        ],
+        "sid": "i221"
+    },
+    "i926": {
+        "type": "item",
+        "names": [
+            "Kommonium Z"
+        ],
+        "sid": "i926"
+    },
+    "i279": {
+        "type": "item",
+        "names": [
+            "Lagging Tail"
+        ],
+        "sid": "i279"
+    },
+    "i206": {
+        "type": "item",
+        "names": [
+            "Lansat Berry"
+        ],
+        "sid": "i206"
+    },
+    "i684": {
+        "type": "item",
+        "names": [
+            "Latiasite"
+        ],
+        "sid": "i684"
+    },
+    "i685": {
+        "type": "item",
+        "names": [
+            "Latiosite"
+        ],
+        "sid": "i685"
+    },
+    "i255": {
+        "type": "item",
+        "names": [
+            "Lax Incense"
+        ],
+        "sid": "i255"
+    },
+    "i85": {
+        "type": "item",
+        "names": [
+            "Leaf Stone"
+        ],
+        "sid": "i85"
+    },
+    "i259": {
+        "type": "item",
+        "names": [
+            "Leek",
+            "Stick"
+        ],
+        "sid": "i259"
+    },
+    "i234": {
+        "type": "item",
+        "names": [
+            "Leftovers"
+        ],
+        "sid": "i234"
+    },
+    "i154": {
+        "type": "item",
+        "names": [
+            "Leppa Berry",
+            "Mystery Berry"
+        ],
+        "sid": "i154"
+    },
+    "i493": {
+        "type": "item",
+        "names": [
+            "Level Ball"
+        ],
+        "sid": "i493"
+    },
+    "i201": {
+        "type": "item",
+        "names": [
+            "Liechi Berry"
+        ],
+        "sid": "i201"
+    },
+    "i270": {
+        "type": "item",
+        "names": [
+            "Life Orb"
+        ],
+        "sid": "i270"
+    },
+    "i236": {
+        "type": "item",
+        "names": [
+            "Light Ball"
+        ],
+        "sid": "i236"
+    },
+    "i269": {
+        "type": "item",
+        "names": [
+            "Light Clay"
+        ],
+        "sid": "i269"
+    },
+    "i768": {
+        "type": "item",
+        "names": [
+            "Lopunnite"
+        ],
+        "sid": "i768"
+    },
+    "i496": {
+        "type": "item",
+        "names": [
+            "Love Ball"
+        ],
+        "sid": "i496"
+    },
+    "i1110": {
+        "type": "item",
+        "names": [
+            "Love Sweet"
+        ],
+        "sid": "i1110"
+    },
+    "i673": {
+        "type": "item",
+        "names": [
+            "Lucarionite"
+        ],
+        "sid": "i673"
+    },
+    "i256": {
+        "type": "item",
+        "names": [
+            "Lucky Punch"
+        ],
+        "sid": "i256"
+    },
+    "i157": {
+        "type": "item",
+        "names": [
+            "Lum Berry",
+            "Miracle Berry"
+        ],
+        "sid": "i157"
+    },
+    "i648": {
+        "type": "item",
+        "names": [
+            "Luminous Moss"
+        ],
+        "sid": "i648"
+    },
+    "i922": {
+        "type": "item",
+        "names": [
+            "Lunalium Z"
+        ],
+        "sid": "i922"
+    },
+    "i494": {
+        "type": "item",
+        "names": [
+            "Lure Ball"
+        ],
+        "sid": "i494"
+    },
+    "i136": {
+        "type": "item",
+        "names": [
+            "Lustrous Orb"
+        ],
+        "sid": "i136"
+    },
+    "i11": {
+        "type": "item",
+        "names": [
+            "Luxury Ball"
+        ],
+        "sid": "i11"
+    },
+    "i925": {
+        "type": "item",
+        "names": [
+            "Lycanium Z"
+        ],
+        "sid": "i925"
+    },
+    "i215": {
+        "type": "item",
+        "names": [
+            "Macho Brace"
+        ],
+        "sid": "i215"
+    },
+    "i323": {
+        "type": "item",
+        "names": [
+            "Magmarizer"
+        ],
+        "sid": "i323"
+    },
+    "i242": {
+        "type": "item",
+        "names": [
+            "Magnet"
+        ],
+        "sid": "i242"
+    },
+    "i161": {
+        "type": "item",
+        "names": [
+            "Mago Berry"
+        ],
+        "sid": "i161"
+    },
+    "i176": {
+        "type": "item",
+        "names": [
+            "Magost Berry"
+        ],
+        "sid": "i176"
+    },
+    "i137": {
+        "type": "item",
+        "names": [
+            "Mail"
+        ],
+        "sid": "i137"
+    },
+    "i682": {
+        "type": "item",
+        "names": [
+            "Manectite"
+        ],
+        "sid": "i682"
+    },
+    "i688": {
+        "type": "item",
+        "names": [
+            "Maranga Berry"
+        ],
+        "sid": "i688"
+    },
+    "i802": {
+        "type": "item",
+        "names": [
+            "Marshadium Z"
+        ],
+        "sid": "i802"
+    },
+    "i1": {
+        "type": "item",
+        "names": [
+            "Master Ball"
+        ],
+        "sid": "i1"
+    },
+    "i681": {
+        "type": "item",
+        "names": [
+            "Mawilite"
+        ],
+        "sid": "i681"
+    },
+    "i301": {
+        "type": "item",
+        "names": [
+            "Meadow Plate"
+        ],
+        "sid": "i301"
+    },
+    "i665": {
+        "type": "item",
+        "names": [
+            "Medichamite"
+        ],
+        "sid": "i665"
+    },
+    "i219": {
+        "type": "item",
+        "names": [
+            "Mental Herb"
+        ],
+        "sid": "i219"
+    },
+    "i758": {
+        "type": "item",
+        "names": [
+            "Metagrossite"
+        ],
+        "sid": "i758"
+    },
+    "i233": {
+        "type": "item",
+        "names": [
+            "Metal Coat"
+        ],
+        "sid": "i233"
+    },
+    "i257": {
+        "type": "item",
+        "names": [
+            "Metal Powder"
+        ],
+        "sid": "i257"
+    },
+    "i277": {
+        "type": "item",
+        "names": [
+            "Metronome"
+        ],
+        "sid": "i277"
     },
     "i806": {
         "type": "item",
-        "sid": "i806",
-        "name": "TM-Dark",
-        "martyCategory": "types"
+        "names": [
+            "Mewnium Z"
+        ],
+        "sid": "i806"
     },
-    "i807": {
+    "i662": {
         "type": "item",
-        "sid": "i807",
-        "name": "TM-Dragon",
-        "martyCategory": "types"
+        "names": [
+            "Mewtwonite X"
+        ],
+        "sid": "i662"
     },
-    "i808": {
+    "i663": {
         "type": "item",
-        "sid": "i808",
-        "name": "TM-Electric",
-        "martyCategory": "types"
+        "names": [
+            "Mewtwonite Y"
+        ],
+        "sid": "i663"
     },
-    "i809": {
+    "i209": {
         "type": "item",
-        "sid": "i809",
-        "name": "TM-Fighting",
-        "martyCategory": "types"
+        "names": [
+            "Micle Berry"
+        ],
+        "sid": "i209"
     },
-    "i810": {
+    "i924": {
         "type": "item",
-        "sid": "i810",
-        "name": "TM-Fire",
-        "martyCategory": "types"
+        "names": [
+            "Mimikium Z"
+        ],
+        "sid": "i924"
     },
-    "i811": {
+    "i307": {
         "type": "item",
-        "sid": "i811",
-        "name": "TM-Flying",
-        "martyCategory": "types"
+        "names": [
+            "Mind Plate"
+        ],
+        "sid": "i307"
     },
-    "i812": {
+    "i239": {
         "type": "item",
-        "sid": "i812",
-        "name": "TM-Ghost",
-        "martyCategory": "types"
+        "names": [
+            "Miracle Seed"
+        ],
+        "sid": "i239"
     },
-    "i813": {
+    "i883": {
         "type": "item",
-        "sid": "i813",
-        "name": "TM-Grass",
-        "martyCategory": "types"
+        "names": [
+            "Misty Seed"
+        ],
+        "sid": "i883"
     },
-    "i814": {
+    "i498": {
         "type": "item",
-        "sid": "i814",
-        "name": "TM-Ground",
-        "martyCategory": "types"
+        "names": [
+            "Moon Ball"
+        ],
+        "sid": "i498"
     },
-    "i815": {
+    "i81": {
         "type": "item",
-        "sid": "i815",
-        "name": "TM-Ice",
-        "martyCategory": "types"
+        "names": [
+            "Moon Stone"
+        ],
+        "sid": "i81"
     },
-    "i816": {
+    "i266": {
         "type": "item",
-        "sid": "i816",
-        "name": "TM-Normal",
-        "martyCategory": "types"
+        "names": [
+            "Muscle Band"
+        ],
+        "sid": "i266"
     },
-    "i817": {
+    "i243": {
         "type": "item",
-        "sid": "i817",
-        "name": "TM-Poison",
-        "martyCategory": "types"
+        "names": [
+            "Mystic Water"
+        ],
+        "sid": "i243"
     },
-    "i818": {
+    "i166": {
         "type": "item",
-        "sid": "i818",
-        "name": "TM-Psychic",
-        "martyCategory": "types"
+        "names": [
+            "Nanab Berry"
+        ],
+        "sid": "i166"
     },
-    "i819": {
+    "i8": {
         "type": "item",
-        "sid": "i819",
-        "name": "TM-Rock",
-        "martyCategory": "types"
+        "names": [
+            "Nest Ball"
+        ],
+        "sid": "i8"
     },
-    "i820": {
+    "i6": {
         "type": "item",
-        "sid": "i820",
-        "name": "TM-Steel",
-        "martyCategory": "types"
+        "names": [
+            "Net Ball"
+        ],
+        "sid": "i6"
     },
-    "i821": {
+    "i246": {
         "type": "item",
-        "sid": "i821",
-        "name": "TM-Water",
-        "martyCategory": "types"
+        "names": [
+            "Never-Melt Ice"
+        ],
+        "sid": "i246"
     },
-    "i822": {
+    "i178": {
         "type": "item",
-        "sid": "i822",
-        "name": "TR-Bug",
-        "martyCategory": "types"
+        "names": [
+            "Nomel Berry"
+        ],
+        "sid": "i178"
     },
-    "i823": {
+    "i564": {
         "type": "item",
-        "sid": "i823",
-        "name": "TR-Dark",
-        "martyCategory": "types"
+        "names": [
+            "Normal Gem"
+        ],
+        "sid": "i564"
     },
-    "i824": {
+    "i776": {
         "type": "item",
-        "sid": "i824",
-        "name": "TR-Dragon",
-        "martyCategory": "types"
+        "names": [
+            "Normalium Z"
+        ],
+        "sid": "i776"
     },
-    "i825": {
+    "i184": {
         "type": "item",
-        "sid": "i825",
-        "name": "TR-Electric",
-        "martyCategory": "types"
+        "names": [
+            "Occa Berry"
+        ],
+        "sid": "i184"
     },
-    "i826": {
+    "i314": {
         "type": "item",
-        "sid": "i826",
-        "name": "TR-Fairy",
-        "martyCategory": "types"
+        "names": [
+            "Odd Incense"
+        ],
+        "sid": "i314"
     },
-    "i827": {
+    "i103": {
         "type": "item",
-        "sid": "i827",
-        "name": "TR-Fighting",
-        "martyCategory": "types"
+        "names": [
+            "Old Amber"
+        ],
+        "sid": "i103"
     },
-    "i828": {
+    "i155": {
         "type": "item",
-        "sid": "i828",
-        "name": "TR-Fire",
-        "martyCategory": "types"
+        "names": [
+            "Oran Berry",
+            "Berry"
+        ],
+        "sid": "i155"
     },
-    "i829": {
+    "i110": {
         "type": "item",
-        "sid": "i829",
-        "name": "TR-Flying",
-        "martyCategory": "types"
+        "names": [
+            "Oval Stone"
+        ],
+        "sid": "i110"
     },
-    "i830": {
+    "i180": {
         "type": "item",
-        "sid": "i830",
-        "name": "TR-Ghost",
-        "martyCategory": "types"
+        "names": [
+            "Pamtre Berry"
+        ],
+        "sid": "i180"
     },
-    "i831": {
+    "i500": {
         "type": "item",
-        "sid": "i831",
-        "name": "TR-Grass",
-        "martyCategory": "types"
+        "names": [
+            "Park Ball"
+        ],
+        "sid": "i500"
     },
-    "i832": {
+    "i185": {
         "type": "item",
-        "sid": "i832",
-        "name": "TR-Ground",
-        "martyCategory": "types"
+        "names": [
+            "Passho Berry"
+        ],
+        "sid": "i185"
     },
-    "i833": {
+    "i193": {
         "type": "item",
-        "sid": "i833",
-        "name": "TR-Ice",
-        "martyCategory": "types"
+        "names": [
+            "Payapa Berry"
+        ],
+        "sid": "i193"
     },
-    "i834": {
+    "i151": {
         "type": "item",
-        "sid": "i834",
-        "name": "TR-Normal",
-        "martyCategory": "types"
+        "names": [
+            "Pecha Berry",
+            "PSN Cure Berry"
+        ],
+        "sid": "i151"
     },
-    "i835": {
+    "i156": {
         "type": "item",
-        "sid": "i835",
-        "name": "TR-Poison",
-        "martyCategory": "types"
+        "names": [
+            "Persim Berry",
+            "Bitter Berry"
+        ],
+        "sid": "i156"
+    },
+    "i204": {
+        "type": "item",
+        "names": [
+            "Petaya Berry"
+        ],
+        "sid": "i204"
+    },
+    "i762": {
+        "type": "item",
+        "names": [
+            "Pidgeotite"
+        ],
+        "sid": "i762"
+    },
+    "i794": {
+        "type": "item",
+        "names": [
+            "Pikanium Z"
+        ],
+        "sid": "i794"
     },
     "i836": {
         "type": "item",
-        "sid": "i836",
-        "name": "TR-Psychic",
-        "martyCategory": "types"
+        "names": [
+            "Pikashunium Z"
+        ],
+        "sid": "i836"
     },
-    "i837": {
+    "i168": {
         "type": "item",
-        "sid": "i837",
-        "name": "TR-Rock",
-        "martyCategory": "types"
+        "names": [
+            "Pinap Berry"
+        ],
+        "sid": "i168"
     },
-    "i838": {
+    "i671": {
         "type": "item",
-        "sid": "i838",
-        "name": "TR-Steel",
-        "martyCategory": "types"
+        "names": [
+            "Pinsirite"
+        ],
+        "sid": "i671"
     },
-    "i839": {
+    "i644": {
         "type": "item",
-        "sid": "i839",
-        "name": "TR-Water",
-        "martyCategory": "types"
+        "names": [
+            "Pixie Plate"
+        ],
+        "sid": "i644"
     },
-    "i840": {
+    "i573": {
         "type": "item",
-        "sid": "i840",
-        "name": "Crucibellite",
-        "martyCategory": "battle"
+        "names": [
+            "Plume Fossil"
+        ],
+        "sid": "i573"
     },
-    "i841": {
+    "i245": {
         "type": "item",
-        "sid": "i841",
-        "name": "Galarica Cuff",
-        "martyCategory": "nonbattle"
+        "names": [
+            "Poison Barb"
+        ],
+        "sid": "i245"
     },
-    "i842": {
+    "i554": {
         "type": "item",
-        "sid": "i842",
-        "name": "Galarica Wreath",
-        "martyCategory": "nonbattle"
+        "names": [
+            "Poison Gem"
+        ],
+        "sid": "i554"
+    },
+    "i906": {
+        "type": "item",
+        "names": [
+            "Poison Memory"
+        ],
+        "sid": "i906"
+    },
+    "i783": {
+        "type": "item",
+        "names": [
+            "Poisonium Z"
+        ],
+        "sid": "i783"
+    },
+    "i4": {
+        "type": "item",
+        "names": [
+            "Poke Ball"
+        ],
+        "sid": "i4"
+    },
+    "i169": {
+        "type": "item",
+        "names": [
+            "Pomeg Berry"
+        ],
+        "sid": "i169"
+    },
+    "i293": {
+        "type": "item",
+        "names": [
+            "Power Anklet"
+        ],
+        "sid": "i293"
+    },
+    "i292": {
+        "type": "item",
+        "names": [
+            "Power Band"
+        ],
+        "sid": "i292"
+    },
+    "i290": {
+        "type": "item",
+        "names": [
+            "Power Belt"
+        ],
+        "sid": "i290"
+    },
+    "i289": {
+        "type": "item",
+        "names": [
+            "Power Bracer"
+        ],
+        "sid": "i289"
+    },
+    "i271": {
+        "type": "item",
+        "names": [
+            "Power Herb"
+        ],
+        "sid": "i271"
+    },
+    "i291": {
+        "type": "item",
+        "names": [
+            "Power Lens"
+        ],
+        "sid": "i291"
+    },
+    "i294": {
+        "type": "item",
+        "names": [
+            "Power Weight"
+        ],
+        "sid": "i294"
+    },
+    "i12": {
+        "type": "item",
+        "names": [
+            "Premier Ball"
+        ],
+        "sid": "i12"
+    },
+    "i800": {
+        "type": "item",
+        "names": [
+            "Primarium Z"
+        ],
+        "sid": "i800"
+    },
+    "i537": {
+        "type": "item",
+        "names": [
+            "Prism Scale"
+        ],
+        "sid": "i537"
+    },
+    "i880": {
+        "type": "item",
+        "names": [
+            "Protective Pads"
+        ],
+        "sid": "i880"
+    },
+    "i321": {
+        "type": "item",
+        "names": [
+            "Protector"
+        ],
+        "sid": "i321"
+    },
+    "i557": {
+        "type": "item",
+        "names": [
+            "Psychic Gem"
+        ],
+        "sid": "i557"
+    },
+    "i916": {
+        "type": "item",
+        "names": [
+            "Psychic Memory"
+        ],
+        "sid": "i916"
+    },
+    "i882": {
+        "type": "item",
+        "names": [
+            "Psychic Seed"
+        ],
+        "sid": "i882"
+    },
+    "i786": {
+        "type": "item",
+        "names": [
+            "Psychium Z"
+        ],
+        "sid": "i786"
+    },
+    "i171": {
+        "type": "item",
+        "names": [
+            "Qualot Berry"
+        ],
+        "sid": "i171"
+    },
+    "i15": {
+        "type": "item",
+        "names": [
+            "Quick Ball"
+        ],
+        "sid": "i15"
+    },
+    "i217": {
+        "type": "item",
+        "names": [
+            "Quick Claw"
+        ],
+        "sid": "i217"
+    },
+    "i274": {
+        "type": "item",
+        "names": [
+            "Quick Powder"
+        ],
+        "sid": "i274"
+    },
+    "i177": {
+        "type": "item",
+        "names": [
+            "Rabuta Berry"
+        ],
+        "sid": "i177"
+    },
+    "i106": {
+        "type": "item",
+        "names": [
+            "Rare Bone"
+        ],
+        "sid": "i106"
+    },
+    "i152": {
+        "type": "item",
+        "names": [
+            "Rawst Berry",
+            "Ice Berry"
+        ],
+        "sid": "i152"
+    },
+    "i326": {
+        "type": "item",
+        "names": [
+            "Razor Claw"
+        ],
+        "sid": "i326"
+    },
+    "i327": {
+        "type": "item",
+        "names": [
+            "Razor Fang"
+        ],
+        "sid": "i327"
+    },
+    "i164": {
+        "type": "item",
+        "names": [
+            "Razz Berry"
+        ],
+        "sid": "i164"
+    },
+    "i325": {
+        "type": "item",
+        "names": [
+            "Reaper Cloth"
+        ],
+        "sid": "i325"
+    },
+    "i542": {
+        "type": "item",
+        "names": [
+            "Red Card"
+        ],
+        "sid": "i542"
+    },
+    "i534": {
+        "type": "item",
+        "names": [
+            "Red Orb"
+        ],
+        "sid": "i534"
+    },
+    "i9": {
+        "type": "item",
+        "names": [
+            "Repeat Ball"
+        ],
+        "sid": "i9"
+    },
+    "i1115": {
+        "type": "item",
+        "names": [
+            "Ribbon Sweet"
+        ],
+        "sid": "i1115"
+    },
+    "i187": {
+        "type": "item",
+        "names": [
+            "Rindo Berry"
+        ],
+        "sid": "i187"
+    },
+    "i543": {
+        "type": "item",
+        "names": [
+            "Ring Target"
+        ],
+        "sid": "i543"
+    },
+    "i559": {
+        "type": "item",
+        "names": [
+            "Rock Gem"
+        ],
+        "sid": "i559"
+    },
+    "i315": {
+        "type": "item",
+        "names": [
+            "Rock Incense"
+        ],
+        "sid": "i315"
+    },
+    "i908": {
+        "type": "item",
+        "names": [
+            "Rock Memory"
+        ],
+        "sid": "i908"
+    },
+    "i788": {
+        "type": "item",
+        "names": [
+            "Rockium Z"
+        ],
+        "sid": "i788"
+    },
+    "i540": {
+        "type": "item",
+        "names": [
+            "Rocky Helmet"
+        ],
+        "sid": "i540"
+    },
+    "i1122": {
+        "type": "item",
+        "names": [
+            "Room Service"
+        ],
+        "sid": "i1122"
+    },
+    "i99": {
+        "type": "item",
+        "names": [
+            "Root Fossil"
+        ],
+        "sid": "i99"
+    },
+    "i318": {
+        "type": "item",
+        "names": [
+            "Rose Incense"
+        ],
+        "sid": "i318"
+    },
+    "i686": {
+        "type": "item",
+        "names": [
+            "Roseli Berry"
+        ],
+        "sid": "i686"
+    },
+    "i212": {
+        "type": "item",
+        "names": [
+            "Rowap Berry"
+        ],
+        "sid": "i212"
+    },
+    "i1104": {
+        "type": "item",
+        "names": [
+            "Rusted Shield"
+        ],
+        "sid": "i1104"
+    },
+    "i1103": {
+        "type": "item",
+        "names": [
+            "Rusted Sword"
+        ],
+        "sid": "i1103"
+    },
+    "i754": {
+        "type": "item",
+        "names": [
+            "Sablenite"
+        ],
+        "sid": "i754"
+    },
+    "i647": {
+        "type": "item",
+        "names": [
+            "Sachet"
+        ],
+        "sid": "i647"
+    },
+    "i5": {
+        "type": "item",
+        "names": [
+            "Safari Ball"
+        ],
+        "sid": "i5"
+    },
+    "i650": {
+        "type": "item",
+        "names": [
+            "Safety Goggles"
+        ],
+        "sid": "i650"
+    },
+    "i711": {
+        "type": "item",
+        "names": [
+            "Sail Fossil"
+        ],
+        "sid": "i711"
+    },
+    "i203": {
+        "type": "item",
+        "names": [
+            "Salac Berry"
+        ],
+        "sid": "i203"
+    },
+    "i769": {
+        "type": "item",
+        "names": [
+            "Salamencite"
+        ],
+        "sid": "i769"
+    },
+    "i753": {
+        "type": "item",
+        "names": [
+            "Sceptilite"
+        ],
+        "sid": "i753"
+    },
+    "i670": {
+        "type": "item",
+        "names": [
+            "Scizorite"
+        ],
+        "sid": "i670"
+    },
+    "i232": {
+        "type": "item",
+        "names": [
+            "Scope Lens"
+        ],
+        "sid": "i232"
+    },
+    "i254": {
+        "type": "item",
+        "names": [
+            "Sea Incense"
+        ],
+        "sid": "i254"
+    },
+    "i244": {
+        "type": "item",
+        "names": [
+            "Sharp Beak"
+        ],
+        "sid": "i244"
+    },
+    "i759": {
+        "type": "item",
+        "names": [
+            "Sharpedonite"
+        ],
+        "sid": "i759"
+    },
+    "i295": {
+        "type": "item",
+        "names": [
+            "Shed Shell"
+        ],
+        "sid": "i295"
+    },
+    "i253": {
+        "type": "item",
+        "names": [
+            "Shell Bell"
+        ],
+        "sid": "i253"
+    },
+    "i107": {
+        "type": "item",
+        "names": [
+            "Shiny Stone"
+        ],
+        "sid": "i107"
+    },
+    "i117": {
+        "type": "item",
+        "names": [
+            "Shock Drive"
+        ],
+        "sid": "i117"
+    },
+    "i191": {
+        "type": "item",
+        "names": [
+            "Shuca Berry"
+        ],
+        "sid": "i191"
+    },
+    "i251": {
+        "type": "item",
+        "names": [
+            "Silk Scarf",
+            "Pink Bow",
+            "Polkadot Bow"
+        ],
+        "sid": "i251"
+    },
+    "i222": {
+        "type": "item",
+        "names": [
+            "Silver Powder"
+        ],
+        "sid": "i222"
+    },
+    "i158": {
+        "type": "item",
+        "names": [
+            "Sitrus Berry",
+            "Gold Berry"
+        ],
+        "sid": "i158"
+    },
+    "i105": {
+        "type": "item",
+        "names": [
+            "Skull Fossil"
+        ],
+        "sid": "i105"
+    },
+    "i306": {
+        "type": "item",
+        "names": [
+            "Sky Plate"
+        ],
+        "sid": "i306"
+    },
+    "i760": {
+        "type": "item",
+        "names": [
+            "Slowbronite"
+        ],
+        "sid": "i760"
+    },
+    "i283": {
+        "type": "item",
+        "names": [
+            "Smooth Rock"
+        ],
+        "sid": "i283"
+    },
+    "i804": {
+        "type": "item",
+        "names": [
+            "Snorlium Z"
+        ],
+        "sid": "i804"
+    },
+    "i649": {
+        "type": "item",
+        "names": [
+            "Snowball"
+        ],
+        "sid": "i649"
+    },
+    "i237": {
+        "type": "item",
+        "names": [
+            "Soft Sand"
+        ],
+        "sid": "i237"
+    },
+    "i921": {
+        "type": "item",
+        "names": [
+            "Solganium Z"
+        ],
+        "sid": "i921"
+    },
+    "i225": {
+        "type": "item",
+        "names": [
+            "Soul Dew"
+        ],
+        "sid": "i225"
+    },
+    "i247": {
+        "type": "item",
+        "names": [
+            "Spell Tag"
+        ],
+        "sid": "i247"
+    },
+    "i179": {
+        "type": "item",
+        "names": [
+            "Spelon Berry"
+        ],
+        "sid": "i179"
+    },
+    "i299": {
+        "type": "item",
+        "names": [
+            "Splash Plate"
+        ],
+        "sid": "i299"
+    },
+    "i310": {
+        "type": "item",
+        "names": [
+            "Spooky Plate"
+        ],
+        "sid": "i310"
+    },
+    "i499": {
+        "type": "item",
+        "names": [
+            "Sport Ball"
+        ],
+        "sid": "i499"
+    },
+    "i207": {
+        "type": "item",
+        "names": [
+            "Starf Berry"
+        ],
+        "sid": "i207"
+    },
+    "i1114": {
+        "type": "item",
+        "names": [
+            "Star Sweet"
+        ],
+        "sid": "i1114"
+    },
+    "i761": {
+        "type": "item",
+        "names": [
+            "Steelixite"
+        ],
+        "sid": "i761"
+    },
+    "i563": {
+        "type": "item",
+        "names": [
+            "Steel Gem"
+        ],
+        "sid": "i563"
+    },
+    "i911": {
+        "type": "item",
+        "names": [
+            "Steel Memory"
+        ],
+        "sid": "i911"
+    },
+    "i792": {
+        "type": "item",
+        "names": [
+            "Steelium Z"
+        ],
+        "sid": "i792"
+    },
+    "i288": {
+        "type": "item",
+        "names": [
+            "Sticky Barb"
+        ],
+        "sid": "i288"
+    },
+    "i309": {
+        "type": "item",
+        "names": [
+            "Stone Plate"
+        ],
+        "sid": "i309"
+    },
+    "i1109": {
+        "type": "item",
+        "names": [
+            "Strawberry Sweet"
+        ],
+        "sid": "i1109"
+    },
+    "i80": {
+        "type": "item",
+        "names": [
+            "Sun Stone"
+        ],
+        "sid": "i80"
+    },
+    "i752": {
+        "type": "item",
+        "names": [
+            "Swampertite"
+        ],
+        "sid": "i752"
+    },
+    "i1116": {
+        "type": "item",
+        "names": [
+            "Sweet Apple"
+        ],
+        "sid": "i1116"
+    },
+    "i174": {
+        "type": "item",
+        "names": [
+            "Tamato Berry"
+        ],
+        "sid": "i174"
+    },
+    "i194": {
+        "type": "item",
+        "names": [
+            "Tanga Berry"
+        ],
+        "sid": "i194"
+    },
+    "i801": {
+        "type": "item",
+        "names": [
+            "Tapunium Z"
+        ],
+        "sid": "i801"
+    },
+    "i1117": {
+        "type": "item",
+        "names": [
+            "Tart Apple"
+        ],
+        "sid": "i1117"
+    },
+    "i879": {
+        "type": "item",
+        "names": [
+            "Terrain Extender"
+        ],
+        "sid": "i879"
+    },
+    "i258": {
+        "type": "item",
+        "names": [
+            "Thick Club"
+        ],
+        "sid": "i258"
+    },
+    "i1118": {
+        "type": "item",
+        "names": [
+            "Throat Spray"
+        ],
+        "sid": "i1118"
+    },
+    "i83": {
+        "type": "item",
+        "names": [
+            "Thunder Stone"
+        ],
+        "sid": "i83"
+    },
+    "i10": {
+        "type": "item",
+        "names": [
+            "Timer Ball"
+        ],
+        "sid": "i10"
+    },
+    "i272": {
+        "type": "item",
+        "names": [
+            "Toxic Orb"
+        ],
+        "sid": "i272"
+    },
+    "i304": {
+        "type": "item",
+        "names": [
+            "Toxic Plate"
+        ],
+        "sid": "i304"
+    },
+    "i1130": {
+        "type": "item",
+        "names": [
+            "TR00"
+        ],
+        "sid": "i1130"
+    },
+    "i1131": {
+        "type": "item",
+        "names": [
+            "TR01"
+        ],
+        "sid": "i1131"
+    },
+    "i1132": {
+        "type": "item",
+        "names": [
+            "TR02"
+        ],
+        "sid": "i1132"
+    },
+    "i1133": {
+        "type": "item",
+        "names": [
+            "TR03"
+        ],
+        "sid": "i1133"
+    },
+    "i1134": {
+        "type": "item",
+        "names": [
+            "TR04"
+        ],
+        "sid": "i1134"
+    },
+    "i1135": {
+        "type": "item",
+        "names": [
+            "TR05"
+        ],
+        "sid": "i1135"
+    },
+    "i1136": {
+        "type": "item",
+        "names": [
+            "TR06"
+        ],
+        "sid": "i1136"
+    },
+    "i1137": {
+        "type": "item",
+        "names": [
+            "TR07"
+        ],
+        "sid": "i1137"
+    },
+    "i1138": {
+        "type": "item",
+        "names": [
+            "TR08"
+        ],
+        "sid": "i1138"
+    },
+    "i1139": {
+        "type": "item",
+        "names": [
+            "TR09"
+        ],
+        "sid": "i1139"
+    },
+    "i1140": {
+        "type": "item",
+        "names": [
+            "TR10"
+        ],
+        "sid": "i1140"
+    },
+    "i1141": {
+        "type": "item",
+        "names": [
+            "TR11"
+        ],
+        "sid": "i1141"
+    },
+    "i1142": {
+        "type": "item",
+        "names": [
+            "TR12"
+        ],
+        "sid": "i1142"
+    },
+    "i1143": {
+        "type": "item",
+        "names": [
+            "TR13"
+        ],
+        "sid": "i1143"
+    },
+    "i1144": {
+        "type": "item",
+        "names": [
+            "TR14"
+        ],
+        "sid": "i1144"
+    },
+    "i1145": {
+        "type": "item",
+        "names": [
+            "TR15"
+        ],
+        "sid": "i1145"
+    },
+    "i1146": {
+        "type": "item",
+        "names": [
+            "TR16"
+        ],
+        "sid": "i1146"
+    },
+    "i1147": {
+        "type": "item",
+        "names": [
+            "TR17"
+        ],
+        "sid": "i1147"
+    },
+    "i1148": {
+        "type": "item",
+        "names": [
+            "TR18"
+        ],
+        "sid": "i1148"
+    },
+    "i1149": {
+        "type": "item",
+        "names": [
+            "TR19"
+        ],
+        "sid": "i1149"
+    },
+    "i1150": {
+        "type": "item",
+        "names": [
+            "TR20"
+        ],
+        "sid": "i1150"
+    },
+    "i1151": {
+        "type": "item",
+        "names": [
+            "TR21"
+        ],
+        "sid": "i1151"
+    },
+    "i1152": {
+        "type": "item",
+        "names": [
+            "TR22"
+        ],
+        "sid": "i1152"
+    },
+    "i1153": {
+        "type": "item",
+        "names": [
+            "TR23"
+        ],
+        "sid": "i1153"
+    },
+    "i1154": {
+        "type": "item",
+        "names": [
+            "TR24"
+        ],
+        "sid": "i1154"
+    },
+    "i1155": {
+        "type": "item",
+        "names": [
+            "TR25"
+        ],
+        "sid": "i1155"
+    },
+    "i1156": {
+        "type": "item",
+        "names": [
+            "TR26"
+        ],
+        "sid": "i1156"
+    },
+    "i1157": {
+        "type": "item",
+        "names": [
+            "TR27"
+        ],
+        "sid": "i1157"
+    },
+    "i1158": {
+        "type": "item",
+        "names": [
+            "TR28"
+        ],
+        "sid": "i1158"
+    },
+    "i1159": {
+        "type": "item",
+        "names": [
+            "TR29"
+        ],
+        "sid": "i1159"
+    },
+    "i1160": {
+        "type": "item",
+        "names": [
+            "TR30"
+        ],
+        "sid": "i1160"
+    },
+    "i1161": {
+        "type": "item",
+        "names": [
+            "TR31"
+        ],
+        "sid": "i1161"
+    },
+    "i1162": {
+        "type": "item",
+        "names": [
+            "TR32"
+        ],
+        "sid": "i1162"
+    },
+    "i1163": {
+        "type": "item",
+        "names": [
+            "TR33"
+        ],
+        "sid": "i1163"
+    },
+    "i1164": {
+        "type": "item",
+        "names": [
+            "TR34"
+        ],
+        "sid": "i1164"
+    },
+    "i1165": {
+        "type": "item",
+        "names": [
+            "TR35"
+        ],
+        "sid": "i1165"
+    },
+    "i1166": {
+        "type": "item",
+        "names": [
+            "TR36"
+        ],
+        "sid": "i1166"
+    },
+    "i1167": {
+        "type": "item",
+        "names": [
+            "TR37"
+        ],
+        "sid": "i1167"
+    },
+    "i1168": {
+        "type": "item",
+        "names": [
+            "TR38"
+        ],
+        "sid": "i1168"
+    },
+    "i1169": {
+        "type": "item",
+        "names": [
+            "TR39"
+        ],
+        "sid": "i1169"
+    },
+    "i1170": {
+        "type": "item",
+        "names": [
+            "TR40"
+        ],
+        "sid": "i1170"
+    },
+    "i1171": {
+        "type": "item",
+        "names": [
+            "TR41"
+        ],
+        "sid": "i1171"
+    },
+    "i1172": {
+        "type": "item",
+        "names": [
+            "TR42"
+        ],
+        "sid": "i1172"
+    },
+    "i1173": {
+        "type": "item",
+        "names": [
+            "TR43"
+        ],
+        "sid": "i1173"
+    },
+    "i1174": {
+        "type": "item",
+        "names": [
+            "TR44"
+        ],
+        "sid": "i1174"
+    },
+    "i1175": {
+        "type": "item",
+        "names": [
+            "TR45"
+        ],
+        "sid": "i1175"
+    },
+    "i1176": {
+        "type": "item",
+        "names": [
+            "TR46"
+        ],
+        "sid": "i1176"
+    },
+    "i1177": {
+        "type": "item",
+        "names": [
+            "TR47"
+        ],
+        "sid": "i1177"
+    },
+    "i1178": {
+        "type": "item",
+        "names": [
+            "TR48"
+        ],
+        "sid": "i1178"
+    },
+    "i1179": {
+        "type": "item",
+        "names": [
+            "TR49"
+        ],
+        "sid": "i1179"
+    },
+    "i1180": {
+        "type": "item",
+        "names": [
+            "TR50"
+        ],
+        "sid": "i1180"
+    },
+    "i1181": {
+        "type": "item",
+        "names": [
+            "TR51"
+        ],
+        "sid": "i1181"
+    },
+    "i1182": {
+        "type": "item",
+        "names": [
+            "TR52"
+        ],
+        "sid": "i1182"
+    },
+    "i1183": {
+        "type": "item",
+        "names": [
+            "TR53"
+        ],
+        "sid": "i1183"
+    },
+    "i1184": {
+        "type": "item",
+        "names": [
+            "TR54"
+        ],
+        "sid": "i1184"
+    },
+    "i1185": {
+        "type": "item",
+        "names": [
+            "TR55"
+        ],
+        "sid": "i1185"
+    },
+    "i1186": {
+        "type": "item",
+        "names": [
+            "TR56"
+        ],
+        "sid": "i1186"
+    },
+    "i1187": {
+        "type": "item",
+        "names": [
+            "TR57"
+        ],
+        "sid": "i1187"
+    },
+    "i1188": {
+        "type": "item",
+        "names": [
+            "TR58"
+        ],
+        "sid": "i1188"
+    },
+    "i1189": {
+        "type": "item",
+        "names": [
+            "TR59"
+        ],
+        "sid": "i1189"
+    },
+    "i1190": {
+        "type": "item",
+        "names": [
+            "TR60"
+        ],
+        "sid": "i1190"
+    },
+    "i1191": {
+        "type": "item",
+        "names": [
+            "TR61"
+        ],
+        "sid": "i1191"
+    },
+    "i1192": {
+        "type": "item",
+        "names": [
+            "TR62"
+        ],
+        "sid": "i1192"
+    },
+    "i1193": {
+        "type": "item",
+        "names": [
+            "TR63"
+        ],
+        "sid": "i1193"
+    },
+    "i1194": {
+        "type": "item",
+        "names": [
+            "TR64"
+        ],
+        "sid": "i1194"
+    },
+    "i1195": {
+        "type": "item",
+        "names": [
+            "TR65"
+        ],
+        "sid": "i1195"
+    },
+    "i1196": {
+        "type": "item",
+        "names": [
+            "TR66"
+        ],
+        "sid": "i1196"
+    },
+    "i1197": {
+        "type": "item",
+        "names": [
+            "TR67"
+        ],
+        "sid": "i1197"
+    },
+    "i1198": {
+        "type": "item",
+        "names": [
+            "TR68"
+        ],
+        "sid": "i1198"
+    },
+    "i1199": {
+        "type": "item",
+        "names": [
+            "TR69"
+        ],
+        "sid": "i1199"
+    },
+    "i1200": {
+        "type": "item",
+        "names": [
+            "TR70"
+        ],
+        "sid": "i1200"
+    },
+    "i1201": {
+        "type": "item",
+        "names": [
+            "TR71"
+        ],
+        "sid": "i1201"
+    },
+    "i1202": {
+        "type": "item",
+        "names": [
+            "TR72"
+        ],
+        "sid": "i1202"
+    },
+    "i1203": {
+        "type": "item",
+        "names": [
+            "TR73"
+        ],
+        "sid": "i1203"
+    },
+    "i1204": {
+        "type": "item",
+        "names": [
+            "TR74"
+        ],
+        "sid": "i1204"
+    },
+    "i1205": {
+        "type": "item",
+        "names": [
+            "TR75"
+        ],
+        "sid": "i1205"
+    },
+    "i1206": {
+        "type": "item",
+        "names": [
+            "TR76"
+        ],
+        "sid": "i1206"
+    },
+    "i1207": {
+        "type": "item",
+        "names": [
+            "TR77"
+        ],
+        "sid": "i1207"
+    },
+    "i1208": {
+        "type": "item",
+        "names": [
+            "TR78"
+        ],
+        "sid": "i1208"
+    },
+    "i1209": {
+        "type": "item",
+        "names": [
+            "TR79"
+        ],
+        "sid": "i1209"
+    },
+    "i1210": {
+        "type": "item",
+        "names": [
+            "TR80"
+        ],
+        "sid": "i1210"
+    },
+    "i1211": {
+        "type": "item",
+        "names": [
+            "TR81"
+        ],
+        "sid": "i1211"
+    },
+    "i1212": {
+        "type": "item",
+        "names": [
+            "TR82"
+        ],
+        "sid": "i1212"
+    },
+    "i1213": {
+        "type": "item",
+        "names": [
+            "TR83"
+        ],
+        "sid": "i1213"
+    },
+    "i1214": {
+        "type": "item",
+        "names": [
+            "TR84"
+        ],
+        "sid": "i1214"
+    },
+    "i1215": {
+        "type": "item",
+        "names": [
+            "TR85"
+        ],
+        "sid": "i1215"
+    },
+    "i1216": {
+        "type": "item",
+        "names": [
+            "TR86"
+        ],
+        "sid": "i1216"
+    },
+    "i1217": {
+        "type": "item",
+        "names": [
+            "TR87"
+        ],
+        "sid": "i1217"
+    },
+    "i1218": {
+        "type": "item",
+        "names": [
+            "TR88"
+        ],
+        "sid": "i1218"
+    },
+    "i1219": {
+        "type": "item",
+        "names": [
+            "TR89"
+        ],
+        "sid": "i1219"
+    },
+    "i1220": {
+        "type": "item",
+        "names": [
+            "TR90"
+        ],
+        "sid": "i1220"
+    },
+    "i1221": {
+        "type": "item",
+        "names": [
+            "TR91"
+        ],
+        "sid": "i1221"
+    },
+    "i1222": {
+        "type": "item",
+        "names": [
+            "TR92"
+        ],
+        "sid": "i1222"
+    },
+    "i1223": {
+        "type": "item",
+        "names": [
+            "TR93"
+        ],
+        "sid": "i1223"
+    },
+    "i1224": {
+        "type": "item",
+        "names": [
+            "TR94"
+        ],
+        "sid": "i1224"
+    },
+    "i1225": {
+        "type": "item",
+        "names": [
+            "TR95"
+        ],
+        "sid": "i1225"
+    },
+    "i1226": {
+        "type": "item",
+        "names": [
+            "TR96"
+        ],
+        "sid": "i1226"
+    },
+    "i1227": {
+        "type": "item",
+        "names": [
+            "TR97"
+        ],
+        "sid": "i1227"
+    },
+    "i1228": {
+        "type": "item",
+        "names": [
+            "TR98"
+        ],
+        "sid": "i1228"
+    },
+    "i1229": {
+        "type": "item",
+        "names": [
+            "TR99"
+        ],
+        "sid": "i1229"
+    },
+    "i248": {
+        "type": "item",
+        "names": [
+            "Twisted Spoon"
+        ],
+        "sid": "i248"
+    },
+    "i669": {
+        "type": "item",
+        "names": [
+            "Tyranitarite"
+        ],
+        "sid": "i669"
+    },
+    "i2": {
+        "type": "item",
+        "names": [
+            "Ultra Ball"
+        ],
+        "sid": "i2"
+    },
+    "i923": {
+        "type": "item",
+        "names": [
+            "Ultranecrozium Z"
+        ],
+        "sid": "i923"
+    },
+    "i252": {
+        "type": "item",
+        "names": [
+            "Up-Grade"
+        ],
+        "sid": "i252"
+    },
+    "i1123": {
+        "type": "item",
+        "names": [
+            "Utility Umbrella"
+        ],
+        "sid": "i1123"
+    },
+    "i659": {
+        "type": "item",
+        "names": [
+            "Venusaurite"
+        ],
+        "sid": "i659"
+    },
+    "i186": {
+        "type": "item",
+        "names": [
+            "Wacan Berry"
+        ],
+        "sid": "i186"
+    },
+    "i549": {
+        "type": "item",
+        "names": [
+            "Water Gem"
+        ],
+        "sid": "i549"
+    },
+    "i913": {
+        "type": "item",
+        "names": [
+            "Water Memory"
+        ],
+        "sid": "i913"
+    },
+    "i84": {
+        "type": "item",
+        "names": [
+            "Water Stone"
+        ],
+        "sid": "i84"
+    },
+    "i778": {
+        "type": "item",
+        "names": [
+            "Waterium Z"
+        ],
+        "sid": "i778"
+    },
+    "i181": {
+        "type": "item",
+        "names": [
+            "Watmel Berry"
+        ],
+        "sid": "i181"
+    },
+    "i317": {
+        "type": "item",
+        "names": [
+            "Wave Incense"
+        ],
+        "sid": "i317"
+    },
+    "i639": {
+        "type": "item",
+        "names": [
+            "Weakness Policy"
+        ],
+        "sid": "i639"
+    },
+    "i167": {
+        "type": "item",
+        "names": [
+            "Wepear Berry"
+        ],
+        "sid": "i167"
+    },
+    "i646": {
+        "type": "item",
+        "names": [
+            "Whipped Dream"
+        ],
+        "sid": "i646"
+    },
+    "i214": {
+        "type": "item",
+        "names": [
+            "White Herb"
+        ],
+        "sid": "i214"
+    },
+    "i265": {
+        "type": "item",
+        "names": [
+            "Wide Lens"
+        ],
+        "sid": "i265"
+    },
+    "i160": {
+        "type": "item",
+        "names": [
+            "Wiki Berry"
+        ],
+        "sid": "i160"
+    },
+    "i267": {
+        "type": "item",
+        "names": [
+            "Wise Glasses"
+        ],
+        "sid": "i267"
+    },
+    "i188": {
+        "type": "item",
+        "names": [
+            "Yache Berry"
+        ],
+        "sid": "i188"
+    },
+    "i300": {
+        "type": "item",
+        "names": [
+            "Zap Plate"
+        ],
+        "sid": "i300"
+    },
+    "i276": {
+        "type": "item",
+        "names": [
+            "Zoom Lens"
+        ],
+        "sid": "i276"
+    },
+    "i0": {
+        "type": "item",
+        "names": [
+            "Berserk Gene"
+        ],
+        "sid": "i0"
+    },
+    "i536870913": {
+        "type": "item",
+        "names": [
+            "Crucibellite"
+        ],
+        "sid": "i536870913"
+    },
+    "i536870914": {
+        "type": "item",
+        "names": [
+            "Vile Vial"
+        ],
+        "sid": "i536870914"
     }
 }
