@@ -44,7 +44,7 @@ function itemspritecopy(f, {dir, ext}) {
     }
 }
 
-for (const f of list("newsrc/models")) {
+for (const f of list("src/models")) {
     spritecopy(f, {dir: "xy"});
 }
 

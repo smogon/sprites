@@ -31,15 +31,15 @@ function spritecopy(f, {dir, ext}) {
     copy(f, {dir, ext, name});
 }
 
-for (const f of list("newsrc/models")) {
+for (const f of list("src/models")) {
     spritecopy(f, {dir: "ani"});
 }
 
-for (const f of list("newsrc/sprites/gen5")) {
+for (const f of list("src/sprites/gen5")) {
     spritecopy(f, {dir: "gen5ani"});
 }
 
-for (const f of list("newsrc/afd")) {
+for (const f of list("src/afd")) {
     spritecopy(f, {dir: "afd"});
 }
 

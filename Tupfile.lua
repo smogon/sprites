@@ -2,7 +2,7 @@
 -- Generate uniform size minisprites
 
 foreach_rule(
-    "newsrc/minisprites/pokemon/gen6/*.png",
+    "src/minisprites/pokemon/gen6/*.png",
     {
         display="pad g6 minisprite %f",
         pad{w=40, h=30},
@@ -12,7 +12,7 @@ foreach_rule(
 )
 
 foreach_rule(
-    "newsrc/minisprites/items/*.png",
+    "src/minisprites/items/*.png",
     {
         display="pad item minisprite %f",
         pad{w=24, h=24},
@@ -22,7 +22,7 @@ foreach_rule(
 )
 
 foreach_rule(
-    "newsrc/minisprites/pokemon/gen6/*.png",
+    "src/minisprites/pokemon/gen6/*.png",
     {
         display="trim g6 minisprite %f",
         trimimg{},
@@ -32,7 +32,7 @@ foreach_rule(
 )
 
 foreach_rule(
-    "newsrc/minisprites/items/*.png",
+    "src/minisprites/items/*.png",
     {
         display="trim item minisprite %f",
         trimimg{},
@@ -77,9 +77,9 @@ rule(
 -- PS pokeball icons
 
 local balls = {
-    "src/noncanonical/ui/battle/Ball-Normal.png",
-    "src/noncanonical/ui/battle/Ball-Sick.png",
-    "src/noncanonical/ui/battle/Ball-Null.png",
+    "src/_uncategorized/noncanonical/ui/battle/Ball-Normal.png",
+    "src/_uncategorized/noncanonical/ui/battle/Ball-Sick.png",
+    "src/_uncategorized/noncanonical/ui/battle/Ball-Null.png",
 }
 
 rule(
@@ -94,7 +94,7 @@ rule(
 
 -- Smogdex social images
 
-local input = spriteglob("newsrc/models/*", {b = false, s = false})
+local input = spriteglob("src/models/*", {b = false, s = false})
 
 foreach_rule(
     input,
@@ -133,7 +133,7 @@ foreach_rule(
 -- Padded Dex
 
 local dexOutput = foreach_rule(
-    "newsrc/dex/*",
+    "src/dex/*",
     {
         display="pad dex %f",
         pad{w=120, h=120},
@@ -152,7 +152,7 @@ end
 
 local dexMissing = {}
 for file in iter(spriteglob(
-                     {"newsrc/sprites/gen5/*.gif", "newsrc/models/*.gif"},
+                     {"src/sprites/gen5/*.gif", "src/models/*.gif"},
                      {b = false, s = false})) do
     local base = tup.base(file)
     if dexSet[base] then

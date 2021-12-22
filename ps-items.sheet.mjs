@@ -534,7 +534,7 @@ for (const {type, sid, names} of spritedata.entries()) {
     for (let name of names) {
         const id = toPSID(name);
         const filename = spritedata.formatFilename({id: sid});
-        found.set(id, path.join(root, "newsrc/minisprites/items", filename + ".png"));
+        found.set(id, path.join(root, "src/minisprites/items", filename + ".png"));
     }
 }
 

@@ -4,7 +4,7 @@ import path from 'path';
 import * as spritedata from '@smogon/sprite-data';
 import root from '@smogon/sprite-root';
 
-const srcDir = path.join(root, "newsrc");
+const srcDir = path.join(root, "src");
 const spritesDir = path.join(srcDir, "minisprites/pokemon/gen6");
 
 function toPSID(name) {
