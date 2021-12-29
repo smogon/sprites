@@ -105,6 +105,6 @@ export function formatFilename(si : InputSpriteFilename) {
         }
     }
     extra.sort();
-    s += extra.join();
+    s += extra.join('');
     return s;
 }
