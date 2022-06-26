@@ -357,6 +357,7 @@ const BattlePokemonIconIndexes = {
 	chromera: 1308 + 31,
 	venomicon: 1308 + 32,
 	venomiconepilogue: 1308 + 33,
+	saharaja: 1308 + 34,
 
 	syclar: 1344 + 0,
 	embirch: 1344 + 1,

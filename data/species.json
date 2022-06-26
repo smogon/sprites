@@ -10311,6 +10311,14 @@
         "forme": "Epilogue",
         "sid": "s536873025"
     },
+    "s536873088": {
+        "type": "specie",
+        "num": -68,
+        "formeNum": 0,
+        "base": "Saharaja",
+        "forme": "",
+        "sid": "s536873088"
+    },
     "s537030912": {
         "type": "specie",
         "num": -5000,
