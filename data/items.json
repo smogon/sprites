@@ -1,4 +1,11 @@
 {
+    "i1881": {
+        "type": "item",
+        "names": [
+            "Ability Shield"
+        ],
+        "sid": "i1881"
+    },
     "i674": {
         "type": "item",
         "names": [
@@ -126,6 +133,13 @@
         ],
         "sid": "i757"
     },
+    "i2344": {
+        "type": "item",
+        "names": [
+            "Auspicious Armor"
+        ],
+        "sid": "i2344"
+    },
     "i199": {
         "type": "item",
         "names": [
@@ -244,6 +258,13 @@
             "Blunder Policy"
         ],
         "sid": "i1121"
+    },
+    "i1880": {
+        "type": "item",
+        "names": [
+            "Booster Energy"
+        ],
+        "sid": "i1880"
     },
     "i795": {
         "type": "item",
@@ -408,6 +429,13 @@
         ],
         "sid": "i100"
     },
+    "i1882": {
+        "type": "item",
+        "names": [
+            "Clear Amulet"
+        ],
+        "sid": "i1882"
+    },
     "i1112": {
         "type": "item",
         "names": [
@@ -442,6 +470,13 @@
             "Cover Fossil"
         ],
         "sid": "i572"
+    },
+    "i1885": {
+        "type": "item",
+        "names": [
+            "Covert Cloak"
+        ],
+        "sid": "i1885"
     },
     "i1253": {
         "type": "item",
@@ -1397,6 +1432,13 @@
         ],
         "sid": "i269"
     },
+    "i1886": {
+        "type": "item",
+        "names": [
+            "Loaded Dice"
+        ],
+        "sid": "i1886"
+    },
     "i768": {
         "type": "item",
         "names": [
@@ -1523,6 +1565,13 @@
             "Mail"
         ],
         "sid": "i137"
+    },
+    "i1861": {
+        "type": "item",
+        "names": [
+            "Malicious Armor"
+        ],
+        "sid": "i1861"
     },
     "i682": {
         "type": "item",
@@ -1656,6 +1705,13 @@
             "Miracle Seed"
         ],
         "sid": "i239"
+    },
+    "i1883": {
+        "type": "item",
+        "names": [
+            "Mirror Herb"
+        ],
+        "sid": "i1883"
     },
     "i883": {
         "type": "item",
@@ -2030,6 +2086,13 @@
             "Psychium Z"
         ],
         "sid": "i786"
+    },
+    "i1884": {
+        "type": "item",
+        "names": [
+            "Punching Glove"
+        ],
+        "sid": "i1884"
     },
     "i171": {
         "type": "item",
