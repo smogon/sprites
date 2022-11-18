@@ -41,6 +41,40 @@ foreach_rule(
     "build/item-minisprites-trimmed/%b"
 )
 
+-- Gen 9
+
+foreach_rule(
+    "src/gen9species/*.png",
+    {
+        display="96x96 %f",
+        -- TODO, add customizable compression for gif
+        -- ... or investigate using webp instead of both png/gif here
+        "magick convert %f -trim +repage -resize 90x90 %o",
+        "gifsicle -O3 -b %o"
+    },
+    "build/gen9-modelslike/%B.gif"
+)
+
+foreach_rule(
+    "src/gen9species/*.png",
+    {
+        display="40x30 %f",
+        "magick convert \"%f[0]\" -trim +repage -resize 40x30 %o",
+        compresspng{config="MINISPRITE"}
+    },
+    "build/gen6-minisprites-trimmed/%b"
+)
+
+foreach_rule(
+    "src/gen9species/*.png",
+    {
+        display="40x30 %f",
+        "magick convert \"%f[0]\" -trim +repage -resize 40x30 -background transparent -gravity center -extent 40x30 %o",
+        compresspng{config="MINISPRITE"}
+    },
+    "build/gen6-minisprites-padded/%b"
+)
+
 -- PS spritesheet
 
 rule(
@@ -94,7 +128,7 @@ rule(
 
 -- Smogdex social images
 
-local input = spriteglob("src/models/*", {b = false, s = false})
+local input = spriteglob({"src/models/*", "src/gen9species/*"}, {b = false, s = false})
 
 foreach_rule(
     input,

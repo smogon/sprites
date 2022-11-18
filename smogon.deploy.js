@@ -48,6 +48,10 @@ for (const f of list("src/models")) {
     spritecopy(f, {dir: "xy"});
 }
 
+for (const f of list("build/gen9-modelslike")) {
+    spritecopy(f, {dir: "xy"});
+}
+
 for (const f of list("build/gen6-minisprites-trimmed")) {
     spritecopy(f, {dir: "xyicons"});
 }
