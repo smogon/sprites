@@ -10115,23 +10115,15 @@
         "type": "specie",
         "num": 917,
         "formeNum": 0,
-        "base": "Dudunsparce",
+        "base": "Tarountula",
         "forme": "",
         "sid": "s29344"
-    },
-    "s29345": {
-        "type": "specie",
-        "num": 917,
-        "formeNum": 1,
-        "base": "Dudunsparce",
-        "forme": "Three-Segment",
-        "sid": "s29345"
     },
     "s29376": {
         "type": "specie",
         "num": 918,
         "formeNum": 0,
-        "base": "Tarountula",
+        "base": "Spidops",
         "forme": "",
         "sid": "s29376"
     },
@@ -10139,7 +10131,7 @@
         "type": "specie",
         "num": 919,
         "formeNum": 0,
-        "base": "Spidops",
+        "base": "Nymble",
         "forme": "",
         "sid": "s29408"
     },
@@ -10147,7 +10139,7 @@
         "type": "specie",
         "num": 920,
         "formeNum": 0,
-        "base": "Nymble",
+        "base": "Lokix",
         "forme": "",
         "sid": "s29440"
     },
@@ -10155,7 +10147,7 @@
         "type": "specie",
         "num": 921,
         "formeNum": 0,
-        "base": "Lokix",
+        "base": "Pawmi",
         "forme": "",
         "sid": "s29472"
     },
@@ -10163,7 +10155,7 @@
         "type": "specie",
         "num": 922,
         "formeNum": 0,
-        "base": "Rellor",
+        "base": "Pawmo",
         "forme": "",
         "sid": "s29504"
     },
@@ -10171,7 +10163,7 @@
         "type": "specie",
         "num": 923,
         "formeNum": 0,
-        "base": "Rabsca",
+        "base": "Pawmot",
         "forme": "",
         "sid": "s29536"
     },
@@ -10179,7 +10171,7 @@
         "type": "specie",
         "num": 924,
         "formeNum": 0,
-        "base": "Greavard",
+        "base": "Tandemaus",
         "forme": "",
         "sid": "s29568"
     },
@@ -10187,15 +10179,23 @@
         "type": "specie",
         "num": 925,
         "formeNum": 0,
-        "base": "Houndstone",
+        "base": "Maushold",
         "forme": "",
         "sid": "s29600"
+    },
+    "s29601": {
+        "type": "specie",
+        "num": 925,
+        "formeNum": 1,
+        "base": "Maushold",
+        "forme": "Four",
+        "sid": "s29601"
     },
     "s29632": {
         "type": "specie",
         "num": 926,
         "formeNum": 0,
-        "base": "Flittle",
+        "base": "Fidough",
         "forme": "",
         "sid": "s29632"
     },
@@ -10203,7 +10203,7 @@
         "type": "specie",
         "num": 927,
         "formeNum": 0,
-        "base": "Espathra",
+        "base": "Dachsbun",
         "forme": "",
         "sid": "s29664"
     },
@@ -10211,7 +10211,7 @@
         "type": "specie",
         "num": 928,
         "formeNum": 0,
-        "base": "Farigiraf",
+        "base": "Smoliv",
         "forme": "",
         "sid": "s29696"
     },
@@ -10219,7 +10219,7 @@
         "type": "specie",
         "num": 929,
         "formeNum": 0,
-        "base": "Wiglett",
+        "base": "Dolliv",
         "forme": "",
         "sid": "s29728"
     },
@@ -10227,7 +10227,7 @@
         "type": "specie",
         "num": 930,
         "formeNum": 0,
-        "base": "Wugtrio",
+        "base": "Arboliva",
         "forme": "",
         "sid": "s29760"
     },
@@ -10235,15 +10235,39 @@
         "type": "specie",
         "num": 931,
         "formeNum": 0,
-        "base": "Dondozo",
+        "base": "Squawkabilly",
         "forme": "",
         "sid": "s29792"
+    },
+    "s29793": {
+        "type": "specie",
+        "num": 931,
+        "formeNum": 1,
+        "base": "Squawkabilly",
+        "forme": "Blue",
+        "sid": "s29793"
+    },
+    "s29794": {
+        "type": "specie",
+        "num": 931,
+        "formeNum": 2,
+        "base": "Squawkabilly",
+        "forme": "Yellow",
+        "sid": "s29794"
+    },
+    "s29795": {
+        "type": "specie",
+        "num": 931,
+        "formeNum": 3,
+        "base": "Squawkabilly",
+        "forme": "White",
+        "sid": "s29795"
     },
     "s29824": {
         "type": "specie",
         "num": 932,
         "formeNum": 0,
-        "base": "Veluza",
+        "base": "Nacli",
         "forme": "",
         "sid": "s29824"
     },
@@ -10251,7 +10275,7 @@
         "type": "specie",
         "num": 933,
         "formeNum": 0,
-        "base": "Finizen",
+        "base": "Naclstack",
         "forme": "",
         "sid": "s29856"
     },
@@ -10259,23 +10283,15 @@
         "type": "specie",
         "num": 934,
         "formeNum": 0,
-        "base": "Palafin",
+        "base": "Garganacl",
         "forme": "",
         "sid": "s29888"
-    },
-    "s29889": {
-        "type": "specie",
-        "num": 934,
-        "formeNum": 1,
-        "base": "Palafin",
-        "forme": "Hero",
-        "sid": "s29889"
     },
     "s29920": {
         "type": "specie",
         "num": 935,
         "formeNum": 0,
-        "base": "Smoliv",
+        "base": "Charcadet",
         "forme": "",
         "sid": "s29920"
     },
@@ -10283,7 +10299,7 @@
         "type": "specie",
         "num": 936,
         "formeNum": 0,
-        "base": "Dolliv",
+        "base": "Armarouge",
         "forme": "",
         "sid": "s29952"
     },
@@ -10291,7 +10307,7 @@
         "type": "specie",
         "num": 937,
         "formeNum": 0,
-        "base": "Arboliva",
+        "base": "Ceruledge",
         "forme": "",
         "sid": "s29984"
     },
@@ -10299,7 +10315,7 @@
         "type": "specie",
         "num": 938,
         "formeNum": 0,
-        "base": "Capsakid",
+        "base": "Tadbulb",
         "forme": "",
         "sid": "s30016"
     },
@@ -10307,7 +10323,7 @@
         "type": "specie",
         "num": 939,
         "formeNum": 0,
-        "base": "Scovillain",
+        "base": "Bellibolt",
         "forme": "",
         "sid": "s30048"
     },
@@ -10315,7 +10331,7 @@
         "type": "specie",
         "num": 940,
         "formeNum": 0,
-        "base": "Tadbulb",
+        "base": "Wattrel",
         "forme": "",
         "sid": "s30080"
     },
@@ -10323,7 +10339,7 @@
         "type": "specie",
         "num": 941,
         "formeNum": 0,
-        "base": "Bellibolt",
+        "base": "Kilowattrel",
         "forme": "",
         "sid": "s30112"
     },
@@ -10331,7 +10347,7 @@
         "type": "specie",
         "num": 942,
         "formeNum": 0,
-        "base": "Varoom",
+        "base": "Maschiff",
         "forme": "",
         "sid": "s30144"
     },
@@ -10339,7 +10355,7 @@
         "type": "specie",
         "num": 943,
         "formeNum": 0,
-        "base": "Revavroom",
+        "base": "Mabosstiff",
         "forme": "",
         "sid": "s30176"
     },
@@ -10347,7 +10363,7 @@
         "type": "specie",
         "num": 944,
         "formeNum": 0,
-        "base": "Orthworm",
+        "base": "Shroodle",
         "forme": "",
         "sid": "s30208"
     },
@@ -10355,7 +10371,7 @@
         "type": "specie",
         "num": 945,
         "formeNum": 0,
-        "base": "Tandemaus",
+        "base": "Grafaiai",
         "forme": "",
         "sid": "s30240"
     },
@@ -10363,23 +10379,15 @@
         "type": "specie",
         "num": 946,
         "formeNum": 0,
-        "base": "Maushold",
+        "base": "Bramblin",
         "forme": "",
         "sid": "s30272"
-    },
-    "s30273": {
-        "type": "specie",
-        "num": 946,
-        "formeNum": 1,
-        "base": "Maushold",
-        "forme": "Four",
-        "sid": "s30273"
     },
     "s30304": {
         "type": "specie",
         "num": 947,
         "formeNum": 0,
-        "base": "Cetoddle",
+        "base": "Brambleghast",
         "forme": "",
         "sid": "s30304"
     },
@@ -10387,7 +10395,7 @@
         "type": "specie",
         "num": 948,
         "formeNum": 0,
-        "base": "Cetitan",
+        "base": "Toedscool",
         "forme": "",
         "sid": "s30336"
     },
@@ -10395,7 +10403,7 @@
         "type": "specie",
         "num": 949,
         "formeNum": 0,
-        "base": "Frigibax",
+        "base": "Toedscruel",
         "forme": "",
         "sid": "s30368"
     },
@@ -10403,7 +10411,7 @@
         "type": "specie",
         "num": 950,
         "formeNum": 0,
-        "base": "Arctibax",
+        "base": "Klawf",
         "forme": "",
         "sid": "s30400"
     },
@@ -10411,7 +10419,7 @@
         "type": "specie",
         "num": 951,
         "formeNum": 0,
-        "base": "Baxcalibur",
+        "base": "Capsakid",
         "forme": "",
         "sid": "s30432"
     },
@@ -10419,31 +10427,15 @@
         "type": "specie",
         "num": 952,
         "formeNum": 0,
-        "base": "Tatsugiri",
+        "base": "Scovillain",
         "forme": "",
         "sid": "s30464"
-    },
-    "s30465": {
-        "type": "specie",
-        "num": 952,
-        "formeNum": 1,
-        "base": "Tatsugiri",
-        "forme": "Droopy",
-        "sid": "s30465"
-    },
-    "s30466": {
-        "type": "specie",
-        "num": 952,
-        "formeNum": 2,
-        "base": "Tatsugiri",
-        "forme": "Stretchy",
-        "sid": "s30466"
     },
     "s30496": {
         "type": "specie",
         "num": 953,
         "formeNum": 0,
-        "base": "Cyclizar",
+        "base": "Rellor",
         "forme": "",
         "sid": "s30496"
     },
@@ -10451,7 +10443,7 @@
         "type": "specie",
         "num": 954,
         "formeNum": 0,
-        "base": "Pawmi",
+        "base": "Rabsca",
         "forme": "",
         "sid": "s30528"
     },
@@ -10459,7 +10451,7 @@
         "type": "specie",
         "num": 955,
         "formeNum": 0,
-        "base": "Pawmo",
+        "base": "Flittle",
         "forme": "",
         "sid": "s30560"
     },
@@ -10467,7 +10459,7 @@
         "type": "specie",
         "num": 956,
         "formeNum": 0,
-        "base": "Pawmot",
+        "base": "Espathra",
         "forme": "",
         "sid": "s30592"
     },
@@ -10475,7 +10467,7 @@
         "type": "specie",
         "num": 957,
         "formeNum": 0,
-        "base": "Wattrel",
+        "base": "Tinkatink",
         "forme": "",
         "sid": "s30624"
     },
@@ -10483,7 +10475,7 @@
         "type": "specie",
         "num": 958,
         "formeNum": 0,
-        "base": "Kilowattrel",
+        "base": "Tinkatuff",
         "forme": "",
         "sid": "s30656"
     },
@@ -10491,7 +10483,7 @@
         "type": "specie",
         "num": 959,
         "formeNum": 0,
-        "base": "Bombirdier",
+        "base": "Tinkaton",
         "forme": "",
         "sid": "s30688"
     },
@@ -10499,39 +10491,15 @@
         "type": "specie",
         "num": 960,
         "formeNum": 0,
-        "base": "Squawkabilly",
+        "base": "Wiglett",
         "forme": "",
         "sid": "s30720"
-    },
-    "s30721": {
-        "type": "specie",
-        "num": 960,
-        "formeNum": 1,
-        "base": "Squawkabilly",
-        "forme": "Blue",
-        "sid": "s30721"
-    },
-    "s30722": {
-        "type": "specie",
-        "num": 960,
-        "formeNum": 2,
-        "base": "Squawkabilly",
-        "forme": "Yellow",
-        "sid": "s30722"
-    },
-    "s30723": {
-        "type": "specie",
-        "num": 960,
-        "formeNum": 3,
-        "base": "Squawkabilly",
-        "forme": "White",
-        "sid": "s30723"
     },
     "s30752": {
         "type": "specie",
         "num": 961,
         "formeNum": 0,
-        "base": "Flamigo",
+        "base": "Wugtrio",
         "forme": "",
         "sid": "s30752"
     },
@@ -10539,7 +10507,7 @@
         "type": "specie",
         "num": 962,
         "formeNum": 0,
-        "base": "Klawf",
+        "base": "Bombirdier",
         "forme": "",
         "sid": "s30784"
     },
@@ -10547,7 +10515,7 @@
         "type": "specie",
         "num": 963,
         "formeNum": 0,
-        "base": "Nacli",
+        "base": "Finizen",
         "forme": "",
         "sid": "s30816"
     },
@@ -10555,15 +10523,23 @@
         "type": "specie",
         "num": 964,
         "formeNum": 0,
-        "base": "Naclstack",
+        "base": "Palafin",
         "forme": "",
         "sid": "s30848"
+    },
+    "s30849": {
+        "type": "specie",
+        "num": 964,
+        "formeNum": 1,
+        "base": "Palafin",
+        "forme": "Hero",
+        "sid": "s30849"
     },
     "s30880": {
         "type": "specie",
         "num": 965,
         "formeNum": 0,
-        "base": "Garganacl",
+        "base": "Varoom",
         "forme": "",
         "sid": "s30880"
     },
@@ -10571,7 +10547,7 @@
         "type": "specie",
         "num": 966,
         "formeNum": 0,
-        "base": "Glimmet",
+        "base": "Revavroom",
         "forme": "",
         "sid": "s30912"
     },
@@ -10579,7 +10555,7 @@
         "type": "specie",
         "num": 967,
         "formeNum": 0,
-        "base": "Glimmora",
+        "base": "Cyclizar",
         "forme": "",
         "sid": "s30944"
     },
@@ -10587,7 +10563,7 @@
         "type": "specie",
         "num": 968,
         "formeNum": 0,
-        "base": "Shroodle",
+        "base": "Orthworm",
         "forme": "",
         "sid": "s30976"
     },
@@ -10595,7 +10571,7 @@
         "type": "specie",
         "num": 969,
         "formeNum": 0,
-        "base": "Grafaiai",
+        "base": "Glimmet",
         "forme": "",
         "sid": "s31008"
     },
@@ -10603,7 +10579,7 @@
         "type": "specie",
         "num": 970,
         "formeNum": 0,
-        "base": "Fidough",
+        "base": "Glimmora",
         "forme": "",
         "sid": "s31040"
     },
@@ -10611,7 +10587,7 @@
         "type": "specie",
         "num": 971,
         "formeNum": 0,
-        "base": "Dachsbun",
+        "base": "Greavard",
         "forme": "",
         "sid": "s31072"
     },
@@ -10619,7 +10595,7 @@
         "type": "specie",
         "num": 972,
         "formeNum": 0,
-        "base": "Maschiff",
+        "base": "Houndstone",
         "forme": "",
         "sid": "s31104"
     },
@@ -10627,7 +10603,7 @@
         "type": "specie",
         "num": 973,
         "formeNum": 0,
-        "base": "Mabosstiff",
+        "base": "Flamigo",
         "forme": "",
         "sid": "s31136"
     },
@@ -10635,7 +10611,7 @@
         "type": "specie",
         "num": 974,
         "formeNum": 0,
-        "base": "Bramblin",
+        "base": "Cetoddle",
         "forme": "",
         "sid": "s31168"
     },
@@ -10643,7 +10619,7 @@
         "type": "specie",
         "num": 975,
         "formeNum": 0,
-        "base": "Brambleghast",
+        "base": "Cetitan",
         "forme": "",
         "sid": "s31200"
     },
@@ -10651,23 +10627,15 @@
         "type": "specie",
         "num": 976,
         "formeNum": 0,
-        "base": "Gimmighoul",
+        "base": "Veluza",
         "forme": "",
         "sid": "s31232"
-    },
-    "s31233": {
-        "type": "specie",
-        "num": 976,
-        "formeNum": 1,
-        "base": "Gimmighoul",
-        "forme": "Roaming",
-        "sid": "s31233"
     },
     "s31264": {
         "type": "specie",
         "num": 977,
         "formeNum": 0,
-        "base": "Gholdengo",
+        "base": "Dondozo",
         "forme": "",
         "sid": "s31264"
     },
@@ -10675,23 +10643,47 @@
         "type": "specie",
         "num": 978,
         "formeNum": 0,
-        "base": "Great Tusk",
+        "base": "Tatsugiri",
         "forme": "",
         "sid": "s31296"
+    },
+    "s31297": {
+        "type": "specie",
+        "num": 978,
+        "formeNum": 1,
+        "base": "Tatsugiri",
+        "forme": "Droopy",
+        "sid": "s31297"
+    },
+    "s31298": {
+        "type": "specie",
+        "num": 978,
+        "formeNum": 2,
+        "base": "Tatsugiri",
+        "forme": "Stretchy",
+        "sid": "s31298"
     },
     "s31328": {
         "type": "specie",
         "num": 979,
         "formeNum": 0,
-        "base": "Brute Bonnet",
+        "base": "Annihilape",
         "forme": "",
         "sid": "s31328"
+    },
+    "s31360": {
+        "type": "specie",
+        "num": 980,
+        "formeNum": 0,
+        "base": "Clodsire",
+        "forme": "",
+        "sid": "s31360"
     },
     "s31392": {
         "type": "specie",
         "num": 981,
         "formeNum": 0,
-        "base": "Sandy Shocks",
+        "base": "Farigiraf",
         "forme": "",
         "sid": "s31392"
     },
@@ -10699,15 +10691,23 @@
         "type": "specie",
         "num": 982,
         "formeNum": 0,
-        "base": "Scream Tail",
+        "base": "Dudunsparce",
         "forme": "",
         "sid": "s31424"
+    },
+    "s31425": {
+        "type": "specie",
+        "num": 982,
+        "formeNum": 1,
+        "base": "Dudunsparce",
+        "forme": "Three-Segment",
+        "sid": "s31425"
     },
     "s31456": {
         "type": "specie",
         "num": 983,
         "formeNum": 0,
-        "base": "Flutter Mane",
+        "base": "Kingambit",
         "forme": "",
         "sid": "s31456"
     },
@@ -10715,7 +10715,7 @@
         "type": "specie",
         "num": 984,
         "formeNum": 0,
-        "base": "Slither Wing",
+        "base": "Great Tusk",
         "forme": "",
         "sid": "s31488"
     },
@@ -10723,7 +10723,7 @@
         "type": "specie",
         "num": 985,
         "formeNum": 0,
-        "base": "Roaring Moon",
+        "base": "Scream Tail",
         "forme": "",
         "sid": "s31520"
     },
@@ -10731,15 +10731,23 @@
         "type": "specie",
         "num": 986,
         "formeNum": 0,
-        "base": "Iron Treads",
+        "base": "Brute Bonnet",
         "forme": "",
         "sid": "s31552"
+    },
+    "s31584": {
+        "type": "specie",
+        "num": 987,
+        "formeNum": 0,
+        "base": "Flutter Mane",
+        "forme": "",
+        "sid": "s31584"
     },
     "s31616": {
         "type": "specie",
         "num": 988,
         "formeNum": 0,
-        "base": "Iron Moth",
+        "base": "Slither Wing",
         "forme": "",
         "sid": "s31616"
     },
@@ -10747,7 +10755,7 @@
         "type": "specie",
         "num": 989,
         "formeNum": 0,
-        "base": "Iron Hands",
+        "base": "Sandy Shocks",
         "forme": "",
         "sid": "s31648"
     },
@@ -10755,7 +10763,7 @@
         "type": "specie",
         "num": 990,
         "formeNum": 0,
-        "base": "Iron Jugulis",
+        "base": "Iron Treads",
         "forme": "",
         "sid": "s31680"
     },
@@ -10763,7 +10771,7 @@
         "type": "specie",
         "num": 991,
         "formeNum": 0,
-        "base": "Iron Thorns",
+        "base": "Iron Bundle",
         "forme": "",
         "sid": "s31712"
     },
@@ -10771,7 +10779,7 @@
         "type": "specie",
         "num": 992,
         "formeNum": 0,
-        "base": "Iron Bundle",
+        "base": "Iron Hands",
         "forme": "",
         "sid": "s31744"
     },
@@ -10779,7 +10787,7 @@
         "type": "specie",
         "num": 993,
         "formeNum": 0,
-        "base": "Iron Valiant",
+        "base": "Iron Jugulis",
         "forme": "",
         "sid": "s31776"
     },
@@ -10787,7 +10795,7 @@
         "type": "specie",
         "num": 994,
         "formeNum": 0,
-        "base": "Ting-Lu",
+        "base": "Iron Moth",
         "forme": "",
         "sid": "s31808"
     },
@@ -10795,7 +10803,7 @@
         "type": "specie",
         "num": 995,
         "formeNum": 0,
-        "base": "Chien-Pao",
+        "base": "Iron Thorns",
         "forme": "",
         "sid": "s31840"
     },
@@ -10803,7 +10811,7 @@
         "type": "specie",
         "num": 996,
         "formeNum": 0,
-        "base": "Wo-Chien",
+        "base": "Frigibax",
         "forme": "",
         "sid": "s31872"
     },
@@ -10811,7 +10819,7 @@
         "type": "specie",
         "num": 997,
         "formeNum": 0,
-        "base": "Chi-Yu",
+        "base": "Arctibax",
         "forme": "",
         "sid": "s31904"
     },
@@ -10819,7 +10827,7 @@
         "type": "specie",
         "num": 998,
         "formeNum": 0,
-        "base": "Koraidon",
+        "base": "Baxcalibur",
         "forme": "",
         "sid": "s31936"
     },
@@ -10827,15 +10835,23 @@
         "type": "specie",
         "num": 999,
         "formeNum": 0,
-        "base": "Miraidon",
+        "base": "Gimmighoul",
         "forme": "",
         "sid": "s31968"
+    },
+    "s31969": {
+        "type": "specie",
+        "num": 999,
+        "formeNum": 1,
+        "base": "Gimmighoul",
+        "forme": "Roaming",
+        "sid": "s31969"
     },
     "s32000": {
         "type": "specie",
         "num": 1000,
         "formeNum": 0,
-        "base": "Tinkatink",
+        "base": "Gholdengo",
         "forme": "",
         "sid": "s32000"
     },
@@ -10843,7 +10859,7 @@
         "type": "specie",
         "num": 1001,
         "formeNum": 0,
-        "base": "Tinkatuff",
+        "base": "Wo-Chien",
         "forme": "",
         "sid": "s32032"
     },
@@ -10851,7 +10867,7 @@
         "type": "specie",
         "num": 1002,
         "formeNum": 0,
-        "base": "Tinkaton",
+        "base": "Chien-Pao",
         "forme": "",
         "sid": "s32064"
     },
@@ -10859,7 +10875,7 @@
         "type": "specie",
         "num": 1003,
         "formeNum": 0,
-        "base": "Charcadet",
+        "base": "Ting-Lu",
         "forme": "",
         "sid": "s32096"
     },
@@ -10867,7 +10883,7 @@
         "type": "specie",
         "num": 1004,
         "formeNum": 0,
-        "base": "Armarouge",
+        "base": "Chi-Yu",
         "forme": "",
         "sid": "s32128"
     },
@@ -10875,7 +10891,7 @@
         "type": "specie",
         "num": 1005,
         "formeNum": 0,
-        "base": "Ceruledge",
+        "base": "Roaring Moon",
         "forme": "",
         "sid": "s32160"
     },
@@ -10883,7 +10899,7 @@
         "type": "specie",
         "num": 1006,
         "formeNum": 0,
-        "base": "Toedscool",
+        "base": "Iron Valiant",
         "forme": "",
         "sid": "s32192"
     },
@@ -10891,7 +10907,7 @@
         "type": "specie",
         "num": 1007,
         "formeNum": 0,
-        "base": "Toedscruel",
+        "base": "Koraidon",
         "forme": "",
         "sid": "s32224"
     },
@@ -10899,25 +10915,9 @@
         "type": "specie",
         "num": 1008,
         "formeNum": 0,
-        "base": "Kingambit",
+        "base": "Miraidon",
         "forme": "",
         "sid": "s32256"
-    },
-    "s32288": {
-        "type": "specie",
-        "num": 1009,
-        "formeNum": 0,
-        "base": "Clodsire",
-        "forme": "",
-        "sid": "s32288"
-    },
-    "s32320": {
-        "type": "specie",
-        "num": 1010,
-        "formeNum": 0,
-        "base": "Annihilape",
-        "forme": "",
-        "sid": "s32320"
     },
     "s0": {
         "type": "specie",
