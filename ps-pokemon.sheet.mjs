@@ -541,6 +541,8 @@ const BattlePokemonIconIndexesLeft = {
 
 const entries = [];
 
+let errors = [];
+
 // Need to figure out how to remove this readdir; tup doesn't like it
 for (const name of fs.readdirSync(spritesDir)) {
     const parsed = path.parse(name);
@@ -568,7 +570,8 @@ for (const name of fs.readdirSync(spritesDir)) {
         if (entry) {
             index = entry.num;
         } else {
-            throw new Error(`can't find ${name}`)
+            errors.push(`can't find ${name}`);
+            continue;
         }
     }
     
@@ -577,14 +580,21 @@ for (const name of fs.readdirSync(spritesDir)) {
 
 for (const [id, num] of Object.entries(BattlePokemonIconIndexes)) {
     if (num !== 'found') {
-        throw new Error(`didn't find ${id}`);
+        errors.push(`didn't find ${id}`);
     }
 }
 
 for (const [id, num] of Object.entries(BattlePokemonIconIndexesLeft)) {
     if (num !== 'found') {
-        throw new Error(`didn't find left ${id}`);
+        errors.push(`didn't find left ${id}`);
     }
+}
+
+if (errors.length) {
+    for (let error of errors) {
+        console.error(error);
+    }
+    process.exit(1);
 }
 
 for (let i = 0; i < entries.length; i++) {
