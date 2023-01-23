@@ -1492,7 +1492,7 @@
         "num": 128,
         "formeNum": 1,
         "base": "Tauros",
-        "forme": "Paldea",
+        "forme": "Paldea-Combat",
         "sid": "s4097"
     },
     "s4098": {
@@ -1500,7 +1500,7 @@
         "num": 128,
         "formeNum": 2,
         "base": "Tauros",
-        "forme": "Paldea-Fire",
+        "forme": "Paldea-Blaze",
         "sid": "s4098"
     },
     "s4099": {
@@ -1508,7 +1508,7 @@
         "num": 128,
         "formeNum": 3,
         "base": "Tauros",
-        "forme": "Paldea-Water",
+        "forme": "Paldea-Aqua",
         "sid": "s4099"
     },
     "s4128": {
@@ -11470,6 +11470,14 @@
         "base": "Venomicon",
         "forme": "Epilogue",
         "sid": "s536873025"
+    },
+    "s536873056": {
+        "type": "specie",
+        "num": -67,
+        "formeNum": 0,
+        "base": "Saharascal",
+        "forme": "",
+        "sid": "s536873056"
     },
     "s536873088": {
         "type": "specie",
