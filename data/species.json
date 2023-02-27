@@ -10919,6 +10919,22 @@
         "forme": "",
         "sid": "s32256"
     },
+    "s32288": {
+        "type": "specie",
+        "num": 1009,
+        "formeNum": 0,
+        "base": "Walking Wake",
+        "forme": "",
+        "sid": "s32288"
+    },
+    "s32320": {
+        "type": "specie",
+        "num": 1010,
+        "formeNum": 0,
+        "base": "Iron Leaves",
+        "forme": "",
+        "sid": "s32320"
+    },
     "s0": {
         "type": "specie",
         "num": 0,
