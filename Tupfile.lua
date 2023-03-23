@@ -55,26 +55,6 @@ foreach_rule(
     "build/gen9-modelslike/%B.gif"
 )
 
-foreach_rule(
-    "src/gen9species/*.png",
-    {
-        display="40x30 %f",
-        "magick convert \"%f[0]\" -trim +repage -resize 40x30 %o",
-        compresspng{config="MINISPRITE"}
-    },
-    "build/gen6-minisprites-trimmed/%b"
-)
-
-foreach_rule(
-    "src/gen9species/*.png",
-    {
-        display="40x30 %f",
-        "magick convert \"%f[0]\" -trim +repage -resize 40x30 -background transparent -gravity center -extent 40x30 %o",
-        compresspng{config="MINISPRITE"}
-    },
-    "build/gen6-minisprites-padded/%b"
-)
-
 -- PS spritesheet
 
 rule(
