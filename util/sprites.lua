@@ -18,7 +18,7 @@ function spriteglob(pat, flagspec)
     local results = glob(pat)
     local function fn(filename)
         local sd = spritedata(tup.base(filename))
-        for k, v in pairs(flagspec) do
+        for k, v in pairs(flagspec or {}) do
             -- Make sure both are booleans
             if not not v ~= not not sd.data[k] then
                 return false
