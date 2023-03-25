@@ -1,4 +1,5 @@
 
+-- Similar to `parseFilename` in data/lib
 function spritedata(basename)
     local iter = basename:gmatch("[^-]+")
     local result = {id = iter(), data = {}}
@@ -6,8 +7,8 @@ function spritedata(basename)
         if flagtext:len() == 1 then
             result.data[flagtext] = true
         else
-            local flag = flagtext.sub(1, 1)
-            local text = flagtext.sub(2)
+            local flag = flagtext:sub(1, 1)
+            local text = flagtext:sub(2)
             result.data[flag] = text
         end
     end
