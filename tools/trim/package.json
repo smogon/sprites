@@ -1,6 +1,5 @@
 {
     "dependencies": {
-        "@types/node": "^14.0.23",
         "commander": "^5.1.0"
     },
     "type": "module",

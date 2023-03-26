@@ -106,6 +106,20 @@ rule(
     "build/ps/pokemonicons-pokeball-sheet.png"
 )
 
+
+-- Smogdex spritesheet
+
+
+rule(
+    spriteglob({"src/minisprites/pokemon/gen6/*", "src/minisprites/items/*"}, {a = false}),
+    {
+        display="smogdex sheet",
+        "node tools/smogdexspritesheet --image build/smogon/spritesheet.png --stylesheet build/smogon/spritesheet.css -- %f",
+        compresspng{config="SPRITESHEET", output="build/smogon/spritesheet.png"}
+    },
+    {"build/smogon/spritesheet.png", "build/smogon/spritesheet.css"}
+)
+
 -- Smogdex social images
 
 local input = spriteglob({"src/models/*", "src/gen9species/*"}, {b = false, s = false})

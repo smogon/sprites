@@ -28,7 +28,6 @@ local function compressopts(program, copts)
     copts.pngquant = getconfig(program .. "_PNGQUANT") or copts.pngquant
     copts.optipng = getconfig(program .. "_OPTIPNG") or copts.optipng
     copts.advpng = getconfig(program .. "_ADVPNG") or copts.advpng
-    copts.deflopt = booleanconfig(program .. "_DEFLOPT") or copts.deflopt
 end
 
 function compresspng(opts)
@@ -48,11 +47,6 @@ function compresspng(opts)
     end
     if copts.advpng then
         cmds += rep{"advpng -q ${opts} ${output}", opts=copts.advpng, output=output}
-    end
-    if copts.deflopt then
-        cmds += rep{"node ${root}/tools/deflopt ${output}",
-                    root=ROOTDIR,
-                    output=output}
     end
     
     return cmds

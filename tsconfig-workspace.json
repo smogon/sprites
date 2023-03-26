@@ -3,8 +3,8 @@
     "references": [
         {"path": "tools/tupctime"},
         {"path": "tools/deploy"},
-        {"path": "tools/deflopt"},
         {"path": "tools/sheet"},
+        {"path": "tools/smogdexspritesheet"},
         {"path": "tools/trim"},
         {"path": "lib/root"},
         {"path": "data/lib"},

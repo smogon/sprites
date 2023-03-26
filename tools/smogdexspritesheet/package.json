@@ -1,0 +1,9 @@
+{
+    "main": "./dist/index.js",
+    "type": "module",
+    "dependencies": {
+        "@types/spritesmith": "^3.4.1",
+        "commander": "^5.0.0",
+        "spritesmith": "^3.4.1"
+    }
+}

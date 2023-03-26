@@ -44,7 +44,7 @@ export class ActionQueue {
         this.debugBuffer = [];
     }
 
-    throw(obj : Error) {
+    throw(obj : unknown) {
         this.gdebug(obj, false);
         this.valid = false;
     }

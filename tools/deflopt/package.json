@@ -1,8 +1,0 @@
-{
-    "type": "module",
-    "dependencies": {
-        "@types/node": "^14.0.23",
-        "commander": "^6.1.0"
-    },
-    "main": "./dist/index.js"
-}
