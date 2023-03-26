@@ -27,12 +27,6 @@ importers:
     dependencies:
       '@types/node': 14.10.1
 
-  tools/deflopt:
-    specifiers:
-      commander: ^6.1.0
-    dependencies:
-      commander: 6.1.0
-
   tools/deploy:
     specifiers:
       commander: ^5.1.0
@@ -458,11 +452,6 @@ packages:
 
   /commander/5.1.0:
     resolution: {integrity: sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==}
-    engines: {node: '>= 6'}
-    dev: false
-
-  /commander/6.1.0:
-    resolution: {integrity: sha512-wl7PNrYWd2y5mp1OK/LhTlv8Ff4kQJQRXXAvF+uU/TPNiVJUxZLRYGj/B0y/lPGAVcSbJqH2Za/cvHmrPMC8mA==}
     engines: {node: '>= 6'}
     dev: false
 

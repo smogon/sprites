@@ -3,7 +3,6 @@
     "references": [
         {"path": "tools/tupctime"},
         {"path": "tools/deploy"},
-        {"path": "tools/deflopt"},
         {"path": "tools/sheet"},
         {"path": "tools/trim"},
         {"path": "lib/root"},
