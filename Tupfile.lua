@@ -125,9 +125,10 @@ rule(
     {
         display="smogdex sheet",
         "node tools/smogdexspritesheet --image build/smogon/spritesheet.png --stylesheet build/smogon/spritesheet.css -- %f",
-        compresspng{config="SPRITESHEET", output="build/smogon/spritesheet.png"}
+        "cwebp -z 9 build/smogon/spritesheet.png -o build/smogon/spritesheet.webp",
+        "rm build/smogon/spritesheet.png"
     },
-    {"build/smogon/spritesheet.png", "build/smogon/spritesheet.css"}
+    {"build/smogon/spritesheet.webp", "build/smogon/spritesheet.css"}
 )
 
 -- Smogdex social images
