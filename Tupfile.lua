@@ -106,6 +106,16 @@ rule(
     "build/ps/pokemonicons-pokeball-sheet.png"
 )
 
+-- Smogdex minisprites (webp)
+
+foreach_rule(
+    spriteglob({"src/minisprites/pokemon/gen6/*", "src/minisprites/items/*"}, {a = false}),
+    {
+        display="webp minisprite %f",
+        "cwebp -z 9 %f -o %o"
+    },
+    "build/smogon/minisprites/%B.webp"
+)
 
 -- Smogdex spritesheet
 
