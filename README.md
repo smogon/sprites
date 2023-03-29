@@ -14,6 +14,7 @@ This project depends on
 - [pnpm](https://pnpm.js.org)
 - [node.js](https://nodejs.org) >= 13
 - [wine](https://www.winehq.org/) (optional)
+- cwebp
 
 ### Windows
 
@@ -22,7 +23,7 @@ Windows binaries of these dependencies can be found on the download pages of the
 ### Linux
 
 ```
-$ sudo apt install nodejs imagemagick advancecomp optipng pngquant wine
+$ sudo apt install nodejs imagemagick advancecomp optipng pngquant wine webp
 $ sudo npm install -g pnpm
 ```
 
