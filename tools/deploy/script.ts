@@ -4,6 +4,7 @@ import nodePath from 'path';
 import vm from 'vm';
 import * as pathlib from './path.js';
 import * as spritedata from '@smogon/sprite-data';
+import tar from 'tar-stream';
 
 
 type Op = {
@@ -36,7 +37,7 @@ export class ActionQueue {
     public log : LogEntry[];
     public valid : boolean;
     private debugBuffer : unknown[];
-    
+
     constructor() {
         this.seen = new Map;
         this.log = [];
@@ -99,7 +100,7 @@ export class ActionQueue {
         }
         this.debugBuffer = [];
     }
-    
+
     print(level : 'errors' | 'all') {
         for (const entry of this.log) {
             if (entry.type === 'Op') {
@@ -128,11 +129,13 @@ export class ActionQueue {
         }
     }
 
-    run(dir : string, mode : 'link' | 'copy') {
+    async run(dir : string, mode : 'link' | 'copy' | 'tar') {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
-        for (const entry of this.log) {
-            if (entry.type === 'Op') {
+        if (mode !== 'tar') {
+            for (const entry of this.log) {
+                if (entry.type !== 'Op')
+                    continue;
                 const op = entry.op;
                 const dst = nodePath.join(dir, entry.dst);
                 fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
@@ -146,6 +149,23 @@ export class ActionQueue {
                     fs.writeFileSync(dst, op.data);
                 }
             }
+        } else {
+            let t = tar.pack();
+            for (const entry of this.log) {
+                if (entry.type !== 'Op')
+                    continue;
+                const op = entry.op;
+                if (op.type === 'Copy'){
+                    t.entry({name: entry.dst}, fs.readFileSync(op.src));
+                } else if (op.type === 'Write') {
+                    t.entry({name: entry.dst}, op.data);
+                }
+            }
+            // In this case, I guess its a file rather than a dir.
+            t.pipe(fs.createWriteStream(dir))
+            return new Promise<void>(resolve => {
+                t.on('close', () => resolve())
+            })
         }
     }
 }
@@ -185,7 +205,7 @@ function makeEnv1(queue: ActionQueue) {
         debug(obj : unknown) {
             queue.debug(obj);
         },
-        
+
         gdebug(obj : unknown) {
             queue.gdebug(obj, false);
         }
@@ -195,7 +215,7 @@ function makeEnv1(queue: ActionQueue) {
 function makeEnv2(srcDir : string, queue: ActionQueue) {
     return {
         __proto__: makeEnv1(queue),
-        
+
         list(dir : string) : pathlib.Path[] {
             const result = [];
             for (const filename of fs.readdirSync(nodePath.join(srcDir, dir))) {
@@ -203,7 +223,7 @@ function makeEnv2(srcDir : string, queue: ActionQueue) {
             }
             return result;
         },
-        
+
         copy(srcp : pathlib.PathLike, dstp : string | pathlib.Delta /* todo deltalike */) {
             const src = pathlib.format(pathlib.path(srcp));
             let dst : string;
