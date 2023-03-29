@@ -5,6 +5,10 @@ function toSmogonAlias(name) {
         replace(/[^a-z0-9-]+/g, '');
 }
 
+function toPSID(name) {
+    return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
+}
+
 function spritecopy(f, {dir, ext}) {
     const sn = spritedata.parseFilename(f.name);
     let name;
@@ -44,6 +48,24 @@ function itemspritecopy(f, {dir, ext}) {
     }
 }
 
+function newspritecopy(f, {dir, ext}) {
+    const sn = spritedata.parseFilename(f.name);
+    if (sn.extension) {
+        return
+    }
+    const sd = spritedata.get(sn.id);
+    for (const n of sd.type === 'item' ? sd.names : [sd.base + sd.forme]) {
+        let name = toPSID(n);
+        if (sn.extra.has("f")) {
+            name += "f";
+        }
+        if (sn.extra.has("g")) {
+            name += "gmax";
+        }
+        copy(f, {dir, ext, name});
+    }
+}
+
 for (const f of list("src/models")) {
     spritecopy(f, {dir: "xy"});
 }
@@ -58,6 +80,10 @@ for (const f of list("build/gen6-minisprites-trimmed")) {
 
 for (const f of list("build/item-minisprites-trimmed")) {
     itemspritecopy(f, {dir: "xyitems"});
+}
+
+for (const f of list("build/smogon/minisprites")) {
+    newspritecopy(f, {dir: "minisprites"});
 }
 
 for (const f of list("build/item-minisprites-padded")) {
