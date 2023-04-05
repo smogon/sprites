@@ -17,7 +17,7 @@ async function runAq(aq : script.ActionQueue, mode: 'copy' | 'link' | 'tar', out
         await aq.run(outputDir, mode);
     } else {
         if (level === 'errors') {
-            console.log(`Success, but nothing to do. Please rerun with -v or -o`);
+            console.error(`Success, but nothing to do. Please rerun with -v or -o`);
         } else {
             aq.print('all');
         }
@@ -47,7 +47,7 @@ program
         }
 
         const aq = new script.ActionQueue;
-        
+
         for (const src of files) {
             script.runOnFile(scr, src, aq);
         }
@@ -68,7 +68,7 @@ program
            const scr = new script.Script(file, 'file');
            script.run(scr, nodePath.dirname(file), aq);
         }
-        
+
         await runAq(aq, tar ? 'tar' : link ? 'link' : 'copy', outputDir, verbose);
     });
 
@@ -77,4 +77,3 @@ program.parse(process.argv);
 if (process.argv.slice(2).length === 0) {
     program.outputHelp();
 }
-

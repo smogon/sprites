@@ -113,19 +113,19 @@ export class ActionQueue {
                     addendum = ` (${entry.valid})`;
                 }
                 for (const obj of entry.debugObjs) {
-                    console.log("DEBUG:", obj);
+                    console.error("DEBUG:", obj);
                 }
                 if (op.type === 'Copy') {
-                    console.log(`COPY${addendum}: ${op.src} ==> ${entry.dst}`);
+                    console.error(`COPY${addendum}: ${op.src} ==> ${entry.dst}`);
                 } else if (op.type === 'Write') {
-                    console.log(`WRITE${addendum}: ${op.data.length} characters ==> ${entry.dst}`);
+                    console.error(`WRITE${addendum}: ${op.data.length} characters ==> ${entry.dst}`);
                 }
             } else if (entry.type === 'Debug') {
                 let addendum = '';
                 if (entry.stray) {
                     addendum = ` (stray)`;
                 }
-                console.log(`GDEBUG${addendum}:`, entry.obj);
+                console.error(`GDEBUG${addendum}:`, entry.obj);
             }
         }
     }
