@@ -17,7 +17,7 @@ function spritecopy(f, {dir, ext}) {
     if (sn.extra.has("a") || sn.extra.has("b") || sn.extra.has("s")) {
         return;
     }
-    
+
     if (sn.extension) {
         // Skip this, we don't use Unknown/Substitute
         return;
@@ -34,7 +34,7 @@ function spritecopy(f, {dir, ext}) {
     if (sn.extra.has("g")) {
         name += "-gmax";
     }
-    
+
     copy(f, {dir, ext, name});
 }
 
@@ -82,9 +82,11 @@ for (const f of list("build/item-minisprites-trimmed")) {
     itemspritecopy(f, {dir: "xyitems"});
 }
 
+let h = hash(...list("build/smogon/minisprites"));
 for (const f of list("build/smogon/minisprites")) {
-    newspritecopy(f, {dir: "minisprites"});
+    newspritecopy(f, {dir: "minisprites/" + h});
 }
+write("minisprites/hash.txt", h);
 
 for (const f of list("build/item-minisprites-padded")) {
     itemspritecopy(f, {dir: "forumsprites"});

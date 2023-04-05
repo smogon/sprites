@@ -5,7 +5,8 @@ import vm from 'vm';
 import * as pathlib from './path.js';
 import * as spritedata from '@smogon/sprite-data';
 import tar from 'tar-stream';
-
+import crypto from 'crypto';
+import b32encode from 'base32-encode';
 
 type Op = {
     type : 'Write',
@@ -238,6 +239,18 @@ function makeEnv2(srcDir : string, queue: ActionQueue) {
         read(srcp : pathlib.PathLike) : string {
             const src = pathlib.format(pathlib.path(srcp));
             return fs.readFileSync(nodePath.join(srcDir, src), 'utf8');
+        },
+
+        hash(...srcps : pathlib.PathLike[]) : string {
+            let hash = crypto.createHash("sha256");
+            let srcs = srcps.map(srcp => pathlib.format(pathlib.path(srcp))).sort();
+            for (let src of srcs) {
+                let data = fs.readFileSync(nodePath.join(srcDir, src));
+                hash.update(data);
+            }
+            let buffer = hash.digest()
+            // Similar to esbuild?
+            return b32encode(buffer, 'RFC4648').slice(0, 8);
         },
 
         write(dstp : pathlib.PathLike, data : string) {

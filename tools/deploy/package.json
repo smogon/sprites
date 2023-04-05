@@ -1,6 +1,7 @@
 {
     "dependencies": {
         "@types/tar-stream": "^2.2.2",
+        "base32-encode": "^2.0.0",
         "commander": "^5.1.0",
         "debug": "^4.1.1",
         "tar-stream": "^3.0.0"
