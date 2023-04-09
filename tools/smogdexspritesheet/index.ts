@@ -37,7 +37,13 @@ for (let [filename, sprite] of Object.entries(result.coordinates)) {
     let data = spritedata.get(parsed.id);
     if (data.type === 'specie') {
         // TODO would like to use toPSID here, mess with it later.
-        sprites.set(toAlias(data.base + (data.forme ? "-" + data.forme : "")), sprite);
+        let name = toAlias(data.base + (data.forme ? "-" + data.forme : ""));
+        if (parsed.extra.has("g")) {
+            name += "-gmax";
+        } else if (parsed.extra.has("f")) {
+            name += "-f";
+        }
+        sprites.set(name, sprite);
     } else {
         for (let name of data.names) {
             sprites.set(toAlias(name), sprite);
