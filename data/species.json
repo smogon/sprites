@@ -11503,6 +11503,14 @@
         "forme": "",
         "sid": "s536873088"
     },
+    "s536873184": {
+        "type": "specie",
+        "num": -71,
+        "formeNum": 0,
+        "base": "Hemogoblin",
+        "forme": "",
+        "sid": "s536873184"
+    },
     "s537030912": {
         "type": "specie",
         "num": -5000,
