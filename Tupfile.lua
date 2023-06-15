@@ -55,6 +55,19 @@ foreach_rule(
     "build/gen9-modelslike/%B.gif"
 )
 
+-- Gen 5 CAPs...
+
+foreach_rule(
+    "src/sprites/gen5/*.png",
+    {
+        -- TODO, add customizable compression for gif
+        -- ... or investigate using webp instead of both png/gif here
+        "magick convert %f %o",
+        "gifsicle -O3 -b %o"
+    },
+    "build/gen5-gif/%B.gif"
+)
+
 -- PS spritesheet
 
 rule(

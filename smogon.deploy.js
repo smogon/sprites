@@ -66,11 +66,24 @@ function newspritecopy(f, {dir, ext}) {
     }
 }
 
+let seenModels = new Set;
+
 for (const f of list("src/models")) {
+    seenModels.add(f.name);
     spritecopy(f, {dir: "xy"});
 }
 
 for (const f of list("build/gen9-modelslike")) {
+    spritecopy(f, {dir: "xy"});
+}
+
+// Non-model CAPs
+for (const f of list("src/sprites/gen5")) {
+    if (f.ext !== 'gif' || seenModels.has(f.name)) continue;
+    spritecopy(f, {dir: "xy"});
+}
+
+for (const f of list("build/gen5-gif")) {
     spritecopy(f, {dir: "xy"});
 }
 
