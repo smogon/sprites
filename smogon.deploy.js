@@ -84,6 +84,7 @@ for (const f of list("src/sprites/gen5")) {
 }
 
 for (const f of list("build/gen5-gif")) {
+    if (seenModels.has(f.name)) continue;
     spritecopy(f, {dir: "xy"});
 }
 
