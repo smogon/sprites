@@ -27,6 +27,13 @@
         ],
         "sid": "i545"
     },
+    "i1777": {
+        "type": "item",
+        "names": [
+            "Adamant Crystal"
+        ],
+        "sid": "i1777"
+    },
     "i135": {
         "type": "item",
         "names": [
@@ -1087,6 +1094,13 @@
         ],
         "sid": "i286"
     },
+    "i1779": {
+        "type": "item",
+        "names": [
+            "Griseous Core"
+        ],
+        "sid": "i1779"
+    },
     "i112": {
         "type": "item",
         "names": [
@@ -1502,6 +1516,13 @@
             "Lure Ball"
         ],
         "sid": "i494"
+    },
+    "i1778": {
+        "type": "item",
+        "names": [
+            "Lustrous Globe"
+        ],
+        "sid": "i1778"
     },
     "i136": {
         "type": "item",
@@ -2601,6 +2622,13 @@
             "Stone Plate"
         ],
         "sid": "i309"
+    },
+    "i1785": {
+        "type": "item",
+        "names": [
+            "Strange Ball"
+        ],
+        "sid": "i1785"
     },
     "i1109": {
         "type": "item",

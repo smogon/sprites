@@ -161,6 +161,7 @@ const ITEMS = {
 	"nevermeltice": 305,
 	"nomelberry": 306,
 	"normalgem": 307,
+	"strangeball": 308,
 	"occaberry": 311,
 	"oddincense": 312,
 	"oldamber": 314,
@@ -525,6 +526,19 @@ const ITEMS = {
 	"tr92": 738,
 	"galaricacuff": 739,
 	"galaricawreath": 740,
+	"adamantcrystal": 741,
+	"lustrousglobe": 742,
+	"griseouscore": 743,
+	"maliciousarmor": 744,
+	"boosterenergy": 745,
+	"abilityshield": 746,
+	"clearamulet": 747,
+	"mirrorherb": 748,
+	"punchingglove": 749,
+	"covertcloak": 750,
+	"loadeddice": 751,
+	"vilevial": 752,
+	"auspiciousarmor": 753,
 };
 
 const found = new Map;
