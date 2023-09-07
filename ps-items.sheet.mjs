@@ -20,6 +20,7 @@ const ITEMS = {
 	"babiriberry": 17,
 	"belueberry": 21,
 	"berryjuice": 22,
+	"bignugget": 27,
 	"bigroot": 29,
 	"bindingband": 31,
 	"blackbelt": 32,
