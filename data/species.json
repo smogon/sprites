@@ -9967,6 +9967,14 @@
         "forme": "",
         "sid": "s28832"
     },
+    "s28833": {
+        "type": "specie",
+        "num": 901,
+        "formeNum": 1,
+        "base": "Ursaluna",
+        "forme": "Bloodmoon",
+        "sid": "s28833"
+    },
     "s28864": {
         "type": "specie",
         "num": 902,
@@ -10934,6 +10942,134 @@
         "base": "Iron Leaves",
         "forme": "",
         "sid": "s32320"
+    },
+    "s32352": {
+        "type": "specie",
+        "num": 1011,
+        "formeNum": 0,
+        "base": "Dipplin",
+        "forme": "",
+        "sid": "s32352"
+    },
+    "s32384": {
+        "type": "specie",
+        "num": 1012,
+        "formeNum": 0,
+        "base": "Poltchageist",
+        "forme": "",
+        "sid": "s32384"
+    },
+    "s32385": {
+        "type": "specie",
+        "num": 1012,
+        "formeNum": 1,
+        "base": "Poltchageist",
+        "forme": "Artisan",
+        "sid": "s32385"
+    },
+    "s32416": {
+        "type": "specie",
+        "num": 1013,
+        "formeNum": 0,
+        "base": "Sinistcha",
+        "forme": "",
+        "sid": "s32416"
+    },
+    "s32417": {
+        "type": "specie",
+        "num": 1013,
+        "formeNum": 1,
+        "base": "Sinistcha",
+        "forme": "Masterpiece",
+        "sid": "s32417"
+    },
+    "s32448": {
+        "type": "specie",
+        "num": 1014,
+        "formeNum": 0,
+        "base": "Okidogi",
+        "forme": "",
+        "sid": "s32448"
+    },
+    "s32480": {
+        "type": "specie",
+        "num": 1015,
+        "formeNum": 0,
+        "base": "Munkidori",
+        "forme": "",
+        "sid": "s32480"
+    },
+    "s32512": {
+        "type": "specie",
+        "num": 1016,
+        "formeNum": 0,
+        "base": "Fezandipiti",
+        "forme": "",
+        "sid": "s32512"
+    },
+    "s32544": {
+        "type": "specie",
+        "num": 1017,
+        "formeNum": 0,
+        "base": "Ogerpon",
+        "forme": "",
+        "sid": "s32544"
+    },
+    "s32545": {
+        "type": "specie",
+        "num": 1017,
+        "formeNum": 1,
+        "base": "Ogerpon",
+        "forme": "Wellspring",
+        "sid": "s32545"
+    },
+    "s32546": {
+        "type": "specie",
+        "num": 1017,
+        "formeNum": 2,
+        "base": "Ogerpon",
+        "forme": "Hearthflame",
+        "sid": "s32546"
+    },
+    "s32547": {
+        "type": "specie",
+        "num": 1017,
+        "formeNum": 3,
+        "base": "Ogerpon",
+        "forme": "Cornerstone",
+        "sid": "s32547"
+    },
+    "s32548": {
+        "type": "specie",
+        "num": 1017,
+        "formeNum": 4,
+        "base": "Ogerpon",
+        "forme": "Teal-Tera",
+        "sid": "s32548"
+    },
+    "s32549": {
+        "type": "specie",
+        "num": 1017,
+        "formeNum": 5,
+        "base": "Ogerpon",
+        "forme": "Wellspring-Tera",
+        "sid": "s32549"
+    },
+    "s32550": {
+        "type": "specie",
+        "num": 1017,
+        "formeNum": 6,
+        "base": "Ogerpon",
+        "forme": "Hearthflame-Tera",
+        "sid": "s32550"
+    },
+    "s32551": {
+        "type": "specie",
+        "num": 1017,
+        "formeNum": 7,
+        "base": "Ogerpon",
+        "forme": "Cornerstone-Tera",
+        "sid": "s32551"
     },
     "s0": {
         "type": "specie",
