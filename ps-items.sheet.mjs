@@ -74,7 +74,6 @@ const ITEMS = {
 	"ejectbutton": 118,
 	"electirizer": 119,
 	"electricgem": 120,
-	"energypowder": 123,
 	"enigmaberry": 124,
 	"eviolite": 130,
 	"expertbelt": 132,
