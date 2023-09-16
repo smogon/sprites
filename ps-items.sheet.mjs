@@ -540,6 +540,13 @@ const ITEMS = {
 	"loadeddice": 751,
 	"vilevial": 752,
 	"auspiciousarmor": 753,
+	"fairyfeather": 754,
+	"syrupyapple": 755,
+	"unremarkableteacup": 756,
+	"masterpieceteacup": 757,
+	"cornerstonemask": 758,
+	"wellspringmask": 759,
+	"hearthflamemask": 760,
 };
 
 const found = new Map;
