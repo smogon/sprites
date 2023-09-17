@@ -281,7 +281,8 @@ const BattlePokemonIconIndexes = {
 	ogerpontealtera: 1017,
 	ogerponwellspringtera: 1020 + 241,
 	ogerponhearthflametera: 1020 + 242,
-	ogerponcornerstonetera: 1020 + 243, */
+	ogerponcornerstonetera: 1020 + 243,
+ 	toxtricitylowkeygmax: 1272 + 69, */
 
 	// Mega/G-Max
 	venusaurmega: 1272 + 0,
@@ -354,7 +355,6 @@ const BattlePokemonIconIndexes = {
 	appletungmax: 1272 + 67,
 	sandacondagmax: 1272 + 68,
 	toxtricitygmax: 1272 + 69,
-	toxtricitylowkeygmax: 1272 + 69,
 	centiskorchgmax: 1272 + 70,
 	hatterenegmax: 1272 + 71,
 	grimmsnarlgmax: 1272 + 72,
