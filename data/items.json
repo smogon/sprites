@@ -27,6 +27,13 @@
         ],
         "sid": "i545"
     },
+    "i1777": {
+        "type": "item",
+        "names": [
+            "Adamant Crystal"
+        ],
+        "sid": "i1777"
+    },
     "i135": {
         "type": "item",
         "names": [
@@ -189,6 +196,13 @@
         ],
         "sid": "i1111"
     },
+    "i581": {
+        "type": "item",
+        "names": [
+            "Big Nugget"
+        ],
+        "sid": "i581"
+    },
     "i296": {
         "type": "item",
         "names": [
@@ -210,19 +224,19 @@
         ],
         "sid": "i241"
     },
-    "i281": {
-        "type": "item",
-        "names": [
-            "Black Sludge"
-        ],
-        "sid": "i281"
-    },
     "i240": {
         "type": "item",
         "names": [
             "Black Glasses"
         ],
         "sid": "i240"
+    },
+    "i281": {
+        "type": "item",
+        "names": [
+            "Black Sludge"
+        ],
+        "sid": "i281"
     },
     "i661": {
         "type": "item",
@@ -456,6 +470,13 @@
             "Colbur Berry"
         ],
         "sid": "i198"
+    },
+    "i2406": {
+        "type": "item",
+        "names": [
+            "Cornerstone Mask"
+        ],
+        "sid": "i2406"
     },
     "i175": {
         "type": "item",
@@ -730,13 +751,6 @@
         ],
         "sid": "i779"
     },
-    "i34": {
-        "type": "item",
-        "names": [
-            "Energy Powder"
-        ],
-        "sid": "i34"
-    },
     "i208": {
         "type": "item",
         "names": [
@@ -764,6 +778,13 @@
             "Fairium Z"
         ],
         "sid": "i793"
+    },
+    "i2401": {
+        "type": "item",
+        "names": [
+            "Fairy Feather"
+        ],
+        "sid": "i2401"
     },
     "i715": {
         "type": "item",
@@ -1087,6 +1108,13 @@
         ],
         "sid": "i286"
     },
+    "i1779": {
+        "type": "item",
+        "names": [
+            "Griseous Core"
+        ],
+        "sid": "i1779"
+    },
     "i112": {
         "type": "item",
         "names": [
@@ -1142,6 +1170,13 @@
             "Heal Ball"
         ],
         "sid": "i14"
+    },
+    "i2408": {
+        "type": "item",
+        "names": [
+            "Hearthflame Mask"
+        ],
+        "sid": "i2408"
     },
     "i284": {
         "type": "item",
@@ -1503,6 +1538,13 @@
         ],
         "sid": "i494"
     },
+    "i1778": {
+        "type": "item",
+        "names": [
+            "Lustrous Globe"
+        ],
+        "sid": "i1778"
+    },
     "i136": {
         "type": "item",
         "names": [
@@ -1600,6 +1642,13 @@
             "Master Ball"
         ],
         "sid": "i1"
+    },
+    "i2404": {
+        "type": "item",
+        "names": [
+            "Masterpiece Teacup"
+        ],
+        "sid": "i2404"
     },
     "i681": {
         "type": "item",
@@ -2602,6 +2651,13 @@
         ],
         "sid": "i309"
     },
+    "i1785": {
+        "type": "item",
+        "names": [
+            "Strange Ball"
+        ],
+        "sid": "i1785"
+    },
     "i1109": {
         "type": "item",
         "names": [
@@ -2629,6 +2685,13 @@
             "Sweet Apple"
         ],
         "sid": "i1116"
+    },
+    "i2402": {
+        "type": "item",
+        "names": [
+            "Syrupy Apple"
+        ],
+        "sid": "i2402"
     },
     "i174": {
         "type": "item",
@@ -3435,6 +3498,13 @@
         ],
         "sid": "i923"
     },
+    "i2403": {
+        "type": "item",
+        "names": [
+            "Unremarkable Teacup"
+        ],
+        "sid": "i2403"
+    },
     "i252": {
         "type": "item",
         "names": [
@@ -3511,6 +3581,13 @@
             "Weakness Policy"
         ],
         "sid": "i639"
+    },
+    "i2407": {
+        "type": "item",
+        "names": [
+            "Wellspring Mask"
+        ],
+        "sid": "i2407"
     },
     "i167": {
         "type": "item",

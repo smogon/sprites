@@ -7,18 +7,17 @@ function collect(value : string, previous : string[]) {
     return previous.concat([value]);
 }
 
-function runAq(aq : script.ActionQueue, link: boolean, outputDir : undefined | string, verbose : undefined | true) {
+async function runAq(aq : script.ActionQueue, mode: 'copy' | 'link' | 'tar', outputDir : undefined | string, verbose : undefined | true) {
     const level = verbose ? 'all' : 'errors';
-    const copyMode = link ? 'link' : 'copy';
     if (!aq.valid) {
         aq.print(level);
         process.exit(1);
     }
     if (outputDir !== undefined) {
-        aq.run(outputDir, copyMode);
+        await aq.run(outputDir, mode);
     } else {
         if (level === 'errors') {
-            console.log(`Success, but nothing to do. Please rerun with -v or -o`);
+            console.error(`Success, but nothing to do. Please rerun with -v or -o`);
         } else {
             aq.print('all');
         }
@@ -33,10 +32,11 @@ program
     .option('-m, --module <mod>', 'Module')
     .option('-v, --verbose', 'Verbose')
     .option('--link', 'Link')
+    .option('--tar', 'Tar')
     // TODO
     // .option('-t, --tag <tag>', 'Tag', collect, [])
     // from rename(1)
-    .action(async (files : string[], {eval: expr, module: mod, output: outputDir, verbose, link}) => {
+    .action(async (files : string[], {eval: expr, module: mod, output: outputDir, verbose, link, tar}) => {
         let scr;
         if (expr !== undefined) {
             scr = new script.Script(expr, 'expr');
@@ -47,12 +47,12 @@ program
         }
 
         const aq = new script.ActionQueue;
-        
+
         for (const src of files) {
             script.runOnFile(scr, src, aq);
         }
 
-        runAq(aq, link, outputDir, verbose);
+        await runAq(aq, tar ? 'tar' : link ? 'link' : 'copy', outputDir, verbose);
     });
 
 program
@@ -60,15 +60,16 @@ program
     .option('-o, --output <dir>', 'Output directory')
     .option('-v, --verbose', 'Verbose')
     .option('--link', 'Link')
-    .action((scripts : string[], {output: outputDir, verbose, link}) => {
+    .option('--tar', 'Tar')
+    .action(async (scripts : string[], {output: outputDir, verbose, link, tar}) => {
         const aq = new script.ActionQueue;
 
         for (const file of scripts) {
            const scr = new script.Script(file, 'file');
            script.run(scr, nodePath.dirname(file), aq);
         }
-        
-        runAq(aq, link, outputDir, verbose);
+
+        await runAq(aq, tar ? 'tar' : link ? 'link' : 'copy', outputDir, verbose);
     });
 
 program.parse(process.argv);
@@ -76,4 +77,3 @@ program.parse(process.argv);
 if (process.argv.slice(2).length === 0) {
     program.outputHelp();
 }
-

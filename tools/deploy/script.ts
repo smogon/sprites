@@ -4,7 +4,9 @@ import nodePath from 'path';
 import vm from 'vm';
 import * as pathlib from './path.js';
 import * as spritedata from '@smogon/sprite-data';
-
+import tar from 'tar-stream';
+import crypto from 'crypto';
+import b32encode from 'base32-encode';
 
 type Op = {
     type : 'Write',
@@ -36,7 +38,7 @@ export class ActionQueue {
     public log : LogEntry[];
     public valid : boolean;
     private debugBuffer : unknown[];
-    
+
     constructor() {
         this.seen = new Map;
         this.log = [];
@@ -99,7 +101,7 @@ export class ActionQueue {
         }
         this.debugBuffer = [];
     }
-    
+
     print(level : 'errors' | 'all') {
         for (const entry of this.log) {
             if (entry.type === 'Op') {
@@ -111,28 +113,30 @@ export class ActionQueue {
                     addendum = ` (${entry.valid})`;
                 }
                 for (const obj of entry.debugObjs) {
-                    console.log("DEBUG:", obj);
+                    console.error("DEBUG:", obj);
                 }
                 if (op.type === 'Copy') {
-                    console.log(`COPY${addendum}: ${op.src} ==> ${entry.dst}`);
+                    console.error(`COPY${addendum}: ${op.src} ==> ${entry.dst}`);
                 } else if (op.type === 'Write') {
-                    console.log(`WRITE${addendum}: ${op.data.length} characters ==> ${entry.dst}`);
+                    console.error(`WRITE${addendum}: ${op.data.length} characters ==> ${entry.dst}`);
                 }
             } else if (entry.type === 'Debug') {
                 let addendum = '';
                 if (entry.stray) {
                     addendum = ` (stray)`;
                 }
-                console.log(`GDEBUG${addendum}:`, entry.obj);
+                console.error(`GDEBUG${addendum}:`, entry.obj);
             }
         }
     }
 
-    run(dir : string, mode : 'link' | 'copy') {
+    async run(dir : string, mode : 'link' | 'copy' | 'tar') {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
-        for (const entry of this.log) {
-            if (entry.type === 'Op') {
+        if (mode !== 'tar') {
+            for (const entry of this.log) {
+                if (entry.type !== 'Op')
+                    continue;
                 const op = entry.op;
                 const dst = nodePath.join(dir, entry.dst);
                 fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
@@ -146,6 +150,23 @@ export class ActionQueue {
                     fs.writeFileSync(dst, op.data);
                 }
             }
+        } else {
+            let t = tar.pack();
+            for (const entry of this.log) {
+                if (entry.type !== 'Op')
+                    continue;
+                const op = entry.op;
+                if (op.type === 'Copy'){
+                    t.entry({name: entry.dst}, fs.readFileSync(op.src));
+                } else if (op.type === 'Write') {
+                    t.entry({name: entry.dst}, op.data);
+                }
+            }
+            // In this case, I guess its a file rather than a dir.
+            t.pipe(fs.createWriteStream(dir))
+            return new Promise<void>(resolve => {
+                t.on('close', () => resolve())
+            })
         }
     }
 }
@@ -185,7 +206,7 @@ function makeEnv1(queue: ActionQueue) {
         debug(obj : unknown) {
             queue.debug(obj);
         },
-        
+
         gdebug(obj : unknown) {
             queue.gdebug(obj, false);
         }
@@ -195,7 +216,7 @@ function makeEnv1(queue: ActionQueue) {
 function makeEnv2(srcDir : string, queue: ActionQueue) {
     return {
         __proto__: makeEnv1(queue),
-        
+
         list(dir : string) : pathlib.Path[] {
             const result = [];
             for (const filename of fs.readdirSync(nodePath.join(srcDir, dir))) {
@@ -203,7 +224,7 @@ function makeEnv2(srcDir : string, queue: ActionQueue) {
             }
             return result;
         },
-        
+
         copy(srcp : pathlib.PathLike, dstp : string | pathlib.Delta /* todo deltalike */) {
             const src = pathlib.format(pathlib.path(srcp));
             let dst : string;
@@ -218,6 +239,18 @@ function makeEnv2(srcDir : string, queue: ActionQueue) {
         read(srcp : pathlib.PathLike) : string {
             const src = pathlib.format(pathlib.path(srcp));
             return fs.readFileSync(nodePath.join(srcDir, src), 'utf8');
+        },
+
+        hash(...srcps : pathlib.PathLike[]) : string {
+            let hash = crypto.createHash("sha256");
+            let srcs = srcps.map(srcp => pathlib.format(pathlib.path(srcp))).sort();
+            for (let src of srcs) {
+                let data = fs.readFileSync(nodePath.join(srcDir, src));
+                hash.update(data);
+            }
+            let buffer = hash.digest()
+            // Similar to esbuild?
+            return b32encode(buffer, 'RFC4648').slice(0, 8);
         },
 
         write(dstp : pathlib.PathLike, data : string) {
