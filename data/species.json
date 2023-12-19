@@ -11071,6 +11071,86 @@
         "forme": "Cornerstone-Tera",
         "sid": "s32551"
     },
+    "s32576": {
+        "type": "specie",
+        "num": 1018,
+        "formeNum": 0,
+        "base": "Archaludon",
+        "forme": "",
+        "sid": "s32576"
+    },
+    "s32608": {
+        "type": "specie",
+        "num": 1019,
+        "formeNum": 0,
+        "base": "Hydrapple",
+        "forme": "",
+        "sid": "s32608"
+    },
+    "s32640": {
+        "type": "specie",
+        "num": 1020,
+        "formeNum": 0,
+        "base": "Gouging Fire",
+        "forme": "",
+        "sid": "s32640"
+    },
+    "s32672": {
+        "type": "specie",
+        "num": 1021,
+        "formeNum": 0,
+        "base": "Raging Bolt",
+        "forme": "",
+        "sid": "s32672"
+    },
+    "s32704": {
+        "type": "specie",
+        "num": 1022,
+        "formeNum": 0,
+        "base": "Iron Boulder",
+        "forme": "",
+        "sid": "s32704"
+    },
+    "s32736": {
+        "type": "specie",
+        "num": 1023,
+        "formeNum": 0,
+        "base": "Iron Crown",
+        "forme": "",
+        "sid": "s32736"
+    },
+    "s32768": {
+        "type": "specie",
+        "num": 1024,
+        "formeNum": 0,
+        "base": "Terapagos",
+        "forme": "",
+        "sid": "s32768"
+    },
+    "s32769": {
+        "type": "specie",
+        "num": 1024,
+        "formeNum": 1,
+        "base": "Terapagos",
+        "forme": "Terastal",
+        "sid": "s32769"
+    },
+    "s32770": {
+        "type": "specie",
+        "num": 1024,
+        "formeNum": 2,
+        "base": "Terapagos",
+        "forme": "Stellar",
+        "sid": "s32770"
+    },
+    "s32800": {
+        "type": "specie",
+        "num": 1025,
+        "formeNum": 0,
+        "base": "Pecharunt",
+        "forme": "",
+        "sid": "s32800"
+    },
     "s0": {
         "type": "specie",
         "num": 0,
