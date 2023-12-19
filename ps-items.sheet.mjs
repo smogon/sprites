@@ -546,6 +546,7 @@ const ITEMS = {
 	"cornerstonemask": 758,
 	"wellspringmask": 759,
 	"hearthflamemask": 760,
+	"metalalloy": 761,
 };
 
 const found = new Map;
