@@ -9,7 +9,7 @@ function toPSID(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
 
-function spritecopy(f, {dir, ext}) {
+function spritecopy(f, {dir, ext}, allowUnknown=false) {
     const sn = spritedata.parseFilename(f.name);
     let name;
 
@@ -19,8 +19,12 @@ function spritecopy(f, {dir, ext}) {
     }
 
     if (sn.extension) {
-        // Skip this, we don't use Unknown/Substitute
-        return;
+        if (allowUnknown && sn.extension && sn.name === "Unknown") {
+            name = "unknown"
+        } else {
+            // Skip this, we don't use Unknown/Substitute
+            return;
+        }
     } else {
         const sd = spritedata.get(sn.id);
         name = toSmogonAlias(sd.base);
@@ -107,7 +111,7 @@ for (const f of list("build/item-minisprites-padded")) {
 }
 
 for (const f of list("build/gen6-minisprites-padded")) {
-    spritecopy(f, {dir: "forumsprites"});
+    spritecopy(f, {dir: "forumsprites"}, true);
 }
 
 for (const f of list("build/smogon/fbsprites/xy")) {
