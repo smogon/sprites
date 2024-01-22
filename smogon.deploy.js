@@ -78,17 +78,21 @@ for (const f of list("src/models")) {
 }
 
 for (const f of list("build/gen9-modelslike")) {
+    if (seenModels.has(f.name)) continue;
+    seenModels.add(f.name);
     spritecopy(f, {dir: "xy"});
 }
 
 // Non-model CAPs
 for (const f of list("src/sprites/gen5")) {
     if (f.ext !== 'gif' || seenModels.has(f.name)) continue;
+    seenModels.add(f.name);
     spritecopy(f, {dir: "xy"});
 }
 
 for (const f of list("build/gen5-gif")) {
     if (seenModels.has(f.name)) continue;
+    seenModels.add(f.name);
     spritecopy(f, {dir: "xy"});
 }
 

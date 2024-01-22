@@ -146,7 +146,23 @@ rule(
 
 -- Smogdex social images
 
-local input = spriteglob({"src/models/*", "src/gen9species/*"}, {b = false, s = false})
+local input = spriteglob({"src/models/*"}, {b = false, s = false})
+
+-- Copied from the CAP bit, dedup, should probably make a routine for it
+local dexSet = {}
+for file in iter(input) do
+    dexSet[tup.base(file)] = true
+end
+
+for file in iter(spriteglob({"src/gen9species/*"}, {b = false, s = false})) do
+    local base = tup.base(file)
+    if dexSet[base] then
+        goto continue
+    end
+    input += file
+    dexSet[base] = true
+    ::continue::
+end
 
 foreach_rule(
     input,
