@@ -98,3 +98,5 @@ CONFIG_DEFAULT_ADVPNG=-z4 -i5000
 All code in this repository is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 The sprites themselves are property of Nintendo / Game Freak / The Pokémon Company, though Black & White sprites for Pokémon from later generations were created by artists in the community. The license for these community-created sprites is still being determined and may change in the future, but in the meantime please talk to use first before using them.
+
+The PMD sprites are from [SpriteCollab](https://sprites.pmdcollab.org/#/Contributors).
