@@ -11751,6 +11751,14 @@
         "forme": "",
         "sid": "s536873216"
     },
+    "s536873312": {
+        "type": "specie",
+        "num": -75,
+        "formeNum": 0,
+        "base": "Chuggalong",
+        "forme": "",
+        "sid": "s536873312"
+    },
     "s537030912": {
         "type": "specie",
         "num": -5000,
