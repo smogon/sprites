@@ -490,6 +490,7 @@ const BattlePokemonIconIndexes = {
 	ababo: 1512 + 71,
 	scattervein: 1512 + 72,
 	cresceidon: 1512 + 73,
+	chuggalong: 1512 + 74,
 };
 
 const BattlePokemonIconIndexesLeft = {
