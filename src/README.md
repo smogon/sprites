@@ -12,6 +12,14 @@ Documentation for flags used.
 - `-s` Shiny
 - `-g` Game it is from, can be `c`
 
+# sprites/gen4
+
+- `-b` Back sprite
+- `-f` Female
+- `-s` Shiny
+- `-g` Game it is from, can be `d`, `p`, `h`, `dp`, `dh`, `ph`, or `dph`
+  - `d` is Diamond and Pearl, `p` is Platinum, and `h` is HeartGold and SoulSilver
+
 # models, dex, afd, previews
 
 - `-b` Back sprite
