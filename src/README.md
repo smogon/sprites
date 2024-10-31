@@ -12,7 +12,8 @@ PNG original dimensions 40x40, 48x48, or 56x56 for fronts; 32x32 for backs
 PNG original dimensions 40x40, 48x48, or 56x56 for fronts; 48x48 for backs
 - `-b` Back sprite
 - `-s` Shiny
-- `-g` Game it is from, can be `c`
+- `-g` Game it is from, can be `g`, `s`, `c`, `gs`, `gc`, `sc`, or `gsc`
+  - `g` is Gold, `s` is Silver, and `c` is Crystal
 
 # sprites/gen3
 
@@ -21,7 +22,7 @@ PNG original dimensions 64x64
 - `-s` Shiny
 - `-g` Game it is from, can be `r`, `f`, `l`, `e`, `re`, `fe`, or `rfe`
   - `r` is Ruby and Sapphire, `f` is Fire Red, `l` is Leaf Green, and `e` is Emerald
-  - Except for Deoxys Defense, all Fire Red sprites are also used in Leaf Green
+  - Except for Deoxys Attack, all Fire Red sprites are also used in Leaf Green
 
 # sprites/gen4
 
