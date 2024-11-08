@@ -4,8 +4,10 @@ Documentation for flags used.
 # sprites/gen1
 
 PNG original dimensions 40x40, 48x48, or 56x56 for fronts; 32x32 for backs
+Sprites in the main directory use Super Game Boy palettes, and those in `/gbc` use Game Boy Color palettes
 - `-b` Back sprite
 - `-g` Game it is from, can be `rb`, `rg`, `rgb`, or `y`
+  - `rb` is Red and Blue, `rg` is Japanese Red and Green, `rgb` is Red, Green, and Blue, and `y` is Yellow
 
 # sprites/gen2
 
