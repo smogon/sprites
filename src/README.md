@@ -43,5 +43,7 @@ PNG original dimensions 80x80
 - `-f` Female
 
 # minisprites/pokemon
-
+/gen8 - PNG original dimensions 68x56
+- `-g` Gmax
+- `-f` Female
 - `-v` Vendor is someone else than the official games, can be `smogon` (document `duplicate` and `g5`?)
