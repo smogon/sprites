@@ -44,6 +44,7 @@ PNG original dimensions 80x80
 
 # minisprites/pokemon
 `/gen8`, `/lgpe` - PNG original dimensions 68x56
+`/home` - PNG original dimensions 128x128
 `/bdsp` - PNG original dimensions 256x256
 - `-g` Gmax
 - `-f` Female
