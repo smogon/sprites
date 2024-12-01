@@ -491,7 +491,7 @@ const BattlePokemonIconIndexes = {
 	scattervein: 1512 + 72,
 	cresceidon: 1512 + 73,
 	chuggalong: 1512 + 74,
-	Shox: 1512 + 75
+	Shox: 1512 + 76
 };
 
 const BattlePokemonIconIndexesLeft = {
