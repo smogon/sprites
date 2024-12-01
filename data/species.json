@@ -11759,6 +11759,14 @@
         "forme": "",
         "sid": "s536873312"
     },
+    "s536873000": {
+        "type": "specie",
+        "num": -76,
+        "formeNum": 0,
+        "base": "Shox",
+        "forme": "",
+        "sid": "s536873000"
+    },
     "s537030912": {
         "type": "specie",
         "num": -5000,
