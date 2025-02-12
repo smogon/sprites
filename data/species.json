@@ -11751,6 +11751,22 @@
         "forme": "",
         "sid": "s536873216"
     },
+    "s536873248": {
+        "type": "specie",
+        "num": -73,
+        "formeNum": 0,
+        "base": "Chuggon",
+        "forme": "",
+        "sid": "s536873248"
+    },
+    "s536873280": {
+        "type": "specie",
+        "num": -74,
+        "formeNum": 0,
+        "base": "Draggalong",
+        "forme": "",
+        "sid": "s536873280"
+    },
     "s536873312": {
         "type": "specie",
         "num": -75,
