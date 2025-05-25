@@ -7188,7 +7188,7 @@
         "num": 669,
         "formeNum": 1,
         "base": "Flabébé",
-        "forme": "Blue",
+        "forme": "Yellow",
         "sid": "s21409"
     },
     "s21410": {
@@ -7204,7 +7204,7 @@
         "num": 669,
         "formeNum": 3,
         "base": "Flabébé",
-        "forme": "White",
+        "forme": "Blue",
         "sid": "s21411"
     },
     "s21412": {
@@ -7212,7 +7212,7 @@
         "num": 669,
         "formeNum": 4,
         "base": "Flabébé",
-        "forme": "Yellow",
+        "forme": "White",
         "sid": "s21412"
     },
     "s21440": {
@@ -7228,7 +7228,7 @@
         "num": 670,
         "formeNum": 1,
         "base": "Floette",
-        "forme": "Blue",
+        "forme": "Yellow",
         "sid": "s21441"
     },
     "s21442": {
@@ -7244,7 +7244,7 @@
         "num": 670,
         "formeNum": 3,
         "base": "Floette",
-        "forme": "White",
+        "forme": "Blue",
         "sid": "s21443"
     },
     "s21444": {
@@ -7252,7 +7252,7 @@
         "num": 670,
         "formeNum": 4,
         "base": "Floette",
-        "forme": "Yellow",
+        "forme": "White",
         "sid": "s21444"
     },
     "s21445": {
@@ -7276,7 +7276,7 @@
         "num": 671,
         "formeNum": 1,
         "base": "Florges",
-        "forme": "Blue",
+        "forme": "Yellow",
         "sid": "s21473"
     },
     "s21474": {
@@ -7292,7 +7292,7 @@
         "num": 671,
         "formeNum": 3,
         "base": "Florges",
-        "forme": "White",
+        "forme": "Blue",
         "sid": "s21475"
     },
     "s21476": {
@@ -7300,7 +7300,7 @@
         "num": 671,
         "formeNum": 4,
         "base": "Florges",
-        "forme": "Yellow",
+        "forme": "White",
         "sid": "s21476"
     },
     "s21504": {
