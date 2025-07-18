@@ -11783,6 +11783,22 @@
         "forme": "",
         "sid": "s536873376"
     },
+    "s536873408": {
+        "type": "specie",
+        "num": -78,
+        "formeNum": 0,
+        "base": "Ramnarok",
+        "forme": "",
+        "sid": "s536873408"
+    },
+    "s536873409": {
+        "type": "specie",
+        "num": -78,
+        "formeNum": 1,
+        "base": "Ramnarok",
+        "forme": "Radiant",
+        "sid": "s536873409"
+    },
     "s537030912": {
         "type": "specie",
         "num": -5000,

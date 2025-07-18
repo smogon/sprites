@@ -494,6 +494,8 @@ const BattlePokemonIconIndexes = {
 	shox: 1512 + 75,
 	chuggon: 1512 + 76,
 	draggalong: 1512 + 77,
+	ramnarok: 1512 + 78,
+	ramnarokradiant: 1512 + 79,
 };
 
 const BattlePokemonIconIndexesLeft = {
