@@ -161,6 +161,13 @@
         ],
         "sid": "i668"
     },
+    "i2581": {
+        "type": "item",
+        "names": [
+            "Barbaracite"
+        ],
+        "sid": "i2581"
+    },
     "i851": {
         "type": "item",
         "names": [
@@ -336,6 +343,13 @@
         ],
         "sid": "i546"
     },
+    "i2574": {
+        "type": "item",
+        "names": [
+            "Chandelurite"
+        ],
+        "sid": "i2574"
+    },
     "i249": {
         "type": "item",
         "names": [
@@ -378,6 +392,13 @@
             "Cherish Ball"
         ],
         "sid": "i16"
+    },
+    "i2575": {
+        "type": "item",
+        "names": [
+            "Chesnaughtite"
+        ],
+        "sid": "i2575"
     },
     "i150": {
         "type": "item",
@@ -449,6 +470,13 @@
             "Clear Amulet"
         ],
         "sid": "i1882"
+    },
+    "i2559": {
+        "type": "item",
+        "names": [
+            "Clefablite"
+        ],
+        "sid": "i2559"
     },
     "i1112": {
         "type": "item",
@@ -569,6 +597,13 @@
         ],
         "sid": "i226"
     },
+    "i2576": {
+        "type": "item",
+        "names": [
+            "Delphoxite"
+        ],
+        "sid": "i2576"
+    },
     "i280": {
         "type": "item",
         "names": [
@@ -611,6 +646,13 @@
         ],
         "sid": "i311"
     },
+    "i2582": {
+        "type": "item",
+        "names": [
+            "Dragalgite"
+        ],
+        "sid": "i2582"
+    },
     "i250": {
         "type": "item",
         "names": [
@@ -639,12 +681,26 @@
         ],
         "sid": "i235"
     },
+    "i2562": {
+        "type": "item",
+        "names": [
+            "Dragoninite"
+        ],
+        "sid": "i2562"
+    },
     "i790": {
         "type": "item",
         "names": [
             "Dragonium Z"
         ],
         "sid": "i790"
+    },
+    "i2585": {
+        "type": "item",
+        "names": [
+            "Drampanite"
+        ],
+        "sid": "i2585"
     },
     "i312": {
         "type": "item",
@@ -694,6 +750,13 @@
             "Earth Plate"
         ],
         "sid": "i305"
+    },
+    "i2573": {
+        "type": "item",
+        "names": [
+            "Eelektrossite"
+        ],
+        "sid": "i2573"
     },
     "i805": {
         "type": "item",
@@ -751,6 +814,13 @@
         ],
         "sid": "i779"
     },
+    "i2569": {
+        "type": "item",
+        "names": [
+            "Emboarite"
+        ],
+        "sid": "i2569"
+    },
     "i208": {
         "type": "item",
         "names": [
@@ -764,6 +834,13 @@
             "Eviolite"
         ],
         "sid": "i538"
+    },
+    "i2570": {
+        "type": "item",
+        "names": [
+            "Excadrite"
+        ],
+        "sid": "i2570"
     },
     "i268": {
         "type": "item",
@@ -800,12 +877,26 @@
         ],
         "sid": "i920"
     },
+    "i2586": {
+        "type": "item",
+        "names": [
+            "Falinksite"
+        ],
+        "sid": "i2586"
+    },
     "i492": {
         "type": "item",
         "names": [
             "Fast Ball"
         ],
         "sid": "i492"
+    },
+    "i2564": {
+        "type": "item",
+        "names": [
+            "Feraligite"
+        ],
+        "sid": "i2564"
     },
     "i553": {
         "type": "item",
@@ -891,6 +982,13 @@
         ],
         "sid": "i539"
     },
+    "i2579": {
+        "type": "item",
+        "names": [
+            "Floettite"
+        ],
+        "sid": "i2579"
+    },
     "i1113": {
         "type": "item",
         "names": [
@@ -967,6 +1065,13 @@
             "Friend Ball"
         ],
         "sid": "i497"
+    },
+    "i2566": {
+        "type": "item",
+        "names": [
+            "Froslassite"
+        ],
+        "sid": "i2566"
     },
     "i316": {
         "type": "item",
@@ -1094,6 +1199,13 @@
         ],
         "sid": "i3"
     },
+    "i2577": {
+        "type": "item",
+        "names": [
+            "Greninjite"
+        ],
+        "sid": "i2577"
+    },
     "i173": {
         "type": "item",
         "names": [
@@ -1163,6 +1275,13 @@
             "Hard Stone"
         ],
         "sid": "i238"
+    },
+    "i2583": {
+        "type": "item",
+        "names": [
+            "Hawluchanite"
+        ],
+        "sid": "i2583"
     },
     "i14": {
         "type": "item",
@@ -1608,6 +1727,13 @@
         ],
         "sid": "i137"
     },
+    "i2580": {
+        "type": "item",
+        "names": [
+            "Malamarite"
+        ],
+        "sid": "i2580"
+    },
     "i1861": {
         "type": "item",
         "names": [
@@ -1670,6 +1796,13 @@
             "Medichamite"
         ],
         "sid": "i665"
+    },
+    "i2563": {
+        "type": "item",
+        "names": [
+            "Meganiumite"
+        ],
+        "sid": "i2563"
     },
     "i219": {
         "type": "item",
@@ -2087,6 +2220,13 @@
         ],
         "sid": "i12"
     },
+    "i571": {
+        "type": "item",
+        "names": [
+            "Pretty Feather"
+        ],
+        "sid": "i571"
+    },
     "i800": {
         "type": "item",
         "names": [
@@ -2149,6 +2289,13 @@
             "Punching Glove"
         ],
         "sid": "i1884"
+    },
+    "i2578": {
+        "type": "item",
+        "names": [
+            "Pyroarite"
+        ],
+        "sid": "i2578"
     },
     "i171": {
         "type": "item",
@@ -2417,12 +2564,26 @@
         ],
         "sid": "i670"
     },
+    "i2571": {
+        "type": "item",
+        "names": [
+            "Scolipite"
+        ],
+        "sid": "i2571"
+    },
     "i232": {
         "type": "item",
         "names": [
             "Scope Lens"
         ],
         "sid": "i232"
+    },
+    "i2572": {
+        "type": "item",
+        "names": [
+            "Scraftinite"
+        ],
+        "sid": "i2572"
     },
     "i254": {
         "type": "item",
@@ -2503,6 +2664,13 @@
             "Gold Berry"
         ],
         "sid": "i158"
+    },
+    "i2565": {
+        "type": "item",
+        "names": [
+            "Skarmorite"
+        ],
+        "sid": "i2565"
     },
     "i105": {
         "type": "item",
@@ -2608,6 +2776,13 @@
             "Starf Berry"
         ],
         "sid": "i207"
+    },
+    "i2561": {
+        "type": "item",
+        "names": [
+            "Starminite"
+        ],
+        "sid": "i2561"
     },
     "i1114": {
         "type": "item",
@@ -3533,6 +3708,13 @@
         ],
         "sid": "i659"
     },
+    "i2560": {
+        "type": "item",
+        "names": [
+            "Victreebelite"
+        ],
+        "sid": "i2560"
+    },
     "i186": {
         "type": "item",
         "names": [
@@ -3658,6 +3840,13 @@
             "Zoom Lens"
         ],
         "sid": "i276"
+    },
+    "i2584": {
+        "type": "item",
+        "names": [
+            "Zygardite"
+        ],
+        "sid": "i2584"
     },
     "i0": {
         "type": "item",
