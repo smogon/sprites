@@ -503,6 +503,14 @@
         "forme": "",
         "sid": "s1152"
     },
+    "s1153": {
+        "type": "specie",
+        "num": 36,
+        "formeNum": 1,
+        "base": "Clefable",
+        "forme": "Mega",
+        "sid": "s1153"
+    },
     "s1184": {
         "type": "specie",
         "num": 37,
@@ -862,6 +870,14 @@
         "base": "Victreebel",
         "forme": "",
         "sid": "s2272"
+    },
+    "s2273": {
+        "type": "specie",
+        "num": 71,
+        "formeNum": 1,
+        "base": "Victreebel",
+        "forme": "Mega",
+        "sid": "s2273"
     },
     "s2304": {
         "type": "specie",
@@ -1415,6 +1431,14 @@
         "forme": "",
         "sid": "s3872"
     },
+    "s3873": {
+        "type": "specie",
+        "num": 121,
+        "formeNum": 1,
+        "base": "Starmie",
+        "forme": "Mega",
+        "sid": "s3873"
+    },
     "s3904": {
         "type": "specie",
         "num": 122,
@@ -1727,6 +1751,14 @@
         "forme": "",
         "sid": "s4768"
     },
+    "s4769": {
+        "type": "specie",
+        "num": 149,
+        "formeNum": 1,
+        "base": "Dragonite",
+        "forme": "Mega",
+        "sid": "s4769"
+    },
     "s4800": {
         "type": "specie",
         "num": 150,
@@ -1783,6 +1815,14 @@
         "forme": "",
         "sid": "s4928"
     },
+    "s4929": {
+        "type": "specie",
+        "num": 154,
+        "formeNum": 1,
+        "base": "Meganium",
+        "forme": "Mega",
+        "sid": "s4929"
+    },
     "s4960": {
         "type": "specie",
         "num": 155,
@@ -1838,6 +1878,14 @@
         "base": "Feraligatr",
         "forme": "",
         "sid": "s5120"
+    },
+    "s5121": {
+        "type": "specie",
+        "num": 160,
+        "formeNum": 1,
+        "base": "Feraligatr",
+        "forme": "Mega",
+        "sid": "s5121"
     },
     "s5152": {
         "type": "specie",
@@ -2670,6 +2718,14 @@
         "base": "Skarmory",
         "forme": "",
         "sid": "s7264"
+    },
+    "s7265": {
+        "type": "specie",
+        "num": 227,
+        "formeNum": 1,
+        "base": "Skarmory",
+        "forme": "Mega",
+        "sid": "s7265"
     },
     "s7296": {
         "type": "specie",
@@ -5031,6 +5087,14 @@
         "forme": "",
         "sid": "s15296"
     },
+    "s15297": {
+        "type": "specie",
+        "num": 478,
+        "formeNum": 1,
+        "base": "Froslass",
+        "forme": "Mega",
+        "sid": "s15297"
+    },
     "s15328": {
         "type": "specie",
         "num": 479,
@@ -5415,6 +5479,14 @@
         "forme": "",
         "sid": "s16000"
     },
+    "s16001": {
+        "type": "specie",
+        "num": 500,
+        "formeNum": 1,
+        "base": "Emboar",
+        "forme": "Mega",
+        "sid": "s16001"
+    },
     "s16032": {
         "type": "specie",
         "num": 501,
@@ -5663,6 +5735,14 @@
         "forme": "",
         "sid": "s16960"
     },
+    "s16961": {
+        "type": "specie",
+        "num": 530,
+        "formeNum": 1,
+        "base": "Excadrill",
+        "forme": "Mega",
+        "sid": "s16961"
+    },
     "s16992": {
         "type": "specie",
         "num": 531,
@@ -5790,6 +5870,14 @@
         "base": "Scolipede",
         "forme": "",
         "sid": "s17440"
+    },
+    "s17441": {
+        "type": "specie",
+        "num": 545,
+        "formeNum": 1,
+        "base": "Scolipede",
+        "forme": "Mega",
+        "sid": "s17441"
     },
     "s17472": {
         "type": "specie",
@@ -5966,6 +6054,14 @@
         "base": "Scrafty",
         "forme": "",
         "sid": "s17920"
+    },
+    "s17921": {
+        "type": "specie",
+        "num": 560,
+        "formeNum": 1,
+        "base": "Scrafty",
+        "forme": "Mega",
+        "sid": "s17921"
     },
     "s17952": {
         "type": "specie",
@@ -6391,6 +6487,14 @@
         "forme": "",
         "sid": "s19328"
     },
+    "s19329": {
+        "type": "specie",
+        "num": 604,
+        "formeNum": 1,
+        "base": "Eelektross",
+        "forme": "Mega",
+        "sid": "s19329"
+    },
     "s19360": {
         "type": "specie",
         "num": 605,
@@ -6430,6 +6534,14 @@
         "base": "Chandelure",
         "forme": "",
         "sid": "s19488"
+    },
+    "s19489": {
+        "type": "specie",
+        "num": 609,
+        "formeNum": 1,
+        "base": "Chandelure",
+        "forme": "Mega",
+        "sid": "s19489"
     },
     "s19520": {
         "type": "specie",
@@ -6879,6 +6991,14 @@
         "forme": "",
         "sid": "s20864"
     },
+    "s20865": {
+        "type": "specie",
+        "num": 652,
+        "formeNum": 1,
+        "base": "Chesnaught",
+        "forme": "Mega",
+        "sid": "s20865"
+    },
     "s20896": {
         "type": "specie",
         "num": 653,
@@ -6902,6 +7022,14 @@
         "base": "Delphox",
         "forme": "",
         "sid": "s20960"
+    },
+    "s20961": {
+        "type": "specie",
+        "num": 655,
+        "formeNum": 1,
+        "base": "Delphox",
+        "forme": "Mega",
+        "sid": "s20961"
     },
     "s20992": {
         "type": "specie",
@@ -6942,6 +7070,14 @@
         "base": "Greninja",
         "forme": "Ash",
         "sid": "s21058"
+    },
+    "s21059": {
+        "type": "specie",
+        "num": 658,
+        "formeNum": 3,
+        "base": "Greninja",
+        "forme": "Mega",
+        "sid": "s21059"
     },
     "s21088": {
         "type": "specie",
@@ -7175,6 +7311,14 @@
         "forme": "",
         "sid": "s21376"
     },
+    "s21377": {
+        "type": "specie",
+        "num": 668,
+        "formeNum": 1,
+        "base": "Pyroar",
+        "forme": "Mega",
+        "sid": "s21377"
+    },
     "s21408": {
         "type": "specie",
         "num": 669,
@@ -7262,6 +7406,14 @@
         "base": "Floette",
         "forme": "Eternal",
         "sid": "s21445"
+    },
+    "s21446": {
+        "type": "specie",
+        "num": 670,
+        "formeNum": 6,
+        "base": "Floette",
+        "forme": "Mega",
+        "sid": "s21446"
     },
     "s21472": {
         "type": "specie",
@@ -7519,6 +7671,14 @@
         "forme": "",
         "sid": "s21984"
     },
+    "s21985": {
+        "type": "specie",
+        "num": 687,
+        "formeNum": 1,
+        "base": "Malamar",
+        "forme": "Mega",
+        "sid": "s21985"
+    },
     "s22016": {
         "type": "specie",
         "num": 688,
@@ -7535,6 +7695,14 @@
         "forme": "",
         "sid": "s22048"
     },
+    "s22049": {
+        "type": "specie",
+        "num": 689,
+        "formeNum": 1,
+        "base": "Barbaracle",
+        "forme": "Mega",
+        "sid": "s22049"
+    },
     "s22080": {
         "type": "specie",
         "num": 690,
@@ -7550,6 +7718,14 @@
         "base": "Dragalge",
         "forme": "",
         "sid": "s22112"
+    },
+    "s22113": {
+        "type": "specie",
+        "num": 691,
+        "formeNum": 1,
+        "base": "Dragalge",
+        "forme": "Mega",
+        "sid": "s22113"
     },
     "s22144": {
         "type": "specie",
@@ -7630,6 +7806,14 @@
         "base": "Hawlucha",
         "forme": "",
         "sid": "s22432"
+    },
+    "s22433": {
+        "type": "specie",
+        "num": 701,
+        "formeNum": 1,
+        "base": "Hawlucha",
+        "forme": "Mega",
+        "sid": "s22433"
     },
     "s22464": {
         "type": "specie",
@@ -7878,6 +8062,14 @@
         "base": "Zygarde",
         "forme": "Complete",
         "sid": "s22980"
+    },
+    "s22981": {
+        "type": "specie",
+        "num": 718,
+        "formeNum": 5,
+        "base": "Zygarde",
+        "forme": "Mega",
+        "sid": "s22981"
     },
     "s23008": {
         "type": "specie",
@@ -8775,6 +8967,14 @@
         "forme": "",
         "sid": "s24960"
     },
+    "s24961": {
+        "type": "specie",
+        "num": 780,
+        "formeNum": 1,
+        "base": "Drampa",
+        "forme": "Mega",
+        "sid": "s24961"
+    },
     "s24992": {
         "type": "specie",
         "num": 781,
@@ -9638,6 +9838,14 @@
         "base": "Falinks",
         "forme": "",
         "sid": "s27840"
+    },
+    "s27841": {
+        "type": "specie",
+        "num": 870,
+        "formeNum": 1,
+        "base": "Falinks",
+        "forme": "Mega",
+        "sid": "s27841"
     },
     "s27872": {
         "type": "specie",
