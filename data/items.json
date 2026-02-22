@@ -20,6 +20,13 @@
         ],
         "sid": "i677"
     },
+    "i2588": {
+        "type": "item",
+        "names": [
+            "Absolite Z"
+        ],
+        "sid": "i2588"
+    },
     "i545": {
         "type": "item",
         "names": [
@@ -168,6 +175,14 @@
         ],
         "sid": "i2581"
     },
+    "i2601": {
+        "type": "item",
+        "names": [
+            "Baxcalibrite",
+            "Tatsugirinite"
+        ],
+        "sid": "i2601"
+    },
     "i851": {
         "type": "item",
         "names": [
@@ -308,19 +323,19 @@
         ],
         "sid": "i558"
     },
-    "i909": {
-        "type": "item",
-        "names": [
-            "Bug Memory"
-        ],
-        "sid": "i909"
-    },
     "i787": {
         "type": "item",
         "names": [
             "Buginium Z"
         ],
         "sid": "i787"
+    },
+    "i909": {
+        "type": "item",
+        "names": [
+            "Bug Memory"
+        ],
+        "sid": "i909"
     },
     "i118": {
         "type": "item",
@@ -421,6 +436,13 @@
             "Chill Drive"
         ],
         "sid": "i119"
+    },
+    "i2587": {
+        "type": "item",
+        "names": [
+            "Chimechite"
+        ],
+        "sid": "i2587"
     },
     "i1254": {
         "type": "item",
@@ -527,6 +549,13 @@
         ],
         "sid": "i1885"
     },
+    "i2595": {
+        "type": "item",
+        "names": [
+            "Crabominite"
+        ],
+        "sid": "i2595"
+    },
     "i1253": {
         "type": "item",
         "names": [
@@ -555,6 +584,13 @@
         ],
         "sid": "i562"
     },
+    "i791": {
+        "type": "item",
+        "names": [
+            "Darkinium Z"
+        ],
+        "sid": "i791"
+    },
     "i919": {
         "type": "item",
         "names": [
@@ -562,12 +598,12 @@
         ],
         "sid": "i919"
     },
-    "i791": {
+    "i2593": {
         "type": "item",
         "names": [
-            "Darkinium Z"
+            "Darkranite"
         ],
-        "sid": "i791"
+        "sid": "i2593"
     },
     "i109": {
         "type": "item",
@@ -667,20 +703,6 @@
         ],
         "sid": "i561"
     },
-    "i918": {
-        "type": "item",
-        "names": [
-            "Dragon Memory"
-        ],
-        "sid": "i918"
-    },
-    "i235": {
-        "type": "item",
-        "names": [
-            "Dragon Scale"
-        ],
-        "sid": "i235"
-    },
     "i2562": {
         "type": "item",
         "names": [
@@ -695,10 +717,25 @@
         ],
         "sid": "i790"
     },
+    "i918": {
+        "type": "item",
+        "names": [
+            "Dragon Memory"
+        ],
+        "sid": "i918"
+    },
+    "i235": {
+        "type": "item",
+        "names": [
+            "Dragon Scale"
+        ],
+        "sid": "i235"
+    },
     "i2585": {
         "type": "item",
         "names": [
-            "Drampanite"
+            "Drampanite",
+            "Raichunite X"
         ],
         "sid": "i2585"
     },
@@ -880,7 +917,8 @@
     "i2586": {
         "type": "item",
         "names": [
-            "Falinksite"
+            "Falinksite",
+            "Raichunite Y"
         ],
         "sid": "i2586"
     },
@@ -1115,6 +1153,13 @@
         ],
         "sid": "i683"
     },
+    "i2590": {
+        "type": "item",
+        "names": [
+            "Garchompite Z"
+        ],
+        "sid": "i2590"
+    },
     "i657": {
         "type": "item",
         "names": [
@@ -1136,19 +1181,19 @@
         ],
         "sid": "i560"
     },
-    "i910": {
-        "type": "item",
-        "names": [
-            "Ghost Memory"
-        ],
-        "sid": "i910"
-    },
     "i789": {
         "type": "item",
         "names": [
             "Ghostium Z"
         ],
         "sid": "i789"
+    },
+    "i910": {
+        "type": "item",
+        "names": [
+            "Ghost Memory"
+        ],
+        "sid": "i910"
     },
     "i763": {
         "type": "item",
@@ -1157,12 +1202,34 @@
         ],
         "sid": "i763"
     },
+    "i2600": {
+        "type": "item",
+        "names": [
+            "Glimmoranite"
+        ],
+        "sid": "i2600"
+    },
     "i796": {
         "type": "item",
         "names": [
             "Gold Bottle Cap"
         ],
         "sid": "i796"
+    },
+    "i2596": {
+        "type": "item",
+        "names": [
+            "Golisopite"
+        ],
+        "sid": "i2596"
+    },
+    "i2594": {
+        "type": "item",
+        "names": [
+            "Golurkite",
+            "Meowsticite"
+        ],
+        "sid": "i2594"
     },
     "i551": {
         "type": "item",
@@ -1171,19 +1238,19 @@
         ],
         "sid": "i551"
     },
-    "i914": {
-        "type": "item",
-        "names": [
-            "Grass Memory"
-        ],
-        "sid": "i914"
-    },
     "i780": {
         "type": "item",
         "names": [
             "Grassium Z"
         ],
         "sid": "i780"
+    },
+    "i914": {
+        "type": "item",
+        "names": [
+            "Grass Memory"
+        ],
+        "sid": "i914"
     },
     "i884": {
         "type": "item",
@@ -1241,19 +1308,19 @@
         ],
         "sid": "i555"
     },
-    "i907": {
-        "type": "item",
-        "names": [
-            "Ground Memory"
-        ],
-        "sid": "i907"
-    },
     "i784": {
         "type": "item",
         "names": [
             "Groundium Z"
         ],
         "sid": "i784"
+    },
+    "i907": {
+        "type": "item",
+        "names": [
+            "Ground Memory"
+        ],
+        "sid": "i907"
     },
     "i676": {
         "type": "item",
@@ -1296,6 +1363,13 @@
             "Hearthflame Mask"
         ],
         "sid": "i2408"
+    },
+    "i2592": {
+        "type": "item",
+        "names": [
+            "Heatranite"
+        ],
+        "sid": "i2592"
     },
     "i284": {
         "type": "item",
@@ -1437,6 +1511,13 @@
         ],
         "sid": "i710"
     },
+    "i675": {
+        "type": "item",
+        "names": [
+            "Kangaskhanite"
+        ],
+        "sid": "i675"
+    },
     "i196": {
         "type": "item",
         "names": [
@@ -1464,13 +1545,6 @@
             "Kelpsy Berry"
         ],
         "sid": "i170"
-    },
-    "i675": {
-        "type": "item",
-        "names": [
-            "Kangaskhanite"
-        ],
-        "sid": "i675"
     },
     "i221": {
         "type": "item",
@@ -1621,6 +1695,13 @@
         ],
         "sid": "i673"
     },
+    "i2591": {
+        "type": "item",
+        "names": [
+            "Lucarionite Z"
+        ],
+        "sid": "i2591"
+    },
     "i256": {
         "type": "item",
         "names": [
@@ -1691,6 +1772,13 @@
             "Macho Brace"
         ],
         "sid": "i215"
+    },
+    "i2597": {
+        "type": "item",
+        "names": [
+            "Magearnite"
+        ],
+        "sid": "i2597"
     },
     "i323": {
         "type": "item",
@@ -2136,19 +2224,19 @@
         ],
         "sid": "i554"
     },
-    "i906": {
-        "type": "item",
-        "names": [
-            "Poison Memory"
-        ],
-        "sid": "i906"
-    },
     "i783": {
         "type": "item",
         "names": [
             "Poisonium Z"
         ],
         "sid": "i783"
+    },
+    "i906": {
+        "type": "item",
+        "names": [
+            "Poison Memory"
+        ],
+        "sid": "i906"
     },
     "i4": {
         "type": "item",
@@ -2431,19 +2519,19 @@
         ],
         "sid": "i315"
     },
-    "i908": {
-        "type": "item",
-        "names": [
-            "Rock Memory"
-        ],
-        "sid": "i908"
-    },
     "i788": {
         "type": "item",
         "names": [
             "Rockium Z"
         ],
         "sid": "i788"
+    },
+    "i908": {
+        "type": "item",
+        "names": [
+            "Rock Memory"
+        ],
+        "sid": "i908"
     },
     "i540": {
         "type": "item",
@@ -2577,6 +2665,13 @@
             "Scope Lens"
         ],
         "sid": "i232"
+    },
+    "i2599": {
+        "type": "item",
+        "names": [
+            "Scovillainite"
+        ],
+        "sid": "i2599"
     },
     "i2572": {
         "type": "item",
@@ -2770,6 +2865,13 @@
         ],
         "sid": "i499"
     },
+    "i2589": {
+        "type": "item",
+        "names": [
+            "Staraptite"
+        ],
+        "sid": "i2589"
+    },
     "i207": {
         "type": "item",
         "names": [
@@ -2791,13 +2893,6 @@
         ],
         "sid": "i1114"
     },
-    "i761": {
-        "type": "item",
-        "names": [
-            "Steelixite"
-        ],
-        "sid": "i761"
-    },
     "i563": {
         "type": "item",
         "names": [
@@ -2805,19 +2900,26 @@
         ],
         "sid": "i563"
     },
-    "i911": {
-        "type": "item",
-        "names": [
-            "Steel Memory"
-        ],
-        "sid": "i911"
-    },
     "i792": {
         "type": "item",
         "names": [
             "Steelium Z"
         ],
         "sid": "i792"
+    },
+    "i761": {
+        "type": "item",
+        "names": [
+            "Steelixite"
+        ],
+        "sid": "i761"
+    },
+    "i911": {
+        "type": "item",
+        "names": [
+            "Steel Memory"
+        ],
+        "sid": "i911"
     },
     "i288": {
         "type": "item",
@@ -3729,6 +3831,13 @@
         ],
         "sid": "i549"
     },
+    "i778": {
+        "type": "item",
+        "names": [
+            "Waterium Z"
+        ],
+        "sid": "i778"
+    },
     "i913": {
         "type": "item",
         "names": [
@@ -3742,13 +3851,6 @@
             "Water Stone"
         ],
         "sid": "i84"
-    },
-    "i778": {
-        "type": "item",
-        "names": [
-            "Waterium Z"
-        ],
-        "sid": "i778"
     },
     "i181": {
         "type": "item",
@@ -3833,6 +3935,13 @@
             "Zap Plate"
         ],
         "sid": "i300"
+    },
+    "i2598": {
+        "type": "item",
+        "names": [
+            "Zeraorite"
+        ],
+        "sid": "i2598"
     },
     "i276": {
         "type": "item",
