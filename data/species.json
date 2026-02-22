@@ -407,6 +407,22 @@
         "forme": "Alola",
         "sid": "s833"
     },
+    "s834": {
+        "type": "specie",
+        "num": 26,
+        "formeNum": 2,
+        "base": "Raichu",
+        "forme": "Mega-X",
+        "sid": "s834"
+    },
+    "s835": {
+        "type": "specie",
+        "num": 26,
+        "formeNum": 3,
+        "base": "Raichu",
+        "forme": "Mega-Y",
+        "sid": "s835"
+    },
     "s864": {
         "type": "specie",
         "num": 27,
@@ -3935,6 +3951,14 @@
         "forme": "",
         "sid": "s11456"
     },
+    "s11457": {
+        "type": "specie",
+        "num": 358,
+        "formeNum": 1,
+        "base": "Chimecho",
+        "forme": "Mega",
+        "sid": "s11457"
+    },
     "s11488": {
         "type": "specie",
         "num": 359,
@@ -3950,6 +3974,14 @@
         "base": "Absol",
         "forme": "Mega",
         "sid": "s11489"
+    },
+    "s11490": {
+        "type": "specie",
+        "num": 359,
+        "formeNum": 2,
+        "base": "Absol",
+        "forme": "Mega-Z",
+        "sid": "s11490"
     },
     "s11520": {
         "type": "specie",
@@ -4350,6 +4382,14 @@
         "base": "Staraptor",
         "forme": "",
         "sid": "s12736"
+    },
+    "s12737": {
+        "type": "specie",
+        "num": 398,
+        "formeNum": 1,
+        "base": "Staraptor",
+        "forme": "Mega",
+        "sid": "s12737"
     },
     "s12768": {
         "type": "specie",
@@ -4799,6 +4839,14 @@
         "forme": "Mega",
         "sid": "s14241"
     },
+    "s14242": {
+        "type": "specie",
+        "num": 445,
+        "formeNum": 2,
+        "base": "Garchomp",
+        "forme": "Mega-Z",
+        "sid": "s14242"
+    },
     "s14272": {
         "type": "specie",
         "num": 446,
@@ -4830,6 +4878,14 @@
         "base": "Lucario",
         "forme": "Mega",
         "sid": "s14337"
+    },
+    "s14338": {
+        "type": "specie",
+        "num": 448,
+        "formeNum": 2,
+        "base": "Lucario",
+        "forme": "Mega-Z",
+        "sid": "s14338"
     },
     "s14368": {
         "type": "specie",
@@ -5207,6 +5263,14 @@
         "forme": "",
         "sid": "s15520"
     },
+    "s15521": {
+        "type": "specie",
+        "num": 485,
+        "formeNum": 1,
+        "base": "Heatran",
+        "forme": "Mega",
+        "sid": "s15521"
+    },
     "s15552": {
         "type": "specie",
         "num": 486,
@@ -5262,6 +5326,14 @@
         "base": "Darkrai",
         "forme": "",
         "sid": "s15712"
+    },
+    "s15713": {
+        "type": "specie",
+        "num": 491,
+        "formeNum": 1,
+        "base": "Darkrai",
+        "forme": "Mega",
+        "sid": "s15713"
     },
     "s15744": {
         "type": "specie",
@@ -6663,6 +6735,14 @@
         "forme": "",
         "sid": "s19936"
     },
+    "s19937": {
+        "type": "specie",
+        "num": 623,
+        "formeNum": 1,
+        "base": "Golurk",
+        "forme": "Mega",
+        "sid": "s19937"
+    },
     "s19968": {
         "type": "specie",
         "num": 624,
@@ -7591,6 +7671,22 @@
         "forme": "F",
         "sid": "s21697"
     },
+    "s21698": {
+        "type": "specie",
+        "num": 678,
+        "formeNum": 2,
+        "base": "Meowstic",
+        "forme": "M-Mega",
+        "sid": "s21698"
+    },
+    "s21699": {
+        "type": "specie",
+        "num": 678,
+        "formeNum": 3,
+        "base": "Meowstic",
+        "forme": "F-Mega",
+        "sid": "s21699"
+    },
     "s21728": {
         "type": "specie",
         "num": 679,
@@ -8287,6 +8383,14 @@
         "forme": "",
         "sid": "s23680"
     },
+    "s23681": {
+        "type": "specie",
+        "num": 740,
+        "formeNum": 1,
+        "base": "Crabominable",
+        "forme": "Mega",
+        "sid": "s23681"
+    },
     "s23712": {
         "type": "specie",
         "num": 741,
@@ -8598,6 +8702,14 @@
         "base": "Golisopod",
         "forme": "",
         "sid": "s24576"
+    },
+    "s24577": {
+        "type": "specie",
+        "num": 768,
+        "formeNum": 1,
+        "base": "Golisopod",
+        "forme": "Mega",
+        "sid": "s24577"
     },
     "s24608": {
         "type": "specie",
@@ -9183,6 +9295,22 @@
         "forme": "Original",
         "sid": "s25633"
     },
+    "s25634": {
+        "type": "specie",
+        "num": 801,
+        "formeNum": 2,
+        "base": "Magearna",
+        "forme": "Mega",
+        "sid": "s25634"
+    },
+    "s25635": {
+        "type": "specie",
+        "num": 801,
+        "formeNum": 3,
+        "base": "Magearna",
+        "forme": "Original-Mega",
+        "sid": "s25635"
+    },
     "s25664": {
         "type": "specie",
         "num": 802,
@@ -9230,6 +9358,14 @@
         "base": "Zeraora",
         "forme": "",
         "sid": "s25824"
+    },
+    "s25825": {
+        "type": "specie",
+        "num": 807,
+        "formeNum": 1,
+        "base": "Zeraora",
+        "forme": "Mega",
+        "sid": "s25825"
     },
     "s25856": {
         "type": "specie",
@@ -10647,6 +10783,14 @@
         "forme": "",
         "sid": "s30464"
     },
+    "s30465": {
+        "type": "specie",
+        "num": 952,
+        "formeNum": 1,
+        "base": "Scovillain",
+        "forme": "Mega",
+        "sid": "s30465"
+    },
     "s30496": {
         "type": "specie",
         "num": 953,
@@ -10799,6 +10943,14 @@
         "forme": "",
         "sid": "s31040"
     },
+    "s31041": {
+        "type": "specie",
+        "num": 970,
+        "formeNum": 1,
+        "base": "Glimmora",
+        "forme": "Mega",
+        "sid": "s31041"
+    },
     "s31072": {
         "type": "specie",
         "num": 971,
@@ -10878,6 +11030,30 @@
         "base": "Tatsugiri",
         "forme": "Stretchy",
         "sid": "s31298"
+    },
+    "s31299": {
+        "type": "specie",
+        "num": 978,
+        "formeNum": 3,
+        "base": "Tatsugiri",
+        "forme": "Curly-Mega",
+        "sid": "s31299"
+    },
+    "s31300": {
+        "type": "specie",
+        "num": 978,
+        "formeNum": 4,
+        "base": "Tatsugiri",
+        "forme": "Droopy-Mega",
+        "sid": "s31300"
+    },
+    "s31301": {
+        "type": "specie",
+        "num": 978,
+        "formeNum": 5,
+        "base": "Tatsugiri",
+        "forme": "Stretchy-Mega",
+        "sid": "s31301"
     },
     "s31328": {
         "type": "specie",
@@ -11046,6 +11222,14 @@
         "base": "Baxcalibur",
         "forme": "",
         "sid": "s31936"
+    },
+    "s31937": {
+        "type": "specie",
+        "num": 998,
+        "formeNum": 1,
+        "base": "Baxcalibur",
+        "forme": "Mega",
+        "sid": "s31937"
     },
     "s31968": {
         "type": "specie",
