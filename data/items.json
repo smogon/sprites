@@ -20,12 +20,12 @@
         ],
         "sid": "i677"
     },
-    "i2588": {
+    "i2638": {
         "type": "item",
         "names": [
             "Absolite Z"
         ],
-        "sid": "i2588"
+        "sid": "i2638"
     },
     "i545": {
         "type": "item",
@@ -175,13 +175,12 @@
         ],
         "sid": "i2581"
     },
-    "i2601": {
+    "i2648": {
         "type": "item",
         "names": [
-            "Baxcalibrite",
-            "Tatsugirinite"
+            "Baxcalibrite"
         ],
-        "sid": "i2601"
+        "sid": "i2648"
     },
     "i851": {
         "type": "item",
@@ -437,12 +436,12 @@
         ],
         "sid": "i119"
     },
-    "i2587": {
+    "i2637": {
         "type": "item",
         "names": [
             "Chimechite"
         ],
-        "sid": "i2587"
+        "sid": "i2637"
     },
     "i1254": {
         "type": "item",
@@ -549,12 +548,12 @@
         ],
         "sid": "i1885"
     },
-    "i2595": {
+    "i2644": {
         "type": "item",
         "names": [
             "Crabominite"
         ],
-        "sid": "i2595"
+        "sid": "i2644"
     },
     "i1253": {
         "type": "item",
@@ -598,12 +597,12 @@
         ],
         "sid": "i919"
     },
-    "i2593": {
+    "i2568": {
         "type": "item",
         "names": [
             "Darkranite"
         ],
-        "sid": "i2593"
+        "sid": "i2568"
     },
     "i109": {
         "type": "item",
@@ -734,8 +733,7 @@
     "i2585": {
         "type": "item",
         "names": [
-            "Drampanite",
-            "Raichunite X"
+            "Drampanite"
         ],
         "sid": "i2585"
     },
@@ -914,13 +912,12 @@
         ],
         "sid": "i920"
     },
-    "i2586": {
+    "i2587": {
         "type": "item",
         "names": [
-            "Falinksite",
-            "Raichunite Y"
+            "Falinksite"
         ],
-        "sid": "i2586"
+        "sid": "i2587"
     },
     "i492": {
         "type": "item",
@@ -1153,12 +1150,12 @@
         ],
         "sid": "i683"
     },
-    "i2590": {
+    "i2640": {
         "type": "item",
         "names": [
             "Garchompite Z"
         ],
-        "sid": "i2590"
+        "sid": "i2640"
     },
     "i657": {
         "type": "item",
@@ -1202,12 +1199,12 @@
         ],
         "sid": "i763"
     },
-    "i2600": {
+    "i2650": {
         "type": "item",
         "names": [
             "Glimmoranite"
         ],
-        "sid": "i2600"
+        "sid": "i2650"
     },
     "i796": {
         "type": "item",
@@ -1216,20 +1213,19 @@
         ],
         "sid": "i796"
     },
-    "i2596": {
+    "i2645": {
         "type": "item",
         "names": [
             "Golisopite"
         ],
-        "sid": "i2596"
+        "sid": "i2645"
     },
-    "i2594": {
+    "i2642": {
         "type": "item",
         "names": [
-            "Golurkite",
-            "Meowsticite"
+            "Golurkite"
         ],
-        "sid": "i2594"
+        "sid": "i2642"
     },
     "i551": {
         "type": "item",
@@ -1364,12 +1360,12 @@
         ],
         "sid": "i2408"
     },
-    "i2592": {
+    "i2567": {
         "type": "item",
         "names": [
             "Heatranite"
         ],
-        "sid": "i2592"
+        "sid": "i2567"
     },
     "i284": {
         "type": "item",
@@ -1695,12 +1691,12 @@
         ],
         "sid": "i673"
     },
-    "i2591": {
+    "i2641": {
         "type": "item",
         "names": [
             "Lucarionite Z"
         ],
-        "sid": "i2591"
+        "sid": "i2641"
     },
     "i256": {
         "type": "item",
@@ -1773,12 +1769,12 @@
         ],
         "sid": "i215"
     },
-    "i2597": {
+    "i2646": {
         "type": "item",
         "names": [
             "Magearnite"
         ],
-        "sid": "i2597"
+        "sid": "i2646"
     },
     "i323": {
         "type": "item",
@@ -1898,6 +1894,13 @@
             "Mental Herb"
         ],
         "sid": "i219"
+    },
+    "i2643": {
+        "type": "item",
+        "names": [
+            "Meowsticite"
+        ],
+        "sid": "i2643"
     },
     "i758": {
         "type": "item",
@@ -2420,6 +2423,20 @@
         ],
         "sid": "i177"
     },
+    "i2635": {
+        "type": "item",
+        "names": [
+            "Raichunite X"
+        ],
+        "sid": "i2635"
+    },
+    "i2636": {
+        "type": "item",
+        "names": [
+            "Raichunite Y"
+        ],
+        "sid": "i2636"
+    },
     "i106": {
         "type": "item",
         "names": [
@@ -2666,12 +2683,12 @@
         ],
         "sid": "i232"
     },
-    "i2599": {
+    "i2647": {
         "type": "item",
         "names": [
             "Scovillainite"
         ],
-        "sid": "i2599"
+        "sid": "i2647"
     },
     "i2572": {
         "type": "item",
@@ -2865,12 +2882,12 @@
         ],
         "sid": "i499"
     },
-    "i2589": {
+    "i2639": {
         "type": "item",
         "names": [
             "Staraptite"
         ],
-        "sid": "i2589"
+        "sid": "i2639"
     },
     "i207": {
         "type": "item",
@@ -3004,6 +3021,13 @@
             "Tart Apple"
         ],
         "sid": "i1117"
+    },
+    "i2649": {
+        "type": "item",
+        "names": [
+            "Tatsugirinite"
+        ],
+        "sid": "i2649"
     },
     "i879": {
         "type": "item",
@@ -3936,12 +3960,12 @@
         ],
         "sid": "i300"
     },
-    "i2598": {
+    "i2586": {
         "type": "item",
         "names": [
             "Zeraorite"
         ],
-        "sid": "i2598"
+        "sid": "i2586"
     },
     "i276": {
         "type": "item",
