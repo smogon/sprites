@@ -12199,6 +12199,14 @@
         "forme": "Radiant",
         "sid": "s536873409"
     },
+    "s536873472": {
+        "type": "specie",
+        "num": -80,
+        "formeNum": 0,
+        "base": "Obliteryx",
+        "forme": "",
+        "sid": "s536873472"
+    },
     "s537030912": {
         "type": "specie",
         "num": -5000,
