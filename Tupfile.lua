@@ -55,6 +55,20 @@ foreach_rule(
     "build/gen9-modelslike/%B.gif"
 )
 
+-- Gen 10
+
+foreach_rule(
+    "src/champions/*.png",
+    {
+        display="96x96 %f",
+        -- TODO, add customizable compression for gif
+        -- ... or investigate using webp instead of both png/gif here
+        "magick convert %f -trim +repage -resize 90x90 %o",
+        "gifsicle -O3 -b %o"
+    },
+    "build/gen10-modelslike/%B.gif"
+)
+
 -- Gen 5 CAPs...
 
 foreach_rule(
