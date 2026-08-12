@@ -1,9 +1,9 @@
 {
     "name": "@smogon/sprite-data",
-    "private": "true",
+    "private": true,
     "type": "module",
     "dependencies": {
-        "@types/node": "^14.0.23"
-    },
-    "main": "./dist/index.js"
+        "@smogon/sprite-root": "workspace:*",
+        "@types/node": "^24.10.7"
+    }
 }

@@ -1,7 +1,7 @@
 
 import path from 'path';
 import fs from 'fs';
-import root from '@smogon/sprite-root';
+import root from '@smogon/sprite-root/index.ts';
 
 const libdir = path.join(root, "data");
 
@@ -70,7 +70,7 @@ export function parseFilename(s : string) : SpriteFilename {
     if (s.length < 2)
         throw new Error(`Filename ${s} needs to be at least 2 characters'`);
 
-    const prefix = s[0];
+    const prefix = s[0]!;
     if (!prefix.match(/[a-z]/))
         throw new Error(`Filename ${s} must start with alpha character`);
 
@@ -79,14 +79,14 @@ export function parseFilename(s : string) : SpriteFilename {
     for (const part of parts.slice(1)) {
         if (part.length === 0)
             throw new Error(`Can't parse ${s}`);
-        extra.set(part[0], part.slice(1));
+        extra.set(part[0]!, part.slice(1));
     }
     
     if (prefix === 'x') {
-        const name = parts[0].slice(1);
+        const name = parts[0]!.slice(1);
         return {extension: true, name, extra};
     } else {
-        const id = parts[0];
+        const id = parts[0]!;
         return {extension: false, id, extra};
     }
 }

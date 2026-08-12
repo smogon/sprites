@@ -1,10 +1,6 @@
 {
     "extends": "../../tsconfig-base",
-    "compilerOptions": {
-        "outDir": "dist",
-        "allowJs": true,
-    },
-    "exclude": ["test", "dist", "node_modules"],
+    "exclude": ["test"],
     "references": [
         {"path": "../../data/lib"},
     ]

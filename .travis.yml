@@ -2,13 +2,13 @@ sudo: false
 dist: focal
 language: node_js
 node_js:
-  - '14'
+  - '24'
 cache:
   npm: false
   directories:
     - "~/.pnpm-store"
 before_install:
-  - curl -L https://unpkg.com/@pnpm/self-installer | node
+  - npm install -g pnpm
   - pnpm config set store-dir ~/.pnpm-store
 install:
   - pnpm install

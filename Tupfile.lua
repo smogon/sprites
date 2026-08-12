@@ -88,7 +88,7 @@ rule(
     "ps-pokemon.sheet.mjs",
     {
         display="ps pokemon sheet",
-        "node tools/sheet %f %o",
+        "node tools/sheet/index.ts %f %o",
         compresspng{config="SPRITESHEET"}
     },
     "build/ps/pokemonicons-sheet.png"
@@ -99,7 +99,7 @@ rule(
 --     display="ps trainers sheet",
 --     {"ps-trainers.sheet.mjs"},
 --     {
---         "node tools/sheet %f %o",
+--         "node tools/sheet/index.ts %f %o",
 --         compresspng{config="SPRITESHEET"}
 --     },
 --     {"build/ps/trainers-sheet.png"}
@@ -109,7 +109,7 @@ rule(
     "ps-items.sheet.mjs",
     {
         display="ps items sheet",
-        "node tools/sheet %f %o",
+        "node tools/sheet/index.ts %f %o",
         compresspng{config="SPRITESHEET"}
     },
     "build/ps/itemicons-sheet.png"
@@ -151,7 +151,7 @@ rule(
     spriteglob({"src/minisprites/pokemon/gen6/*", "src/minisprites/items/*"}, {a = false}),
     {
         display="smogdex sheet",
-        "node tools/smogdexspritesheet --image build/smogon/spritesheet.png --stylesheet build/smogon/spritesheet.css -- %f",
+        "node tools/smogdexspritesheet/index.ts --image build/smogon/spritesheet.png --stylesheet build/smogon/spritesheet.css -- %f",
         "cwebp -z 9 build/smogon/spritesheet.png -o build/smogon/spritesheet.webp",
         "rm build/smogon/spritesheet.png"
     },

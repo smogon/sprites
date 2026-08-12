@@ -4,7 +4,7 @@ import spritesmith from 'spritesmith'
 import path from 'path'
 import fs from 'fs'
 import util from 'util';
-import * as spritedata from '@smogon/sprite-data';
+import * as spritedata from '@smogon/sprite-data/index.ts';
 
 program
     .option('--image <file>', 'where to put image')
