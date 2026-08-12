@@ -18,6 +18,6 @@ ssh smogon 'systemctl reload dex'
 # Update forum minisprites
 cd /home/monsanto/smogon/sprites
 rm -rf deploy/smogon
-node tools/deploy run smogon.deploy.js -o deploy/smogon
+node tools/deploy/index.ts run smogon.deploy.js -o deploy/smogon
 rsync -a deploy/smogon/forumsprites/ smogon:/smog2/forumsprites/minisprites
 rsync -a deploy/smogon/xyicons/ smogon:/smog2/sprites/xyicons
