@@ -12,7 +12,7 @@ This project depends on
 - [OptiPNG](http://optipng.sourceforge.net/) (optional)
 - [pngquant](https://pngquant.org/) (optional)
 - [pnpm](https://pnpm.js.org)
-- [node.js](https://nodejs.org) >= 13
+- [node.js](https://nodejs.org) >= 24
 - [wine](https://www.winehq.org/) (optional)
 - cwebp
 
