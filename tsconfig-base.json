@@ -2,12 +2,18 @@
     "compilerOptions": {
         "incremental": true,
         "target": "esnext",
-        "module": "esnext",
-        "jsx": "react",
+        "lib": ["es2025"],
+        "module": "nodenext",
         "strict": true,
-        "moduleResolution": "node",
-        "esModuleInterop": true,
         "isolatedModules": true,
-        "composite": true
+        "composite": true,
+        // Support cross-project goto/rename
+        "declarationMap": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "${configDir}/.cache",
+        "emitDeclarationOnly": true,
+        "noUncheckedIndexedAccess": true,
+        "verbatimModuleSyntax": true,
+        "allowImportingTsExtensions": true,
     }
 }

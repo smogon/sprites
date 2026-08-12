@@ -2,3 +2,5 @@ packages:
     - 'tools/*'
     - 'lib/*'
     - "data/lib"
+allowBuilds:
+    better-sqlite3: true
