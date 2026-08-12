@@ -3,6 +3,8 @@
         "incremental": true,
         "target": "esnext",
         "lib": ["es2025"],
+        // tsgo doesn't auto-include node_modules/@types
+        "types": ["node"],
         "module": "nodenext",
         "strict": true,
         "isolatedModules": true,
