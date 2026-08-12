@@ -1,6 +1,6 @@
 
 import program from 'commander';
-import * as image from './image.js';
+import * as image from './image.ts';
 
 program
     .option('-c, --check', 'Check only')

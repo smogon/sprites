@@ -31,7 +31,7 @@ const TUP_DB_GENERATED = 4;
 const TUP_DB_GENERATED_DIR = 7;
 
 // ^ and $ are virtual directories for environment variables
-const traversalQuery = db.prepare(`
+const traversalQuery = db.prepare<[number], {id: number, type: number, ctime: number, name: string}>(`
 SELECT id, type, mtime as ctime, name 
 FROM node 
 WHERE dir = ? 

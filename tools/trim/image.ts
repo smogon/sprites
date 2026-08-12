@@ -6,7 +6,7 @@ export function getDims(input : string) {
                                  {encoding:'utf8'});
 
     const [imageWidth, imageHeight, width, height, left, top] =
-          info.split(/x|\+/g).map(dim => parseInt(dim));
+          info.split(/x|\+/g).map(dim => parseInt(dim)) as [number, number, number, number, number, number];
 
     const right = imageWidth - (left + width);
     const bottom = imageHeight - (top + height);

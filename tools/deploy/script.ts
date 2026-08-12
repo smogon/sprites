@@ -2,8 +2,8 @@
 import fs from 'fs';
 import nodePath from 'path';
 import vm from 'vm';
-import * as pathlib from './path.js';
-import * as spritedata from '@smogon/sprite-data';
+import * as pathlib from './path.ts';
+import * as spritedata from '@smogon/sprite-data/index.ts';
 import tar from 'tar-stream';
 import crypto from 'crypto';
 import b32encode from 'base32-encode';
