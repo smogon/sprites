@@ -1,18 +1,15 @@
 {
     "dependencies": {
+        "@smogon/sprite-data": "workspace:*",
+        "@types/node": "^24.10.7",
         "@types/tar-stream": "^2.2.2",
         "base32-encode": "^2.0.0",
         "commander": "^5.1.0",
         "debug": "^4.1.1",
         "tar-stream": "^3.0.0"
     },
-    "devDependencies": {
-        "expect": "^26.4.1",
-        "mocha": "^8.1.1"
-    },
     "scripts": {
-        "test": "tsc && mocha test"
+        "test": "node --test test/script.test.ts"
     },
-    "type": "module",
-    "main": "dist/index.js"
+    "type": "module"
 }
