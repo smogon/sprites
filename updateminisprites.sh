@@ -3,7 +3,7 @@
 set -ex
 
 cd ~/smogon/sprites
-./build.sh
+pnpm build
 
 # Update dex
 cd ~/smogon/smogon.com/run

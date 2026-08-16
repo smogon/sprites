@@ -51,7 +51,7 @@ $ brew install imagemagick gifsicle advancecomp optipng pngquant webp
 Install dependencies once with `pnpm install`. Then, to build:
 
 ```
-$ node tools/build/index.ts
+$ pnpm build
 ```
 
 The rules live in `Buildfile.ts`. Build state (content hashes, rule records)

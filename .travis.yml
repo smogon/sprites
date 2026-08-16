@@ -12,6 +12,6 @@ before_install:
   - pnpm config set store-dir ~/.pnpm-store
 install:
   - pnpm install
-script: pnpm run build
+script: pnpm run check
 notifications:
   email: false

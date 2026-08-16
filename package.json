@@ -1,7 +1,8 @@
 {
     "type": "module",
     "scripts": {
-        "build": "tsc --build tsconfig-workspace.json"
+        "build": "node tools/build/index.ts",
+        "check": "tsc --build tsconfig-workspace.json"
     },
     "dependencies": {
         "@smogon/sprite-data": "workspace:*",

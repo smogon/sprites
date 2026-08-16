@@ -3,7 +3,7 @@
 set -ex
 
 cd /home/monsanto/smogon/sprites
-./build.sh
+pnpm build
 rm -rf deploy/smogon
 node tools/deploy/index.ts run smogon.deploy.js -o deploy/smogon
 
