@@ -211,6 +211,22 @@ export class BuildDb {
         this.db.prepare('DELETE FROM rules WHERE id = ?').run(id);
     }
 
+    // template/display are pure functions of the rule declaration but are not
+    // part of the rule key; refresh stored values that have drifted (e.g. the
+    // template format changed in a newer version of this tool), otherwise
+    // rename detection quietly stops matching older records.
+    refreshRuleMeta(entries : {id : bigint, template : string, display : string | null}[]) : void {
+        if (entries.length === 0) {
+            return;
+        }
+        const update = this.db.prepare('UPDATE rules SET template = ?, display = ? WHERE id = ?');
+        this.db.transaction(() => {
+            for (const e of entries) {
+                update.run(e.template, e.display, e.id);
+            }
+        })();
+    }
+
     close() : void {
         this.db.pragma('wal_checkpoint(TRUNCATE)');
         this.db.close();

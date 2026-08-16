@@ -100,13 +100,29 @@ async function main() : Promise<number> {
             }
             return st;
         };
+        const stored = db.loadStoredRules();
         const plan = computePlan({
             current: rules,
-            stored: db.loadStoredRules(),
+            stored,
             hashes,
             statOutput,
             adopt: Boolean(opts.adopt),
         });
+
+        // Keep stored template/display in sync for key-matched rules; they are
+        // outside the key, so e.g. a template format change in this tool would
+        // otherwise silently disable rename detection for old records.
+        if (!dryRun) {
+            const storedByKey = new Map(stored.map(s => [s.key, s]));
+            const staleMeta = [];
+            for (const decl of rules) {
+                const s = storedByKey.get(decl.key);
+                if (s !== undefined && (s.template !== decl.template || s.display !== decl.display)) {
+                    staleMeta.push({id: s.id, template: decl.template, display: decl.display});
+                }
+            }
+            db.refreshRuleMeta(staleMeta);
+        }
 
         const staleOutputs = [];
         const currentOutputs = new Set(rules.flatMap(r => r.outputs));
