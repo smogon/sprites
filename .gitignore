@@ -1,6 +1,6 @@
 /build/
-.tup
 node_modules
 pnpm-debug.log
-tup.config
 .cache/
+.build/
+build.config

@@ -6,14 +6,13 @@
 
 This project depends on
 
-- [tup](http://gittup.org/tup/)
 - [ImageMagick](http://www.imagemagick.org/) >= 7
+- [gifsicle](https://www.lcdf.org/gifsicle/)
 - [AdvPng](http://www.advancemame.it/doc-advpng.html) (optional)
 - [OptiPNG](http://optipng.sourceforge.net/) (optional)
 - [pngquant](https://pngquant.org/) (optional)
 - [pnpm](https://pnpm.js.org)
 - [node.js](https://nodejs.org) >= 24
-- [wine](https://www.winehq.org/) (optional)
 - cwebp
 
 ### Windows
@@ -23,19 +22,8 @@ Windows binaries of these dependencies can be found on the download pages of the
 ### Linux
 
 ```
-$ sudo apt install nodejs imagemagick advancecomp optipng pngquant wine webp
+$ sudo apt install nodejs imagemagick gifsicle advancecomp optipng pngquant webp
 $ sudo npm install -g pnpm
-```
-
-Build tup from source:
-
-```
-$ sudo apt install build-essential pkg-config fuse3 libfuse3-dev libpcre3-dev
-$ git clone git://github.com/gittup/tup.git
-$ cd tup
-$ ./bootstrap.sh
-$ sudo cp tup /usr/local/bin/tup
-$ sudo cp tup.1 /usr/local/share/man
 ```
 
 You may have to build imagemagick from source to get version 7.
@@ -55,8 +43,7 @@ $ sudo ldconfig /usr/local/lib
 Using [`brew`](https://brew.sh/) on  a macOS:
 
 ```
-$ brew cask install osxfuse wine-stable
-$ brew install tup imagemagick advancecomp optipng pngquant
+$ brew install imagemagick gifsicle advancecomp optipng pngquant webp
 ```
 
 ## Building
@@ -64,34 +51,44 @@ $ brew install tup imagemagick advancecomp optipng pngquant
 Install dependencies once with `pnpm install`. Then, to build:
 
 ```
-$ tup
+$ node tools/build/index.ts
 ```
+
+The rules live in `Buildfile.ts`. Build state (content hashes, rule records)
+is kept in `.build/`; outputs of removed rules are deleted automatically, and
+renamed sources are detected and their outputs copied instead of rebuilt.
+
+Useful flags: `-j <n>` parallelism, `-n` dry run, `-v` verbose,
+`--adopt` record already-existing `build/` outputs as up to date instead of
+rebuilding them (useful when `build/` was produced elsewhere).
 
 ## Configuration
 
-Build settings are configurable in `tup.config`.
+Build settings are configurable in `build.config` (not tracked by git).
 
-- `CONFIG_DEFAULT_OPTIPNG`: Command line to pass to `optipng`.
-- `CONFIG_DEFAULT_ADVPNG`: Command line to pass to `advpng`.
-- `CONFIG_DEFAULT_PNGQUANT`: Command line to pass to `pngquant`.
+- `DEFAULT_OPTIPNG`: Command line to pass to `optipng`.
+- `DEFAULT_ADVPNG`: Command line to pass to `advpng`.
+- `DEFAULT_PNGQUANT`: Command line to pass to `pngquant`.
 
 There are src-specific versions of these settings:
 
-- `CONFIG_TRAINERS_<PROGRAM>`: Compression options for `trainers/` only.
-- `CONFIG_DEX_<PROGRAM>`: Compression options for `dex/` only.
-- `CONFIG_MODELS_<PROGRAM>`: Compression options for `models/` only.
-- `CONFIG_SPRITESHEET_<PROGRAM>`: Compression options for spritesheets only.
-- `CONFIG_MINISPRITE_<PROGRAM>`: Compression options for `minisprites/` only.
+- `TRAINERS_<PROGRAM>`: Compression options for `trainers/` only.
+- `DEX_<PROGRAM>`: Compression options for `dex/` only.
+- `MODELS_<PROGRAM>`: Compression options for `models/` only.
+- `SPRITESHEET_<PROGRAM>`: Compression options for spritesheets only.
+- `MINISPRITE_<PROGRAM>`: Compression options for `minisprites/` only.
 
 For example, these settings reflect the compression settings for the files chaos uploaded in `src/`:
 ```
-CONFIG_DEFAULT_OPTIPNG=-o7
-CONFIG_DEFAULT_ADVPNG=-z4 -i5000
+DEFAULT_OPTIPNG=-o7
+DEFAULT_ADVPNG=-z4 -i5000
 ```
 
 ## Gotchas
 
-- Tup, like Git, tracks files, not directories. If you `readdir()` and forget to declare a dependency it won't catch it, like it would for `read()`. You can work around this by having build tools `stat()` any filenames they acquire.
+- The build tool only tracks the inputs a rule declares. If a build tool reads
+  files that aren't on its command line (e.g. it does a `readdir()`), declare
+  them with the rule's `deps:` in `Buildfile.ts` so changes are detected.
 
 ## License
 
