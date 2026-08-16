@@ -151,23 +151,34 @@ export class ActionQueue {
                 }
             }
         } else {
-            let t = tar.pack();
-            for (const entry of this.log) {
-                if (entry.type !== 'Op')
-                    continue;
-                const op = entry.op;
-                if (op.type === 'Copy'){
-                    t.entry({name: entry.dst}, fs.readFileSync(op.src));
-                } else if (op.type === 'Write') {
-                    t.entry({name: entry.dst}, op.data);
-                }
-            }
             // In this case, I guess its a file rather than a dir.
-            t.pipe(fs.createWriteStream(dir))
-            return new Promise<void>(resolve => {
-                t.on('close', () => resolve())
+            const out = fs.createWriteStream(dir);
+            this.pack().pipe(out);
+            return new Promise<void>((resolve, reject) => {
+                out.on('error', reject);
+                out.on('finish', () => resolve());
             })
         }
+    }
+
+    pack() : NodeJS.ReadableStream {
+        if (!this.valid)
+            throw new Error(`Invalid ActionQueue`);
+        let t = tar.pack();
+        for (const entry of this.log) {
+            if (entry.type !== 'Op')
+                continue;
+            const op = entry.op;
+            if (op.type === 'Copy'){
+                t.entry({name: entry.dst}, fs.readFileSync(op.src));
+            } else if (op.type === 'Write') {
+                t.entry({name: entry.dst}, op.data);
+            }
+        }
+        // Without this the archive has no end-of-archive marker, and strict
+        // readers (Python tarfile in stream mode) die on the truncation.
+        t.finalize();
+        return t;
     }
 }
 
