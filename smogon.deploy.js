@@ -172,7 +172,11 @@ for (const f of list("build/smogon/twittersprites/xy")) {
     spritecopy(f, {dir: "twittersprites/xy"});
 }
 
-for (const f of list("src/pmd")) {
-    seenModels.add(f.name);
-    spritecopy(f, {dir: "pmd"});
+{
+    const manifest = {};
+    for (const f of list("src/pmd")) {
+        seenModels.add(f.name);
+        spritecopy(f, {dir: "pmd"}, false, manifest);
+    }
+    writeManifest("pmd/manifest.json", manifest);
 }
