@@ -4,6 +4,7 @@
         "build": "tsc --build tsconfig-workspace.json"
     },
     "devDependencies": {
+        "@types/node": "^24.10.7",
         "typescript": "~7.0.2"
     }
 }
