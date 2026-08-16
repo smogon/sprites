@@ -101,36 +101,39 @@ function newspritecopy(f, {dir, ext}) {
 }
 
 let seenModels = new Set;
+const xyManifest = {};
 
 for (const f of list("src/models")) {
     seenModels.add(f.name);
-    spritecopy(f, {dir: "xy"});
+    spritecopy(f, {dir: "xy"}, false, xyManifest);
 }
 
 for (const f of list("build/gen9-modelslike")) {
     if (seenModels.has(f.name)) continue;
     seenModels.add(f.name);
-    spritecopy(f, {dir: "xy"});
+    spritecopy(f, {dir: "xy"}, false, xyManifest);
 }
 
 for (const f of list("build/gen10-modelslike")) {
     if (seenModels.has(f.name)) continue;
     seenModels.add(f.name);
-    spritecopy(f, {dir: "xy"});
+    spritecopy(f, {dir: "xy"}, false, xyManifest);
 }
 
 // Non-model CAPs
 for (const f of list("src/sprites/gen5")) {
     if (f.ext !== 'gif' || seenModels.has(f.name)) continue;
     seenModels.add(f.name);
-    spritecopy(f, {dir: "xy"});
+    spritecopy(f, {dir: "xy"}, false, xyManifest);
 }
 
 for (const f of list("build/gen5-gif")) {
     if (seenModels.has(f.name)) continue;
     seenModels.add(f.name);
-    spritecopy(f, {dir: "xy"});
+    spritecopy(f, {dir: "xy"}, false, xyManifest);
 }
+
+writeManifest("xy/manifest.json", xyManifest);
 
 {
     const manifest = {};
