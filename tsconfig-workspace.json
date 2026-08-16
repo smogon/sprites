@@ -1,6 +1,8 @@
 {
     "files": [],
     "references": [
+        {"path": "./tsconfig.json"},
+        {"path": "tools/build"},
         {"path": "tools/tupctime"},
         {"path": "tools/deploy"},
         {"path": "tools/sheet"},

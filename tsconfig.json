@@ -1,0 +1,7 @@
+{
+    "extends": "./tsconfig-base",
+    "files": ["Buildfile.ts"],
+    "references": [
+        {"path": "tools/build"}
+    ]
+}

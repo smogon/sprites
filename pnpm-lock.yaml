@@ -27,6 +27,27 @@ importers:
         specifier: ^24.10.7
         version: 24.13.3
 
+  tools/build:
+    dependencies:
+      '@types/better-sqlite3':
+        specifier: ^7.6.13
+        version: 7.6.13
+      '@types/debug':
+        specifier: ^4.1.5
+        version: 4.1.13
+      '@types/node':
+        specifier: ^24.10.7
+        version: 24.13.3
+      better-sqlite3:
+        specifier: ^12.4.1
+        version: 12.11.1
+      commander:
+        specifier: ^5.1.0
+        version: 5.1.0
+      debug:
+        specifier: ^4.1.1
+        version: 4.4.3
+
   tools/deploy:
     dependencies:
       '@smogon/sprite-data':
