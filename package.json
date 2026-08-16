@@ -3,6 +3,10 @@
     "scripts": {
         "build": "tsc --build tsconfig-workspace.json"
     },
+    "dependencies": {
+        "@smogon/sprite-data": "workspace:*",
+        "@smogon/sprite-root": "workspace:*"
+    },
     "devDependencies": {
         "@types/node": "^24.10.7",
         "typescript": "~7.0.2"

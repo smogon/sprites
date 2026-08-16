@@ -1,8 +1,8 @@
 
 import fs from 'fs';
 import path from 'path';
-import * as spritedata from '@smogon/sprite-data';
-import root from '@smogon/sprite-root';
+import * as spritedata from '@smogon/sprite-data/index.ts';
+import root from '@smogon/sprite-root/index.ts';
 
 const srcDir = path.join(root, "src");
 const spritesDir = path.join(srcDir, "minisprites/pokemon/gen6");

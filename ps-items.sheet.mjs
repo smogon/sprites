@@ -1,7 +1,7 @@
 
 import path from 'path';
-import * as spritedata from '@smogon/sprite-data';
-import root from '@smogon/sprite-root';
+import * as spritedata from '@smogon/sprite-data/index.ts';
+import root from '@smogon/sprite-root/index.ts';
 
 function toPSID(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '');

@@ -7,6 +7,13 @@ settings:
 importers:
 
   .:
+    dependencies:
+      '@smogon/sprite-data':
+        specifier: workspace:*
+        version: link:data/lib
+      '@smogon/sprite-root':
+        specifier: workspace:*
+        version: link:lib/root
     devDependencies:
       '@types/node':
         specifier: ^24.10.7
