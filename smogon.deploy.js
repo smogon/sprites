@@ -9,7 +9,29 @@ function toPSID(name) {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
 }
 
-function spritecopy(f, {dir, ext}, allowUnknown=false) {
+// Copy with a content-hash-stamped name and record the unhashed -> hashed
+// mapping in `manifest`.
+function stampcopy(f, {dir, ext, name}, manifest) {
+    const key = `${name}.${ext ?? f.ext}`;
+    // ActionQueue only dedups final dsts; hashed dsts differ even when
+    // unhashed names collide, so check the manifest key explicitly.
+    if (manifest[key] !== undefined) {
+        throw new Error(`duplicate sprite name ${key}`);
+    }
+    const h = hash(f);
+    manifest[key] = `${name}-${h}.${ext ?? f.ext}`;
+    copy(f, {dir, ext, name: `${name}-${h}`});
+}
+
+function writeManifest(dst, manifest) {
+    const sorted = {};
+    for (const k of Object.keys(manifest).sort()) {
+        sorted[k] = manifest[k];
+    }
+    write(dst, JSON.stringify(sorted, null, 4) + "\n");
+}
+
+function spritecopy(f, {dir, ext}, allowUnknown=false, manifest=null) {
     const sn = spritedata.parseFilename(f.name);
     let name;
 
@@ -39,16 +61,24 @@ function spritecopy(f, {dir, ext}, allowUnknown=false) {
         name += "-gmax";
     }
 
-    copy(f, {dir, ext, name});
+    if (manifest) {
+        stampcopy(f, {dir, ext, name}, manifest);
+    } else {
+        copy(f, {dir, ext, name});
+    }
 }
 
 // TODO: merge with above
-function itemspritecopy(f, {dir, ext}) {
+function itemspritecopy(f, {dir, ext}, manifest=null) {
     const sn = spritedata.parseFilename(f.name);
     const sd = spritedata.get(sn.id);
     for (const n of sd.names) {
         const name = toSmogonAlias(n);
-        copy(f, {dir, ext, name});
+        if (manifest) {
+            stampcopy(f, {dir, ext, name}, manifest);
+        } else {
+            copy(f, {dir, ext, name});
+        }
     }
 }
 
@@ -102,8 +132,12 @@ for (const f of list("build/gen5-gif")) {
     spritecopy(f, {dir: "xy"});
 }
 
-for (const f of list("build/gen6-minisprites-trimmed")) {
-    spritecopy(f, {dir: "xyicons"});
+{
+    const manifest = {};
+    for (const f of list("build/gen6-minisprites-trimmed")) {
+        spritecopy(f, {dir: "xyicons"}, false, manifest);
+    }
+    writeManifest("xyicons/manifest.json", manifest);
 }
 
 for (const f of list("build/item-minisprites-trimmed")) {
@@ -116,12 +150,15 @@ for (const f of list("build/smogon/minisprites")) {
 }
 write("minisprites/hash.txt", h);
 
-for (const f of list("build/item-minisprites-padded")) {
-    itemspritecopy(f, {dir: "forumsprites"});
-}
-
-for (const f of list("build/gen6-minisprites-padded")) {
-    spritecopy(f, {dir: "forumsprites"}, true);
+{
+    const manifest = {};
+    for (const f of list("build/item-minisprites-padded")) {
+        itemspritecopy(f, {dir: "forumsprites"}, manifest);
+    }
+    for (const f of list("build/gen6-minisprites-padded")) {
+        spritecopy(f, {dir: "forumsprites"}, true, manifest);
+    }
+    writeManifest("forumsprites/manifest.json", manifest);
 }
 
 for (const f of list("build/smogon/fbsprites/xy")) {
