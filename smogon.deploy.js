@@ -147,6 +147,23 @@ for (const f of list("build/item-minisprites-trimmed")) {
     itemspritecopy(f, {dir: "xyitems"});
 }
 
+// Dex spritesheet assets: hash-stamped css + webp, plus the css suffix file
+// shipped to /smog2/dex/spritesheet_css_suffix.txt (read by dex render).
+{
+    const wh = hash("build/smogon/spritesheet.webp");
+    copy("build/smogon/spritesheet.webp", `assets/spritesheet-${wh}.webp`);
+    const src = read("build/smogon/spritesheet.css");
+    const css = src.replaceAll('url("./spritesheet.webp")', `url("./spritesheet-${wh}.webp")`);
+    if (css === src) {
+        throw new Error("spritesheet.css: no webp urls rewritten");
+    }
+    // Suffix from source content: the rewritten css is a pure function of
+    // (css, webp), so this changes exactly when the served bytes change.
+    const ch = hash("build/smogon/spritesheet.css", "build/smogon/spritesheet.webp");
+    write(`assets/spritesheet-${ch}.css`, css);
+    write("spritesheet_css_suffix.txt", `-${ch}\n`);
+}
+
 let h = hash(...list("build/smogon/minisprites"));
 for (const f of list("build/smogon/minisprites")) {
     newspritecopy(f, {dir: "minisprites/" + h});
