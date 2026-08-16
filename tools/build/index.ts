@@ -9,7 +9,7 @@ import debugfn from 'debug';
 import {getRules, type RuleDecl, setConfig} from './api.ts';
 import {loadConfig} from './config.ts';
 import {acquireLock, BuildDb, type RecordedOutput} from './db.ts';
-import {runShell, workerPool} from './exec.ts';
+import {killAllProcessGroups, runShell, workerPool} from './exec.ts';
 import {BuildError, checkGraph} from './graph.ts';
 import {reconcileHashes} from './hash.ts';
 import {computePlan, type OutputStat, ruleInputSig} from './plan.ts';
@@ -47,9 +47,16 @@ function indent(text : string) : string {
 }
 
 async function main() : Promise<number> {
+    const jobs = Number(opts.jobs);
+    if (!Number.isInteger(jobs) || jobs < 1) {
+        throw new BuildError(`Invalid --jobs value: ${opts.jobs}`);
+    }
     const dryRun = Boolean(opts.dryRun);
     const releaseLock = dryRun ? null : acquireLock('.build/lock.sqlite');
-    const db = new BuildDb('.build/db.sqlite');
+    // A dry run must not create state; without an existing db it reads from
+    // an empty in-memory one.
+    const dbPath = dryRun && !fs.existsSync('.build/db.sqlite') ? ':memory:' : '.build/db.sqlite';
+    const db = new BuildDb(dbPath);
     try {
         // Phase 1: evaluate the rule set
         setConfig(loadConfig(opts.config));
@@ -137,7 +144,21 @@ async function main() : Promise<number> {
         }
 
         // Phase 4: renames (before stale deletion: sources must still exist)
+        let renamed = 0;
         for (const {decl, from} of plan.renames) {
+            // An earlier copy in this loop may have overwritten this rename's
+            // source (rename destinations can collide with rename sources);
+            // re-verify every source against its recorded stat before copying
+            // so only verified bytes ever propagate.
+            const intact = from.outputs.every(o => {
+                const st = statPath(o.path);
+                return o.size !== null && st !== null
+                    && st.size === o.size && st.mtimeNs === o.mtimeNs;
+            });
+            if (!intact) {
+                plan.run.push({decl, reason: 'new'});
+                continue;
+            }
             const recorded : RecordedOutput[] = [];
             for (let i = 0; i < decl.outputs.length; i++) {
                 const src = from.outputs[i]!.path;
@@ -153,6 +174,7 @@ async function main() : Promise<number> {
                 recorded.push({path: dst, size: st.size, mtimeNs: st.mtimeNs});
             }
             db.recordRuleResult(decl, hashes, ruleInputSig(decl, hashes), recorded);
+            renamed++;
         }
 
         // Phase 5: delete outputs of removed rules, prune empty dirs
@@ -203,6 +225,7 @@ async function main() : Promise<number> {
         let interrupted = false;
         const onSignal = () => {
             if (interrupted) {
+                killAllProcessGroups();
                 process.exit(130);
             }
             interrupted = true;
@@ -214,51 +237,60 @@ async function main() : Promise<number> {
 
         const failures : RuleDecl[] = [];
         let done = 0;
-        await workerPool(runList, parseInt(opts.jobs, 10), async ({decl}) => {
+        await workerPool(runList, jobs, async ({decl}) => {
             if (ac.signal.aborted) {
                 return;
             }
-            for (const out of decl.outputs) {
-                fs.mkdirSync(pathlib.dirname(out), {recursive: true});
-            }
-            const result = await runShell(decl.command, {cwd: root, signal: ac.signal});
-            if (ac.signal.aborted && result.code !== 0) {
-                return;  // killed by the abort, not a real failure; stays dirty
-            }
-            let recorded : RecordedOutput[] | null = null;
-            const missingOutputs = [];
-            if (result.code === 0) {
-                recorded = [];
-                for (const path of decl.outputs) {
-                    const st = statPath(path);
-                    if (st === null) {
-                        missingOutputs.push(path);
-                        recorded = null;
-                        break;
+            try {
+                for (const out of decl.outputs) {
+                    fs.mkdirSync(pathlib.dirname(out), {recursive: true});
+                }
+                const result = await runShell(decl.command, {cwd: root, signal: ac.signal});
+                if (ac.signal.aborted && result.code !== 0) {
+                    return;  // killed by the abort, not a real failure; stays dirty
+                }
+                let recorded : RecordedOutput[] | null = null;
+                const missingOutputs = [];
+                if (result.code === 0) {
+                    recorded = [];
+                    for (const path of decl.outputs) {
+                        const st = statPath(path);
+                        if (st === null) {
+                            missingOutputs.push(path);
+                            recorded = null;
+                            break;
+                        }
+                        recorded.push({path, size: st.size, mtimeNs: st.mtimeNs});
                     }
-                    recorded.push({path, size: st.size, mtimeNs: st.mtimeNs});
                 }
-            }
-            db.recordRuleResult(decl, hashes, ruleInputSig(decl, hashes), recorded);
-            done++;
-            if (recorded !== null) {
-                console.log(`[${done}/${runList.length}] ${label(decl)}`);
-                if (result.output !== '') {
-                    console.log(indent(result.output));
+                db.recordRuleResult(decl, hashes, ruleInputSig(decl, hashes), recorded);
+                done++;
+                if (recorded !== null) {
+                    console.log(`[${done}/${runList.length}] ${label(decl)}`);
+                    if (result.output !== '') {
+                        console.log(indent(result.output));
+                    }
+                } else {
+                    failures.push(decl);
+                    console.error(`[${done}/${runList.length}] FAILED: ${label(decl)}`);
+                    console.error(`    command: ${decl.command}`);
+                    if (result.output !== '') {
+                        console.error(indent(result.output));
+                    }
+                    if (missingOutputs.length > 0) {
+                        console.error(`    command succeeded but did not produce: ${missingOutputs.join(' ')}`);
+                    }
+                    if (opts.failFast) {
+                        ac.abort();
+                    }
                 }
-            } else {
+            } catch (err) {
+                // Unexpected (infrastructure) error: count the rule failed and
+                // stop scheduling; something systemic is wrong.
                 failures.push(decl);
-                console.error(`[${done}/${runList.length}] FAILED: ${label(decl)}`);
-                console.error(`    command: ${decl.command}`);
-                if (result.output !== '') {
-                    console.error(indent(result.output));
-                }
-                if (missingOutputs.length > 0) {
-                    console.error(`    command succeeded but did not produce: ${missingOutputs.join(' ')}`);
-                }
-                if (opts.failFast) {
-                    ac.abort();
-                }
+                console.error(`FAILED (internal error): ${label(decl)}`);
+                console.error(indent(err instanceof Error ? err.stack ?? err.message : String(err)));
+                ac.abort();
             }
         });
         process.off('SIGINT', onSignal);
@@ -269,8 +301,8 @@ async function main() : Promise<number> {
         if (runList.length > 0) {
             parts.push(`${done - failures.length} ran`);
         }
-        if (plan.renames.length > 0) {
-            parts.push(`${plan.renames.length} renamed`);
+        if (renamed > 0) {
+            parts.push(`${renamed} renamed`);
         }
         if (plan.adopt.length > 0) {
             parts.push(`${plan.adopt.length} adopted`);

@@ -132,6 +132,73 @@ test('rename does not match differing content or tampered source outputs', () =>
     assert.deepEqual(plan.run.map(r => r.reason), ['new']);
 });
 
+test('rename is restricted to single-input, no-deps rules', () => {
+    // multi-input: same output basename, same content, but never rename-matched
+    resetRules();
+    rule(['src/a.png', 'src/b.png'], {cmds: ['c %f %o']}, 'out1/x.png');
+    rule(['src/a2.png', 'src/b2.png'], {cmds: ['c %f %o']}, 'out2/x.png');
+    const [multiOld, multiNew] = getRules() as [RuleDecl, RuleDecl];
+    const multiHashes = new Map([
+        ['src/a.png', hashOf('A')], ['src/b.png', hashOf('B')],
+        ['src/a2.png', hashOf('A')], ['src/b2.png', hashOf('B')],
+    ]);
+    let plan = computePlan({
+        current: [multiNew],
+        stored: [stored(multiOld, multiHashes)],
+        hashes: multiHashes,
+        statOutput: statFrom({'out1/x.png': GOOD}),
+        adopt: false,
+    });
+    assert.deepEqual(plan.run.map(r => r.reason), ['new']);
+
+    // dep-bearing: same template and sig, but never rename-matched
+    resetRules();
+    forEachRule('src/a.png', {deps: 'src/d.json', cmds: ['c %f %o']}, 'out/%b');
+    forEachRule('src/b.png', {deps: 'src/d.json', cmds: ['c %f %o']}, 'out/%b');
+    const [depOld, depNew] = getRules() as [RuleDecl, RuleDecl];
+    const depHashes = new Map([
+        ['src/a.png', hashOf('SAME')], ['src/b.png', hashOf('SAME')],
+        ['src/d.json', hashOf('D')],
+    ]);
+    plan = computePlan({
+        current: [depNew],
+        stored: [stored(depOld, depHashes)],
+        hashes: depHashes,
+        statOutput: statFrom({'out/a.png': GOOD}),
+        adopt: false,
+    });
+    assert.deepEqual(plan.run.map(r => r.reason), ['new']);
+});
+
+test('rename does not match across input extension changes', () => {
+    const oldDecl = makeForeach('src/a.png', 'build/out');
+    resetRules();
+    forEachRule('src/a.gif', {cmds: ['convert %f %o']}, 'build/out/%b');
+    const newDecl = getRules()[0]!;
+    const hashes = new Map([['src/a.png', hashOf('SAME')], ['src/a.gif', hashOf('SAME')]]);
+    const plan = computePlan({
+        current: [newDecl],
+        stored: [stored(oldDecl, hashes)],
+        hashes,
+        statOutput: statFrom({'build/out/a.png': GOOD}),
+        adopt: false,
+    });
+    assert.deepEqual(plan.run.map(r => r.reason), ['new']);
+});
+
+test('adopt does not bless known-dirty rules', () => {
+    const decl = makeForeach('src/a.png', 'build/out');
+    const plan = computePlan({
+        current: [decl],
+        stored: [stored(decl, new Map([['src/a.png', hashOf('OLD')]]))],
+        hashes: new Map([['src/a.png', hashOf('NEW')]]),
+        statOutput: statFrom({'build/out/a.png': GOOD}),
+        adopt: true,
+    });
+    assert.equal(plan.adopt.length, 0);
+    assert.deepEqual(plan.run.map(r => r.reason), ['input-changed']);
+});
+
 test('adopt records existing outputs instead of running', () => {
     resetRules();
     rule('src/a.png', {cmds: ['convert %f %o']}, 'build/present.png');

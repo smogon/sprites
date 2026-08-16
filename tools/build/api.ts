@@ -73,6 +73,9 @@ function globOne(pat : string) : string[] {
             continue;
         }
         const name = ent.name;
+        if (name.startsWith('.')) {
+            continue;  // tup.glob ignored dotfiles
+        }
         if (name.length >= prefix.length + suffix.length
             && name.startsWith(prefix) && name.endsWith(suffix)) {
             results.push(dir === '.' ? name : `${dir}/${name}`);
@@ -172,10 +175,15 @@ function normalizeSpec(spec : CmdSpec | Cmd[]) : CmdSpec {
 
 // The rename-detection template deliberately excludes output directories
 // (basename only) so that content-preserving moves across directories with
-// identical processing still match, but extension changes (which change the
-// bytes tools like magick produce) do not.
-function templateOf(cmds : string[], outputTemplates : string[]) : string {
-    return cmds.join('\n') + '\0' + outputTemplates.map(t => pathlib.basename(t)).join('\0');
+// identical processing still match. Input extensions are included because
+// tools like magick pick their output format from file extensions, so an
+// extension-only rename must not match.
+function templateOf(cmds : string[], outputTemplates : string[], inputs : string[]) : string {
+    return [
+        cmds.join('\n'),
+        outputTemplates.map(t => pathlib.basename(t)).join('\0'),
+        inputs.map(p => pathlib.extname(p)).join('\0'),
+    ].join('\x01');
 }
 
 function keyOf(command : string, inputs : string[], deps : string[], outputs : string[]) : string {
@@ -197,7 +205,7 @@ function makeRule(inputs : string[], deps : string[], spec : CmdSpec,
         outputs,
         command,
         display: spec.display !== undefined ? substitute(spec.display, inputs, outputs) : null,
-        template: templateOf(flattenCmds(spec.cmds), outputTemplates),
+        template: templateOf(flattenCmds(spec.cmds), outputTemplates, inputs),
         key: keyOf(command, inputs, deps, outputs),
     };
     rules.push(decl);
@@ -208,6 +216,11 @@ export function rule(input : string | string[], spec : CmdSpec | Cmd[],
                      output : string | string[]) : string[] {
     const s = normalizeSpec(spec);
     const outputs = astable(output);
+    for (const out of outputs) {
+        if (out.includes('%')) {
+            throw new Error(`rule() outputs are literal paths, no substitutions: ${out}`);
+        }
+    }
     const decl = makeRule(glob(input), glob(astable(s.deps)), s, outputs, outputs);
     return decl.outputs;
 }

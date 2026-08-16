@@ -66,6 +66,8 @@ rule("ps-pokemon.sheet.mjs", {
         "src/minisprites/pokemon/gen6/*",
         "data/species.json",
         "data/items.json",
+        "data/lib/index.ts",
+        "lib/root/index.ts",
         "tools/sheet/index.ts",
     ],
     cmds: ["node tools/sheet/index.ts %f %o", compresspng({config: "SPRITESHEET"})],
@@ -83,6 +85,8 @@ rule("ps-items.sheet.mjs", {
         "src/minisprites/items/*",
         "data/species.json",
         "data/items.json",
+        "data/lib/index.ts",
+        "lib/root/index.ts",
         "tools/sheet/index.ts",
     ],
     cmds: ["node tools/sheet/index.ts %f %o", compresspng({config: "SPRITESHEET"})],
@@ -115,7 +119,13 @@ forEachRule(spriteglob(["src/minisprites/pokemon/gen6/*", "src/minisprites/items
 
 rule(spriteglob(["src/minisprites/pokemon/gen6/*", "src/minisprites/items/*"], {a: false}), {
     display: "smogdex sheet",
-    deps: ["data/species.json", "data/items.json", "tools/smogdexspritesheet/index.ts"],
+    deps: [
+        "data/species.json",
+        "data/items.json",
+        "data/lib/index.ts",
+        "lib/root/index.ts",
+        "tools/smogdexspritesheet/index.ts",
+    ],
     // build/smogon/spritesheet.png is an undeclared temporary; it is removed
     // before the rule finishes.
     cmds: [

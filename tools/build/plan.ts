@@ -49,7 +49,10 @@ export function computePlan(opts : {
     const renameIndex = new Map<string, StoredRule[]>();
     for (const s of stored) {
         storedByKey.set(s.key, s);
-        if (s.ok) {
+        // Rename detection is restricted to single-input, no-deps rules:
+        // sheet-style rules embed input *names* in their output bytes, so
+        // identical input content does not imply identical outputs there.
+        if (s.ok && s.inputs.length === 1 && !s.inputs[0]!.isDep) {
             const key = renameKey(s.template, s.inputSig);
             let list = renameIndex.get(key);
             if (list === undefined) {
@@ -112,16 +115,20 @@ export function computePlan(opts : {
             }
         } else {
             reason = 'new';
-            const sig = ruleInputSig(decl, hashes);
-            const candidates = renameIndex.get(renameKey(decl.template, sig)) ?? [];
-            const from = candidates.find(c =>
-                c.outputs.length === decl.outputs.length && outputsIntact(c));
-            if (from !== undefined) {
-                plan.renames.push({decl, from});
-                continue;
+            if (decl.inputs.length === 1 && decl.deps.length === 0) {
+                const sig = ruleInputSig(decl, hashes);
+                const candidates = renameIndex.get(renameKey(decl.template, sig)) ?? [];
+                const from = candidates.find(c =>
+                    c.outputs.length === decl.outputs.length && outputsIntact(c));
+                if (from !== undefined) {
+                    plan.renames.push({decl, from});
+                    continue;
+                }
             }
         }
-        if (adopt && decl.outputs.every(p => statOutput(p) !== null)) {
+        // Adoption only covers rules we know nothing about; a known-dirty
+        // rule (input-changed, tampered, failed) must actually run.
+        if (adopt && reason === 'new' && decl.outputs.every(p => statOutput(p) !== null)) {
             plan.adopt.push(decl);
         } else {
             plan.run.push({decl, reason});

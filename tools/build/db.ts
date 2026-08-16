@@ -38,14 +38,14 @@ export interface RecordedOutput {
 }
 
 const DDL = `
-CREATE TABLE file_cache (
+CREATE TABLE IF NOT EXISTS file_cache (
     path     TEXT PRIMARY KEY,
     size     INTEGER NOT NULL,
     mtime_ns INTEGER NOT NULL,
     hash     BLOB NOT NULL
 ) WITHOUT ROWID;
 
-CREATE TABLE rules (
+CREATE TABLE IF NOT EXISTS rules (
     id        INTEGER PRIMARY KEY,
     key       TEXT NOT NULL UNIQUE,
     command   TEXT NOT NULL,
@@ -54,9 +54,9 @@ CREATE TABLE rules (
     input_sig BLOB NOT NULL,
     ok        INTEGER NOT NULL DEFAULT 0
 );
-CREATE INDEX rules_rename ON rules(template, input_sig);
+CREATE INDEX IF NOT EXISTS rules_rename ON rules(template, input_sig);
 
-CREATE TABLE rule_inputs (
+CREATE TABLE IF NOT EXISTS rule_inputs (
     rule_id INTEGER NOT NULL REFERENCES rules(id) ON DELETE CASCADE,
     ord     INTEGER NOT NULL,
     path    TEXT NOT NULL,
@@ -64,9 +64,9 @@ CREATE TABLE rule_inputs (
     hash    BLOB NOT NULL,
     PRIMARY KEY (rule_id, ord)
 );
-CREATE INDEX rule_inputs_path ON rule_inputs(path);
+CREATE INDEX IF NOT EXISTS rule_inputs_path ON rule_inputs(path);
 
-CREATE TABLE rule_outputs (
+CREATE TABLE IF NOT EXISTS rule_outputs (
     rule_id  INTEGER NOT NULL REFERENCES rules(id) ON DELETE CASCADE,
     ord      INTEGER NOT NULL,
     path     TEXT NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE rule_outputs (
     mtime_ns INTEGER,
     PRIMARY KEY (rule_id, ord)
 );
-CREATE INDEX rule_outputs_path ON rule_outputs(path);
+CREATE INDEX IF NOT EXISTS rule_outputs_path ON rule_outputs(path);
 `;
 
 export class BuildDb {
@@ -135,6 +135,12 @@ export class BuildDb {
     }
 
     loadStoredRules() : StoredRule[] {
+        // One transaction: the three queries must see a single snapshot, or a
+        // concurrent writer (e.g. a build racing a dry run) tears the view.
+        return this.db.transaction(() => this.loadStoredRulesInner())();
+    }
+
+    private loadStoredRulesInner() : StoredRule[] {
         const byId = new Map<bigint, StoredRule>();
         const ruleRows = this.db.prepare<[], {
             id : bigint, key : string, command : string, display : string | null,

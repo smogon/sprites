@@ -8,6 +8,17 @@ export interface ExecResult {
     durationMs : number;
 }
 
+const livePids = new Set<number>();
+
+// Emergency stop (e.g. second Ctrl-C): SIGKILL every live process group.
+export function killAllProcessGroups() : void {
+    for (const pid of livePids) {
+        try {
+            process.kill(-pid, 'SIGKILL');
+        } catch {}
+    }
+}
+
 // The command script is fed to sh via stdin rather than -c: a single argv
 // entry is capped by the kernel (MAX_ARG_STRLEN, ~128KB) and the largest %f
 // expansion is already 80KB+.
@@ -17,6 +28,9 @@ export function runShell(command : string, opts : {cwd : string, signal : AbortS
         // detached: own process group, so an abort kills grandchildren
         // (magick, optipng, ...) with one signal
         const child = spawn('sh', [], {cwd: opts.cwd, detached: true, stdio: ['pipe', 'pipe', 'pipe']});
+        if (child.pid !== undefined) {
+            livePids.add(child.pid);
+        }
         const chunks : Buffer[] = [];
         child.stdout.on('data', c => chunks.push(c));
         child.stderr.on('data', c => chunks.push(c));
@@ -41,6 +55,9 @@ export function runShell(command : string, opts : {cwd : string, signal : AbortS
         }
 
         const cleanup = () => {
+            if (child.pid !== undefined) {
+                livePids.delete(child.pid);
+            }
             opts.signal.removeEventListener('abort', onAbort);
             if (killTimer !== undefined) {
                 clearTimeout(killTimer);
@@ -62,6 +79,9 @@ export function runShell(command : string, opts : {cwd : string, signal : AbortS
     });
 }
 
+// A worker that throws stops its own loop, but the pool always waits for
+// every other worker to finish before rethrowing: failing fast here would
+// return control (and e.g. close the database) while rules are still running.
 export async function workerPool<T>(items : readonly T[], jobs : number,
                                     fn : (item : T, index : number) => Promise<void>) : Promise<void> {
     let next = 0;
@@ -74,5 +94,10 @@ export async function workerPool<T>(items : readonly T[], jobs : number,
             }
         })());
     }
-    await Promise.all(workers);
+    const results = await Promise.allSettled(workers);
+    for (const result of results) {
+        if (result.status === 'rejected') {
+            throw result.reason;
+        }
+    }
 }
