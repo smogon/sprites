@@ -3,5 +3,6 @@
     "exclude": ["test"],
     "references": [
         {"path": "../../data/lib"},
+        {"path": "../build"},
     ]
 }

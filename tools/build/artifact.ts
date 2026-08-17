@@ -70,6 +70,7 @@ export interface RuleDecl {
     outputs : Artifact[];
     cmds : string[];                // flattened PRE-substitution templates
     display : string | null;        // nominally substituted; cosmetic
+    displayTemplate : string | null;  // pre-substitution; groups forEach rules
     nameSensitive : boolean;
 }
 
@@ -155,6 +156,7 @@ function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : st
         outputs: [],
         cmds,
         display: null,
+        displayTemplate: spec.display ?? null,
         nameSensitive: spec.nameSensitive ?? false,
     };
     if (decl.nameSensitive) {

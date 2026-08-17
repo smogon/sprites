@@ -145,6 +145,9 @@ export class ActionQueue {
                         fs.linkSync(op.src, dst);
                     } else {
                         fs.copyFileSync(op.src, dst);
+                        // The copy inherits the source mode; CAS objects are
+                        // read-only, which must not leak into deploy trees.
+                        fs.chmodSync(dst, 0o644);
                     }
                 } else if (op.type === 'Write') {
                     fs.writeFileSync(dst, op.data);

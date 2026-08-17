@@ -9,7 +9,7 @@
         "tar-stream": "^3.0.0"
     },
     "scripts": {
-        "test": "node --test test/script.test.ts"
+        "test": "node --test test/*.test.ts"
     },
     "type": "module"
 }
