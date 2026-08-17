@@ -1,7 +1,8 @@
 
 import type {RuleDecl} from './api.ts';
+import {BuildError} from './errors.ts';
 
-export class BuildError extends Error {}
+export {BuildError};
 
 export interface GraphResult {
     order : RuleDecl[];           // topological, stable w.r.t. declaration order
