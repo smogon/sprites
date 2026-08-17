@@ -18,14 +18,14 @@ import {type DeployFn, getDeploys, makeCtx} from './api.ts';
 import {loadDeployConfig, matchSubsets} from './config.ts';
 import {ActionQueue} from './queue.ts';
 
-const root = nodePath.resolve(fileURLToPath(import.meta.url), '../../..');
-const invocationCwd = process.cwd();
+let root = nodePath.resolve(fileURLToPath(import.meta.url), '../../..');
+let invocationCwd = process.cwd();
 process.chdir(root);
 
-const DB_PATH = '.build/db.sqlite';
-const LOCK_PATH = '.build/lock.sqlite';
-const CAS_DIR = '.build/cas';
-const TMP_DIR = '.build/tmp';
+let DB_PATH = '.build/db.sqlite';
+let LOCK_PATH = '.build/lock.sqlite';
+let CAS_DIR = '.build/cas';
+let TMP_DIR = '.build/tmp';
 
 interface CommonOpts {
     jobs: string;
@@ -41,7 +41,7 @@ interface VerbOpts extends CommonOpts {
     tar?: boolean;
 }
 
-const USAGE = `usage: node tools/deploy/index.ts <command> [options]
+let USAGE = `usage: node tools/deploy/index.ts <command> [options]
 
 commands:
   build [files...]            build the rules of the given deploys (default: all *.build.ts)
@@ -64,7 +64,7 @@ options:
   -v, --verbose        print more detail
   -h, --help           show this help`;
 
-const COMMON_OPTIONS = {
+let COMMON_OPTIONS = {
     jobs: {type: 'string', short: 'j', default: String(os.availableParallelism())},
     'dry-run': {type: 'boolean', short: 'n'},
     'fail-fast': {type: 'boolean'},
@@ -73,7 +73,7 @@ const COMMON_OPTIONS = {
     help: {type: 'boolean', short: 'h'},
 } as const;
 
-const VERB_OPTIONS = {
+let VERB_OPTIONS = {
     build: {},
     deploy: {
         output: {type: 'string', short: 'o'},
@@ -96,7 +96,7 @@ function requireOutput(opts: VerbOpts): string {
 }
 
 function discoverDeployFiles(): string[] {
-    const files = fs.readdirSync('.').filter(f => f.endsWith('.build.ts')).sort();
+    let files = fs.readdirSync('.').filter(f => f.endsWith('.build.ts')).sort();
     if (files.length === 0) {
         throw new BuildError('No *.build.ts files at the repo root');
     }
@@ -107,9 +107,9 @@ function discoverDeployFiles(): string[] {
 // blocks; the registry delta over each sequential import is that file's
 // blocks.
 async function importDeploys(files: string[]): Promise<Map<string, readonly DeployFn[]>> {
-    const specs = new Map<string, readonly DeployFn[]>();
-    for (const file of files) {
-        const before = getDeploys().length;
+    let specs = new Map<string, readonly DeployFn[]>();
+    for (let file of files) {
+        let before = getDeploys().length;
         await import(pathToFileURL(nodePath.resolve(file)).href);
         specs.set(file, getDeploys().slice(before));
     }
@@ -121,24 +121,24 @@ async function importDeploys(files: string[]): Promise<Map<string, readonly Depl
 // the process exit code.
 async function buildThen(decls: readonly RuleDecl[], opts: CommonOpts, gc: boolean,
                          then?: () => Promise<number>): Promise<number> {
-    const jobs = Number(opts.jobs);
+    let jobs = Number(opts.jobs);
     if (!Number.isInteger(jobs) || jobs < 1) {
         throw new BuildError(`Invalid --jobs value: ${opts.jobs}`);
     }
-    const dryRun = Boolean(opts.dryRun);
-    const release = dryRun ? null : acquireLock(LOCK_PATH);
+    let dryRun = Boolean(opts.dryRun);
+    let release = dryRun ? null : acquireLock(LOCK_PATH);
     try {
         // A dry run must not create state (opening a db migrates it);
         // without a current-version db it reads from an empty in-memory one.
-        const dbPath = dryRun && dbVersion(DB_PATH) !== 2 ? ':memory:' : DB_PATH;
-        const store = new Store(dbPath);
+        let dbPath = dryRun && dbVersion(DB_PATH) !== 2 ? ':memory:' : DB_PATH;
+        let store = new Store(dbPath);
         if (!dryRun) {
             fs.rmSync(TMP_DIR, {recursive: true, force: true});
         }
 
-        const ac = new AbortController();
+        let ac = new AbortController();
         let interrupted = false;
-        const onSignal = () => {
+        let onSignal = () => {
             if (interrupted) {
                 killAllProcessGroups();
                 process.exit(130);
@@ -151,7 +151,7 @@ async function buildThen(decls: readonly RuleDecl[], opts: CommonOpts, gc: boole
         process.on('SIGTERM', onSignal);
         let ok: boolean;
         try {
-            const result = await build(decls, {
+            let result = await build(decls, {
                 root,
                 store,
                 casDir: CAS_DIR,
@@ -185,7 +185,7 @@ async function buildThen(decls: readonly RuleDecl[], opts: CommonOpts, gc: boole
 }
 
 function finishOf(specs: Map<string, readonly DeployFn[]>, file: string): readonly DeployFn[] {
-    const fns = specs.get(file);
+    let fns = specs.get(file);
     if (fns === undefined || fns.length === 0) {
         throw new BuildError(`${file} registers no deploy blocks (use deploy())`);
     }
@@ -193,9 +193,9 @@ function finishOf(specs: Map<string, readonly DeployFn[]>, file: string): readon
 }
 
 async function runFinish(fns: readonly DeployFn[], verbose: boolean): Promise<ActionQueue | null> {
-    const aq = new ActionQueue();
-    const ctx = makeCtx(CAS_DIR, aq);
-    for (const fn of fns) {
+    let aq = new ActionQueue();
+    let ctx = makeCtx(CAS_DIR, aq);
+    for (let fn of fns) {
         await fn(ctx);
     }
     if (!aq.valid) {
@@ -216,56 +216,56 @@ async function cmdBuild(files: string[], opts: CommonOpts): Promise<void> {
     setConfig(loadConfig(opts.config));
     // GC needs the full rule universe: only an unfiltered union build
     // can know which keys are no longer declared anywhere.
-    const gc = files.length === 0 && !Boolean(opts.dryRun);
+    let gc = files.length === 0 && !Boolean(opts.dryRun);
     await importDeploys(files.length > 0 ? files : discoverDeployFiles());
     process.exitCode = await buildThen(getDecls(), opts, gc);
 }
 
 async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
-    const config = loadDeployConfig('deploy.json5');
+    let config = loadDeployConfig('deploy.json5');
     if (names.length === 0) {
-        for (const [name, target] of config) {
+        for (let [name, target] of config) {
             console.log(`${name} (${target.buildFile})`);
-            for (const entry of target.deploy) {
+            for (let entry of target.deploy) {
                 console.log(`    ${entry.subset.join(' ')} | ${entry.cmd}`);
             }
         }
         return;
     }
-    for (const name of names) {
+    for (let name of names) {
         if (!config.has(name)) {
             throw new BuildError(`deploy.json5: no deploy named ${name}`);
         }
     }
     setConfig(loadConfig(opts.config));
-    const files = [...new Set(names.map(n => config.get(n)!.buildFile))];
-    const specs = await importDeploys(files);
+    let files = [...new Set(names.map(n => config.get(n)!.buildFile))];
+    let specs = await importDeploys(files);
     process.exitCode = await buildThen(getDecls(), opts, false, async () => {
-        for (const name of names) {
-            const target = config.get(name)!;
-            const aq = await runFinish(finishOf(specs, target.buildFile), Boolean(opts.verbose));
+        for (let name of names) {
+            let target = config.get(name)!;
+            let aq = await runFinish(finishOf(specs, target.buildFile), Boolean(opts.verbose));
             if (aq === null) {
                 return 1;
             }
-            const dsts = aq.log.filter(e => e.type === 'Op').map(e => e.dst);
-            const subsets = matchSubsets(dsts, target.deploy);
-            for (const [i, entry] of target.deploy.entries()) {
-                const matched = subsets[i]!;
+            let dsts = aq.log.filter(e => e.type === 'Op').map(e => e.dst);
+            let subsets = matchSubsets(dsts, target.deploy);
+            for (let [i, entry] of target.deploy.entries()) {
+                let matched = subsets[i]!;
                 console.log(`${name}: ${matched.size} files | ${entry.cmd}`);
                 // Debug mode: materialize what each entry would ship (tar
                 // entries included) instead of running its command.
                 if (opts.output !== undefined) {
-                    const dir = nodePath.join(opts.output, name, String(i));
+                    let dir = nodePath.join(opts.output, name, String(i));
                     await aq.run(dir, 'copy', dst => matched.has(dst));
                     console.log(`    -> ${dir}`);
                     continue;
                 }
                 if (entry.dir) {
                     fs.mkdirSync(TMP_DIR, {recursive: true});
-                    const tmp = fs.mkdtempSync(nodePath.join(TMP_DIR, 'deploy-'));
+                    let tmp = fs.mkdtempSync(nodePath.join(TMP_DIR, 'deploy-'));
                     try {
                         await aq.run(tmp, 'copy', dst => matched.has(dst));
-                        const cmd = spawn(entry.cmd.replaceAll('%d', tmp),
+                        let cmd = spawn(entry.cmd.replaceAll('%d', tmp),
                             {shell: true, stdio: ['ignore', 'inherit', 'inherit']});
                         if (await waitExit(cmd) !== 0) {
                             return 1;
@@ -275,12 +275,12 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                     }
                     continue;
                 }
-                const upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
+                let upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
                 // If the command dies early we report its exit code; don't
                 // also crash on the resulting EPIPE, which reaches both
                 // stdin and (via streamx's destroy propagation) the pack.
                 upload.stdin!.on('error', () => {});
-                const pack = aq.pack(dst => matched.has(dst));
+                let pack = aq.pack(dst => matched.has(dst));
                 pack.on('error', () => {});
                 pack.pipe(upload.stdin!);
                 if (await waitExit(upload) !== 0) {
@@ -293,11 +293,11 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
 }
 
 async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
-    const output = requireOutput(opts);
+    let output = requireOutput(opts);
     setConfig(loadConfig(opts.config));
-    const specs = await importDeploys([file]);
+    let specs = await importDeploys([file]);
     process.exitCode = await buildThen(getDecls(), opts, false, async () => {
-        const aq = await runFinish(finishOf(specs, file), Boolean(opts.verbose));
+        let aq = await runFinish(finishOf(specs, file), Boolean(opts.verbose));
         if (aq === null) {
             return 1;
         }
@@ -307,29 +307,29 @@ async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
 }
 
 function slugOf(decl: RuleDecl): string {
-    const template = decl.displayTemplate ?? decl.cmds[0]!;
-    const slug = template.replace(/%[a-zA-Z0-9]+/g, ' ')
+    let template = decl.displayTemplate ?? decl.cmds[0]!;
+    let slug = template.replace(/%[a-zA-Z0-9]+/g, ' ')
         .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     return slug === '' ? 'rule' : slug;
 }
 
 async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
-    const output = requireOutput(opts);
+    let output = requireOutput(opts);
     setConfig(loadConfig(opts.config));
     await importDeploys(discoverDeployFiles());
     // Accept absolute paths and paths relative to where the user ran the
     // command; rules declare repo-root-relative paths.
-    const targets = paths.map(p => {
-        const target = nodePath.relative(root, nodePath.resolve(invocationCwd, p));
+    let targets = paths.map(p => {
+        let target = nodePath.relative(root, nodePath.resolve(invocationCwd, p));
         if (target.startsWith('..')) {
             throw new BuildError(`Not under the repo root: ${p}`);
         }
         return target;
     });
 
-    const closure = new Set<RuleDecl>();
-    for (const decl of getDecls()) {
-        const hit = [...decl.inputs, ...decl.deps].some(i => typeof i === 'string'
+    let closure = new Set<RuleDecl>();
+    for (let decl of getDecls()) {
+        let hit = [...decl.inputs, ...decl.deps].some(i => typeof i === 'string'
             && targets.some(t => i === t || i.startsWith(t + '/')));
         if (hit) {
             closure.add(decl);
@@ -342,7 +342,7 @@ async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
     // executor pulls in any producers the closure needs on its own.
     for (let grew = true; grew;) {
         grew = false;
-        for (const decl of getDecls()) {
+        for (let decl of getDecls()) {
             if (closure.has(decl)) {
                 continue;
             }
@@ -353,13 +353,13 @@ async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
         }
     }
 
-    const decls = getDecls().filter(d => closure.has(d));
+    let decls = getDecls().filter(d => closure.has(d));
     console.log(`inspect: ${decls.length} rules`);
     process.exitCode = await buildThen(decls, opts, false, async () => {
-        for (const decl of decls) {
-            const dir = nodePath.join(output, slugOf(decl));
+        for (let decl of decls) {
+            let dir = nodePath.join(output, slugOf(decl));
             fs.mkdirSync(dir, {recursive: true});
-            for (const artifact of decl.outputs) {
+            for (let artifact of decl.outputs) {
                 let dst = nodePath.join(dir, artifact.filename);
                 for (let n = 2; fs.existsSync(dst); n++) {
                     dst = nodePath.join(dir, `${artifact.name}-${n}.${artifact.ext}`);
@@ -374,7 +374,7 @@ async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
 }
 
 async function main(argv: string[]): Promise<void> {
-    const [verb, ...rest] = argv;
+    let [verb, ...rest] = argv;
     if (verb === undefined || verb === '-h' || verb === '--help') {
         console.log(USAGE);
         return;
@@ -392,13 +392,13 @@ async function main(argv: string[]): Promise<void> {
     } catch (err) {
         throw new BuildError(`${(err as Error).message.split('\n')[0]} (-h for usage)`);
     }
-    const v = parsed.values as {[k: string]: string | boolean | undefined};
-    const positionals = parsed.positionals;
+    let v = parsed.values as {[k: string]: string | boolean | undefined};
+    let positionals = parsed.positionals;
     if (v.help) {
         console.log(USAGE);
         return;
     }
-    const opts: VerbOpts = {
+    let opts: VerbOpts = {
         jobs: v.jobs as string,
         dryRun: Boolean(v['dry-run']),
         failFast: Boolean(v['fail-fast']),

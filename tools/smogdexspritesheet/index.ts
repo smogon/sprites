@@ -5,7 +5,7 @@ import fs from 'fs'
 import util from 'util';
 import * as spritedata from '@smogon/sprite-data/index.ts';
 
-const {values: opts, positionals: srcs} = util.parseArgs({
+let {values: opts, positionals: srcs} = util.parseArgs({
     options: {
         image: {type: 'string'},
         stylesheet: {type: 'string'},
@@ -16,14 +16,14 @@ if (opts.image === undefined || opts.stylesheet === undefined) {
     throw new Error('usage: --image <file> --stylesheet <file> -- <sprites...>');
 }
 
-const run = util.promisify(spritesmith.run);
+let run = util.promisify(spritesmith.run);
 
 let result = await run({
     src: srcs
 });
 
-const spaceRe = /[ _]+/g
-const removeRe = /[^a-z0-9-]/g
+let spaceRe = /[ _]+/g
+let removeRe = /[^a-z0-9-]/g
 
 export function toAlias(s: string) {
     s = s.toLowerCase()

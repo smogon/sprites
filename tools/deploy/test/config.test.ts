@@ -8,14 +8,14 @@ import {test} from 'node:test';
 import {loadDeployConfig, matchSubsets} from '../config.ts';
 
 function configFile(text: string): string {
-    const dir = fs.mkdtempSync(pathlib.join(os.tmpdir(), 'deploy-config-test-'));
-    const p = pathlib.join(dir, 'deploy.json5');
+    let dir = fs.mkdtempSync(pathlib.join(os.tmpdir(), 'deploy-config-test-'));
+    let p = pathlib.join(dir, 'deploy.json5');
     fs.writeFileSync(p, text);
     return p;
 }
 
 test('loadDeployConfig parses json5 with comments and trailing commas', () => {
-    const config = loadDeployConfig(configFile(`{
+    let config = loadDeployConfig(configFile(`{
         // dex assets
         assets: {
             buildFile: "assets.build.ts",
@@ -32,7 +32,7 @@ test('loadDeployConfig parses json5 with comments and trailing commas', () => {
 });
 
 test('loadDeployConfig ties the dir flag to %d in the cmd', () => {
-    const dir = loadDeployConfig(configFile(
+    let dir = loadDeployConfig(configFile(
         '{ps: {buildFile: "ps.build.ts", deploy: [{subset: ["ani/**"], dir: true, cmd: "rsync -a %d/ani/ h:a/"}]}}'));
     assert.equal(dir.get('ps')!.deploy[0]!.dir, true);
     assert.throws(() => loadDeployConfig(configFile(
@@ -54,8 +54,8 @@ test('loadDeployConfig rejects missing files and malformed shapes', () => {
 });
 
 test('matchSubsets routes dsts to entries, overlap allowed', () => {
-    const dsts = ['xy/a.gif', 'xy/manifest.json', 'xyicons/b.png'];
-    const [xy, manifests] = matchSubsets(dsts, [
+    let dsts = ['xy/a.gif', 'xy/manifest.json', 'xyicons/b.png'];
+    let [xy, manifests] = matchSubsets(dsts, [
         {subset: ['xy/**', 'xyicons/**'], cmd: 'one'},
         {subset: ['**/manifest.json'], cmd: 'two'},
     ]);

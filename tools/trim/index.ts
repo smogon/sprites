@@ -3,7 +3,7 @@ import {parseArgs} from 'util';
 
 import * as image from './image.ts';
 
-const {values: opts, positionals: files} = parseArgs({
+let {values: opts, positionals: files} = parseArgs({
     options: {
         check: {type: 'boolean', short: 'c'},
         verbose: {type: 'boolean', short: 'v'},
@@ -14,9 +14,9 @@ const {values: opts, positionals: files} = parseArgs({
 
 let retVal = 0;
 
-for (const file of files) {
-    const dims = image.getDims(file);
-    const alreadyCropped = (dims.left === 0 || dims.right === 0) &&
+for (let file of files) {
+    let dims = image.getDims(file);
+    let alreadyCropped = (dims.left === 0 || dims.right === 0) &&
           (dims.top === 0 || dims.bottom === 0);
 
     if (opts.verbose) {
@@ -37,7 +37,7 @@ for (const file of files) {
     }
         
     if (!opts.check && (!alreadyCropped || opts.force)) {
-        const trimDims = image.losslessTrim(dims);
+        let trimDims = image.losslessTrim(dims);
         image.crop(file, trimDims, file);
     }
 }

@@ -70,7 +70,7 @@ class Semaphore {
     }
 
     release(): void {
-        const waiter = this.waiters.shift();
+        let waiter = this.waiters.shift();
         if (waiter !== undefined) {
             waiter();
         } else {
@@ -108,8 +108,8 @@ export class Executor {
 
     async build(decls: readonly RuleDecl[]): Promise<BuildResult> {
         await Promise.allSettled(decls.map(d => this.demand(d)));
-        const ok = decls.every(d => {
-            const status = this.outcomes.get(d)?.status;
+        let ok = decls.every(d => {
+            let status = this.outcomes.get(d)?.status;
             return status === 'clean' || status === 'ran';
         });
         return {outcomes: this.outcomes, keys: this.keys, ok};
@@ -141,7 +141,7 @@ export class Executor {
             await this.demand(i.decl);
             return i.hash;
         }
-        const hash = this.opts.sourceHashes.get(i);
+        let hash = this.opts.sourceHashes.get(i);
         if (hash === undefined) {
             throw new BuildError(`No hash for source ${i}`);
         }
@@ -151,8 +151,8 @@ export class Executor {
     private async demandInner(decl: RuleDecl): Promise<string[]> {
         let digests: Map<Input, string>;
         try {
-            const inputs = [...decl.inputs, ...decl.deps];
-            const resolved = await Promise.all(inputs.map(i => this.digestOf(i)));
+            let inputs = [...decl.inputs, ...decl.deps];
+            let resolved = await Promise.all(inputs.map(i => this.digestOf(i)));
             digests = new Map(inputs.map((i, n) => [i, resolved[n]!]));
         } catch (err) {
             if (err instanceof RuleFailed) {
@@ -164,14 +164,14 @@ export class Executor {
             throw err;
         }
 
-        const key = computeKey(decl, i => digests.get(i)!);
+        let key = computeKey(decl, i => digests.get(i)!);
         this.keys.set(decl, key);
 
         // Byte-identical duplicate declarations share one execution.
-        const existing = this.inflightByKey.get(key);
+        let existing = this.inflightByKey.get(key);
         if (existing !== undefined) {
             try {
-                const shared = await existing;
+                let shared = await existing;
                 decl.outputs.forEach((o, n) => o.resolve(shared[n]!));
                 this.outcomes.set(decl, {status: 'clean'});
                 return shared;
@@ -184,16 +184,16 @@ export class Executor {
                 throw err;
             }
         }
-        const work = this.perform(decl, key);
+        let work = this.perform(decl, key);
         this.inflightByKey.set(key, work);
-        const result = await work;
+        let result = await work;
         decl.outputs.forEach((o, n) => o.resolve(result[n]!));
         return result;
     }
 
     private async perform(decl: RuleDecl, key: string): Promise<string[]> {
-        const {store, casDir} = this.opts;
-        const stored = store.lookupRule(key);
+        let {store, casDir} = this.opts;
+        let stored = store.lookupRule(key);
         if (stored !== null
             && stored.length === decl.outputs.length
             && stored.every((o, n) => o.ext === decl.outputs[n]!.ext)
@@ -201,7 +201,7 @@ export class Executor {
             this.outcomes.set(decl, {status: 'clean'});
             return stored.map(o => o.digest);
         }
-        const reason: DirtyReason = stored === null ? 'new' : 'cas-missing';
+        let reason: DirtyReason = stored === null ? 'new' : 'cas-missing';
 
         if (this.opts.dryRun) {
             this.outcomes.set(decl, {status: 'would-run', reason});
@@ -221,24 +221,24 @@ export class Executor {
     }
 
     private async execute(decl: RuleDecl, key: string, reason: DirtyReason): Promise<string[]> {
-        const {store, casDir, tmpDir, root} = this.opts;
-        const ruleTmp = pathlib.join(tmpDir, String(this.tmpSeq++));
+        let {store, casDir, tmpDir, root} = this.opts;
+        let ruleTmp = pathlib.join(tmpDir, String(this.tmpSeq++));
         fs.mkdirSync(ruleTmp, {recursive: true});
-        const tempOutputs = decl.outputs.map(o => pathlib.join(ruleTmp, o.filename));
-        const concreteInputs = decl.inputs.map(
+        let tempOutputs = decl.outputs.map(o => pathlib.join(ruleTmp, o.filename));
+        let concreteInputs = decl.inputs.map(
             i => typeof i === 'string' ? i : casPath(casDir, i.hash, i.ext));
-        const command = decl.cmds.map(c => substitute(c, concreteInputs, tempOutputs)).join(' && ');
+        let command = decl.cmds.map(c => substitute(c, concreteInputs, tempOutputs)).join(' && ');
 
         try {
-            const result = await runShell(command, {cwd: root, signal: this.runSignal});
+            let result = await runShell(command, {cwd: root, signal: this.runSignal});
             if (this.runSignal.aborted && result.code !== 0) {
                 throw new Aborted();  // killed by the abort, not a real failure; stays dirty
             }
             if (result.code === 0) {
-                const missing = tempOutputs.filter(p => !fs.existsSync(p));
+                let missing = tempOutputs.filter(p => !fs.existsSync(p));
                 if (missing.length === 0) {
-                    const outputs = decl.outputs.map((o, n) => {
-                        const object = casInsert(casDir, tempOutputs[n]!, o.ext);
+                    let outputs = decl.outputs.map((o, n) => {
+                        let object = casInsert(casDir, tempOutputs[n]!, o.ext);
                         return {digest: object.digest, ext: o.ext, size: object.size};
                     });
                     store.recordRule(key, decl.cmds, outputs);

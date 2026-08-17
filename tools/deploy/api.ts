@@ -35,7 +35,7 @@ export type DeployFn = (ctx: DeployCtx) => void | Promise<void>;
 // Like rule(): a buildFile registers free-floating deploy blocks next to the
 // rules they ship. They run in registration order after the build, sharing
 // one ctx (and so one output tree) per buildFile.
-const deploys: DeployFn[] = [];
+let deploys: DeployFn[] = [];
 
 export function deploy(fn: DeployFn): void {
     deploys.push(fn);
@@ -55,13 +55,13 @@ function shortHash(digest: Buffer): string {
 
 export function makeCtx(casDir: string, queue: ActionQueue): DeployCtx {
     // Every path here is repo-root-relative; the CLI chdirs to the root.
-    const srcPath = (src: CopySource): string => {
+    let srcPath = (src: CopySource): string => {
         if (src instanceof Artifact) {
             return casPath(casDir, src.hash, src.ext);
         }
         return typeof src === 'string' ? src : src.path;
     };
-    const digestOf = (src: CopySource): Buffer => {
+    let digestOf = (src: CopySource): Buffer => {
         if (src instanceof Artifact) {
             return Buffer.from(src.hash, 'hex');
         }
@@ -78,14 +78,14 @@ export function makeCtx(casDir: string, queue: ActionQueue): DeployCtx {
             return fs.readFileSync(srcPath(src), 'utf8');
         },
         list(dir: string): SrcFile[] {
-            const result = [];
+            let result = [];
             // Files only, no dotfiles: the same filtering the build-side
             // glob applies to rule inputs.
-            for (const ent of fs.readdirSync(dir, {withFileTypes: true}).sort((a, b) => a.name < b.name ? -1 : 1)) {
+            for (let ent of fs.readdirSync(dir, {withFileTypes: true}).sort((a, b) => a.name < b.name ? -1 : 1)) {
                 if (ent.name.startsWith('.') || (!ent.isFile() && !ent.isSymbolicLink())) {
                     continue;
                 }
-                const p = pathlib.path(ent.name, {dir});
+                let p = pathlib.path(ent.name, {dir});
                 result.push({...p, path: pathlib.format(p)});
             }
             return result;
@@ -94,9 +94,9 @@ export function makeCtx(casDir: string, queue: ActionQueue): DeployCtx {
             if (srcs.length === 1) {
                 return shortHash(digestOf(srcs[0]!));
             }
-            const digests = srcs.map(digestOf).sort(Buffer.compare);
-            const h = crypto.createHash('sha256');
-            for (const d of digests) {
+            let digests = srcs.map(digestOf).sort(Buffer.compare);
+            let h = crypto.createHash('sha256');
+            for (let d of digests) {
                 h.update(d);
             }
             return shortHash(h.digest());

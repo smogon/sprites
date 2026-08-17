@@ -16,7 +16,7 @@ export function parse(s: string): Path {
 }
 
 export function format({dir, name, ext}: Path) {
-    const dotext = ext === null ? '' : `.${ext}`;
+    let dotext = ext === null ? '' : `.${ext}`;
     return pathlib.format({dir, name, ext: dotext});
 }
 

@@ -14,7 +14,7 @@ function makeDbPath(): string {
 }
 
 test('recordRule/lookupRule roundtrip, upsert replaces outputs', () => {
-    const store = new Store(makeDbPath());
+    let store = new Store(makeDbPath());
     assert.equal(store.lookupRule('k1'), null);
     store.recordRule('k1', ['cmd a'], [{digest: 'd1', ext: 'png', size: 1n}, {digest: 'd2', ext: 'css', size: 2n}]);
     assert.deepEqual(store.lookupRule('k1'), [{digest: 'd1', ext: 'png', size: 1n}, {digest: 'd2', ext: 'css', size: 2n}]);
@@ -24,7 +24,7 @@ test('recordRule/lookupRule roundtrip, upsert replaces outputs', () => {
 });
 
 test('deleteKeysNotIn cascades outputs; liveObjects reflects survivors', () => {
-    const store = new Store(makeDbPath());
+    let store = new Store(makeDbPath());
     store.recordRule('keep', ['c'], [{digest: 'da', ext: 'png', size: 1n}]);
     store.recordRule('drop', ['c'], [{digest: 'db', ext: 'gif', size: 1n}]);
     assert.deepEqual(store.liveObjects(), new Set(['da.png', 'db.gif']));
@@ -35,8 +35,8 @@ test('deleteKeysNotIn cascades outputs; liveObjects reflects survivors', () => {
 });
 
 test('file cache roundtrip and prune', () => {
-    const store = new Store(makeDbPath());
-    const stat = {size: 5n, mtimeNs: 123n, hash: Buffer.from('aa', 'hex')};
+    let store = new Store(makeDbPath());
+    let stat = {size: 5n, mtimeNs: 123n, hash: Buffer.from('aa', 'hex')};
     store.saveFileCache(new Map([['src/a.png', stat], ['src/b.png', stat]]));
     store.pruneFileCache(new Set(['src/a.png']));
     assert.deepEqual([...store.loadFileCache().keys()], ['src/a.png']);
@@ -44,8 +44,8 @@ test('file cache roundtrip and prune', () => {
 });
 
 test('migrates a v1 db: drops rule tables, keeps file_cache', () => {
-    const dbPath = makeDbPath();
-    const v1 = new DatabaseSync(dbPath);
+    let dbPath = makeDbPath();
+    let v1 = new DatabaseSync(dbPath);
     v1.exec(`BEGIN;
         CREATE TABLE file_cache (
             path TEXT PRIMARY KEY, size INTEGER NOT NULL,
@@ -74,22 +74,22 @@ test('migrates a v1 db: drops rule tables, keeps file_cache', () => {
     COMMIT;`);
     v1.close();
 
-    const store = new Store(dbPath);
+    let store = new Store(dbPath);
     assert.deepEqual([...store.loadFileCache().keys()], ['src/a.png']);
     assert.equal(store.lookupRule('old'), null);
     store.recordRule('new', ['c'], [{digest: 'd', ext: 'png', size: 1n}]);
     assert.deepEqual(store.lookupRule('new'), [{digest: 'd', ext: 'png', size: 1n}]);
     store.close();
 
-    const check = new DatabaseSync(dbPath);
-    const {user_version} = check.prepare('PRAGMA user_version').get() as {user_version: number};
+    let check = new DatabaseSync(dbPath);
+    let {user_version} = check.prepare('PRAGMA user_version').get() as {user_version: number};
     assert.equal(Number(user_version), 2);
     check.close();
 });
 
 test('rejects unknown schema versions', () => {
-    const dbPath = makeDbPath();
-    const weird = new DatabaseSync(dbPath);
+    let dbPath = makeDbPath();
+    let weird = new DatabaseSync(dbPath);
     weird.exec('PRAGMA user_version = 7');
     weird.close();
     assert.throws(() => new Store(dbPath), /Unknown build db schema version 7/);

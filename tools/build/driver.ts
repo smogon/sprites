@@ -30,20 +30,20 @@ export interface DriveResult extends BuildResult {
 }
 
 export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promise<DriveResult> {
-    const log = opts.log ?? console.log;
-    const logError = opts.logError ?? console.error;
-    const {store} = opts;
+    let log = opts.log ?? console.log;
+    let logError = opts.logError ?? console.error;
+    let {store} = opts;
 
     // Hash sources over the producer closure: demanding a rule demands the
     // producers of its artifact inputs, even ones outside `decls`.
-    const closure = new Set<RuleDecl>();
-    const sources = new Set<string>();
-    const add = (decl: RuleDecl) => {
+    let closure = new Set<RuleDecl>();
+    let sources = new Set<string>();
+    let add = (decl: RuleDecl) => {
         if (closure.has(decl)) {
             return;
         }
         closure.add(decl);
-        for (const input of [...decl.inputs, ...decl.deps]) {
+        for (let input of [...decl.inputs, ...decl.deps]) {
             if (typeof input === 'string') {
                 sources.add(input);
             } else {
@@ -52,7 +52,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
         }
     };
     decls.forEach(add);
-    const {hashes, updated, missing} = reconcileHashes(sources, store.loadFileCache());
+    let {hashes, updated, missing} = reconcileHashes(sources, store.loadFileCache());
     if (missing.length > 0) {
         throw new BuildError(`Missing input files:\n  ${missing.slice(0, 20).join('\n  ')}`
             + (missing.length > 20 ? `\n  ... and ${missing.length - 20} more` : ''));
@@ -61,7 +61,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
         store.saveFileCache(updated);
     }
 
-    const executor = new Executor({
+    let executor = new Executor({
         root: opts.root,
         store,
         casDir: opts.casDir,
@@ -75,12 +75,12 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
         log,
         logError,
     });
-    const result = await executor.build(decls);
-    const interrupted = opts.signal.aborted;
+    let result = await executor.build(decls);
+    let interrupted = opts.signal.aborted;
 
-    const counts = {clean: 0, ran: 0, 'would-run': 0, failed: 0, blocked: 0};
-    for (const decl of decls) {
-        const outcome = result.outcomes.get(decl);
+    let counts = {clean: 0, ran: 0, 'would-run': 0, failed: 0, blocked: 0};
+    for (let decl of decls) {
+        let outcome = result.outcomes.get(decl);
         if (outcome !== undefined) {
             counts[outcome.status]++;
         }
@@ -88,7 +88,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
     if (opts.dryRun) {
         log(`would run ${counts['would-run']} (${counts.clean} up to date)`);
     } else {
-        const parts = [`${counts.clean} up to date`];
+        let parts = [`${counts.clean} up to date`];
         if (counts.ran > 0) {
             parts.push(`${counts.ran} ran`);
         }
@@ -101,7 +101,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
         log(parts.join(', ') + '.');
         if (counts.failed > 0) {
             logError('Failed rules:');
-            for (const decl of decls) {
+            for (let decl of decls) {
                 if (result.outcomes.get(decl)?.status === 'failed') {
                     logError(`  ${label(decl)}`);
                 }
@@ -111,8 +111,8 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
 
     if (opts.gc && !opts.dryRun && !interrupted
         && result.ok && result.keys.size === decls.length) {
-        const removedRules = store.deleteKeysNotIn(new Set(result.keys.values()));
-        const removedObjects = casSweep(opts.casDir, store.liveObjects());
+        let removedRules = store.deleteKeysNotIn(new Set(result.keys.values()));
+        let removedObjects = casSweep(opts.casDir, store.liveObjects());
         store.pruneFileCache(sources);
         if (removedRules > 0 || removedObjects > 0) {
             log(`gc: removed ${removedRules} rules, ${removedObjects} objects`);

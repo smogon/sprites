@@ -12,7 +12,7 @@ export function setConfig(cfg: Map<string, string>): void {
 }
 
 export function getconfig(name: string): string | undefined {
-    const value = config.get(name);
+    let value = config.get(name);
     return value === '' ? undefined : value;
 }
 
@@ -31,18 +31,18 @@ function globOne(pat: string): string[] {
     if (!pat.includes('*')) {
         return [pat];
     }
-    const dir = pathlib.dirname(pat);
-    const base = pathlib.basename(pat);
+    let dir = pathlib.dirname(pat);
+    let base = pathlib.basename(pat);
     if (dir.includes('*') || base.indexOf('*') !== base.lastIndexOf('*')) {
         throw new Error(`Unsupported glob pattern: ${pat}`);
     }
-    const [prefix, suffix] = base.split('*') as [string, string];
-    const results = [];
-    for (const ent of fs.readdirSync(dir, {withFileTypes: true})) {
+    let [prefix, suffix] = base.split('*') as [string, string];
+    let results = [];
+    for (let ent of fs.readdirSync(dir, {withFileTypes: true})) {
         if (!ent.isFile() && !ent.isSymbolicLink()) {
             continue;
         }
-        const name = ent.name;
+        let name = ent.name;
         if (name.startsWith('.')) {
             continue;  // tup.glob ignored dotfiles
         }
@@ -73,9 +73,9 @@ export interface SpriteData {
 // Port of util/sprites.lua spritedata. Lua used gmatch("[^-]+"), which skips
 // empty segments, hence the filter.
 export function spritedata(basename: string): SpriteData {
-    const parts = basename.split('-').filter(p => p !== '');
-    const data: Record<string, string | true> = {};
-    for (const part of parts.slice(1)) {
+    let parts = basename.split('-').filter(p => p !== '');
+    let data: Record<string, string | true> = {};
+    for (let part of parts.slice(1)) {
         if (part.length === 1) {
             data[part] = true;
         } else {
@@ -87,8 +87,8 @@ export function spritedata(basename: string): SpriteData {
 
 export function spriteglob(pats: string | string[], flagspec?: Record<string, unknown>): string[] {
     return glob(pats).filter(filename => {
-        const sd = spritedata(base(filename));
-        for (const [k, v] of Object.entries(flagspec ?? {})) {
+        let sd = spritedata(base(filename));
+        for (let [k, v] of Object.entries(flagspec ?? {})) {
             if (Boolean(v) !== Boolean(sd.data[k])) {
                 return false;
             }
@@ -99,11 +99,11 @@ export function spriteglob(pats: string | string[], flagspec?: Record<string, un
 
 // PNG date/time tEXt chunks make magick output nondeterministic, which would
 // churn every content-addressed name on a rebuild.
-export const PNG_DETERMINISTIC = '-define png:exclude-chunks=date,time';
+export let PNG_DETERMINISTIC = '-define png:exclude-chunks=date,time';
 
 export function pad(opts: {w: number, h: number, input?: string, output?: string}): string {
-    const input = opts.input ?? '%f';
-    const output = opts.output ?? '%o';
+    let input = opts.input ?? '%f';
+    let output = opts.output ?? '%o';
     return `magick convert ${input} ${PNG_DETERMINISTIC} -background transparent -gravity center -extent ${opts.w}x${opts.h} ${output}`;
 }
 
@@ -124,13 +124,13 @@ function compressopts(program: string, copts: CompressOpts): void {
 }
 
 export function compresspng(opts: {config?: string, output?: string} = {}): Cmd[] {
-    const output = opts.output ?? '%o';
-    const copts: CompressOpts = {};
+    let output = opts.output ?? '%o';
+    let copts: CompressOpts = {};
     compressopts('DEFAULT', copts);
     if (opts.config) {
         compressopts(opts.config, copts);
     }
-    const cmds = [];
+    let cmds = [];
     if (copts.pngquant !== undefined) {
         // -f -o necessary to overwrite existing file
         cmds.push(`pngquant -f -o ${output} ${copts.pngquant} ${output}`);

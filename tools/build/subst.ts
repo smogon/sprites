@@ -7,15 +7,15 @@ export type Cmd = string | Cmd[];
 
 export function flattenCmds(cmds: Cmd): string[] {
     if (typeof cmds === 'string') {
-        const trimmed = cmds.trim();
+        let trimmed = cmds.trim();
         return trimmed === '' ? [] : [trimmed];
     }
     return cmds.flatMap(flattenCmds);
 }
 
 export function basenameNoExt(path: string): string {
-    const base = pathlib.basename(path);
-    const dot = base.lastIndexOf('.');
+    let base = pathlib.basename(path);
+    let dot = base.lastIndexOf('.');
     return dot > 0 ? base.slice(0, dot) : base;
 }
 
@@ -35,7 +35,7 @@ export function substituteNames(s: string, inputs: string[]): string {
 export function substitute(s: string, inputs: string[], outputs: string[]): string {
     return s.replace(/%o(\d+)|%([a-zA-Z])/g, (match, n: string | undefined, c: string | undefined) => {
         if (n !== undefined) {
-            const i = Number(n);
+            let i = Number(n);
             if (i < 1 || i > outputs.length) {
                 throw new Error(`Output index out of range (${outputs.length} outputs): ${match} in: ${s}`);
             }

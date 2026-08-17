@@ -26,33 +26,33 @@ function shortHash(data: Buffer | string): string {
 
 // Stage `content` as a built artifact in a scratch CAS.
 function makeArtifact(casDir: string, content: string, ext: string) {
-    const digest = createHash('sha256').update(content).digest('hex');
-    const artifact = rule('in.png', ['t %f %o'], `art.${ext}`);
+    let digest = createHash('sha256').update(content).digest('hex');
+    let artifact = rule('in.png', ['t %f %o'], `art.${ext}`);
     artifact.resolve(digest);
-    const obj = casPath(casDir, digest, ext);
+    let obj = casPath(casDir, digest, ext);
     fs.mkdirSync(pathlib.dirname(obj), {recursive: true});
     fs.writeFileSync(obj, content);
     return artifact;
 }
 
 test('ctx.hash matches the historical single-file stamp for artifacts and files', () => {
-    const dir = tmpdir();
-    const file = pathlib.join(dir, 'f.png');
+    let dir = tmpdir();
+    let file = pathlib.join(dir, 'f.png');
     fs.writeFileSync(file, 'stamp-me');
-    const artifact = makeArtifact(pathlib.join(dir, 'cas'), 'stamp-me', 'png');
-    const ctx = makeCtx(pathlib.join(dir, 'cas'), new ActionQueue());
+    let artifact = makeArtifact(pathlib.join(dir, 'cas'), 'stamp-me', 'png');
+    let ctx = makeCtx(pathlib.join(dir, 'cas'), new ActionQueue());
     assert.equal(ctx.hash(file), shortHash('stamp-me'));
     assert.equal(ctx.hash(artifact), shortHash('stamp-me'));
 });
 
 test('multi-source ctx.hash is order-insensitive and content-sensitive', () => {
-    const dir = tmpdir();
-    const a = pathlib.join(dir, 'a.png');
-    const b = pathlib.join(dir, 'b.png');
+    let dir = tmpdir();
+    let a = pathlib.join(dir, 'a.png');
+    let b = pathlib.join(dir, 'b.png');
     fs.writeFileSync(a, 'aaa');
     fs.writeFileSync(b, 'bbb');
-    const ctx = makeCtx(pathlib.join(dir, 'cas'), new ActionQueue());
-    const before = ctx.hash(a, b);
+    let ctx = makeCtx(pathlib.join(dir, 'cas'), new ActionQueue());
+    let before = ctx.hash(a, b);
     assert.equal(before, ctx.hash(b, a));
     assert.notEqual(before, ctx.hash(a));
     fs.writeFileSync(b, 'changed');
@@ -60,27 +60,27 @@ test('multi-source ctx.hash is order-insensitive and content-sensitive', () => {
 });
 
 test('ctx queues artifact copies from the CAS, writes and reads', () => {
-    const dir = tmpdir();
-    const casDir = pathlib.join(dir, 'cas');
-    const artifact = makeArtifact(casDir, 'bytes', 'webp');
-    const aq = new ActionQueue();
-    const ctx = makeCtx(casDir, aq);
+    let dir = tmpdir();
+    let casDir = pathlib.join(dir, 'cas');
+    let artifact = makeArtifact(casDir, 'bytes', 'webp');
+    let aq = new ActionQueue();
+    let ctx = makeCtx(casDir, aq);
     ctx.write('m.json', '{}');
     ctx.copy(artifact, 'sprites/x.webp');
     assert.equal(ctx.read(artifact), 'bytes');
-    const ops = aq.log.filter(e => e.type === 'Op');
+    let ops = aq.log.filter(e => e.type === 'Op');
     assert.deepEqual(ops.map(e => e.dst), ['m.json', 'sprites/x.webp']);
     assert.equal((ops[1] as {op: {src: string}}).op.src, casPath(casDir, artifact.hash, 'webp'));
 });
 
 test('ctx.list sorts, parses extensions, skips dotfiles and directories', () => {
-    const dir = tmpdir();
+    let dir = tmpdir();
     fs.writeFileSync(pathlib.join(dir, 'b.png'), '');
     fs.writeFileSync(pathlib.join(dir, 'a.gif'), '');
     fs.writeFileSync(pathlib.join(dir, 'noext'), '');
     fs.writeFileSync(pathlib.join(dir, '.hidden'), '');
     fs.mkdirSync(pathlib.join(dir, 'subdir'));
-    const ctx = makeCtx('cas', new ActionQueue());
+    let ctx = makeCtx('cas', new ActionQueue());
     assert.deepEqual(ctx.list(dir), [
         {dir, name: 'a', ext: 'gif', path: pathlib.join(dir, 'a.gif')},
         {dir, name: 'b', ext: 'png', path: pathlib.join(dir, 'b.png')},
@@ -91,10 +91,10 @@ test('ctx.list sorts, parses extensions, skips dotfiles and directories', () => 
 function packedEntries(aq: ActionQueue, filter?: (dst: string) => boolean)
     : Promise<{name: string, data: string}[]> {
     return new Promise((resolve, reject) => {
-        const extract = tar.extract();
-        const entries: {name: string, data: string}[] = [];
+        let extract = tar.extract();
+        let entries: {name: string, data: string}[] = [];
         extract.on('entry', (header, stream, next) => {
-            const chunks: Buffer[] = [];
+            let chunks: Buffer[] = [];
             stream.on('data', c => chunks.push(c));
             stream.on('end', () => {
                 entries.push({name: header.name, data: Buffer.concat(chunks).toString()});
@@ -108,7 +108,7 @@ function packedEntries(aq: ActionQueue, filter?: (dst: string) => boolean)
 }
 
 test('pack preserves op order', async () => {
-    const aq = new ActionQueue();
+    let aq = new ActionQueue();
     aq.write('zzz', 'z.txt');
     aq.write('aaa', 'a.txt');
     assert.deepEqual(await packedEntries(aq), [
@@ -118,11 +118,11 @@ test('pack preserves op order', async () => {
 });
 
 test('pack with a filter packs only matching entries in order', async () => {
-    const aq = new ActionQueue();
+    let aq = new ActionQueue();
     aq.write('1', 'xy/a.png');
     aq.write('2', 'meta/m.json');
     aq.write('3', 'xy/b.png');
-    const subset = await packedEntries(aq, dst => dst.startsWith('xy/'));
+    let subset = await packedEntries(aq, dst => dst.startsWith('xy/'));
     assert.deepEqual(subset, [
         {name: 'xy/a.png', data: '1'},
         {name: 'xy/b.png', data: '3'},
@@ -130,36 +130,36 @@ test('pack with a filter packs only matching entries in order', async () => {
 });
 
 test('duplicate and absolute destinations invalidate the queue', () => {
-    const dup = new ActionQueue();
+    let dup = new ActionQueue();
     dup.write('a', 'x.txt');
     dup.write('b', 'x.txt');
     assert.ok(!dup.valid);
     assert.throws(() => dup.pack(), /Invalid ActionQueue/);
 
-    const abs = new ActionQueue();
+    let abs = new ActionQueue();
     abs.write('a', '/etc/passwd');
     assert.ok(!abs.valid);
 });
 
 test('run with a filter materializes only matching entries', async () => {
-    const dir = tmpdir();
-    const aq = new ActionQueue();
+    let dir = tmpdir();
+    let aq = new ActionQueue();
     aq.write('1', 'ani/a.gif');
     aq.write('2', 'dex/b.png');
-    const out = pathlib.join(dir, 'deploy');
+    let out = pathlib.join(dir, 'deploy');
     await aq.run(out, 'copy', dst => dst.startsWith('ani/'));
     assert.equal(fs.readFileSync(pathlib.join(out, 'ani/a.gif'), 'utf8'), '1');
     assert.ok(!fs.existsSync(pathlib.join(out, 'dex')));
 });
 
 test('copy-mode materialization restores 0644 on read-only sources', async () => {
-    const dir = tmpdir();
-    const src = pathlib.join(dir, 'obj');
+    let dir = tmpdir();
+    let src = pathlib.join(dir, 'obj');
     fs.writeFileSync(src, 'x');
     fs.chmodSync(src, 0o444);
-    const aq = new ActionQueue();
+    let aq = new ActionQueue();
     aq.copy(src, 'out/x.png');
-    const out = pathlib.join(dir, 'deploy');
+    let out = pathlib.join(dir, 'deploy');
     await aq.run(out, 'copy');
     assert.equal(fs.statSync(pathlib.join(out, 'out/x.png')).mode & 0o777, 0o644);
 });

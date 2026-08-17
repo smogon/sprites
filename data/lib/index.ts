@@ -3,7 +3,7 @@ import path from 'path';
 import fs from 'fs';
 import root from '@smogon/sprite-root/index.ts';
 
-const libdir = path.join(root, 'data');
+let libdir = path.join(root, 'data');
 
 export type Id = string;
 
@@ -24,17 +24,17 @@ export type ItemEntry = {
 
 export type Entry = SpecieEntry | ItemEntry;
 
-const objects: Record<Id, Entry> = {};
+let objects: Record<Id, Entry> = {};
 Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, 'species.json'), 'utf8')));
 Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, 'items.json'), 'utf8')));
 
-const map = new Map<Id, Entry>();
-for (const entry of Object.values(objects)) {
+let map = new Map<Id, Entry>();
+for (let entry of Object.values(objects)) {
     map.set(entry.sid, entry);
 }
 
 export function get(id: Id): Entry {
-    const entry = map.get(id);
+    let entry = map.get(id);
     if (entry === undefined)
         throw new Error(`No id for ${id}`);
     return entry;
@@ -70,23 +70,23 @@ export function parseFilename(s: string): SpriteFilename {
     if (s.length < 2)
         throw new Error(`Filename ${s} needs to be at least 2 characters'`);
 
-    const prefix = s[0]!;
+    let prefix = s[0]!;
     if (!prefix.match(/[a-z]/))
         throw new Error(`Filename ${s} must start with alpha character`);
 
-    const parts = s.split('-');
-    const extra = new Map<string, string>();
-    for (const part of parts.slice(1)) {
+    let parts = s.split('-');
+    let extra = new Map<string, string>();
+    for (let part of parts.slice(1)) {
         if (part.length === 0)
             throw new Error(`Can't parse ${s}`);
         extra.set(part[0]!, part.slice(1));
     }
     
     if (prefix === 'x') {
-        const name = parts[0]!.slice(1);
+        let name = parts[0]!.slice(1);
         return {extension: true, name, extra};
     } else {
-        const id = parts[0]!;
+        let id = parts[0]!;
         return {extension: false, id, extra};
     }
 }
@@ -98,9 +98,9 @@ export function formatFilename(si: InputSpriteFilename) {
     } else {
         s = si.id;
     }
-    const extra = [];
+    let extra = [];
     if (si.extra) {
-        for (const [k, v] of si.extra.entries()) {
+        for (let [k, v] of si.extra.entries()) {
             extra.push(`-${k}${v}`);
         }
     }

@@ -22,10 +22,10 @@ export interface ReconcileResult {
 // since the recorded cache entry are rehashed. mtime_ns exceeds 2^53, hence
 // bigint stats throughout.
 export function reconcileHashes(paths: Iterable<string>, cache: Map<string, FileStat>): ReconcileResult {
-    const hashes = new Map<string, Buffer>();
-    const updated = new Map<string, FileStat>();
-    const missing = [];
-    for (const path of paths) {
+    let hashes = new Map<string, Buffer>();
+    let updated = new Map<string, FileStat>();
+    let missing = [];
+    for (let path of paths) {
         let st;
         try {
             st = fs.statSync(path, {bigint: true});
@@ -37,7 +37,7 @@ export function reconcileHashes(paths: Iterable<string>, cache: Map<string, File
             missing.push(path);
             continue;
         }
-        const cached = cache.get(path);
+        let cached = cache.get(path);
         let hash;
         if (cached !== undefined && cached.size === st.size && cached.mtimeNs === st.mtimeNs) {
             hash = cached.hash;

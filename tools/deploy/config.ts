@@ -42,14 +42,14 @@ export function loadDeployConfig(path: string): DeployConfig {
         throw new BuildError(`${path}: top level must be an object of deploy names`);
     }
 
-    const config: DeployConfig = new Map();
-    for (const [name, t] of Object.entries(raw)) {
-        const target = t as Partial<DeployTarget>;
+    let config: DeployConfig = new Map();
+    for (let [name, t] of Object.entries(raw)) {
+        let target = t as Partial<DeployTarget>;
         if (typeof t !== 'object' || t === null || typeof target.buildFile !== 'string'
             || !Array.isArray(target.deploy)) {
             throw new BuildError(`${path}: ${name}: expected {buildFile: string, deploy: [...]}`);
         }
-        for (const e of target.deploy as Partial<DeployEntry>[]) {
+        for (let e of target.deploy as Partial<DeployEntry>[]) {
             if (typeof e !== 'object' || e === null
                 || !isStringArray(e.subset) || typeof e.cmd !== 'string'
                 || (e.dir !== undefined && typeof e.dir !== 'boolean')) {
@@ -72,25 +72,25 @@ export function loadDeployConfig(path: string): DeployConfig {
 // covered by some entry; to unship an output, don't emit it in finish.
 export function matchSubsets(dsts: readonly string[],
                              entries: readonly DeployEntry[]): Set<string>[] {
-    const covered = new Set<string>();
-    const perEntry = entries.map(entry => {
-        const matched = new Set<string>();
-        for (const glob of entry.subset) {
-            const hits = dsts.filter(d => nodePath.matchesGlob(d, glob));
+    let covered = new Set<string>();
+    let perEntry = entries.map(entry => {
+        let matched = new Set<string>();
+        for (let glob of entry.subset) {
+            let hits = dsts.filter(d => nodePath.matchesGlob(d, glob));
             if (hits.length === 0) {
                 throw new BuildError(`subset glob matches no outputs: ${glob}`);
             }
-            for (const hit of hits) {
+            for (let hit of hits) {
                 matched.add(hit);
                 covered.add(hit);
             }
         }
         return matched;
     });
-    const uncovered = dsts.filter(d => !covered.has(d));
+    let uncovered = dsts.filter(d => !covered.has(d));
     if (uncovered.length > 0) {
-        const shown = uncovered.slice(0, 10).join('\n  ');
-        const more = uncovered.length > 10 ? `\n  ... and ${uncovered.length - 10} more` : '';
+        let shown = uncovered.slice(0, 10).join('\n  ');
+        let more = uncovered.length > 10 ? `\n  ... and ${uncovered.length - 10} more` : '';
         throw new BuildError(`outputs not covered by any deploy entry:\n  ${shown}${more}`);
     }
     return perEntry;

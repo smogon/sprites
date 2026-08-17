@@ -6,14 +6,14 @@ import {deploy} from './tools/deploy/api.ts';
 
 // xy/ animations: first source wins per sprite name.
 
-const xyModels = gen9Modelslike();
-const xyChampions = gen10Modelslike();
-const xyGen5 = gen5Gifs();
+let xyModels = gen9Modelslike();
+let xyChampions = gen10Modelslike();
+let xyGen5 = gen5Gifs();
 
 deploy(ctx => {
-    const seenModels = new Set<string>();
-    const manifest = new Manifest(ctx);
-    const xycopy = (f: Sprite) => {
+    let seenModels = new Set<string>();
+    let manifest = new Manifest(ctx);
+    let xycopy = (f: Sprite) => {
         if (seenModels.has(f.name)) {
             return;
         }
@@ -21,22 +21,22 @@ deploy(ctx => {
         spritecopy(manifest, f, {dir: 'xy'});
     };
 
-    for (const f of ctx.list('src/models')) {
+    for (let f of ctx.list('src/models')) {
         xycopy(f);
     }
-    for (const f of xyModels) {
+    for (let f of xyModels) {
         xycopy(f);
     }
-    for (const f of xyChampions) {
+    for (let f of xyChampions) {
         xycopy(f);
     }
     // Non-model CAPs
-    for (const f of ctx.list('src/sprites/gen5')) {
+    for (let f of ctx.list('src/sprites/gen5')) {
         if (f.ext === 'gif') {
             xycopy(f);
         }
     }
-    for (const f of xyGen5) {
+    for (let f of xyGen5) {
         xycopy(f);
     }
     manifest.write('xy/manifest.json');
@@ -44,29 +44,29 @@ deploy(ctx => {
 
 // xyicons/: trimmed gen6 minisprites.
 
-const xyIcons = gen6Trimmed();
+let xyIcons = gen6Trimmed();
 
 deploy(ctx => {
-    const manifest = new Manifest(ctx);
-    for (const f of xyIcons) {
+    let manifest = new Manifest(ctx);
+    for (let f of xyIcons) {
         spritecopy(manifest, f, {dir: 'xyicons'});
     }
     manifest.write('xyicons/manifest.json');
 });
 
 // Deprecated, unstamped sets:
-// const xyItems = itemTrimmed();       (rules/minisprites.ts)
-// const fb = fbSprites();              (rules/social.ts)
-// const twitter = twitterSprites();    (rules/social.ts)
+// let xyItems = itemTrimmed();       (rules/minisprites.ts)
+// let fb = fbSprites();              (rules/social.ts)
+// let twitter = twitterSprites();    (rules/social.ts)
 //
 // deploy(ctx => {
-//     for (const f of xyItems) {
+//     for (let f of xyItems) {
 //         itemspritecopy(?, f, {dir: "xyitems"});
 //     }
-//     for (const f of fb) {
+//     for (let f of fb) {
 //         spritecopy(?, f, {dir: "fbsprites/xy"});
 //     }
-//     for (const f of twitter) {
+//     for (let f of twitter) {
 //         spritecopy(?, f, {dir: "twittersprites/xy"});
 //     }
 // });

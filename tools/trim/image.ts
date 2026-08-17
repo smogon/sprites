@@ -2,14 +2,14 @@
 import cp from 'child_process';
 
 export function getDims(input: string) {
-    const info = cp.execFileSync('magick', ['convert', input, '-format', '%w+%h+%@', 'info:'],
+    let info = cp.execFileSync('magick', ['convert', input, '-format', '%w+%h+%@', 'info:'],
                                  {encoding:'utf8'});
 
-    const [imageWidth, imageHeight, width, height, left, top] =
+    let [imageWidth, imageHeight, width, height, left, top] =
           info.split(/x|\+/g).map(dim => parseInt(dim)) as [number, number, number, number, number, number];
 
-    const right = imageWidth - (left + width);
-    const bottom = imageHeight - (top + height);
+    let right = imageWidth - (left + width);
+    let bottom = imageHeight - (top + height);
 
     return {
         width,

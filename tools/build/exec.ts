@@ -8,11 +8,11 @@ export interface ExecResult {
     durationMs: number;
 }
 
-const livePids = new Set<number>();
+let livePids = new Set<number>();
 
 // Emergency stop (e.g. second Ctrl-C): SIGKILL every live process group.
 export function killAllProcessGroups(): void {
-    for (const pid of livePids) {
+    for (let pid of livePids) {
         try {
             process.kill(-pid, 'SIGKILL');
         } catch {}
@@ -24,26 +24,26 @@ export function killAllProcessGroups(): void {
 // expansion is already 80KB+.
 export function runShell(command: string, opts: {cwd: string, signal: AbortSignal}): Promise<ExecResult> {
     return new Promise((resolve, reject) => {
-        const start = performance.now();
+        let start = performance.now();
         // detached: own process group, so an abort kills grandchildren
         // (magick, optipng, ...) with one signal
-        const child = spawn('sh', [], {cwd: opts.cwd, detached: true, stdio: ['pipe', 'pipe', 'pipe']});
+        let child = spawn('sh', [], {cwd: opts.cwd, detached: true, stdio: ['pipe', 'pipe', 'pipe']});
         if (child.pid !== undefined) {
             livePids.add(child.pid);
         }
-        const chunks: Buffer[] = [];
+        let chunks: Buffer[] = [];
         child.stdout.on('data', c => chunks.push(c));
         child.stderr.on('data', c => chunks.push(c));
         child.stdin.on('error', () => {});  // EPIPE if the shell exits early
         child.stdin.end(command + '\n');
 
         let killTimer: NodeJS.Timeout | undefined;
-        const kill = (sig: NodeJS.Signals) => {
+        let kill = (sig: NodeJS.Signals) => {
             try {
                 process.kill(-child.pid!, sig);
             } catch {}
         };
-        const onAbort = () => {
+        let onAbort = () => {
             kill('SIGTERM');
             killTimer = setTimeout(() => kill('SIGKILL'), 5000);
             killTimer.unref();
@@ -54,7 +54,7 @@ export function runShell(command: string, opts: {cwd: string, signal: AbortSigna
             opts.signal.addEventListener('abort', onAbort, {once: true});
         }
 
-        const cleanup = () => {
+        let cleanup = () => {
             if (child.pid !== undefined) {
                 livePids.delete(child.pid);
             }

@@ -5,7 +5,7 @@ import {test} from 'node:test';
 import {parseConfig} from '../config.ts';
 
 test('parseConfig parses values with spaces and equals', () => {
-    const cfg = parseConfig([
+    let cfg = parseConfig([
         '# comment',
         '',
         'MODELS_OPTIPNG=-o7',

@@ -2,13 +2,13 @@
 import fs from 'fs';
 
 export function parseConfig(text: string): Map<string, string> {
-    const result = new Map<string, string>();
+    let result = new Map<string, string>();
     for (let line of text.split('\n')) {
         line = line.trim();
         if (line === '' || line.startsWith('#')) {
             continue;
         }
-        const eq = line.indexOf('=');
+        let eq = line.indexOf('=');
         if (eq === -1) {
             throw new Error(`Invalid config line: ${line}`);
         }

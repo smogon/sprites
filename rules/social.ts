@@ -6,9 +6,9 @@ import {PNG_DETERMINISTIC, base, compresspng, spriteglob} from '../tools/build/h
 // models (first source wins).
 
 function socialInputs(): string[] {
-    const social = spriteglob(['src/models/*'], {b: false, s: false});
-    const socialSeen = new Set(social.map(base));
-    for (const file of spriteglob(['src/gen9species/*'], {b: false, s: false})) {
+    let social = spriteglob(['src/models/*'], {b: false, s: false});
+    let socialSeen = new Set(social.map(base));
+    for (let file of spriteglob(['src/gen9species/*'], {b: false, s: false})) {
         if (!socialSeen.has(base(file))) {
             social.push(file);
             socialSeen.add(base(file));

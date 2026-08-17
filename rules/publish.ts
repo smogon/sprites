@@ -27,8 +27,8 @@ export class Manifest {
     }
 
     write(dst: string): void {
-        const sorted: Record<string, string> = {};
-        for (const k of [...this.entries.keys()].sort()) {
+        let sorted: Record<string, string> = {};
+        for (let k of [...this.entries.keys()].sort()) {
             sorted[k] = this.entries.get(k)!;
         }
         this.ctx.write(dst, JSON.stringify(sorted, null, 4) + "\n");
@@ -41,7 +41,7 @@ export interface Dest {
 }
 
 function extOf(f: Sprite, ext?: string): string {
-    const result = ext ?? f.ext;
+    let result = ext ?? f.ext;
     if (result === null) {
         throw new Error(`Sprite ${f.name} has no extension`);
     }
@@ -61,14 +61,14 @@ export function toPSID(name: string): string {
 // Copy with a content-hash-stamped name and record the unhashed -> hashed
 // mapping in `manifest`.
 export function stampcopy(manifest: Manifest, f: Sprite, {dir, ext}: Dest, name: string): void {
-    const h = manifest.ctx.hash(f);
+    let h = manifest.ctx.hash(f);
     manifest.set(`${name}.${extOf(f, ext)}`, `${name}-${h}.${extOf(f, ext)}`);
     manifest.ctx.copy(f, `${dir}/${name}-${h}.${extOf(f, ext)}`);
 }
 
 export function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
                            allowUnknown = false): void {
-    const sn = spritedata.parseFilename(f.name);
+    let sn = spritedata.parseFilename(f.name);
     let name: string;
 
     // Skip asymmetrical for now
@@ -84,7 +84,7 @@ export function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
             return;
         }
     } else {
-        const sd = spritedata.get(sn.id);
+        let sd = spritedata.get(sn.id);
         if (sd.type !== 'specie') {
             throw new Error(`Not a specie sprite: ${f.name}`);
         }
@@ -105,26 +105,26 @@ export function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
 
 // TODO: merge with above
 export function itemspritecopy(manifest: Manifest, f: Sprite, dest: Dest): void {
-    const sn = spritedata.parseFilename(f.name);
+    let sn = spritedata.parseFilename(f.name);
     if (sn.extension) {
         throw new Error(`Not an item sprite: ${f.name}`);
     }
-    const sd = spritedata.get(sn.id);
+    let sd = spritedata.get(sn.id);
     if (sd.type !== 'item') {
         throw new Error(`Not an item sprite: ${f.name}`);
     }
-    for (const n of sd.names) {
+    for (let n of sd.names) {
         stampcopy(manifest, f, dest, toSmogonAlias(n));
     }
 }
 
 export function newspritecopy(ctx: DeployCtx, f: Sprite, dest: Dest): void {
-    const sn = spritedata.parseFilename(f.name);
+    let sn = spritedata.parseFilename(f.name);
     if (sn.extension) {
         return;
     }
-    const sd = spritedata.get(sn.id);
-    for (const n of sd.type === 'item' ? sd.names : [sd.base + sd.forme]) {
+    let sd = spritedata.get(sn.id);
+    for (let n of sd.type === 'item' ? sd.names : [sd.base + sd.forme]) {
         let name = toPSID(n);
         if (sn.extra.has('f')) {
             name += 'f';

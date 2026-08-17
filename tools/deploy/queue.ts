@@ -56,7 +56,7 @@ export class ActionQueue {
 
     private pushOp(op: Op, dst: string) {
         dst = nodePath.normalize(dst);
-        const entry: OpEntry = {
+        let entry: OpEntry = {
             type: 'Op',
             op,
             dst,
@@ -69,7 +69,7 @@ export class ActionQueue {
             this.valid = false;
             entry.valid = 'Absolute';
         } else {
-            const lastEntry = this.seen.get(dst);
+            let lastEntry = this.seen.get(dst);
             if (lastEntry === undefined) {
                 this.seen.set(dst, entry);
             } else {
@@ -91,23 +91,23 @@ export class ActionQueue {
     }
 
     skip() {
-        for (const obj of this.debugBuffer) {
+        for (let obj of this.debugBuffer) {
             this.gdebug(obj, true);
         }
         this.debugBuffer = [];
     }
 
     print(level: 'errors' | 'all') {
-        for (const entry of this.log) {
+        for (let entry of this.log) {
             if (entry.type === 'Op') {
-                const op = entry.op;
+                let op = entry.op;
                 if (entry.valid === 'Success' && level === 'errors')
                     continue;
                 let addendum = '';
                 if (entry.valid !== 'Success') {
                     addendum = ` (${entry.valid})`;
                 }
-                for (const obj of entry.debugObjs) {
+                for (let obj of entry.debugObjs) {
                     console.error('DEBUG:', obj);
                 }
                 if (op.type === 'Copy') {
@@ -129,11 +129,11 @@ export class ActionQueue {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
         if (mode !== 'tar') {
-            for (const entry of this.log) {
+            for (let entry of this.log) {
                 if (entry.type !== 'Op' || (filter !== undefined && !filter(entry.dst)))
                     continue;
-                const op = entry.op;
-                const dst = nodePath.join(dir, entry.dst);
+                let op = entry.op;
+                let dst = nodePath.join(dir, entry.dst);
                 fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
                 if (op.type === 'Copy'){
                     // Read-only sources are CAS objects; their mode must not
@@ -151,7 +151,7 @@ export class ActionQueue {
             }
         } else {
             // In this case, I guess its a file rather than a dir.
-            const out = fs.createWriteStream(dir);
+            let out = fs.createWriteStream(dir);
             this.pack(filter).pipe(out);
             return new Promise<void>((resolve, reject) => {
                 out.on('error', reject);
@@ -164,11 +164,11 @@ export class ActionQueue {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
         let t = tar.pack();
-        for (const entry of this.log) {
+        for (let entry of this.log) {
             if (entry.type !== 'Op' || (filter !== undefined && !filter(entry.dst)))
                 continue;
-            const op = entry.op;
-            const data = op.type === 'Copy' ? fs.readFileSync(op.src) : op.data;
+            let op = entry.op;
+            let data = op.type === 'Copy' ? fs.readFileSync(op.src) : op.data;
             // A dying consumer destroys the pack and every pending entry
             // sink, and each sink emits the error; the consumer is the one
             // reporting the failure, so keep the sinks quiet.

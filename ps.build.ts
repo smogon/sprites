@@ -11,7 +11,7 @@ import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 // ids through the sprite data, baking input names into the sheet layout,
 // hence nameSensitive.
 
-const sheetDeps = [
+let sheetDeps = [
     'data/species.json',
     'data/items.json',
     'data/lib/index.ts',
@@ -56,14 +56,14 @@ rule([
 
 // Padded Dex, plus missing CAPs backfilled from the gen5/model gifs.
 
-const dex = forEachRule('src/dex/*', {
+let dex = forEachRule('src/dex/*', {
     display: 'pad dex %f',
     cmds: [pad({w: 120, h: 120}), compresspng({config: 'DEX'})],
 }, '%b');
 
-const dexSet = new Set(dex.map(base));
-const dexMissing = [];
-for (const file of spriteglob(['src/sprites/gen5/*.gif', 'src/models/*.gif'], {b: false, s: false})) {
+let dexSet = new Set(dex.map(base));
+let dexMissing = [];
+for (let file of spriteglob(['src/sprites/gen5/*.gif', 'src/models/*.gif'], {b: false, s: false})) {
     if (!dexSet.has(base(file))) {
         dexMissing.push(file);
         dexSet.add(base(file));
@@ -81,17 +81,17 @@ forEachRule(dexMissing, {
 
 // ani/: the models plus champions backfill, under PS ids.
 
-const aniChampions = gen10Modelslike();
+let aniChampions = gen10Modelslike();
 
 deploy(ctx => {
-    const seenModels = new Set<string>();
+    let seenModels = new Set<string>();
 
-    for (const f of ctx.list('src/models')) {
+    for (let f of ctx.list('src/models')) {
         seenModels.add(f.name);
         psSpritecopy(ctx, f, 'ani');
     }
 
-    for (const f of aniChampions) {
+    for (let f of aniChampions) {
         if (seenModels.has(f.name)) {
             continue;
         }
@@ -105,7 +105,7 @@ deploy(ctx => {
 
 // PS ids keep the forme dash, unlike the smogon aliases.
 function psSpritecopy(ctx: DeployCtx, f: Sprite, dir: string): void {
-    const sn = spritedata.parseFilename(f.name);
+    let sn = spritedata.parseFilename(f.name);
     let name: string;
 
     // Skip asymmetrical for now
@@ -117,7 +117,7 @@ function psSpritecopy(ctx: DeployCtx, f: Sprite, dir: string): void {
         // Skip this, we don't use Unknown/Substitute
         return;
     }
-    const sd = spritedata.get(sn.id);
+    let sd = spritedata.get(sn.id);
     if (sd.type !== 'specie') {
         throw new Error(`Not a specie sprite: ${f.name}`);
     }

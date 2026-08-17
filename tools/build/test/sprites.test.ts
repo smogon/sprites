@@ -21,9 +21,9 @@ test('base strips directory and final extension', () => {
 });
 
 test('spriteglob filters by flag truthiness', () => {
-    const dir = fs.mkdtempSync(pathlib.join(os.tmpdir(), 'spriteglob-'));
+    let dir = fs.mkdtempSync(pathlib.join(os.tmpdir(), 'spriteglob-'));
     try {
-        for (const name of ['1.png', '1-a.png', '2-b.png', '2-b-s.png', '3-g.png', '.hidden.png']) {
+        for (let name of ['1.png', '1-a.png', '2-b.png', '2-b-s.png', '3-g.png', '.hidden.png']) {
             fs.writeFileSync(pathlib.join(dir, name), '');
         }
         assert.deepEqual(

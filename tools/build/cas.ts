@@ -24,7 +24,7 @@ export function casExists(casDir: string, digest: string, ext: string): boolean 
 // truncated object, which must read as dirty, not clean.
 export function casStat(casDir: string, digest: string, ext: string): bigint | null {
     try {
-        const st = fs.statSync(casPath(casDir, digest, ext), {bigint: true});
+        let st = fs.statSync(casPath(casDir, digest, ext), {bigint: true});
         return st.isFile() ? st.size : null;
     } catch {
         return null;
@@ -40,9 +40,9 @@ export interface CasObject {
 // existing object is trusted only if its bytes actually hash to the digest;
 // otherwise (crash-truncated object) the fresh bytes replace it.
 export function casInsert(casDir: string, tmpPath: string, ext: string): CasObject {
-    const digest = hashFileSync(tmpPath).toString('hex');
-    const size = fs.statSync(tmpPath, {bigint: true}).size;
-    const target = casPath(casDir, digest, ext);
+    let digest = hashFileSync(tmpPath).toString('hex');
+    let size = fs.statSync(tmpPath, {bigint: true}).size;
+    let target = casPath(casDir, digest, ext);
     if (fs.existsSync(target) && hashFileSync(target).toString('hex') === digest) {
         fs.unlinkSync(tmpPath);
         return {digest, size};
@@ -51,7 +51,7 @@ export function casInsert(casDir: string, tmpPath: string, ext: string): CasObje
     fs.chmodSync(tmpPath, 0o444);
     // Flush the bytes before the rename becomes visible, so a power loss
     // cannot journal the rename while dropping the data pages.
-    const fd = fs.openSync(tmpPath, 'r');
+    let fd = fs.openSync(tmpPath, 'r');
     try {
         fs.fsyncSync(fd);
     } finally {
@@ -74,12 +74,12 @@ export function casSweep(casDir: string, live: Set<string>): number {
         }
         throw err;
     }
-    for (const dir of fanout) {
+    for (let dir of fanout) {
         if (!dir.isDirectory()) {
             continue;
         }
-        const dirPath = pathlib.join(casDir, dir.name);
-        for (const name of fs.readdirSync(dirPath)) {
+        let dirPath = pathlib.join(casDir, dir.name);
+        for (let name of fs.readdirSync(dirPath)) {
             if (!live.has(name)) {
                 fs.unlinkSync(pathlib.join(dirPath, name));
                 removed++;

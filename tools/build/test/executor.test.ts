@@ -22,7 +22,7 @@ interface Env {
 }
 
 function setup(): Env {
-    const root = fs.mkdtempSync(pathlib.join(os.tmpdir(), 'executor-test-'));
+    let root = fs.mkdtempSync(pathlib.join(os.tmpdir(), 'executor-test-'));
     fs.mkdirSync(pathlib.join(root, 'src'));
     return {
         root,
@@ -34,7 +34,7 @@ function setup(): Env {
 }
 
 function src(env: Env, name: string, content: string): string {
-    const p = pathlib.join(env.root, 'src', name);
+    let p = pathlib.join(env.root, 'src', name);
     fs.writeFileSync(p, content);
     return p;
 }
@@ -55,7 +55,7 @@ function execCount(env: Env): number {
 
 async function runBuild(env: Env, opts: {dryRun?: boolean, gc?: boolean} = {},
                         decls = getDecls()): Promise<DriveResult> {
-    const store = new Store(env.dbPath);
+    let store = new Store(env.dbPath);
     try {
         return await build(decls, {
             root: env.root,
@@ -81,42 +81,42 @@ function statuses(result: DriveResult): RuleOutcome['status'][] {
 }
 
 test('second build is clean and executes nothing', async () => {
-    const env = setup();
-    const out = copyRule(env, src(env, 'a.txt', 'hello'), 'out.txt');
-    const first = await runBuild(env);
+    let env = setup();
+    let out = copyRule(env, src(env, 'a.txt', 'hello'), 'out.txt');
+    let first = await runBuild(env);
     assert.ok(first.ok);
     assert.deepEqual(statuses(first), ['ran']);
     assert.equal(fs.readFileSync(casPath(env.casDir, out.hash, 'txt'), 'utf8'), 'hello');
 
     resetDecls();
     copyRule(env, pathlib.join(env.root, 'src/a.txt'), 'out.txt');
-    const second = await runBuild(env);
+    let second = await runBuild(env);
     assert.deepEqual(statuses(second), ['clean']);
     assert.equal(execCount(env), 1);
 });
 
 test('input content change reruns; gc removes the old rule and object', async () => {
-    const env = setup();
-    const a = src(env, 'a.txt', 'v1');
-    const out1 = copyRule(env, a, 'out.txt');
+    let env = setup();
+    let a = src(env, 'a.txt', 'v1');
+    let out1 = copyRule(env, a, 'out.txt');
     await runBuild(env, {gc: true});
-    const oldObject = casPath(env.casDir, out1.hash, 'txt');
+    let oldObject = casPath(env.casDir, out1.hash, 'txt');
 
     resetDecls();
     fs.writeFileSync(a, 'v2');
     copyRule(env, a, 'out.txt');
-    const result = await runBuild(env, {gc: true});
+    let result = await runBuild(env, {gc: true});
     assert.deepEqual(statuses(result), ['ran']);
     assert.equal(execCount(env), 2);
     assert.ok(!fs.existsSync(oldObject));
 
-    const store = new Store(env.dbPath);
+    let store = new Store(env.dbPath);
     assert.deepEqual(store.liveObjects().size, 1);
     store.close();
 });
 
 test('same-bytes source rename executes nothing; nameSensitive reruns', async () => {
-    const env = setup();
+    let env = setup();
     copyRule(env, src(env, 'a.txt', 'stable'), 'out.txt');
     copyRule(env, src(env, 'ns.txt', 'stable'), 'ns-out.txt', {nameSensitive: true});
     await runBuild(env);
@@ -127,16 +127,16 @@ test('same-bytes source rename executes nothing; nameSensitive reruns', async ()
     fs.renameSync(pathlib.join(env.root, 'src/ns.txt'), pathlib.join(env.root, 'src/ns2.txt'));
     copyRule(env, pathlib.join(env.root, 'src/moved.txt'), 'out.txt');
     copyRule(env, pathlib.join(env.root, 'src/ns2.txt'), 'ns-out.txt', {nameSensitive: true});
-    const result = await runBuild(env);
+    let result = await runBuild(env);
     assert.deepEqual(statuses(result), ['clean', 'ran']);
     assert.equal(execCount(env), 3);
 });
 
 test('byte-identical inputs share one execution across two declarations', async () => {
-    const env = setup();
-    const one = copyRule(env, src(env, 'one.txt', 'same-bytes'), 'one.txt');
-    const two = copyRule(env, src(env, 'two.txt', 'same-bytes'), 'two.txt');
-    const result = await runBuild(env);
+    let env = setup();
+    let one = copyRule(env, src(env, 'one.txt', 'same-bytes'), 'one.txt');
+    let two = copyRule(env, src(env, 'two.txt', 'same-bytes'), 'two.txt');
+    let result = await runBuild(env);
     assert.ok(result.ok);
     assert.equal(execCount(env), 1);
     assert.deepEqual(statuses(result).sort(), ['clean', 'ran']);
@@ -152,48 +152,48 @@ function upcaseRule(env: Env, input: Artifact, out: string): Artifact {
 }
 
 test('chained rules: consumer follows producer, cas-missing reruns alone', async () => {
-    const env = setup();
-    const mid = copyRule(env, src(env, 'a.txt', 'chain'), 'mid.txt');
+    let env = setup();
+    let mid = copyRule(env, src(env, 'a.txt', 'chain'), 'mid.txt');
     upcaseRule(env, mid, 'final.txt');
-    const first = await runBuild(env);
+    let first = await runBuild(env);
     assert.ok(first.ok);
     assert.equal(execCount(env), 2);
 
     resetDecls();
-    const mid2 = copyRule(env, pathlib.join(env.root, 'src/a.txt'), 'mid.txt');
-    const final2 = upcaseRule(env, mid2, 'final.txt');
-    const clean = await runBuild(env);
+    let mid2 = copyRule(env, pathlib.join(env.root, 'src/a.txt'), 'mid.txt');
+    let final2 = upcaseRule(env, mid2, 'final.txt');
+    let clean = await runBuild(env);
     assert.deepEqual(statuses(clean), ['clean', 'clean']);
     assert.equal(fs.readFileSync(casPath(env.casDir, final2.hash, 'txt'), 'utf8'), 'CHAIN');
 
     resetDecls();
     fs.rmSync(casPath(env.casDir, final2.hash, 'txt'));
-    const mid3 = copyRule(env, pathlib.join(env.root, 'src/a.txt'), 'mid.txt');
+    let mid3 = copyRule(env, pathlib.join(env.root, 'src/a.txt'), 'mid.txt');
     upcaseRule(env, mid3, 'final.txt');
-    const rerun = await runBuild(env);
+    let rerun = await runBuild(env);
     assert.deepEqual(statuses(rerun), ['clean', 'ran']);
-    const outcome = rerun.outcomes.get(getDecls()[1]!)!;
+    let outcome = rerun.outcomes.get(getDecls()[1]!)!;
     assert.deepEqual(outcome, {status: 'ran', reason: 'cas-missing'});
 });
 
 test('failed producer blocks the consumer; nothing is recorded', async () => {
-    const env = setup();
-    const bad = rule(src(env, 'a.txt', 'x'), ['false'], 'mid.txt');
+    let env = setup();
+    let bad = rule(src(env, 'a.txt', 'x'), ['false'], 'mid.txt');
     copyRule(env, bad, 'final.txt');
-    const result = await runBuild(env);
+    let result = await runBuild(env);
     assert.ok(!result.ok);
     assert.deepEqual(statuses(result), ['failed', 'blocked']);
-    const store = new Store(env.dbPath);
+    let store = new Store(env.dbPath);
     assert.equal(store.liveObjects().size, 0);
     store.close();
 });
 
 test('multi-output rules route %oN and skip all-or-nothing', async () => {
-    const env = setup();
-    const declare = () => rule(src(env, 'a.txt', 'multi'),
+    let env = setup();
+    let declare = () => rule(src(env, 'a.txt', 'multi'),
         [`printf one > %o1 && printf two > %o2 && echo x >> ${env.execLog}`],
         ['x.txt', 'y.css']);
-    const [x1, y1] = declare();
+    let [x1, y1] = declare();
     await runBuild(env);
     assert.equal(fs.readFileSync(casPath(env.casDir, x1.hash, 'txt'), 'utf8'), 'one');
     assert.equal(fs.readFileSync(casPath(env.casDir, y1.hash, 'css'), 'utf8'), 'two');
@@ -201,67 +201,67 @@ test('multi-output rules route %oN and skip all-or-nothing', async () => {
     resetDecls();
     fs.rmSync(casPath(env.casDir, y1.hash, 'css'));
     declare();
-    const rerun = await runBuild(env);
+    let rerun = await runBuild(env);
     assert.deepEqual(statuses(rerun), ['ran']);
     assert.equal(execCount(env), 2);
 });
 
 test('a missing declared output fails the rule', async () => {
-    const env = setup();
+    let env = setup();
     rule(src(env, 'a.txt', 'x'), ['printf one > %o1'], ['x.txt', 'missing.css']);
-    const result = await runBuild(env);
+    let result = await runBuild(env);
     assert.ok(!result.ok);
-    const outcome = result.outcomes.get(getDecls()[0]!)!;
+    let outcome = result.outcomes.get(getDecls()[0]!)!;
     assert.equal(outcome.status, 'failed');
     assert.match((outcome as {message: string}).message, /did not produce: missing.css/);
-    const store = new Store(env.dbPath);
+    let store = new Store(env.dbPath);
     assert.equal(store.liveObjects().size, 0);
     store.close();
 });
 
 test('dry run reports without writing state', async () => {
-    const env = setup();
-    const mid = copyRule(env, src(env, 'a.txt', 'dry'), 'mid.txt');
+    let env = setup();
+    let mid = copyRule(env, src(env, 'a.txt', 'dry'), 'mid.txt');
     copyRule(env, mid, 'final.txt');
-    const result = await runBuild(env, {dryRun: true});
+    let result = await runBuild(env, {dryRun: true});
     assert.ok(!result.ok);
     assert.deepEqual(result.outcomes.get(getDecls()[0]!), {status: 'would-run', reason: 'new'});
     assert.deepEqual(result.outcomes.get(getDecls()[1]!), {status: 'would-run', reason: 'blocked'});
     assert.equal(execCount(env), 0);
     assert.ok(!fs.existsSync(env.casDir));
-    const store = new Store(env.dbPath);
+    let store = new Store(env.dbPath);
     assert.equal(store.liveObjects().size, 0);
     store.close();
 });
 
 test('a truncated CAS object reads as dirty and is repaired', async () => {
-    const env = setup();
-    const out = copyRule(env, src(env, 'a.txt', 'truncate-me'), 'out.txt');
+    let env = setup();
+    let out = copyRule(env, src(env, 'a.txt', 'truncate-me'), 'out.txt');
     await runBuild(env);
-    const obj = casPath(env.casDir, out.hash, 'txt');
+    let obj = casPath(env.casDir, out.hash, 'txt');
     fs.chmodSync(obj, 0o644);
     fs.truncateSync(obj);
 
     resetDecls();
     copyRule(env, pathlib.join(env.root, 'src/a.txt'), 'out.txt');
-    const rerun = await runBuild(env);
+    let rerun = await runBuild(env);
     assert.deepEqual(statuses(rerun), ['ran']);
     assert.equal(fs.readFileSync(obj, 'utf8'), 'truncate-me');
     assert.equal(fs.statSync(obj).mode & 0o777, 0o444);
 });
 
 test('building a consumer alone pulls in and hashes its producer', async () => {
-    const env = setup();
-    const mid = copyRule(env, src(env, 'a.txt', 'solo'), 'mid.txt');
-    const final = rule(mid, [`tr a-z A-Z < %f > %o && echo x >> ${env.execLog}`], 'final.txt');
-    const result = await runBuild(env, {}, [final.decl]);
+    let env = setup();
+    let mid = copyRule(env, src(env, 'a.txt', 'solo'), 'mid.txt');
+    let final = rule(mid, [`tr a-z A-Z < %f > %o && echo x >> ${env.execLog}`], 'final.txt');
+    let result = await runBuild(env, {}, [final.decl]);
     assert.ok(result.ok);
     assert.equal(execCount(env), 2);
     assert.equal(fs.readFileSync(casPath(env.casDir, final.hash, 'txt'), 'utf8'), 'SOLO');
 });
 
 test('missing sources fail upfront', async () => {
-    const env = setup();
+    let env = setup();
     copyRule(env, pathlib.join(env.root, 'src/nope.txt'), 'out.txt');
     await assert.rejects(() => runBuild(env), /Missing input files/);
 });
