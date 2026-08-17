@@ -22,8 +22,16 @@ export function basenameNoExt(path : string) : string {
 // Tup-style substitutions:
 //   %f  inputs, space-joined        %b  input basenames
 //   %o  outputs, space-joined       %B  input basenames without extension
+//   %oN (1-based) a single output, for rules with several
 export function substitute(s : string, inputs : string[], outputs : string[]) : string {
-    return s.replace(/%([a-zA-Z])/g, (match, c : string) => {
+    return s.replace(/%o(\d+)|%([a-zA-Z])/g, (match, n : string | undefined, c : string | undefined) => {
+        if (n !== undefined) {
+            const i = Number(n);
+            if (i < 1 || i > outputs.length) {
+                throw new Error(`Output index out of range (${outputs.length} outputs): ${match} in: ${s}`);
+            }
+            return outputs[i - 1]!;
+        }
         switch (c) {
             case 'f': return inputs.join(' ');
             case 'o': return outputs.join(' ');

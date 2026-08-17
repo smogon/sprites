@@ -19,6 +19,18 @@ test('substitute handles quoted frame selector', () => {
         'magick convert "src/models/a.gif[0]" -trim out/a.png');
 });
 
+test('substitute expands indexed %oN', () => {
+    assert.equal(
+        substitute('tool --image %o1 --stylesheet %o2 -- %f', ['a.png'], ['x.png', 'x.css']),
+        'tool --image x.png --stylesheet x.css -- a.png');
+    assert.equal(substitute('%o10', [], ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'ten']), 'ten');
+});
+
+test('substitute rejects out-of-range %oN', () => {
+    assert.throws(() => substitute('%o2', ['a'], ['b']), /out of range/);
+    assert.throws(() => substitute('%o0', ['a'], ['b']), /out of range/);
+});
+
 test('substitute rejects unknown escapes', () => {
     assert.throws(() => substitute('%d', ['a'], ['b']), /Unknown substitution/);
 });
