@@ -1,6 +1,6 @@
 
 import {spawn, type ChildProcess} from 'node:child_process';
-import * as fs from 'node:fs';
+import * as fs from 'node:fs/promises';
 import * as os from 'node:os';
 import * as nodePath from 'node:path';
 import {fileURLToPath, pathToFileURL} from 'node:url';
@@ -95,8 +95,8 @@ function requireOutput(opts: VerbOpts): string {
     return opts.output;
 }
 
-function discoverDeployFiles(): string[] {
-    let files = fs.readdirSync('.').filter(f => f.endsWith('.build.ts')).sort();
+async function discoverDeployFiles(): Promise<string[]> {
+    let files = (await fs.readdir('.')).filter(f => f.endsWith('.build.ts')).sort();
     if (files.length === 0) {
         throw new BuildError('No *.build.ts files at the repo root');
     }
@@ -133,7 +133,7 @@ async function buildThen(decls: readonly artifact.RuleDecl[], opts: CommonOpts, 
         let dbPath = dryRun && db.dbVersion(DB_PATH) !== 2 ? ':memory:' : DB_PATH;
         let store = new db.Store(dbPath);
         if (!dryRun) {
-            fs.rmSync(TMP_DIR, {recursive: true, force: true});
+            await fs.rm(TMP_DIR, {recursive: true, force: true});
         }
 
         let ac = new AbortController();
@@ -213,16 +213,16 @@ function waitExit(child: ChildProcess): Promise<number | null> {
 }
 
 async function cmdBuild(files: string[], opts: CommonOpts): Promise<void> {
-    setConfig(loadConfig(opts.config));
+    setConfig(await loadConfig(opts.config));
     // GC needs the full rule universe: only an unfiltered union build
     // can know which keys are no longer declared anywhere.
     let gc = files.length === 0 && !Boolean(opts.dryRun);
-    await importDeploys(files.length > 0 ? files : discoverDeployFiles());
+    await importDeploys(files.length > 0 ? files : await discoverDeployFiles());
     process.exitCode = await buildThen(artifact.getDecls(), opts, gc);
 }
 
 async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
-    let config = loadDeployConfig('deploy.json5');
+    let config = await loadDeployConfig('deploy.json5');
     if (names.length === 0) {
         for (let [name, target] of config) {
             console.log(`${name} (${target.buildFile})`);
@@ -239,7 +239,7 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
         }
         return {name, target};
     });
-    setConfig(loadConfig(opts.config));
+    setConfig(await loadConfig(opts.config));
     let files = [...new Set(targets.map(t => t.target.buildFile))];
     let specs = await importDeploys(files);
     process.exitCode = await buildThen(artifact.getDecls(), opts, false, async () => {
@@ -260,8 +260,8 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                     continue;
                 }
                 if (entry.dir) {
-                    fs.mkdirSync(TMP_DIR, {recursive: true});
-                    let tmp = fs.mkdtempSync(nodePath.join(TMP_DIR, 'deploy-'));
+                    await fs.mkdir(TMP_DIR, {recursive: true});
+                    let tmp = await fs.mkdtemp(nodePath.join(TMP_DIR, 'deploy-'));
                     try {
                         await aq.run(tmp, 'copy', dst => matched.has(dst));
                         let cmd = spawn(entry.cmd.replaceAll('%d', tmp),
@@ -270,7 +270,7 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                             return 1;
                         }
                     } finally {
-                        fs.rmSync(tmp, {recursive: true, force: true});
+                        await fs.rm(tmp, {recursive: true, force: true});
                     }
                     continue;
                 }
@@ -283,7 +283,7 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                 // also crash on the resulting EPIPE, which reaches both
                 // stdin and (via streamx's destroy propagation) the pack.
                 stdin.on('error', () => {});
-                let pack = aq.pack(dst => matched.has(dst));
+                let pack = await aq.pack(dst => matched.has(dst));
                 pack.on('error', () => {});
                 pack.pipe(stdin);
                 if (await waitExit(upload) !== 0) {
@@ -297,7 +297,7 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
 
 async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
     let output = requireOutput(opts);
-    setConfig(loadConfig(opts.config));
+    setConfig(await loadConfig(opts.config));
     let specs = await importDeploys([file]);
     process.exitCode = await buildThen(artifact.getDecls(), opts, false, async () => {
         let aq = await runFinish(finishOf(specs, file), Boolean(opts.verbose));
@@ -318,8 +318,8 @@ function slugOf(decl: artifact.RuleDecl): string {
 
 async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
     let output = requireOutput(opts);
-    setConfig(loadConfig(opts.config));
-    await importDeploys(discoverDeployFiles());
+    setConfig(await loadConfig(opts.config));
+    await importDeploys(await discoverDeployFiles());
     // Accept absolute paths and paths relative to where the user ran the
     // command; rules declare repo-root-relative paths.
     let targets = paths.map(p => {
@@ -358,17 +358,18 @@ async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
 
     let decls = artifact.getDecls().filter(d => closure.has(d));
     console.log(`inspect: ${decls.length} rules`);
+    let exists = (p: string) => fs.access(p).then(() => true, () => false);
     process.exitCode = await buildThen(decls, opts, false, async () => {
         for (let decl of decls) {
             let dir = nodePath.join(output, slugOf(decl));
-            fs.mkdirSync(dir, {recursive: true});
+            await fs.mkdir(dir, {recursive: true});
             for (let artifact of decl.outputs) {
                 let dst = nodePath.join(dir, artifact.filename);
-                for (let n = 2; fs.existsSync(dst); n++) {
+                for (let n = 2; await exists(dst); n++) {
                     dst = nodePath.join(dir, `${artifact.name}-${n}.${artifact.ext}`);
                 }
-                fs.copyFileSync(casPath(CAS_DIR, artifact.hash, artifact.ext), dst);
-                fs.chmodSync(dst, 0o644);
+                await fs.copyFile(casPath(CAS_DIR, artifact.hash, artifact.ext), dst);
+                await fs.chmod(dst, 0o644);
                 console.log(`${nodePath.relative(output, dst)}`);
             }
         }

@@ -1,7 +1,7 @@
 
 import spritesmith from 'spritesmith'
 import * as path from 'node:path';
-import * as fs from 'node:fs';
+import * as fs from 'node:fs/promises';
 import * as util from 'node:util';
 import * as spritedata from '@smogon/sprite-data/index.ts';
 
@@ -68,5 +68,5 @@ for (let [id, sprite] of sprites) {
     }`;
 }
 
-fs.writeFileSync(opts.image, result.image, 'binary');
-fs.writeFileSync(opts.stylesheet, stylesheet);
+await fs.writeFile(opts.image, result.image, 'binary');
+await fs.writeFile(opts.stylesheet, stylesheet);

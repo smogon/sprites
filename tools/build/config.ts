@@ -1,5 +1,5 @@
 
-import * as fs from 'node:fs';
+import * as fs from 'node:fs/promises';
 
 export function parseConfig(text: string): Map<string, string> {
     let result = new Map<string, string>();
@@ -17,9 +17,15 @@ export function parseConfig(text: string): Map<string, string> {
     return result;
 }
 
-export function loadConfig(path: string): Map<string, string> {
-    if (!fs.existsSync(path)) {
-        return new Map();
+export async function loadConfig(path: string): Promise<Map<string, string>> {
+    let text;
+    try {
+        text = await fs.readFile(path, 'utf8');
+    } catch (err) {
+        if ((err as {code?: string}).code === 'ENOENT') {
+            return new Map();
+        }
+        throw err;
     }
-    return parseConfig(fs.readFileSync(path, 'utf8'));
+    return parseConfig(text);
 }

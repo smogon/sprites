@@ -1,5 +1,5 @@
 
-import * as fs from 'node:fs';
+import * as fs from 'node:fs/promises';
 import * as nodePath from 'node:path';
 
 import JSON5 from 'json5';
@@ -25,10 +25,10 @@ function isStringArray(v: unknown): v is string[] {
     return Array.isArray(v) && v.every(x => typeof x === 'string');
 }
 
-export function loadDeployConfig(path: string): DeployConfig {
+export async function loadDeployConfig(path: string): Promise<DeployConfig> {
     let text: string;
     try {
-        text = fs.readFileSync(path, 'utf8');
+        text = await fs.readFile(path, 'utf8');
     } catch {
         throw new BuildError(`missing ${path}; see README ("Deploying") for the schema`);
     }

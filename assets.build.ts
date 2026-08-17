@@ -15,8 +15,8 @@ let webpMinisprites = forEachRule(minispriteInputs, {
     cmds: ['cwebp -z 9 %f -o %o'],
 }, '%B.webp');
 
-deploy(ctx => {
-    let h = ctx.hash(...webpMinisprites);
+deploy(async ctx => {
+    let h = await ctx.hash(...webpMinisprites);
     for (let f of webpMinisprites) {
         newspritecopy(ctx, f, {dir: 'minisprites/' + h});
     }
@@ -43,10 +43,10 @@ let sheetWebp = rule(sheetPng, ['cwebp -z 9 %f -o %o'], 'spritesheet.webp');
 
 // Hash-stamped css + webp. The css suffix pointer rides in __meta/ for the
 // dex to read.
-deploy(ctx => {
-    let wh = ctx.hash(sheetWebp);
+deploy(async ctx => {
+    let wh = await ctx.hash(sheetWebp);
     ctx.copy(sheetWebp, `spritesheet-${wh}.webp`);
-    let src = ctx.read(sheetCss);
+    let src = await ctx.read(sheetCss);
     let css = src.replaceAll('url("./spritesheet.webp")', `url("./spritesheet-${wh}.webp")`);
     if (css === src) {
         throw new Error('spritesheet.css: no webp urls rewritten');
@@ -54,7 +54,7 @@ deploy(ctx => {
     // Suffix from source content: the rewritten css is a pure function
     // of (css, webp), so this changes exactly when the served bytes
     // change.
-    let ch = ctx.hash(sheetCss, sheetWebp);
+    let ch = await ctx.hash(sheetCss, sheetWebp);
     ctx.write(`spritesheet-${ch}.css`, css);
     ctx.write('__meta/spritesheet_css_suffix.txt', `-${ch}\n`);
 });
@@ -65,23 +65,23 @@ deploy(ctx => {
 let forumItems = itemPadded();
 let forumG6 = gen6Padded();
 
-deploy(ctx => {
+deploy(async ctx => {
     let manifest = new Manifest(ctx);
     for (let f of forumItems) {
-        itemspritecopy(manifest, f, {dir: 'forumsprites'});
+        await itemspritecopy(manifest, f, {dir: 'forumsprites'});
     }
     for (let f of forumG6) {
-        spritecopy(manifest, f, {dir: 'forumsprites'}, true);
+        await spritecopy(manifest, f, {dir: 'forumsprites'}, true);
     }
     manifest.write('__meta/forumsprites/manifest.json');
 });
 
 // PMD sprites ship as-is, stamped.
 
-deploy(ctx => {
+deploy(async ctx => {
     let manifest = new Manifest(ctx);
-    for (let f of ctx.list('src/pmd')) {
-        spritecopy(manifest, f, {dir: 'pmd'});
+    for (let f of await ctx.list('src/pmd')) {
+        await spritecopy(manifest, f, {dir: 'pmd'});
     }
     manifest.write('__meta/pmd/manifest.json');
 });

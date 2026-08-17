@@ -14,8 +14,8 @@ function configFile(text: string): string {
     return p;
 }
 
-test('loadDeployConfig parses json5 with comments and trailing commas', () => {
-    let config = loadDeployConfig(configFile(`{
+test('loadDeployConfig parses json5 with comments and trailing commas', async () => {
+    let config = await loadDeployConfig(configFile(`{
         // dex assets
         assets: {
             buildFile: "assets.build.ts",
@@ -31,26 +31,26 @@ test('loadDeployConfig parses json5 with comments and trailing commas', () => {
     });
 });
 
-test('loadDeployConfig ties the dir flag to %d in the cmd', () => {
-    let dir = loadDeployConfig(configFile(
+test('loadDeployConfig ties the dir flag to %d in the cmd', async () => {
+    let dir = await loadDeployConfig(configFile(
         '{ps: {buildFile: "ps.build.ts", deploy: [{subset: ["ani/**"], dir: true, cmd: "rsync -a %d/ani/ h:a/"}]}}'));
     assert.equal(dir.get('ps')!.deploy[0]!.dir, true);
-    assert.throws(() => loadDeployConfig(configFile(
+    await assert.rejects(() => loadDeployConfig(configFile(
         '{a: {buildFile: "x.build.ts", deploy: [{subset: ["**"], dir: true, cmd: "rsync -a h:a/"}]}}')),
     /dir entry's cmd must use %d/);
-    assert.throws(() => loadDeployConfig(configFile(
+    await assert.rejects(() => loadDeployConfig(configFile(
         '{a: {buildFile: "x.build.ts", deploy: [{subset: ["**"], cmd: "rsync -a %d/ h:a/"}]}}')),
     /must not use %d \(missing dir: true\?\)/);
 });
 
-test('loadDeployConfig rejects missing files and malformed shapes', () => {
-    assert.throws(() => loadDeployConfig('/nonexistent/deploy.json5'), /missing/);
-    assert.throws(() => loadDeployConfig(configFile('[1]')), /must be an object/);
-    assert.throws(() => loadDeployConfig(configFile('{a: {deploy: []}}')), /expected \{buildFile/);
-    assert.throws(() => loadDeployConfig(configFile(
+test('loadDeployConfig rejects missing files and malformed shapes', async () => {
+    await assert.rejects(() => loadDeployConfig('/nonexistent/deploy.json5'), /missing/);
+    await assert.rejects(() => loadDeployConfig(configFile('[1]')), /must be an object/);
+    await assert.rejects(() => loadDeployConfig(configFile('{a: {deploy: []}}')), /expected \{buildFile/);
+    await assert.rejects(() => loadDeployConfig(configFile(
         '{a: {buildFile: "x.build.ts", deploy: [{subset: "**", cmd: "c"}]}}')),
     /needs \{subset/);
-    assert.throws(() => loadDeployConfig(configFile('{a: {buildFile:')), /deploy.json5:/);
+    await assert.rejects(() => loadDeployConfig(configFile('{a: {buildFile:')), /deploy.json5:/);
 });
 
 test('matchSubsets routes dsts to entries, overlap allowed', () => {

@@ -1,6 +1,6 @@
 
 import * as crypto from 'node:crypto';
-import * as fs from 'node:fs';
+import * as fs from 'node:fs/promises';
 
 import b32encode from 'base32-encode';
 
@@ -20,14 +20,16 @@ export type CopySource = Artifact | SrcFile | string;   // string = repo-relativ
 // The finish API: nice naming over built artifacts and raw sources. Ops are
 // queued in call order, which is the tar entry order.
 export type DeployCtx = {
+    // copy and write queue ops without touching the disk, so they are sync;
+    // read, list, and hash do file I/O.
     copy(src: CopySource, dst: string): void,
     write(dst: string, data: string): void,
-    read(src: CopySource): string,
-    list(dir: string): SrcFile[],
+    read(src: CopySource): Promise<string>,
+    list(dir: string): Promise<SrcFile[]>,
     // 8-char base32 content stamp. One source: the digest of its bytes,
     // byte-compatible with artifact hashes. Several: a digest of the sorted
     // per-source digests (order-insensitive).
-    hash(...srcs: CopySource[]): string,
+    hash(...srcs: CopySource[]): Promise<string>,
 };
 
 export type DeployFn = (ctx: DeployCtx) => void | Promise<void>;
@@ -61,11 +63,11 @@ export function makeCtx(casDir: string, queue: ActionQueue): DeployCtx {
         }
         return typeof src === 'string' ? src : src.path;
     };
-    let digestOf = (src: CopySource): Buffer => {
+    let digestOf = async (src: CopySource): Promise<Buffer> => {
         if (src instanceof Artifact) {
             return Buffer.from(src.hash, 'hex');
         }
-        return crypto.createHash('sha256').update(fs.readFileSync(srcPath(src))).digest();
+        return crypto.createHash('sha256').update(await fs.readFile(srcPath(src))).digest();
     };
     return {
         copy(src: CopySource, dst: string): void {
@@ -74,14 +76,15 @@ export function makeCtx(casDir: string, queue: ActionQueue): DeployCtx {
         write(dst: string, data: string): void {
             queue.write(data, dst);
         },
-        read(src: CopySource): string {
-            return fs.readFileSync(srcPath(src), 'utf8');
+        async read(src: CopySource): Promise<string> {
+            return await fs.readFile(srcPath(src), 'utf8');
         },
-        list(dir: string): SrcFile[] {
+        async list(dir: string): Promise<SrcFile[]> {
             let result = [];
             // Files only, no dotfiles: the same filtering the build-side
             // glob applies to rule inputs.
-            for (let ent of fs.readdirSync(dir, {withFileTypes: true}).sort((a, b) => a.name < b.name ? -1 : 1)) {
+            let ents = await fs.readdir(dir, {withFileTypes: true});
+            for (let ent of ents.sort((a, b) => a.name < b.name ? -1 : 1)) {
                 if (ent.name.startsWith('.') || (!ent.isFile() && !ent.isSymbolicLink())) {
                     continue;
                 }
@@ -90,12 +93,12 @@ export function makeCtx(casDir: string, queue: ActionQueue): DeployCtx {
             }
             return result;
         },
-        hash(...srcs: CopySource[]): string {
+        async hash(...srcs: CopySource[]): Promise<string> {
             let [only] = srcs;
             if (only !== undefined && srcs.length === 1) {
-                return shortHash(digestOf(only));
+                return shortHash(await digestOf(only));
             }
-            let digests = srcs.map(digestOf).sort(Buffer.compare);
+            let digests = (await Promise.all(srcs.map(digestOf))).sort(Buffer.compare);
             let h = crypto.createHash('sha256');
             for (let d of digests) {
                 h.update(d);

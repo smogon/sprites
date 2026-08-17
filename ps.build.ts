@@ -83,10 +83,10 @@ forEachRule(dexMissing, {
 
 let aniChampions = gen10Modelslike();
 
-deploy(ctx => {
+deploy(async ctx => {
     let seenModels = new Set<string>();
 
-    for (let f of ctx.list('src/models')) {
+    for (let f of await ctx.list('src/models')) {
         seenModels.add(f.name);
         psSpritecopy(ctx, f, 'ani');
     }

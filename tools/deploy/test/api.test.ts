@@ -35,31 +35,31 @@ function makeArtifact(casDir: string, content: string, ext: string) {
     return artifact;
 }
 
-test('ctx.hash matches the historical single-file stamp for artifacts and files', () => {
+test('ctx.hash matches the historical single-file stamp for artifacts and files', async () => {
     let dir = tmpdir();
     let file = pathlib.join(dir, 'f.png');
     fs.writeFileSync(file, 'stamp-me');
     let artifact = makeArtifact(pathlib.join(dir, 'cas'), 'stamp-me', 'png');
     let ctx = makeCtx(pathlib.join(dir, 'cas'), new ActionQueue());
-    assert.equal(ctx.hash(file), shortHash('stamp-me'));
-    assert.equal(ctx.hash(artifact), shortHash('stamp-me'));
+    assert.equal(await ctx.hash(file), shortHash('stamp-me'));
+    assert.equal(await ctx.hash(artifact), shortHash('stamp-me'));
 });
 
-test('multi-source ctx.hash is order-insensitive and content-sensitive', () => {
+test('multi-source ctx.hash is order-insensitive and content-sensitive', async () => {
     let dir = tmpdir();
     let a = pathlib.join(dir, 'a.png');
     let b = pathlib.join(dir, 'b.png');
     fs.writeFileSync(a, 'aaa');
     fs.writeFileSync(b, 'bbb');
     let ctx = makeCtx(pathlib.join(dir, 'cas'), new ActionQueue());
-    let before = ctx.hash(a, b);
-    assert.equal(before, ctx.hash(b, a));
-    assert.notEqual(before, ctx.hash(a));
+    let before = await ctx.hash(a, b);
+    assert.equal(before, await ctx.hash(b, a));
+    assert.notEqual(before, await ctx.hash(a));
     fs.writeFileSync(b, 'changed');
-    assert.notEqual(ctx.hash(a, b), before);
+    assert.notEqual(await ctx.hash(a, b), before);
 });
 
-test('ctx queues artifact copies from the CAS, writes and reads', () => {
+test('ctx queues artifact copies from the CAS, writes and reads', async () => {
     let dir = tmpdir();
     let casDir = pathlib.join(dir, 'cas');
     let artifact = makeArtifact(casDir, 'bytes', 'webp');
@@ -67,13 +67,13 @@ test('ctx queues artifact copies from the CAS, writes and reads', () => {
     let ctx = makeCtx(casDir, aq);
     ctx.write('m.json', '{}');
     ctx.copy(artifact, 'sprites/x.webp');
-    assert.equal(ctx.read(artifact), 'bytes');
+    assert.equal(await ctx.read(artifact), 'bytes');
     let ops = aq.log.filter(e => e.type === 'Op');
     assert.deepEqual(ops.map(e => e.dst), ['m.json', 'sprites/x.webp']);
     assert.equal((ops[1] as {op: {src: string}}).op.src, casPath(casDir, artifact.hash, 'webp'));
 });
 
-test('ctx.list sorts, parses extensions, skips dotfiles and directories', () => {
+test('ctx.list sorts, parses extensions, skips dotfiles and directories', async () => {
     let dir = tmpdir();
     fs.writeFileSync(pathlib.join(dir, 'b.png'), '');
     fs.writeFileSync(pathlib.join(dir, 'a.gif'), '');
@@ -81,15 +81,16 @@ test('ctx.list sorts, parses extensions, skips dotfiles and directories', () => 
     fs.writeFileSync(pathlib.join(dir, '.hidden'), '');
     fs.mkdirSync(pathlib.join(dir, 'subdir'));
     let ctx = makeCtx('cas', new ActionQueue());
-    assert.deepEqual(ctx.list(dir), [
+    assert.deepEqual(await ctx.list(dir), [
         {dir, name: 'a', ext: 'gif', path: pathlib.join(dir, 'a.gif')},
         {dir, name: 'b', ext: 'png', path: pathlib.join(dir, 'b.png')},
         {dir, name: 'noext', ext: null, path: pathlib.join(dir, 'noext')},
     ]);
 });
 
-function packedEntries(aq: ActionQueue, filter?: (dst: string) => boolean)
+async function packedEntries(aq: ActionQueue, filter?: (dst: string) => boolean)
     : Promise<{name: string, data: string}[]> {
+    let packed = await aq.pack(filter);
     return new Promise((resolve, reject) => {
         let extract = tar.extract();
         let entries: {name: string, data: string}[] = [];
@@ -103,7 +104,7 @@ function packedEntries(aq: ActionQueue, filter?: (dst: string) => boolean)
         });
         extract.on('finish', () => resolve(entries));
         extract.on('error', reject);
-        aq.pack(filter).pipe(extract);
+        packed.pipe(extract);
     });
 }
 
@@ -129,12 +130,12 @@ test('pack with a filter packs only matching entries in order', async () => {
     ]);
 });
 
-test('duplicate and absolute destinations invalidate the queue', () => {
+test('duplicate and absolute destinations invalidate the queue', async () => {
     let dup = new ActionQueue();
     dup.write('a', 'x.txt');
     dup.write('b', 'x.txt');
     assert.ok(!dup.valid);
-    assert.throws(() => dup.pack(), /Invalid ActionQueue/);
+    await assert.rejects(() => dup.pack(), /Invalid ActionQueue/);
 
     let abs = new ActionQueue();
     abs.write('a', '/etc/passwd');

@@ -10,34 +10,34 @@ let xyModels = gen9Modelslike();
 let xyChampions = gen10Modelslike();
 let xyGen5 = gen5Gifs();
 
-deploy(ctx => {
+deploy(async ctx => {
     let seenModels = new Set<string>();
     let manifest = new Manifest(ctx);
-    let xycopy = (f: Sprite) => {
+    let xycopy = async (f: Sprite) => {
         if (seenModels.has(f.name)) {
             return;
         }
         seenModels.add(f.name);
-        spritecopy(manifest, f, {dir: 'xy'});
+        await spritecopy(manifest, f, {dir: 'xy'});
     };
 
-    for (let f of ctx.list('src/models')) {
-        xycopy(f);
+    for (let f of await ctx.list('src/models')) {
+        await xycopy(f);
     }
     for (let f of xyModels) {
-        xycopy(f);
+        await xycopy(f);
     }
     for (let f of xyChampions) {
-        xycopy(f);
+        await xycopy(f);
     }
     // Non-model CAPs
-    for (let f of ctx.list('src/sprites/gen5')) {
+    for (let f of await ctx.list('src/sprites/gen5')) {
         if (f.ext === 'gif') {
-            xycopy(f);
+            await xycopy(f);
         }
     }
     for (let f of xyGen5) {
-        xycopy(f);
+        await xycopy(f);
     }
     manifest.write('xy/manifest.json');
 });
@@ -46,10 +46,10 @@ deploy(ctx => {
 
 let xyIcons = gen6Trimmed();
 
-deploy(ctx => {
+deploy(async ctx => {
     let manifest = new Manifest(ctx);
     for (let f of xyIcons) {
-        spritecopy(manifest, f, {dir: 'xyicons'});
+        await spritecopy(manifest, f, {dir: 'xyicons'});
     }
     manifest.write('xyicons/manifest.json');
 });

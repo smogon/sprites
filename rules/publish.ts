@@ -60,14 +60,14 @@ export function toPSID(name: string): string {
 
 // Copy with a content-hash-stamped name and record the unhashed -> hashed
 // mapping in `manifest`.
-export function stampcopy(manifest: Manifest, f: Sprite, {dir, ext}: Dest, name: string): void {
-    let h = manifest.ctx.hash(f);
+export async function stampcopy(manifest: Manifest, f: Sprite, {dir, ext}: Dest, name: string): Promise<void> {
+    let h = await manifest.ctx.hash(f);
     manifest.set(`${name}.${extOf(f, ext)}`, `${name}-${h}.${extOf(f, ext)}`);
     manifest.ctx.copy(f, `${dir}/${name}-${h}.${extOf(f, ext)}`);
 }
 
-export function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
-                           allowUnknown = false): void {
+export async function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
+                                 allowUnknown = false): Promise<void> {
     let sn = spritedata.parseFilename(f.name);
     let name: string;
 
@@ -100,11 +100,11 @@ export function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
         name += '-gmax';
     }
 
-    stampcopy(manifest, f, dest, name);
+    await stampcopy(manifest, f, dest, name);
 }
 
 // TODO: merge with above
-export function itemspritecopy(manifest: Manifest, f: Sprite, dest: Dest): void {
+export async function itemspritecopy(manifest: Manifest, f: Sprite, dest: Dest): Promise<void> {
     let sn = spritedata.parseFilename(f.name);
     if (sn.extension) {
         throw new Error(`Not an item sprite: ${f.name}`);
@@ -114,7 +114,7 @@ export function itemspritecopy(manifest: Manifest, f: Sprite, dest: Dest): void 
         throw new Error(`Not an item sprite: ${f.name}`);
     }
     for (let n of sd.names) {
-        stampcopy(manifest, f, dest, toSmogonAlias(n));
+        await stampcopy(manifest, f, dest, toSmogonAlias(n));
     }
 }
 

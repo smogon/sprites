@@ -1,5 +1,6 @@
 
-import * as fs from 'node:fs';
+import * as fs from 'node:fs/promises';
+import {createWriteStream} from 'node:fs';
 import * as nodePath from 'node:path';
 import tar from 'tar-stream';
 
@@ -134,25 +135,25 @@ export class ActionQueue {
                     continue;
                 let op = entry.op;
                 let dst = nodePath.join(dir, entry.dst);
-                fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
+                await fs.mkdir(nodePath.dirname(dst), {recursive: true});
                 if (op.type === 'Copy'){
                     // Read-only sources are CAS objects; their mode must not
                     // leak into deploy trees (rsync -a would ship it), and a
                     // hardlink cannot carry its own mode, so copy those.
-                    if (mode === 'link' && (fs.statSync(op.src).mode & 0o200) !== 0) {
-                        fs.linkSync(op.src, dst);
+                    if (mode === 'link' && ((await fs.stat(op.src)).mode & 0o200) !== 0) {
+                        await fs.link(op.src, dst);
                     } else {
-                        fs.copyFileSync(op.src, dst);
-                        fs.chmodSync(dst, 0o644);
+                        await fs.copyFile(op.src, dst);
+                        await fs.chmod(dst, 0o644);
                     }
                 } else if (op.type === 'Write') {
-                    fs.writeFileSync(dst, op.data);
+                    await fs.writeFile(dst, op.data);
                 }
             }
         } else {
             // In this case, I guess its a file rather than a dir.
-            let out = fs.createWriteStream(dir);
-            this.pack(filter).pipe(out);
+            let out = createWriteStream(dir);
+            (await this.pack(filter)).pipe(out);
             return new Promise<void>((resolve, reject) => {
                 out.on('error', reject);
                 out.on('finish', () => resolve());
@@ -160,7 +161,7 @@ export class ActionQueue {
         }
     }
 
-    pack(filter?: (dst: string) => boolean): NodeJS.ReadableStream {
+    async pack(filter?: (dst: string) => boolean): Promise<NodeJS.ReadableStream> {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
         let t = tar.pack();
@@ -168,7 +169,7 @@ export class ActionQueue {
             if (entry.type !== 'Op' || (filter !== undefined && !filter(entry.dst)))
                 continue;
             let op = entry.op;
-            let data = op.type === 'Copy' ? fs.readFileSync(op.src) : op.data;
+            let data = op.type === 'Copy' ? await fs.readFile(op.src) : op.data;
             // A dying consumer destroys the pack and every pending entry
             // sink, and each sink emits the error; the consumer is the one
             // reporting the failure, so keep the sinks quiet.
