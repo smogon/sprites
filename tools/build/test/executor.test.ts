@@ -13,13 +13,13 @@ import {Store} from '../store.ts';
 
 beforeEach(resetDecls);
 
-interface Env {
-    root: string;
-    dbPath: string;
-    casDir: string;
-    tmpDir: string;
-    execLog: string;
-}
+type Env = {
+    root: string,
+    dbPath: string,
+    casDir: string,
+    tmpDir: string,
+    execLog: string,
+};
 
 function setup(): Env {
     let root = fs.mkdtempSync(pathlib.join(os.tmpdir(), 'executor-test-'));

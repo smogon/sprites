@@ -1,12 +1,12 @@
 
 import {spawn} from 'node:child_process';
 
-export interface ExecResult {
-    code: number | null;
-    signal: NodeJS.Signals | null;
-    output: string;
-    durationMs: number;
-}
+export type ExecResult = {
+    code: number | null,
+    signal: NodeJS.Signals | null,
+    output: string,
+    durationMs: number,
+};
 
 let livePids = new Set<number>();
 

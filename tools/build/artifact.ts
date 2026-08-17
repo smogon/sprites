@@ -15,7 +15,7 @@ export class Artifact {
     readonly ext: string;          // "png", "gif", ... (no dot)
     readonly decl: RuleDecl;
     readonly index: number;        // position among decl.outputs
-    private digest: string | null = null;
+    #digest: string | null = null;
 
     constructor(name: string, ext: string, decl: RuleDecl, index: number) {
         this.name = name;
@@ -34,46 +34,46 @@ export class Artifact {
     }
 
     get hash(): string {
-        if (this.digest === null) {
+        if (this.#digest === null) {
             throw new Error(`Artifact ${this.filename} has not been built yet`);
         }
-        return this.digest;
+        return this.#digest;
     }
 
     resolve(digest: string): void {
-        if (this.digest !== null && this.digest !== digest) {
+        if (this.#digest !== null && this.#digest !== digest) {
             throw new Error(`Artifact ${this.filename} resolved twice with different digests`);
         }
-        this.digest = digest;
+        this.#digest = digest;
     }
 }
 
 export type Input = string | Artifact;   // string = source path relative to repo root
 
-export interface CmdSpec {
-    display?: string;
+export type CmdSpec = {
+    display?: string,
     // Tracked-but-not-substituted inputs: part of rule identity, but never
     // expanded into %f. Use for files a tool reads on its own (e.g.
     // tools/sheet readdirs the minisprite directories).
-    deps?: Input | Input[];
+    deps?: Input | Input[],
     // IMPORTANT: set this on any rule whose output BYTES depend on input
     // NAMES (a tool that readdirs, or parses ids out of %f filenames, e.g.
     // the spritesheet builders). Identity is normally content-only, so
     // without this flag a same-bytes rename would leave the output stale.
-    nameSensitive?: boolean;
-    cmds: subst.Cmd[];
-}
+    nameSensitive?: boolean,
+    cmds: subst.Cmd[],
+};
 
-export interface RuleDecl {
+export type RuleDecl = {
     id: number;                    // registration order; identity for artifact inputs
     inputs: Input[];               // ordered (%f order; some rules are order-sensitive)
-    deps: Input[];
-    outputs: Artifact[];
+    deps: Input[],
+    outputs: Artifact[],
     cmds: string[];                // flattened PRE-substitution templates
     display: string | null;        // nominally substituted; cosmetic
     displayTemplate: string | null;  // pre-substitution; groups forEach rules
-    nameSensitive: boolean;
-}
+    nameSensitive: boolean,
+};
 
 let decls: RuleDecl[] = [];
 // Declaring an identical rule twice returns the existing artifacts, so

@@ -6,18 +6,18 @@ import JSON5 from 'json5';
 
 import {BuildError} from '../build/errors.ts';
 
-export interface DeployEntry {
-    subset: string[];
-    cmd: string;
+export type DeployEntry = {
+    subset: string[],
+    cmd: string,
     // dir entries get their subset materialized into a temp directory whose
     // path replaces %d in cmd; tar entries get the subset tarred on stdin.
-    dir?: boolean;
-}
+    dir?: boolean,
+};
 
-export interface DeployTarget {
-    buildFile: string;
-    deploy: DeployEntry[];
-}
+export type DeployTarget = {
+    buildFile: string,
+    deploy: DeployEntry[],
+};
 
 export type DeployConfig = Map<string, DeployTarget>;
 

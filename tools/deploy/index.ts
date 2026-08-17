@@ -27,19 +27,19 @@ let LOCK_PATH = '.build/lock.sqlite';
 let CAS_DIR = '.build/cas';
 let TMP_DIR = '.build/tmp';
 
-interface CommonOpts {
-    jobs: string;
-    dryRun?: boolean;
-    failFast?: boolean;
-    config: string;
-    verbose?: boolean;
-}
+type CommonOpts = {
+    jobs: string,
+    dryRun?: boolean,
+    failFast?: boolean,
+    config: string,
+    verbose?: boolean,
+};
 
-interface VerbOpts extends CommonOpts {
-    output?: string;
-    link?: boolean;
-    tar?: boolean;
-}
+type VerbOpts = CommonOpts & {
+    output?: string,
+    link?: boolean,
+    tar?: boolean,
+};
 
 let USAGE = `usage: node tools/deploy/index.ts <command> [options]
 

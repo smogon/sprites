@@ -28,17 +28,17 @@ type DebugEntry = {
 export type LogEntry = OpEntry | DebugEntry;
 
 export class ActionQueue {
-    private seen: Map<string, OpEntry | 'MoreThan1'>;
+    #seen: Map<string, OpEntry | 'MoreThan1'>;
     // Have an accessor for this in the future? idk
     public log: LogEntry[];
     public valid: boolean;
-    private debugBuffer: unknown[];
+    #debugBuffer: unknown[];
 
     constructor() {
-        this.seen = new Map;
+        this.#seen = new Map;
         this.log = [];
         this.valid = true;
-        this.debugBuffer = [];
+        this.#debugBuffer = [];
     }
 
     throw(obj: unknown) {
@@ -47,31 +47,31 @@ export class ActionQueue {
     }
 
     debug(obj: unknown) {
-        this.debugBuffer.push(obj);
+        this.#debugBuffer.push(obj);
     }
 
     gdebug(obj: unknown, stray: boolean) {
         this.log.push({type: 'Debug', obj, stray});
     }
 
-    private pushOp(op: Op, dst: string) {
+    #pushOp(op: Op, dst: string) {
         dst = nodePath.normalize(dst);
         let entry: OpEntry = {
             type: 'Op',
             op,
             dst,
             valid: 'Success',
-            debugObjs: this.debugBuffer
+            debugObjs: this.#debugBuffer
         };
         this.log.push(entry);
-        this.debugBuffer = [];
+        this.#debugBuffer = [];
         if (nodePath.isAbsolute(dst)) {
             this.valid = false;
             entry.valid = 'Absolute';
         } else {
-            let lastEntry = this.seen.get(dst);
+            let lastEntry = this.#seen.get(dst);
             if (lastEntry === undefined) {
-                this.seen.set(dst, entry);
+                this.#seen.set(dst, entry);
             } else {
                 this.valid = false;
                 entry.valid = 'Multiple';
@@ -83,18 +83,18 @@ export class ActionQueue {
     }
 
     copy(src: string, dst: string) {
-        this.pushOp({type: 'Copy', src}, dst);
+        this.#pushOp({type: 'Copy', src}, dst);
     }
 
     write(data: string, dst: string) {
-        this.pushOp({type: 'Write', data}, dst);
+        this.#pushOp({type: 'Write', data}, dst);
     }
 
     skip() {
-        for (let obj of this.debugBuffer) {
+        for (let obj of this.#debugBuffer) {
             this.gdebug(obj, true);
         }
-        this.debugBuffer = [];
+        this.#debugBuffer = [];
     }
 
     print(level: 'errors' | 'all') {

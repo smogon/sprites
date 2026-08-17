@@ -31,10 +31,10 @@ export function casStat(casDir: string, digest: string, ext: string): bigint | n
     }
 }
 
-export interface CasObject {
+export type CasObject = {
     digest: string;   // sha256 hex of the bytes
-    size: bigint;
-}
+    size: bigint,
+};
 
 // Move tmpPath into the store, returning the content digest and size. An
 // existing object is trusted only if its bytes actually hash to the digest;

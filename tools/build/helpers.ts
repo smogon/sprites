@@ -65,10 +65,10 @@ export function base(x: string | Artifact): string {
     return typeof x === 'string' ? basenameNoExt(x) : x.name;
 }
 
-export interface SpriteData {
-    id: string;
-    data: Record<string, string | true>;
-}
+export type SpriteData = {
+    id: string,
+    data: Record<string, string | true>,
+};
 
 // Port of util/sprites.lua spritedata. Lua used gmatch("[^-]+"), which skips
 // empty segments, hence the filter.
@@ -111,11 +111,11 @@ export function trimimg(opts: {input?: string, output?: string} = {}): string {
     return `magick convert ${opts.input ?? '%f'} ${PNG_DETERMINISTIC} -trim ${opts.output ?? '%o'}`;
 }
 
-interface CompressOpts {
-    pngquant?: string;
-    optipng?: string;
-    advpng?: string;
-}
+type CompressOpts = {
+    pngquant?: string,
+    optipng?: string,
+    advpng?: string,
+};
 
 function compressopts(program: string, copts: CompressOpts): void {
     copts.pngquant = getconfig(`${program}_PNGQUANT`) ?? copts.pngquant;

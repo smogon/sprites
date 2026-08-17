@@ -2,21 +2,21 @@
 import * as fs from 'node:fs';
 import {createHash} from 'node:crypto';
 
-export interface FileStat {
-    size: bigint;
-    mtimeNs: bigint;
-    hash: Buffer;
-}
+export type FileStat = {
+    size: bigint,
+    mtimeNs: bigint,
+    hash: Buffer,
+};
 
 export function hashFileSync(path: string): Buffer {
     return createHash('sha256').update(fs.readFileSync(path)).digest();
 }
 
-export interface ReconcileResult {
+export type ReconcileResult = {
     hashes: Map<string, Buffer>;      // current content hash for every extant path
     updated: Map<string, FileStat>;   // cache entries that changed (to persist)
     missing: string[];                // paths that don't exist or aren't files
-}
+};
 
 // Content hashes with a stat cache: only files whose (size, mtime_ns) changed
 // since the recorded cache entry are rehashed. mtime_ns exceeds 2^53, hence

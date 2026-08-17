@@ -11,7 +11,7 @@ export type Sprite = Artifact | SrcFile;
 // The unhashed -> hashed name mapping published beside a stamped set.
 export class Manifest {
     readonly ctx: DeployCtx;
-    private entries = new Map<string, string>();
+    #entries = new Map<string, string>();
 
     constructor(ctx: DeployCtx) {
         this.ctx = ctx;
@@ -20,25 +20,25 @@ export class Manifest {
     set(key: string, value: string): void {
         // ActionQueue only dedups final dsts; hashed dsts differ even when
         // unhashed names collide, so check the key explicitly.
-        if (this.entries.has(key)) {
+        if (this.#entries.has(key)) {
             throw new Error(`duplicate sprite name ${key}`);
         }
-        this.entries.set(key, value);
+        this.#entries.set(key, value);
     }
 
     write(dst: string): void {
         let sorted: Record<string, string> = {};
-        for (let k of [...this.entries.keys()].sort()) {
-            sorted[k] = this.entries.get(k)!;
+        for (let k of [...this.#entries.keys()].sort()) {
+            sorted[k] = this.#entries.get(k)!;
         }
         this.ctx.write(dst, JSON.stringify(sorted, null, 4) + "\n");
     }
 }
 
-export interface Dest {
-    dir: string;
-    ext?: string;
-}
+export type Dest = {
+    dir: string,
+    ext?: string,
+};
 
 function extOf(f: Sprite, ext?: string): string {
     let result = ext ?? f.ext;

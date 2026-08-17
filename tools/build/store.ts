@@ -6,11 +6,11 @@ import {DatabaseSync} from 'node:sqlite';
 import {BuildError} from './errors.ts';
 import type {FileStat} from './hash.ts';
 
-export interface StoredOutput {
+export type StoredOutput = {
     digest: string;   // sha256 hex of the bytes; the CAS object is <digest>.<ext>
-    ext: string;
+    ext: string,
     size: bigint;     // verified against the object on every clean check
-}
+};
 
 let DDL = `
 CREATE TABLE IF NOT EXISTS file_cache (
@@ -45,38 +45,38 @@ function userVersion(db: DatabaseSync): number {
 }
 
 export class Store {
-    private db: DatabaseSync;
+    #db: DatabaseSync;
 
     constructor(dbPath: string) {
         fs.mkdirSync(pathlib.dirname(dbPath), {recursive: true});
-        this.db = new DatabaseSync(dbPath, {readBigInts: true});
-        this.db.exec('PRAGMA journal_mode = WAL');
-        this.db.exec('PRAGMA foreign_keys = ON');
-        this.db.exec('PRAGMA synchronous = NORMAL');
-        this.migrate();
+        this.#db = new DatabaseSync(dbPath, {readBigInts: true});
+        this.#db.exec('PRAGMA journal_mode = WAL');
+        this.#db.exec('PRAGMA foreign_keys = ON');
+        this.#db.exec('PRAGMA synchronous = NORMAL');
+        this.#migrate();
     }
 
-    private transaction<T>(fn: () => T): T {
-        this.db.exec('BEGIN');
+    #transaction<T>(fn: () => T): T {
+        this.#db.exec('BEGIN');
         try {
             let result = fn();
-            this.db.exec('COMMIT');
+            this.#db.exec('COMMIT');
             return result;
         } catch (err) {
-            this.db.exec('ROLLBACK');
+            this.#db.exec('ROLLBACK');
             throw err;
         }
     }
 
-    private migrate(): void {
-        let version = userVersion(this.db);
+    #migrate(): void {
+        let version = userVersion(this.#db);
         if (version === 0) {
-            this.db.exec('BEGIN;' + DDL + 'PRAGMA user_version = 2; COMMIT;');
+            this.#db.exec('BEGIN;' + DDL + 'PRAGMA user_version = 2; COMMIT;');
         } else if (version === 1) {
             // v1 stored fixed-name outputs and per-input hashes; none of it
             // maps to the content-addressed model. Keep the file_cache (same
             // schema, saves rehashing every source) and drop the rest.
-            this.db.exec(`BEGIN;
+            this.#db.exec(`BEGIN;
                 DROP TABLE rule_inputs;
                 DROP TABLE rule_outputs;
                 DROP TABLE rules;
@@ -90,7 +90,7 @@ export class Store {
 
     loadFileCache(): Map<string, FileStat> {
         let result = new Map<string, FileStat>();
-        let rows = this.db.prepare('SELECT path, size, mtime_ns, hash FROM file_cache').all() as
+        let rows = this.#db.prepare('SELECT path, size, mtime_ns, hash FROM file_cache').all() as
             unknown as {path: string, size: bigint, mtime_ns: bigint, hash: Uint8Array}[];
         for (let row of rows) {
             let h = row.hash;
@@ -101,11 +101,11 @@ export class Store {
     }
 
     saveFileCache(entries: Map<string, FileStat>): void {
-        let upsert = this.db.prepare(`
+        let upsert = this.#db.prepare(`
             INSERT INTO file_cache (path, size, mtime_ns, hash) VALUES (?, ?, ?, ?)
             ON CONFLICT(path) DO UPDATE SET
                 size = excluded.size, mtime_ns = excluded.mtime_ns, hash = excluded.hash`);
-        this.transaction(() => {
+        this.#transaction(() => {
             for (let [path, stat] of entries) {
                 upsert.run(path, stat.size, stat.mtimeNs, stat.hash);
             }
@@ -113,10 +113,10 @@ export class Store {
     }
 
     pruneFileCache(live: Set<string>): void {
-        let paths = this.db.prepare('SELECT path FROM file_cache').all() as
+        let paths = this.#db.prepare('SELECT path FROM file_cache').all() as
             unknown as {path: string}[];
-        let del = this.db.prepare('DELETE FROM file_cache WHERE path = ?');
-        this.transaction(() => {
+        let del = this.#db.prepare('DELETE FROM file_cache WHERE path = ?');
+        this.#transaction(() => {
             for (let {path} of paths) {
                 if (!live.has(path)) {
                     del.run(path);
@@ -126,13 +126,13 @@ export class Store {
     }
 
     lookupRule(key: string): StoredOutput[] | null {
-        return this.transaction(() => {
-            let rule = this.db.prepare('SELECT id FROM rules WHERE key = ?').get(key) as
+        return this.#transaction(() => {
+            let rule = this.#db.prepare('SELECT id FROM rules WHERE key = ?').get(key) as
                 {id: bigint} | undefined;
             if (rule === undefined) {
                 return null;
             }
-            let rows = this.db.prepare(
+            let rows = this.#db.prepare(
                 'SELECT digest, ext, size FROM rule_outputs WHERE rule_id = ? ORDER BY ord')
                 .all(rule.id) as unknown as StoredOutput[];
             // node:sqlite rows have a null prototype; return plain objects.
@@ -143,14 +143,14 @@ export class Store {
     // One transaction per completed rule: an interrupted build only ever
     // contains fully-recorded rules.
     recordRule(key: string, cmds: string[], outputs: StoredOutput[]): void {
-        let upsert = this.db.prepare(`
+        let upsert = this.#db.prepare(`
             INSERT INTO rules (key, cmds) VALUES (?, ?)
             ON CONFLICT(key) DO UPDATE SET cmds = excluded.cmds
             RETURNING id`);
-        let delOutputs = this.db.prepare('DELETE FROM rule_outputs WHERE rule_id = ?');
-        let insOutput = this.db.prepare(
+        let delOutputs = this.#db.prepare('DELETE FROM rule_outputs WHERE rule_id = ?');
+        let insOutput = this.#db.prepare(
             'INSERT INTO rule_outputs (rule_id, ord, digest, ext, size) VALUES (?, ?, ?, ?, ?)');
-        this.transaction(() => {
+        this.#transaction(() => {
             let {id} = upsert.get(key, cmds.join('\n')) as {id: bigint};
             delOutputs.run(id);
             outputs.forEach((o, i) => insOutput.run(id, i, o.digest, o.ext, o.size));
@@ -159,11 +159,11 @@ export class Store {
 
     // GC: drop every rule whose key is not live. Returns the removal count.
     deleteKeysNotIn(live: Set<string>): number {
-        let keys = this.db.prepare('SELECT id, key FROM rules').all() as
+        let keys = this.#db.prepare('SELECT id, key FROM rules').all() as
             unknown as {id: bigint, key: string}[];
-        let del = this.db.prepare('DELETE FROM rules WHERE id = ?');
+        let del = this.#db.prepare('DELETE FROM rules WHERE id = ?');
         let removed = 0;
-        this.transaction(() => {
+        this.#transaction(() => {
             for (let {id, key} of keys) {
                 if (!live.has(key)) {
                     del.run(id);
@@ -176,14 +176,14 @@ export class Store {
 
     // Every CAS object referenced by some rule, as "<digest>.<ext>" basenames.
     liveObjects(): Set<string> {
-        let rows = this.db.prepare('SELECT digest, ext FROM rule_outputs').all() as
+        let rows = this.#db.prepare('SELECT digest, ext FROM rule_outputs').all() as
             unknown as {digest: string, ext: string}[];
         return new Set(rows.map(r => `${r.digest}.${r.ext}`));
     }
 
     close(): void {
-        this.db.exec('PRAGMA wal_checkpoint(TRUNCATE)');
-        this.db.close();
+        this.#db.exec('PRAGMA wal_checkpoint(TRUNCATE)');
+        this.#db.close();
     }
 }
 
