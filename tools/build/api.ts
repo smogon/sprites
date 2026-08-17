@@ -1,11 +1,13 @@
 
-import fs from 'fs';
 import pathlib from 'path';
 import {createHash} from 'crypto';
 
-import {type Cmd, flattenCmds, substitute, basenameNoExt} from './subst.ts';
+import {astable, glob} from './helpers.ts';
+import {type Cmd, flattenCmds, substitute} from './subst.ts';
 
 export type {Cmd};
+export {base, compresspng, getconfig, glob, pad, setConfig,
+        spritedata, spriteglob, trimimg, type SpriteData} from './helpers.ts';
 
 export interface CmdSpec {
     display? : string;
@@ -27,11 +29,6 @@ export interface RuleDecl {
 }
 
 let rules : RuleDecl[] = [];
-let config = new Map<string, string>();
-
-export function setConfig(cfg : Map<string, string>) : void {
-    config = cfg;
-}
 
 export function getRules() : RuleDecl[] {
     return rules;
@@ -39,134 +36,6 @@ export function getRules() : RuleDecl[] {
 
 export function resetRules() : void {
     rules = [];
-}
-
-export function getconfig(name : string) : string | undefined {
-    const value = config.get(name);
-    return value === '' ? undefined : value;
-}
-
-function astable(x : string | string[] | undefined) : string[] {
-    if (x === undefined) {
-        return [];
-    }
-    return typeof x === 'string' ? [x] : x;
-}
-
-// Single-directory, single-'*' glob (all Tupfile patterns were of this form).
-// Non-glob strings pass through literally; existence is checked at hash time.
-// Results are sorted within a pattern; declared order is preserved across
-// patterns (some rules, e.g. the pokeball sheet, are input-order-sensitive).
-function globOne(pat : string) : string[] {
-    if (!pat.includes('*')) {
-        return [pat];
-    }
-    const dir = pathlib.dirname(pat);
-    const base = pathlib.basename(pat);
-    if (dir.includes('*') || base.indexOf('*') !== base.lastIndexOf('*')) {
-        throw new Error(`Unsupported glob pattern: ${pat}`);
-    }
-    const [prefix, suffix] = base.split('*') as [string, string];
-    const results = [];
-    for (const ent of fs.readdirSync(dir, {withFileTypes: true})) {
-        if (!ent.isFile() && !ent.isSymbolicLink()) {
-            continue;
-        }
-        const name = ent.name;
-        if (name.startsWith('.')) {
-            continue;  // tup.glob ignored dotfiles
-        }
-        if (name.length >= prefix.length + suffix.length
-            && name.startsWith(prefix) && name.endsWith(suffix)) {
-            results.push(dir === '.' ? name : `${dir}/${name}`);
-        }
-    }
-    results.sort();
-    return results;
-}
-
-export function glob(pats : string | string[]) : string[] {
-    return astable(pats).flatMap(globOne);
-}
-
-// tup.base: basename without directory or final extension
-export function base(path : string) : string {
-    return basenameNoExt(path);
-}
-
-export interface SpriteData {
-    id : string;
-    data : Record<string, string | true>;
-}
-
-// Port of util/sprites.lua spritedata. Lua used gmatch("[^-]+"), which skips
-// empty segments, hence the filter.
-export function spritedata(basename : string) : SpriteData {
-    const parts = basename.split('-').filter(p => p !== '');
-    const data : Record<string, string | true> = {};
-    for (const part of parts.slice(1)) {
-        if (part.length === 1) {
-            data[part] = true;
-        } else {
-            data[part[0]!] = part.slice(1);
-        }
-    }
-    return {id: parts[0] ?? '', data};
-}
-
-export function spriteglob(pats : string | string[], flagspec? : Record<string, unknown>) : string[] {
-    return glob(pats).filter(filename => {
-        const sd = spritedata(base(filename));
-        for (const [k, v] of Object.entries(flagspec ?? {})) {
-            if (Boolean(v) !== Boolean(sd.data[k])) {
-                return false;
-            }
-        }
-        return true;
-    });
-}
-
-export function pad(opts : {w : number, h : number, input? : string, output? : string}) : string {
-    const input = opts.input ?? '%f';
-    const output = opts.output ?? '%o';
-    return `magick convert ${input} -background transparent -gravity center -extent ${opts.w}x${opts.h} ${output}`;
-}
-
-export function trimimg(opts : {input? : string, output? : string} = {}) : string {
-    return `magick convert ${opts.input ?? '%f'} -trim ${opts.output ?? '%o'}`;
-}
-
-interface CompressOpts {
-    pngquant? : string;
-    optipng? : string;
-    advpng? : string;
-}
-
-function compressopts(program : string, copts : CompressOpts) : void {
-    copts.pngquant = getconfig(`${program}_PNGQUANT`) ?? copts.pngquant;
-    copts.optipng = getconfig(`${program}_OPTIPNG`) ?? copts.optipng;
-    copts.advpng = getconfig(`${program}_ADVPNG`) ?? copts.advpng;
-}
-
-export function compresspng(opts : {config? : string, output? : string} = {}) : Cmd[] {
-    const output = opts.output ?? '%o';
-    const copts : CompressOpts = {};
-    compressopts('DEFAULT', copts);
-    if (opts.config) {
-        compressopts(opts.config, copts);
-    }
-    const cmds = [];
-    if (copts.pngquant !== undefined) {
-        // -f -o necessary to overwrite existing file
-        cmds.push(`pngquant -f -o ${output} ${copts.pngquant} ${output}`);
-    }
-    if (copts.optipng !== undefined) {
-        cmds.push(`optipng -q ${copts.optipng} ${output}`);
-    }
-    if (copts.advpng !== undefined) {
-        cmds.push(`advpng -q ${copts.advpng} ${output}`);
-    }
-    return cmds;
 }
 
 function normalizeSpec(spec : CmdSpec | Cmd[]) : CmdSpec {
