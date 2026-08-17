@@ -5,7 +5,7 @@ import os from 'node:os';
 import pathlib from 'node:path';
 import {test} from 'node:test';
 
-import Database from 'better-sqlite3';
+import {DatabaseSync} from 'node:sqlite';
 
 import {Store} from '../store.ts';
 
@@ -45,7 +45,7 @@ test('file cache roundtrip and prune', () => {
 
 test('migrates a v1 db: drops rule tables, keeps file_cache', () => {
     const dbPath = makeDbPath();
-    const v1 = new Database(dbPath);
+    const v1 = new DatabaseSync(dbPath);
     v1.exec(`BEGIN;
         CREATE TABLE file_cache (
             path TEXT PRIMARY KEY, size INTEGER NOT NULL,
@@ -81,14 +81,15 @@ test('migrates a v1 db: drops rule tables, keeps file_cache', () => {
     assert.deepEqual(store.lookupRule('new'), [{digest: 'd', ext: 'png', size: 1n}]);
     store.close();
 
-    const check = new Database(dbPath);
-    assert.equal(Number(check.pragma('user_version', {simple: true})), 2);
+    const check = new DatabaseSync(dbPath);
+    const {user_version} = check.prepare('PRAGMA user_version').get() as {user_version : number};
+    assert.equal(Number(user_version), 2);
     check.close();
 });
 
 test('rejects unknown schema versions', () => {
     const dbPath = makeDbPath();
-    const weird = new Database(dbPath);
+    const weird = new DatabaseSync(dbPath);
     weird.exec('PRAGMA user_version = 7');
     weird.close();
     assert.throws(() => new Store(dbPath), /Unknown build db schema version 7/);

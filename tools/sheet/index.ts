@@ -1,5 +1,4 @@
 
-import 'make-promises-safe';
 import cp from 'child_process';
 import path from 'path';
 

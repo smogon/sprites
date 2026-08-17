@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 import pathlib from 'path';
-import Database from 'better-sqlite3';
+import {DatabaseSync} from 'node:sqlite';
 
 import {BuildError} from './errors.ts';
 import type {FileStat} from './hash.ts';
@@ -39,21 +39,37 @@ CREATE TABLE IF NOT EXISTS rule_outputs (
 );
 `;
 
+function userVersion(db : DatabaseSync) : number {
+    const row = db.prepare('PRAGMA user_version').get() as {user_version : bigint | number};
+    return Number(row.user_version);
+}
+
 export class Store {
-    private db : Database.Database;
+    private db : DatabaseSync;
 
     constructor(dbPath : string) {
         fs.mkdirSync(pathlib.dirname(dbPath), {recursive: true});
-        this.db = new Database(dbPath);
-        this.db.defaultSafeIntegers(true);
-        this.db.pragma('journal_mode = WAL');
-        this.db.pragma('foreign_keys = ON');
-        this.db.pragma('synchronous = NORMAL');
+        this.db = new DatabaseSync(dbPath, {readBigInts: true});
+        this.db.exec('PRAGMA journal_mode = WAL');
+        this.db.exec('PRAGMA foreign_keys = ON');
+        this.db.exec('PRAGMA synchronous = NORMAL');
         this.migrate();
     }
 
+    private transaction<T>(fn : () => T) : T {
+        this.db.exec('BEGIN');
+        try {
+            const result = fn();
+            this.db.exec('COMMIT');
+            return result;
+        } catch (err) {
+            this.db.exec('ROLLBACK');
+            throw err;
+        }
+    }
+
     private migrate() : void {
-        const version = Number(this.db.pragma('user_version', {simple: true}));
+        const version = userVersion(this.db);
         if (version === 0) {
             this.db.exec('BEGIN;' + DDL + 'PRAGMA user_version = 2; COMMIT;');
         } else if (version === 1) {
@@ -74,10 +90,12 @@ export class Store {
 
     loadFileCache() : Map<string, FileStat> {
         const result = new Map<string, FileStat>();
-        const rows = this.db.prepare<[], {path : string, size : bigint, mtime_ns : bigint, hash : Buffer}>(
-            'SELECT path, size, mtime_ns, hash FROM file_cache').all();
+        const rows = this.db.prepare('SELECT path, size, mtime_ns, hash FROM file_cache').all() as
+            unknown as {path : string, size : bigint, mtime_ns : bigint, hash : Uint8Array}[];
         for (const row of rows) {
-            result.set(row.path, {size: row.size, mtimeNs: row.mtime_ns, hash: row.hash});
+            const h = row.hash;
+            result.set(row.path, {size: row.size, mtimeNs: row.mtime_ns,
+                hash: Buffer.from(h.buffer, h.byteOffset, h.byteLength)});
         }
         return result;
     }
@@ -87,79 +105,84 @@ export class Store {
             INSERT INTO file_cache (path, size, mtime_ns, hash) VALUES (?, ?, ?, ?)
             ON CONFLICT(path) DO UPDATE SET
                 size = excluded.size, mtime_ns = excluded.mtime_ns, hash = excluded.hash`);
-        this.db.transaction(() => {
+        this.transaction(() => {
             for (const [path, stat] of entries) {
                 upsert.run(path, stat.size, stat.mtimeNs, stat.hash);
             }
-        })();
+        });
     }
 
     pruneFileCache(live : Set<string>) : void {
-        const paths = this.db.prepare<[], {path : string}>('SELECT path FROM file_cache').all();
+        const paths = this.db.prepare('SELECT path FROM file_cache').all() as
+            unknown as {path : string}[];
         const del = this.db.prepare('DELETE FROM file_cache WHERE path = ?');
-        this.db.transaction(() => {
+        this.transaction(() => {
             for (const {path} of paths) {
                 if (!live.has(path)) {
                     del.run(path);
                 }
             }
-        })();
+        });
     }
 
     lookupRule(key : string) : StoredOutput[] | null {
-        return this.db.transaction(() => {
-            const rule = this.db.prepare<[string], {id : bigint}>(
-                'SELECT id FROM rules WHERE key = ?').get(key);
+        return this.transaction(() => {
+            const rule = this.db.prepare('SELECT id FROM rules WHERE key = ?').get(key) as
+                {id : bigint} | undefined;
             if (rule === undefined) {
                 return null;
             }
-            return this.db.prepare<[bigint], StoredOutput>(
-                'SELECT digest, ext, size FROM rule_outputs WHERE rule_id = ? ORDER BY ord').all(rule.id);
-        })();
+            const rows = this.db.prepare(
+                'SELECT digest, ext, size FROM rule_outputs WHERE rule_id = ? ORDER BY ord')
+                .all(rule.id) as unknown as StoredOutput[];
+            // node:sqlite rows have a null prototype; return plain objects.
+            return rows.map(r => ({digest: r.digest, ext: r.ext, size: r.size}));
+        });
     }
 
     // One transaction per completed rule: an interrupted build only ever
     // contains fully-recorded rules.
     recordRule(key : string, cmds : string[], outputs : StoredOutput[]) : void {
-        const upsert = this.db.prepare<[string, string], {id : bigint}>(`
+        const upsert = this.db.prepare(`
             INSERT INTO rules (key, cmds) VALUES (?, ?)
             ON CONFLICT(key) DO UPDATE SET cmds = excluded.cmds
             RETURNING id`);
         const delOutputs = this.db.prepare('DELETE FROM rule_outputs WHERE rule_id = ?');
         const insOutput = this.db.prepare(
             'INSERT INTO rule_outputs (rule_id, ord, digest, ext, size) VALUES (?, ?, ?, ?, ?)');
-        this.db.transaction(() => {
-            const {id} = upsert.get(key, cmds.join('\n'))!;
+        this.transaction(() => {
+            const {id} = upsert.get(key, cmds.join('\n')) as {id : bigint};
             delOutputs.run(id);
             outputs.forEach((o, i) => insOutput.run(id, i, o.digest, o.ext, o.size));
-        })();
+        });
     }
 
     // GC: drop every rule whose key is not live. Returns the removal count.
     deleteKeysNotIn(live : Set<string>) : number {
-        const keys = this.db.prepare<[], {id : bigint, key : string}>('SELECT id, key FROM rules').all();
+        const keys = this.db.prepare('SELECT id, key FROM rules').all() as
+            unknown as {id : bigint, key : string}[];
         const del = this.db.prepare('DELETE FROM rules WHERE id = ?');
         let removed = 0;
-        this.db.transaction(() => {
+        this.transaction(() => {
             for (const {id, key} of keys) {
                 if (!live.has(key)) {
                     del.run(id);
                     removed++;
                 }
             }
-        })();
+        });
         return removed;
     }
 
     // Every CAS object referenced by some rule, as "<digest>.<ext>" basenames.
     liveObjects() : Set<string> {
-        const rows = this.db.prepare<[], {digest : string, ext : string}>(
-            'SELECT digest, ext FROM rule_outputs').all();
+        const rows = this.db.prepare('SELECT digest, ext FROM rule_outputs').all() as
+            unknown as {digest : string, ext : string}[];
         return new Set(rows.map(r => `${r.digest}.${r.ext}`));
     }
 
     close() : void {
-        this.db.pragma('wal_checkpoint(TRUNCATE)');
+        this.db.exec('PRAGMA wal_checkpoint(TRUNCATE)');
         this.db.close();
     }
 }
@@ -170,9 +193,9 @@ export function dbVersion(dbPath : string) : number | null {
     if (!fs.existsSync(dbPath)) {
         return null;
     }
-    const db = new Database(dbPath, {readonly: true});
+    const db = new DatabaseSync(dbPath, {readOnly: true});
     try {
-        return Number(db.pragma('user_version', {simple: true}));
+        return userVersion(db);
     } finally {
         db.close();
     }
@@ -182,12 +205,12 @@ export function dbVersion(dbPath : string) : number | null {
 // by the OS on any crash, so there are no stale lock files.
 export function acquireLock(lockPath : string) : () => void {
     fs.mkdirSync(pathlib.dirname(lockPath), {recursive: true});
-    const lock = new Database(lockPath, {timeout: 0});
+    const lock = new DatabaseSync(lockPath, {timeout: 0});
     try {
         lock.exec('BEGIN EXCLUSIVE');
     } catch (err) {
         lock.close();
-        if ((err as {code? : string}).code === 'SQLITE_BUSY') {
+        if ((err as {errcode? : number}).errcode === 5) { // SQLITE_BUSY
             throw new BuildError('Another build is already running.');
         }
         throw err;
