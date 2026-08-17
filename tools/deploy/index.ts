@@ -46,7 +46,9 @@ const USAGE = `usage: node tools/deploy/index.ts <command> [options]
 commands:
   build [files...]            build the rules of the given deploys (default: all *.build.ts)
   deploy [names...]           build, finish, and pipe each subset tar (or %d dir) to its
-                              command from deploy.json5 (no names: list the deploys)
+                              command from deploy.json5 (no names: list the deploys;
+                              -o <dir>: materialize each subset there instead of
+                              running its command)
   run <file> -o <dir>         build, finish, and materialize to a directory (or tar file)
   inspect <paths...> -o <dir> build every rule touching the given source paths and copy
                               the outputs out
@@ -56,7 +58,7 @@ options:
   -n, --dry-run        print what would run without changing anything
       --fail-fast      stop scheduling new rules after the first failure
       --config <file>  config file (default: build.config)
-  -o, --output <dir>   run/inspect: output directory (a file with --tar)
+  -o, --output <dir>   run/inspect/deploy: output directory (a file with --tar)
       --link           run: hardlink instead of copying
       --tar            run: write a tar file
   -v, --verbose        print more detail
@@ -73,7 +75,9 @@ const COMMON_OPTIONS = {
 
 const VERB_OPTIONS = {
     build: {},
-    deploy: {},
+    deploy: {
+        output: {type: 'string', short: 'o'},
+    },
     run: {
         output: {type: 'string', short: 'o'},
         link: {type: 'boolean'},
@@ -218,7 +222,7 @@ async function cmdBuild(files : string[], opts : CommonOpts) : Promise<void> {
     process.exitCode = await buildThen(getDecls(), opts, gc);
 }
 
-async function cmdDeploy(names : string[], opts : CommonOpts) : Promise<void> {
+async function cmdDeploy(names : string[], opts : VerbOpts) : Promise<void> {
     const config = loadDeployConfig('deploy.json5');
     if (names.length === 0) {
         for (const [name, target] of config) {
@@ -249,6 +253,14 @@ async function cmdDeploy(names : string[], opts : CommonOpts) : Promise<void> {
             for (const [i, entry] of target.deploy.entries()) {
                 const matched = subsets[i]!;
                 console.log(`${name}: ${matched.size} files | ${entry.cmd}`);
+                // Debug mode: materialize what each entry would ship (tar
+                // entries included) instead of running its command.
+                if (opts.output !== undefined) {
+                    const dir = nodePath.join(opts.output, name, String(i));
+                    await aq.run(dir, 'copy', dst => matched.has(dst));
+                    console.log(`    -> ${dir}`);
+                    continue;
+                }
                 if (entry.dir) {
                     fs.mkdirSync(TMP_DIR, {recursive: true});
                     const tmp = fs.mkdtempSync(nodePath.join(TMP_DIR, 'deploy-'));

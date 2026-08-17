@@ -86,7 +86,9 @@ the finish outputs, which are tarred and piped to the entry's command on
 stdin. An entry with `dir: true` instead materializes the subset into a temp
 directory whose path replaces `%d` in the command (for rsync-style
 transports). Every glob must match something, and every output must be
-covered by some entry.
+covered by some entry. `deploy <name> -o <dir>` materializes each entry's
+subset under `<dir>/<name>/<entry index>/` instead of running its command,
+for eyeballing what would ship.
 
 ```json5
 {
