@@ -52,7 +52,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
         }
     };
     decls.forEach(add);
-    let {hashes, updated, missing} = reconcileHashes(sources, store.loadFileCache());
+    let {hashes, updated, missing} = await reconcileHashes(sources, store.loadFileCache());
     if (missing.length > 0) {
         throw new BuildError(`Missing input files:\n  ${missing.slice(0, 20).join('\n  ')}`
             + (missing.length > 20 ? `\n  ... and ${missing.length - 20} more` : ''));
@@ -112,7 +112,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
     if (opts.gc && !opts.dryRun && !interrupted
         && result.ok && result.keys.size === decls.length) {
         let removedRules = store.deleteKeysNotIn(new Set(result.keys.values()));
-        let removedObjects = casSweep(opts.casDir, store.liveObjects());
+        let removedObjects = await casSweep(opts.casDir, store.liveObjects());
         store.pruneFileCache(sources);
         if (removedRules > 0 || removedObjects > 0) {
             log(`gc: removed ${removedRules} rules, ${removedObjects} objects`);

@@ -1,5 +1,5 @@
 
-import * as fs from 'node:fs';
+import * as fs from 'node:fs/promises';
 import * as pathlib from 'node:path';
 
 import * as artifact from './artifact.ts';
@@ -212,10 +212,12 @@ export class Executor {
         let stored = store.lookupRule(key);
         if (stored !== null
             && stored.length === decl.outputs.length
-            && stored.every((o, n) => o.ext === paired(decl.outputs, n).ext)
-            && stored.every(o => cas.casStat(casDir, o.digest, o.ext) === o.size)) {
-            this.#outcomes.set(decl, {status: 'clean'});
-            return stored.map(o => o.digest);
+            && stored.every((o, n) => o.ext === paired(decl.outputs, n).ext)) {
+            let sizes = await Promise.all(stored.map(o => cas.casStat(casDir, o.digest, o.ext)));
+            if (stored.every((o, n) => sizes[n] === o.size)) {
+                this.#outcomes.set(decl, {status: 'clean'});
+                return stored.map(o => o.digest);
+            }
         }
         let reason: DirtyReason = stored === null ? 'new' : 'cas-missing';
 
@@ -239,7 +241,7 @@ export class Executor {
     async #execute(decl: artifact.RuleDecl, key: string, reason: DirtyReason): Promise<string[]> {
         let {store, casDir, tmpDir, root} = this.#opts;
         let ruleTmp = pathlib.join(tmpDir, String(this.#tmpSeq++));
-        fs.mkdirSync(ruleTmp, {recursive: true});
+        await fs.mkdir(ruleTmp, {recursive: true});
         let tempOutputs = decl.outputs.map(o => pathlib.join(ruleTmp, o.filename));
         let concreteInputs = decl.inputs.map(
             i => typeof i === 'string' ? i : cas.casPath(casDir, i.hash, i.ext));
@@ -251,12 +253,15 @@ export class Executor {
                 throw new Aborted();  // killed by the abort, not a real failure; stays dirty
             }
             if (result.code === 0) {
-                let missing = tempOutputs.filter(p => !fs.existsSync(p));
+                let present = await Promise.all(tempOutputs.map(
+                    p => fs.access(p).then(() => true, () => false)));
+                let missing = tempOutputs.filter((_, n) => !present[n]);
                 if (missing.length === 0) {
-                    let outputs = decl.outputs.map((o, n) => {
-                        let object = cas.casInsert(casDir, paired(tempOutputs, n), o.ext);
-                        return {digest: object.digest, ext: o.ext, size: object.size};
-                    });
+                    let outputs = [];
+                    for (let [n, o] of decl.outputs.entries()) {
+                        let object = await cas.casInsert(casDir, paired(tempOutputs, n), o.ext);
+                        outputs.push({digest: object.digest, ext: o.ext, size: object.size});
+                    }
                     store.recordRule(key, decl.cmds, outputs);
                     this.#outcomes.set(decl, {status: 'ran', reason});
                     this.#log(`[${++this.#counter}] ${label(decl)}`
@@ -271,7 +276,7 @@ export class Executor {
             }
             return this.#fail(decl, command, result.output, `exit status ${result.code ?? result.signal}`);
         } finally {
-            fs.rmSync(ruleTmp, {recursive: true, force: true});
+            await fs.rm(ruleTmp, {recursive: true, force: true});
         }
     }
 

@@ -1,8 +1,8 @@
 
-import * as fs from 'node:fs';
+import * as fs from 'node:fs/promises';
 import * as pathlib from 'node:path';
 
-import {hashFileSync} from './hash.ts';
+import {hashFile} from './hash.ts';
 
 // Content-addressed store for build outputs. Objects live at
 // <casDir>/<hh>/<sha256hex>.<ext> (hh = first two hex chars), carry their
@@ -15,16 +15,16 @@ export function casPath(casDir: string, digest: string, ext: string): string {
     return pathlib.join(casDir, digest.slice(0, 2), `${digest}.${ext}`);
 }
 
-export function casExists(casDir: string, digest: string, ext: string): boolean {
-    return casStat(casDir, digest, ext) !== null;
+export async function casExists(casDir: string, digest: string, ext: string): Promise<boolean> {
+    return await casStat(casDir, digest, ext) !== null;
 }
 
 // Size of an object, or null if absent. Callers verify it against the
 // recorded size: a crash between rename and data flush can leave a
 // truncated object, which must read as dirty, not clean.
-export function casStat(casDir: string, digest: string, ext: string): bigint | null {
+export async function casStat(casDir: string, digest: string, ext: string): Promise<bigint | null> {
     try {
-        let st = fs.statSync(casPath(casDir, digest, ext), {bigint: true});
+        let st = await fs.stat(casPath(casDir, digest, ext), {bigint: true});
         return st.isFile() ? st.size : null;
     } catch {
         return null;
@@ -32,42 +32,51 @@ export function casStat(casDir: string, digest: string, ext: string): bigint | n
 }
 
 export type CasObject = {
-    digest: string;   // sha256 hex of the bytes
+    digest: string,   // sha256 hex of the bytes
     size: bigint,
 };
+
+async function exists(path: string): Promise<boolean> {
+    try {
+        await fs.access(path);
+        return true;
+    } catch {
+        return false;
+    }
+}
 
 // Move tmpPath into the store, returning the content digest and size. An
 // existing object is trusted only if its bytes actually hash to the digest;
 // otherwise (crash-truncated object) the fresh bytes replace it.
-export function casInsert(casDir: string, tmpPath: string, ext: string): CasObject {
-    let digest = hashFileSync(tmpPath).toString('hex');
-    let size = fs.statSync(tmpPath, {bigint: true}).size;
+export async function casInsert(casDir: string, tmpPath: string, ext: string): Promise<CasObject> {
+    let digest = (await hashFile(tmpPath)).toString('hex');
+    let size = (await fs.stat(tmpPath, {bigint: true})).size;
     let target = casPath(casDir, digest, ext);
-    if (fs.existsSync(target) && hashFileSync(target).toString('hex') === digest) {
-        fs.unlinkSync(tmpPath);
+    if (await exists(target) && (await hashFile(target)).toString('hex') === digest) {
+        await fs.unlink(tmpPath);
         return {digest, size};
     }
-    fs.mkdirSync(pathlib.dirname(target), {recursive: true});
-    fs.chmodSync(tmpPath, 0o444);
+    await fs.mkdir(pathlib.dirname(target), {recursive: true});
+    await fs.chmod(tmpPath, 0o444);
     // Flush the bytes before the rename becomes visible, so a power loss
     // cannot journal the rename while dropping the data pages.
-    let fd = fs.openSync(tmpPath, 'r');
+    let fh = await fs.open(tmpPath, 'r');
     try {
-        fs.fsyncSync(fd);
+        await fh.sync();
     } finally {
-        fs.closeSync(fd);
+        await fh.close();
     }
-    fs.renameSync(tmpPath, target);
+    await fs.rename(tmpPath, target);
     return {digest, size};
 }
 
 // Remove every object not in `live` (keys are "<digest>.<ext>", the object
 // basename) and prune emptied fanout directories. Returns the removal count.
-export function casSweep(casDir: string, live: Set<string>): number {
+export async function casSweep(casDir: string, live: Set<string>): Promise<number> {
     let removed = 0;
-    let fanout: fs.Dirent[];
+    let fanout;
     try {
-        fanout = fs.readdirSync(casDir, {withFileTypes: true});
+        fanout = await fs.readdir(casDir, {withFileTypes: true});
     } catch (err) {
         if ((err as {code?: string}).code === 'ENOENT') {
             return 0;
@@ -79,14 +88,14 @@ export function casSweep(casDir: string, live: Set<string>): number {
             continue;
         }
         let dirPath = pathlib.join(casDir, dir.name);
-        for (let name of fs.readdirSync(dirPath)) {
+        for (let name of await fs.readdir(dirPath)) {
             if (!live.has(name)) {
-                fs.unlinkSync(pathlib.join(dirPath, name));
+                await fs.unlink(pathlib.join(dirPath, name));
                 removed++;
             }
         }
         try {
-            fs.rmdirSync(dirPath);
+            await fs.rmdir(dirPath);
         } catch {
             // not empty
         }
