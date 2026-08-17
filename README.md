@@ -53,8 +53,9 @@ Install dependencies once with `pnpm install`.
 Each deploy is a root `*.build.ts` module: it declares its build rules
 (shared sets are plain functions in `rules/`; declaring an identical rule
 twice is a no-op returning the existing artifacts, so any number of deploys
-can call the same set) and a `finish` function that maps the built artifacts
-to their published names. Build outputs are content-addressed:
+can call the same set) and, next to each set of rules, a `deploy(ctx => ...)`
+block that maps the built artifacts to their published names; the blocks run
+in registration order after the build, sharing one output tree per module. Build outputs are content-addressed:
 rules declare nominal output filenames but the store names every object by
 the hash of its bytes (under `.build/cas/`), so incrementality keys on
 content, same-byte renames rebuild nothing, and hash-stamped publishing
@@ -139,7 +140,7 @@ DEFAULT_ADVPNG=-z4 -i5000
   its output bytes (the spritesheet builders do), the rule must set
   `nameSensitive: true` or renames will leave its output silently stale.
 - Rules must be declared when a deploy module is imported (top level), not
-  inside `finish` — the build runs before finish does.
+  inside a `deploy` block — the build runs before the blocks do.
 
 ## License
 

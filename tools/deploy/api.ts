@@ -30,14 +30,23 @@ export interface DeployCtx {
     hash(...srcs : CopySource[]) : string;
 }
 
-export interface DeploySpec {
-    finish : (ctx : DeployCtx) => void | Promise<void>;
+export type DeployFn = (ctx : DeployCtx) => void | Promise<void>;
+
+// Like rule(): a buildFile registers free-floating deploy blocks next to the
+// rules they ship. They run in registration order after the build, sharing
+// one ctx (and so one output tree) per buildFile.
+const deploys : DeployFn[] = [];
+
+export function deploy(fn : DeployFn) : void {
+    deploys.push(fn);
 }
 
-// Identity helper: a deploy module declares its rules at top level and
-// `export default defineDeploy({finish})`.
-export function defineDeploy(spec : DeploySpec) : DeploySpec {
-    return spec;
+export function getDeploys() : readonly DeployFn[] {
+    return deploys;
+}
+
+export function resetDeploys() : void {
+    deploys.length = 0;
 }
 
 function shortHash(digest : Buffer) : string {

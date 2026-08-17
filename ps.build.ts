@@ -5,7 +5,7 @@ import {gen10Modelslike} from './rules/modelslike.ts';
 import {type Sprite, toPSID} from './rules/publish.ts';
 import {forEachRule, rule} from './tools/build/artifact.ts';
 import {PNG_DETERMINISTIC, base, compresspng, pad, spriteglob} from './tools/build/helpers.ts';
-import {type DeployCtx, defineDeploy} from './tools/deploy/api.ts';
+import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 
 // PS spritesheets. The sheet tools readdir the minisprite dirs and resolve
 // ids through the sprite data, baking input names into the sheet layout,
@@ -79,7 +79,29 @@ forEachRule(dexMissing, {
     ],
 }, "%B.png");
 
+// ani/: the models plus champions backfill, under PS ids.
+
 const aniChampions = gen10Modelslike();
+
+deploy(ctx => {
+    const seenModels = new Set<string>();
+
+    for (const f of ctx.list("src/models")) {
+        seenModels.add(f.name);
+        psSpritecopy(ctx, f, "ani");
+    }
+
+    for (const f of aniChampions) {
+        if (seenModels.has(f.name)) {
+            continue;
+        }
+        seenModels.add(f.name);
+        psSpritecopy(ctx, f, "ani");
+    }
+
+    // TODO: ship the padded dex, sheets, trainers, types/categories when
+    // the PS deploy is revived; the rules above keep them building.
+});
 
 // PS ids keep the forme dash, unlike the smogon aliases.
 function psSpritecopy(ctx : DeployCtx, f : Sprite, dir : string) : void {
@@ -116,24 +138,3 @@ function psSpritecopy(ctx : DeployCtx, f : Sprite, dir : string) : void {
     ctx.copy(f, `${dir}/${name}.${f.ext}`);
 }
 
-export default defineDeploy({
-    finish(ctx) {
-        const seenModels = new Set<string>();
-
-        for (const f of ctx.list("src/models")) {
-            seenModels.add(f.name);
-            psSpritecopy(ctx, f, "ani");
-        }
-
-        for (const f of aniChampions) {
-            if (seenModels.has(f.name)) {
-                continue;
-            }
-            seenModels.add(f.name);
-            psSpritecopy(ctx, f, "ani");
-        }
-
-        // TODO: ship the padded dex, sheets, trainers, types/categories when
-        // the PS deploy is revived; the rules above keep them building.
-    },
-});

@@ -14,7 +14,7 @@ import {BuildError} from '../build/errors.ts';
 import {killAllProcessGroups} from '../build/exec.ts';
 import {setConfig} from '../build/helpers.ts';
 import {Store, acquireLock, dbVersion} from '../build/store.ts';
-import {type DeploySpec, makeCtx} from './api.ts';
+import {type DeployFn, getDeploys, makeCtx} from './api.ts';
 import {loadDeployConfig, matchSubsets} from './config.ts';
 import {ActionQueue} from './queue.ts';
 
@@ -103,19 +103,15 @@ function discoverDeployFiles() : string[] {
     return files;
 }
 
-// Importing a deploy module declares its rules; the default export carries
-// the finish function.
-async function importDeploys(files : string[]) : Promise<Map<string, DeploySpec | null>> {
-    const specs = new Map<string, DeploySpec | null>();
+// Importing a deploy module declares its rules and registers its deploy
+// blocks; the registry delta over each sequential import is that file's
+// blocks.
+async function importDeploys(files : string[]) : Promise<Map<string, readonly DeployFn[]>> {
+    const specs = new Map<string, readonly DeployFn[]>();
     for (const file of files) {
-        const mod : {default? : unknown} = await import(pathToFileURL(nodePath.resolve(file)).href);
-        const spec = mod.default;
-        if (typeof spec === 'object' && spec !== null
-            && typeof (spec as DeploySpec).finish === 'function') {
-            specs.set(file, spec as DeploySpec);
-        } else {
-            specs.set(file, null);
-        }
+        const before = getDeploys().length;
+        await import(pathToFileURL(nodePath.resolve(file)).href);
+        specs.set(file, getDeploys().slice(before));
     }
     return specs;
 }
@@ -188,17 +184,20 @@ async function buildThen(decls : readonly RuleDecl[], opts : CommonOpts, gc : bo
     }
 }
 
-function finishOf(specs : Map<string, DeploySpec | null>, file : string) : DeploySpec {
-    const spec = specs.get(file);
-    if (spec === null || spec === undefined) {
-        throw new BuildError(`${file} does not default-export a deploy (use defineDeploy)`);
+function finishOf(specs : Map<string, readonly DeployFn[]>, file : string) : readonly DeployFn[] {
+    const fns = specs.get(file);
+    if (fns === undefined || fns.length === 0) {
+        throw new BuildError(`${file} registers no deploy blocks (use deploy())`);
     }
-    return spec;
+    return fns;
 }
 
-async function runFinish(spec : DeploySpec, verbose : boolean) : Promise<ActionQueue | null> {
+async function runFinish(fns : readonly DeployFn[], verbose : boolean) : Promise<ActionQueue | null> {
     const aq = new ActionQueue();
-    await spec.finish(makeCtx(CAS_DIR, aq));
+    const ctx = makeCtx(CAS_DIR, aq);
+    for (const fn of fns) {
+        await fn(ctx);
+    }
     if (!aq.valid) {
         aq.print(verbose ? 'all' : 'errors');
         return null;
