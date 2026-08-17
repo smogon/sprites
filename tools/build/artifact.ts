@@ -11,36 +11,36 @@ import {type Cmd, basenameNoExt, flattenCmds, substitute, substituteNames} from 
 // rebuilds anything. The digest is resolved by the executor (from the store
 // on a clean hit, or by running the rule).
 export class Artifact {
-    readonly name : string;         // nominal basename sans ext ("abra", "spritesheet")
-    readonly ext : string;          // "png", "gif", ... (no dot)
-    readonly decl : RuleDecl;
-    readonly index : number;        // position among decl.outputs
-    private digest : string | null = null;
+    readonly name: string;         // nominal basename sans ext ("abra", "spritesheet")
+    readonly ext: string;          // "png", "gif", ... (no dot)
+    readonly decl: RuleDecl;
+    readonly index: number;        // position among decl.outputs
+    private digest: string | null = null;
 
-    constructor(name : string, ext : string, decl : RuleDecl, index : number) {
+    constructor(name: string, ext: string, decl: RuleDecl, index: number) {
         this.name = name;
         this.ext = ext;
         this.decl = decl;
         this.index = index;
     }
 
-    get filename() : string {
+    get filename(): string {
         return `${this.name}.${this.ext}`;
     }
 
     // The producing rule's source-path inputs (provenance).
-    get sources() : string[] {
+    get sources(): string[] {
         return this.decl.inputs.filter(i => typeof i === 'string');
     }
 
-    get hash() : string {
+    get hash(): string {
         if (this.digest === null) {
             throw new Error(`Artifact ${this.filename} has not been built yet`);
         }
         return this.digest;
     }
 
-    resolve(digest : string) : void {
+    resolve(digest: string): void {
         if (this.digest !== null && this.digest !== digest) {
             throw new Error(`Artifact ${this.filename} resolved twice with different digests`);
         }
@@ -51,54 +51,54 @@ export class Artifact {
 export type Input = string | Artifact;   // string = source path relative to repo root
 
 export interface CmdSpec {
-    display? : string;
+    display?: string;
     // Tracked-but-not-substituted inputs: part of rule identity, but never
     // expanded into %f. Use for files a tool reads on its own (e.g.
     // tools/sheet readdirs the minisprite directories).
-    deps? : Input | Input[];
+    deps?: Input | Input[];
     // IMPORTANT: set this on any rule whose output BYTES depend on input
     // NAMES (a tool that readdirs, or parses ids out of %f filenames, e.g.
     // the spritesheet builders). Identity is normally content-only, so
     // without this flag a same-bytes rename would leave the output stale.
-    nameSensitive? : boolean;
-    cmds : Cmd[];
+    nameSensitive?: boolean;
+    cmds: Cmd[];
 }
 
 export interface RuleDecl {
-    id : number;                    // registration order; identity for artifact inputs
-    inputs : Input[];               // ordered (%f order; some rules are order-sensitive)
-    deps : Input[];
-    outputs : Artifact[];
-    cmds : string[];                // flattened PRE-substitution templates
-    display : string | null;        // nominally substituted; cosmetic
-    displayTemplate : string | null;  // pre-substitution; groups forEach rules
-    nameSensitive : boolean;
+    id: number;                    // registration order; identity for artifact inputs
+    inputs: Input[];               // ordered (%f order; some rules are order-sensitive)
+    deps: Input[];
+    outputs: Artifact[];
+    cmds: string[];                // flattened PRE-substitution templates
+    display: string | null;        // nominally substituted; cosmetic
+    displayTemplate: string | null;  // pre-substitution; groups forEach rules
+    nameSensitive: boolean;
 }
 
-let decls : RuleDecl[] = [];
+let decls: RuleDecl[] = [];
 // Declaring an identical rule twice returns the existing artifacts, so
 // shared rule sets are plain functions that any number of deploys may call.
 let declIndex = new Map<string, RuleDecl>();
 
-export function getDecls() : RuleDecl[] {
+export function getDecls(): RuleDecl[] {
     return decls;
 }
 
-export function resetDecls() : void {
+export function resetDecls(): void {
     decls = [];
     declIndex = new Map();
 }
 
 // Nominal path of an input, for %b/%B and displays.
-function nominal(i : Input) : string {
+function nominal(i: Input): string {
     return typeof i === 'string' ? i : i.filename;
 }
 
-function extOf(i : Input) : string {
+function extOf(i: Input): string {
     return typeof i === 'string' ? pathlib.extname(i) : `.${i.ext}`;
 }
 
-function pathOrThrow(i : Input, what : string) : string {
+function pathOrThrow(i: Input, what: string): string {
     if (typeof i !== 'string') {
         throw new Error(`nameSensitive rules with artifact ${what} are not yet supported`);
     }
@@ -110,7 +110,7 @@ function pathOrThrow(i : Input, what : string) : string {
 // source renames and byte-identical duplicates dedupe for free. Output exts
 // are included because tools pick output formats from extensions; nominal
 // names are not.
-export function computeKey(decl : RuleDecl, digestOf : (i : Input) => string) : string {
+export function computeKey(decl: RuleDecl, digestOf: (i: Input) => string): string {
     const h = createHash('sha256');
     h.update([
         'v2',
@@ -128,17 +128,17 @@ export function computeKey(decl : RuleDecl, digestOf : (i : Input) => string) : 
     return h.digest('hex');
 }
 
-function normalizeSpec(spec : CmdSpec | Cmd[]) : CmdSpec {
+function normalizeSpec(spec: CmdSpec | Cmd[]): CmdSpec {
     return Array.isArray(spec) ? {cmds: spec} : spec;
 }
 
 // Glob string patterns; artifacts pass through. Order is preserved.
-function resolveInputs(input : Input | Input[] | undefined) : Input[] {
+function resolveInputs(input: Input | Input[] | undefined): Input[] {
     const list = input === undefined ? [] : Array.isArray(input) ? input : [input];
-    return list.flatMap((i) : Input[] => typeof i === 'string' ? glob(i) : [i]);
+    return list.flatMap((i): Input[] => typeof i === 'string' ? glob(i) : [i]);
 }
 
-function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : string[]) : RuleDecl {
+function makeDecl(inputs: Input[], deps: Input[], spec: CmdSpec, outputs: string[]): RuleDecl {
     const nominalInputs = inputs.map(nominal);
     // %b/%B expand to nominal input names, never CAS paths, so they are
     // resolved at declaration. This also lands them in the identity key: a
@@ -153,7 +153,7 @@ function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : st
 
     // An identical declaration returns the already-registered rule. Artifact
     // inputs are keyed by their producing rule's id, so chains dedupe too.
-    const token = (i : Input) => typeof i === 'string' ? `s:${i}` : `a:${i.decl.id}:${i.index}`;
+    const token = (i: Input) => typeof i === 'string' ? `s:${i}` : `a:${i.decl.id}:${i.index}`;
     const identity = [
         cmds.join('\0'),
         inputs.map(token).join('\0'),
@@ -167,7 +167,7 @@ function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : st
         return existing;
     }
 
-    const decl : RuleDecl = {
+    const decl: RuleDecl = {
         id: decls.length,
         inputs,
         deps,
@@ -216,20 +216,20 @@ function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : st
 // One Artifact per declared output, as a tuple when the output list is a
 // literal, so `const [png, css] = rule(...)` needs no undefined checks. A
 // single string output returns its Artifact directly.
-export function rule(input : Input | Input[], spec : CmdSpec | Cmd[],
-                     output : string) : Artifact;
+export function rule(input: Input | Input[], spec: CmdSpec | Cmd[],
+                     output: string): Artifact;
 export function rule<const T extends readonly string[]>(
-    input : Input | Input[], spec : CmdSpec | Cmd[],
-    output : T) : {[K in keyof T] : Artifact};
-export function rule(input : Input | Input[], spec : CmdSpec | Cmd[],
-                     output : string | readonly string[]) : Artifact | Artifact[] {
+    input: Input | Input[], spec: CmdSpec | Cmd[],
+    output: T): {[K in keyof T]: Artifact};
+export function rule(input: Input | Input[], spec: CmdSpec | Cmd[],
+                     output: string | readonly string[]): Artifact | Artifact[] {
     const s = normalizeSpec(spec);
     const decl = makeDecl(resolveInputs(input), resolveInputs(s.deps), s, astable(output));
     return typeof output === 'string' ? decl.outputs[0]! : decl.outputs;
 }
 
-export function forEachRule(input : Input | Input[], spec : CmdSpec | Cmd[],
-                            output : string) : Artifact[] {
+export function forEachRule(input: Input | Input[], spec: CmdSpec | Cmd[],
+                            output: string): Artifact[] {
     const s = normalizeSpec(spec);
     if (/%[fo]/.test(output)) {
         throw new Error(`forEachRule output template may only use %b/%B: ${output}`);

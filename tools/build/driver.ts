@@ -7,29 +7,29 @@ import {reconcileHashes} from './hash.ts';
 import {type Store} from './store.ts';
 
 export interface BuildOpts {
-    root : string;
-    store : Store;
-    casDir : string;                 // relative to root; substituted into commands
-    tmpDir : string;
-    jobs : number;
-    dryRun : boolean;
-    failFast : boolean;
-    verbose : boolean;
+    root: string;
+    store: Store;
+    casDir: string;                 // relative to root; substituted into commands
+    tmpDir: string;
+    jobs: number;
+    dryRun: boolean;
+    failFast: boolean;
+    verbose: boolean;
     // GC after a fully successful build: drop rules whose key is no longer
     // declared, sweep unreferenced CAS objects, prune the file cache. Only
     // safe when `decls` is the full rule universe (a partial build would GC
     // the other deploys' state), so the CLI sets it for union builds only.
-    gc : boolean;
-    signal : AbortSignal;
-    log? : (line : string) => void;
-    logError? : (line : string) => void;
+    gc: boolean;
+    signal: AbortSignal;
+    log?: (line: string) => void;
+    logError?: (line: string) => void;
 }
 
 export interface DriveResult extends BuildResult {
-    interrupted : boolean;
+    interrupted: boolean;
 }
 
-export async function build(decls : readonly RuleDecl[], opts : BuildOpts) : Promise<DriveResult> {
+export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promise<DriveResult> {
     const log = opts.log ?? console.log;
     const logError = opts.logError ?? console.error;
     const {store} = opts;
@@ -38,7 +38,7 @@ export async function build(decls : readonly RuleDecl[], opts : BuildOpts) : Pro
     // producers of its artifact inputs, even ones outside `decls`.
     const closure = new Set<RuleDecl>();
     const sources = new Set<string>();
-    const add = (decl : RuleDecl) => {
+    const add = (decl: RuleDecl) => {
         if (closure.has(decl)) {
             return;
         }

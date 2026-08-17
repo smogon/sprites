@@ -11,18 +11,18 @@ import {hashFileSync} from './hash.ts';
 // store. Writers stage the file elsewhere on the same filesystem and insert
 // it with an atomic rename.
 
-export function casPath(casDir : string, digest : string, ext : string) : string {
+export function casPath(casDir: string, digest: string, ext: string): string {
     return pathlib.join(casDir, digest.slice(0, 2), `${digest}.${ext}`);
 }
 
-export function casExists(casDir : string, digest : string, ext : string) : boolean {
+export function casExists(casDir: string, digest: string, ext: string): boolean {
     return casStat(casDir, digest, ext) !== null;
 }
 
 // Size of an object, or null if absent. Callers verify it against the
 // recorded size: a crash between rename and data flush can leave a
 // truncated object, which must read as dirty, not clean.
-export function casStat(casDir : string, digest : string, ext : string) : bigint | null {
+export function casStat(casDir: string, digest: string, ext: string): bigint | null {
     try {
         const st = fs.statSync(casPath(casDir, digest, ext), {bigint: true});
         return st.isFile() ? st.size : null;
@@ -32,14 +32,14 @@ export function casStat(casDir : string, digest : string, ext : string) : bigint
 }
 
 export interface CasObject {
-    digest : string;   // sha256 hex of the bytes
-    size : bigint;
+    digest: string;   // sha256 hex of the bytes
+    size: bigint;
 }
 
 // Move tmpPath into the store, returning the content digest and size. An
 // existing object is trusted only if its bytes actually hash to the digest;
 // otherwise (crash-truncated object) the fresh bytes replace it.
-export function casInsert(casDir : string, tmpPath : string, ext : string) : CasObject {
+export function casInsert(casDir: string, tmpPath: string, ext: string): CasObject {
     const digest = hashFileSync(tmpPath).toString('hex');
     const size = fs.statSync(tmpPath, {bigint: true}).size;
     const target = casPath(casDir, digest, ext);
@@ -63,13 +63,13 @@ export function casInsert(casDir : string, tmpPath : string, ext : string) : Cas
 
 // Remove every object not in `live` (keys are "<digest>.<ext>", the object
 // basename) and prune emptied fanout directories. Returns the removal count.
-export function casSweep(casDir : string, live : Set<string>) : number {
+export function casSweep(casDir: string, live: Set<string>): number {
     let removed = 0;
-    let fanout : fs.Dirent[];
+    let fanout: fs.Dirent[];
     try {
         fanout = fs.readdirSync(casDir, {withFileTypes: true});
     } catch (err) {
-        if ((err as {code? : string}).code === 'ENOENT') {
+        if ((err as {code?: string}).code === 'ENOENT') {
             return 0;
         }
         throw err;

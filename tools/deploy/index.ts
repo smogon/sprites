@@ -28,17 +28,17 @@ const CAS_DIR = '.build/cas';
 const TMP_DIR = '.build/tmp';
 
 interface CommonOpts {
-    jobs : string;
-    dryRun? : boolean;
-    failFast? : boolean;
-    config : string;
-    verbose? : boolean;
+    jobs: string;
+    dryRun?: boolean;
+    failFast?: boolean;
+    config: string;
+    verbose?: boolean;
 }
 
 interface VerbOpts extends CommonOpts {
-    output? : string;
-    link? : boolean;
-    tar? : boolean;
+    output?: string;
+    link?: boolean;
+    tar?: boolean;
 }
 
 const USAGE = `usage: node tools/deploy/index.ts <command> [options]
@@ -88,14 +88,14 @@ const VERB_OPTIONS = {
     },
 } as const;
 
-function requireOutput(opts : VerbOpts) : string {
+function requireOutput(opts: VerbOpts): string {
     if (opts.output === undefined) {
         throw new BuildError('missing -o/--output');
     }
     return opts.output;
 }
 
-function discoverDeployFiles() : string[] {
+function discoverDeployFiles(): string[] {
     const files = fs.readdirSync('.').filter(f => f.endsWith('.build.ts')).sort();
     if (files.length === 0) {
         throw new BuildError('No *.build.ts files at the repo root');
@@ -106,7 +106,7 @@ function discoverDeployFiles() : string[] {
 // Importing a deploy module declares its rules and registers its deploy
 // blocks; the registry delta over each sequential import is that file's
 // blocks.
-async function importDeploys(files : string[]) : Promise<Map<string, readonly DeployFn[]>> {
+async function importDeploys(files: string[]): Promise<Map<string, readonly DeployFn[]>> {
     const specs = new Map<string, readonly DeployFn[]>();
     for (const file of files) {
         const before = getDeploys().length;
@@ -119,8 +119,8 @@ async function importDeploys(files : string[]) : Promise<Map<string, readonly De
 // Build `decls` and, on success, run `then` while still holding the lock (a
 // concurrent GC must not sweep CAS objects out from under a finish). Returns
 // the process exit code.
-async function buildThen(decls : readonly RuleDecl[], opts : CommonOpts, gc : boolean,
-                         then? : () => Promise<number>) : Promise<number> {
+async function buildThen(decls: readonly RuleDecl[], opts: CommonOpts, gc: boolean,
+                         then?: () => Promise<number>): Promise<number> {
     const jobs = Number(opts.jobs);
     if (!Number.isInteger(jobs) || jobs < 1) {
         throw new BuildError(`Invalid --jobs value: ${opts.jobs}`);
@@ -149,7 +149,7 @@ async function buildThen(decls : readonly RuleDecl[], opts : CommonOpts, gc : bo
         };
         process.on('SIGINT', onSignal);
         process.on('SIGTERM', onSignal);
-        let ok : boolean;
+        let ok: boolean;
         try {
             const result = await build(decls, {
                 root,
@@ -184,7 +184,7 @@ async function buildThen(decls : readonly RuleDecl[], opts : CommonOpts, gc : bo
     }
 }
 
-function finishOf(specs : Map<string, readonly DeployFn[]>, file : string) : readonly DeployFn[] {
+function finishOf(specs: Map<string, readonly DeployFn[]>, file: string): readonly DeployFn[] {
     const fns = specs.get(file);
     if (fns === undefined || fns.length === 0) {
         throw new BuildError(`${file} registers no deploy blocks (use deploy())`);
@@ -192,7 +192,7 @@ function finishOf(specs : Map<string, readonly DeployFn[]>, file : string) : rea
     return fns;
 }
 
-async function runFinish(fns : readonly DeployFn[], verbose : boolean) : Promise<ActionQueue | null> {
+async function runFinish(fns: readonly DeployFn[], verbose: boolean): Promise<ActionQueue | null> {
     const aq = new ActionQueue();
     const ctx = makeCtx(CAS_DIR, aq);
     for (const fn of fns) {
@@ -205,14 +205,14 @@ async function runFinish(fns : readonly DeployFn[], verbose : boolean) : Promise
     return aq;
 }
 
-function waitExit(child : ChildProcess) : Promise<number | null> {
+function waitExit(child: ChildProcess): Promise<number | null> {
     return new Promise((resolve, reject) => {
         child.on('error', reject);
         child.on('close', code => resolve(code));
     });
 }
 
-async function cmdBuild(files : string[], opts : CommonOpts) : Promise<void> {
+async function cmdBuild(files: string[], opts: CommonOpts): Promise<void> {
     setConfig(loadConfig(opts.config));
     // GC needs the full rule universe: only an unfiltered union build
     // can know which keys are no longer declared anywhere.
@@ -221,7 +221,7 @@ async function cmdBuild(files : string[], opts : CommonOpts) : Promise<void> {
     process.exitCode = await buildThen(getDecls(), opts, gc);
 }
 
-async function cmdDeploy(names : string[], opts : VerbOpts) : Promise<void> {
+async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
     const config = loadDeployConfig('deploy.json5');
     if (names.length === 0) {
         for (const [name, target] of config) {
@@ -292,7 +292,7 @@ async function cmdDeploy(names : string[], opts : VerbOpts) : Promise<void> {
     });
 }
 
-async function cmdRun(file : string, opts : VerbOpts) : Promise<void> {
+async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
     const output = requireOutput(opts);
     setConfig(loadConfig(opts.config));
     const specs = await importDeploys([file]);
@@ -306,14 +306,14 @@ async function cmdRun(file : string, opts : VerbOpts) : Promise<void> {
     });
 }
 
-function slugOf(decl : RuleDecl) : string {
+function slugOf(decl: RuleDecl): string {
     const template = decl.displayTemplate ?? decl.cmds[0]!;
     const slug = template.replace(/%[a-zA-Z0-9]+/g, ' ')
         .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     return slug === '' ? 'rule' : slug;
 }
 
-async function cmdInspect(paths : string[], opts : VerbOpts) : Promise<void> {
+async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
     const output = requireOutput(opts);
     setConfig(loadConfig(opts.config));
     await importDeploys(discoverDeployFiles());
@@ -373,7 +373,7 @@ async function cmdInspect(paths : string[], opts : VerbOpts) : Promise<void> {
     });
 }
 
-async function main(argv : string[]) : Promise<void> {
+async function main(argv: string[]): Promise<void> {
     const [verb, ...rest] = argv;
     if (verb === undefined || verb === '-h' || verb === '--help') {
         console.log(USAGE);
@@ -392,13 +392,13 @@ async function main(argv : string[]) : Promise<void> {
     } catch (err) {
         throw new BuildError(`${(err as Error).message.split('\n')[0]} (-h for usage)`);
     }
-    const v = parsed.values as {[k : string] : string | boolean | undefined};
+    const v = parsed.values as {[k: string]: string | boolean | undefined};
     const positionals = parsed.positionals;
     if (v.help) {
         console.log(USAGE);
         return;
     }
-    const opts : VerbOpts = {
+    const opts: VerbOpts = {
         jobs: v.jobs as string,
         dryRun: Boolean(v['dry-run']),
         failFast: Boolean(v['fail-fast']),

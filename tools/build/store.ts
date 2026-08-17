@@ -7,9 +7,9 @@ import {BuildError} from './errors.ts';
 import type {FileStat} from './hash.ts';
 
 export interface StoredOutput {
-    digest : string;   // sha256 hex of the bytes; the CAS object is <digest>.<ext>
-    ext : string;
-    size : bigint;     // verified against the object on every clean check
+    digest: string;   // sha256 hex of the bytes; the CAS object is <digest>.<ext>
+    ext: string;
+    size: bigint;     // verified against the object on every clean check
 }
 
 const DDL = `
@@ -39,15 +39,15 @@ CREATE TABLE IF NOT EXISTS rule_outputs (
 );
 `;
 
-function userVersion(db : DatabaseSync) : number {
-    const row = db.prepare('PRAGMA user_version').get() as {user_version : bigint | number};
+function userVersion(db: DatabaseSync): number {
+    const row = db.prepare('PRAGMA user_version').get() as {user_version: bigint | number};
     return Number(row.user_version);
 }
 
 export class Store {
-    private db : DatabaseSync;
+    private db: DatabaseSync;
 
-    constructor(dbPath : string) {
+    constructor(dbPath: string) {
         fs.mkdirSync(pathlib.dirname(dbPath), {recursive: true});
         this.db = new DatabaseSync(dbPath, {readBigInts: true});
         this.db.exec('PRAGMA journal_mode = WAL');
@@ -56,7 +56,7 @@ export class Store {
         this.migrate();
     }
 
-    private transaction<T>(fn : () => T) : T {
+    private transaction<T>(fn: () => T): T {
         this.db.exec('BEGIN');
         try {
             const result = fn();
@@ -68,7 +68,7 @@ export class Store {
         }
     }
 
-    private migrate() : void {
+    private migrate(): void {
         const version = userVersion(this.db);
         if (version === 0) {
             this.db.exec('BEGIN;' + DDL + 'PRAGMA user_version = 2; COMMIT;');
@@ -88,10 +88,10 @@ export class Store {
         }
     }
 
-    loadFileCache() : Map<string, FileStat> {
+    loadFileCache(): Map<string, FileStat> {
         const result = new Map<string, FileStat>();
         const rows = this.db.prepare('SELECT path, size, mtime_ns, hash FROM file_cache').all() as
-            unknown as {path : string, size : bigint, mtime_ns : bigint, hash : Uint8Array}[];
+            unknown as {path: string, size: bigint, mtime_ns: bigint, hash: Uint8Array}[];
         for (const row of rows) {
             const h = row.hash;
             result.set(row.path, {size: row.size, mtimeNs: row.mtime_ns,
@@ -100,7 +100,7 @@ export class Store {
         return result;
     }
 
-    saveFileCache(entries : Map<string, FileStat>) : void {
+    saveFileCache(entries: Map<string, FileStat>): void {
         const upsert = this.db.prepare(`
             INSERT INTO file_cache (path, size, mtime_ns, hash) VALUES (?, ?, ?, ?)
             ON CONFLICT(path) DO UPDATE SET
@@ -112,9 +112,9 @@ export class Store {
         });
     }
 
-    pruneFileCache(live : Set<string>) : void {
+    pruneFileCache(live: Set<string>): void {
         const paths = this.db.prepare('SELECT path FROM file_cache').all() as
-            unknown as {path : string}[];
+            unknown as {path: string}[];
         const del = this.db.prepare('DELETE FROM file_cache WHERE path = ?');
         this.transaction(() => {
             for (const {path} of paths) {
@@ -125,10 +125,10 @@ export class Store {
         });
     }
 
-    lookupRule(key : string) : StoredOutput[] | null {
+    lookupRule(key: string): StoredOutput[] | null {
         return this.transaction(() => {
             const rule = this.db.prepare('SELECT id FROM rules WHERE key = ?').get(key) as
-                {id : bigint} | undefined;
+                {id: bigint} | undefined;
             if (rule === undefined) {
                 return null;
             }
@@ -142,7 +142,7 @@ export class Store {
 
     // One transaction per completed rule: an interrupted build only ever
     // contains fully-recorded rules.
-    recordRule(key : string, cmds : string[], outputs : StoredOutput[]) : void {
+    recordRule(key: string, cmds: string[], outputs: StoredOutput[]): void {
         const upsert = this.db.prepare(`
             INSERT INTO rules (key, cmds) VALUES (?, ?)
             ON CONFLICT(key) DO UPDATE SET cmds = excluded.cmds
@@ -151,16 +151,16 @@ export class Store {
         const insOutput = this.db.prepare(
             'INSERT INTO rule_outputs (rule_id, ord, digest, ext, size) VALUES (?, ?, ?, ?, ?)');
         this.transaction(() => {
-            const {id} = upsert.get(key, cmds.join('\n')) as {id : bigint};
+            const {id} = upsert.get(key, cmds.join('\n')) as {id: bigint};
             delOutputs.run(id);
             outputs.forEach((o, i) => insOutput.run(id, i, o.digest, o.ext, o.size));
         });
     }
 
     // GC: drop every rule whose key is not live. Returns the removal count.
-    deleteKeysNotIn(live : Set<string>) : number {
+    deleteKeysNotIn(live: Set<string>): number {
         const keys = this.db.prepare('SELECT id, key FROM rules').all() as
-            unknown as {id : bigint, key : string}[];
+            unknown as {id: bigint, key: string}[];
         const del = this.db.prepare('DELETE FROM rules WHERE id = ?');
         let removed = 0;
         this.transaction(() => {
@@ -175,13 +175,13 @@ export class Store {
     }
 
     // Every CAS object referenced by some rule, as "<digest>.<ext>" basenames.
-    liveObjects() : Set<string> {
+    liveObjects(): Set<string> {
         const rows = this.db.prepare('SELECT digest, ext FROM rule_outputs').all() as
-            unknown as {digest : string, ext : string}[];
+            unknown as {digest: string, ext: string}[];
         return new Set(rows.map(r => `${r.digest}.${r.ext}`));
     }
 
-    close() : void {
+    close(): void {
         this.db.exec('PRAGMA wal_checkpoint(TRUNCATE)');
         this.db.close();
     }
@@ -189,7 +189,7 @@ export class Store {
 
 // Schema version of an existing db, without opening it for writing (the
 // Store constructor migrates); null if there is no db.
-export function dbVersion(dbPath : string) : number | null {
+export function dbVersion(dbPath: string): number | null {
     if (!fs.existsSync(dbPath)) {
         return null;
     }
@@ -203,14 +203,14 @@ export function dbVersion(dbPath : string) : number | null {
 
 // Guards against two concurrent builds; the exclusive transaction is released
 // by the OS on any crash, so there are no stale lock files.
-export function acquireLock(lockPath : string) : () => void {
+export function acquireLock(lockPath: string): () => void {
     fs.mkdirSync(pathlib.dirname(lockPath), {recursive: true});
     const lock = new DatabaseSync(lockPath, {timeout: 0});
     try {
         lock.exec('BEGIN EXCLUSIVE');
     } catch (err) {
         lock.close();
-        if ((err as {errcode? : number}).errcode === 5) { // SQLITE_BUSY
+        if ((err as {errcode?: number}).errcode === 5) { // SQLITE_BUSY
             throw new BuildError('Another build is already running.');
         }
         throw err;

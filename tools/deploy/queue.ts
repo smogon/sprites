@@ -4,35 +4,35 @@ import nodePath from 'path';
 import tar from 'tar-stream';
 
 type Op = {
-    type : 'Write',
-    data : string,
+    type: 'Write',
+    data: string,
 } | {
-    type : 'Copy',
-    src : string,
+    type: 'Copy',
+    src: string,
 };
 
 type OpEntry = {
-    type : 'Op',
-    op : Op,
-    dst : string,
-    valid : 'Success' | 'Absolute' | 'Multiple',
-    debugObjs : unknown[]
+    type: 'Op',
+    op: Op,
+    dst: string,
+    valid: 'Success' | 'Absolute' | 'Multiple',
+    debugObjs: unknown[]
 };
 
 type DebugEntry = {
-    type : 'Debug',
-    obj : unknown,
-    stray : boolean
+    type: 'Debug',
+    obj: unknown,
+    stray: boolean
 };
 
 export type LogEntry = OpEntry | DebugEntry;
 
 export class ActionQueue {
-    private seen : Map<string, OpEntry | 'MoreThan1'>;
+    private seen: Map<string, OpEntry | 'MoreThan1'>;
     // Have an accessor for this in the future? idk
-    public log : LogEntry[];
-    public valid : boolean;
-    private debugBuffer : unknown[];
+    public log: LogEntry[];
+    public valid: boolean;
+    private debugBuffer: unknown[];
 
     constructor() {
         this.seen = new Map;
@@ -41,27 +41,27 @@ export class ActionQueue {
         this.debugBuffer = [];
     }
 
-    throw(obj : unknown) {
+    throw(obj: unknown) {
         this.gdebug(obj, false);
         this.valid = false;
     }
 
-    debug(obj : unknown) {
+    debug(obj: unknown) {
         this.debugBuffer.push(obj);
     }
 
-    gdebug(obj : unknown, stray : boolean) {
+    gdebug(obj: unknown, stray: boolean) {
         this.log.push({type: 'Debug', obj, stray});
     }
 
-    private pushOp(op: Op, dst : string) {
+    private pushOp(op: Op, dst: string) {
         dst = nodePath.normalize(dst);
-        const entry : OpEntry = {
-            type : 'Op',
+        const entry: OpEntry = {
+            type: 'Op',
             op,
             dst,
-            valid : 'Success',
-            debugObjs : this.debugBuffer
+            valid: 'Success',
+            debugObjs: this.debugBuffer
         };
         this.log.push(entry);
         this.debugBuffer = [];
@@ -82,11 +82,11 @@ export class ActionQueue {
         }
     }
 
-    copy(src : string, dst : string) {
+    copy(src: string, dst: string) {
         this.pushOp({type: 'Copy', src}, dst);
     }
 
-    write(data : string, dst : string) {
+    write(data: string, dst: string) {
         this.pushOp({type: 'Write', data}, dst);
     }
 
@@ -97,7 +97,7 @@ export class ActionQueue {
         this.debugBuffer = [];
     }
 
-    print(level : 'errors' | 'all') {
+    print(level: 'errors' | 'all') {
         for (const entry of this.log) {
             if (entry.type === 'Op') {
                 const op = entry.op;
@@ -108,7 +108,7 @@ export class ActionQueue {
                     addendum = ` (${entry.valid})`;
                 }
                 for (const obj of entry.debugObjs) {
-                    console.error("DEBUG:", obj);
+                    console.error('DEBUG:', obj);
                 }
                 if (op.type === 'Copy') {
                     console.error(`COPY${addendum}: ${op.src} ==> ${entry.dst}`);
@@ -125,7 +125,7 @@ export class ActionQueue {
         }
     }
 
-    async run(dir : string, mode : 'link' | 'copy' | 'tar', filter? : (dst : string) => boolean) {
+    async run(dir: string, mode: 'link' | 'copy' | 'tar', filter?: (dst: string) => boolean) {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
         if (mode !== 'tar') {
@@ -160,7 +160,7 @@ export class ActionQueue {
         }
     }
 
-    pack(filter? : (dst : string) => boolean) : NodeJS.ReadableStream {
+    pack(filter?: (dst: string) => boolean): NodeJS.ReadableStream {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
         let t = tar.pack();

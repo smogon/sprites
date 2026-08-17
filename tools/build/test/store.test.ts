@@ -9,7 +9,7 @@ import {DatabaseSync} from 'node:sqlite';
 
 import {Store} from '../store.ts';
 
-function makeDbPath() : string {
+function makeDbPath(): string {
     return pathlib.join(fs.mkdtempSync(pathlib.join(os.tmpdir(), 'store-test-')), 'db.sqlite');
 }
 
@@ -82,7 +82,7 @@ test('migrates a v1 db: drops rule tables, keeps file_cache', () => {
     store.close();
 
     const check = new DatabaseSync(dbPath);
-    const {user_version} = check.prepare('PRAGMA user_version').get() as {user_version : number};
+    const {user_version} = check.prepare('PRAGMA user_version').get() as {user_version: number};
     assert.equal(Number(user_version), 2);
     check.close();
 });

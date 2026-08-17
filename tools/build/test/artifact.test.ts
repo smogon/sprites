@@ -6,7 +6,7 @@ import {type Input, computeKey, forEachRule, getDecls, resetDecls, rule} from '.
 
 beforeEach(resetDecls);
 
-function digests(map : Record<string, string>) : (i : Input) => string {
+function digests(map: Record<string, string>): (i: Input) => string {
     return i => {
         if (typeof i !== 'string') {
             return i.hash;

@@ -2,16 +2,16 @@
 import {spawn} from 'child_process';
 
 export interface ExecResult {
-    code : number | null;
-    signal : NodeJS.Signals | null;
-    output : string;
-    durationMs : number;
+    code: number | null;
+    signal: NodeJS.Signals | null;
+    output: string;
+    durationMs: number;
 }
 
 const livePids = new Set<number>();
 
 // Emergency stop (e.g. second Ctrl-C): SIGKILL every live process group.
-export function killAllProcessGroups() : void {
+export function killAllProcessGroups(): void {
     for (const pid of livePids) {
         try {
             process.kill(-pid, 'SIGKILL');
@@ -22,7 +22,7 @@ export function killAllProcessGroups() : void {
 // The command script is fed to sh via stdin rather than -c: a single argv
 // entry is capped by the kernel (MAX_ARG_STRLEN, ~128KB) and the largest %f
 // expansion is already 80KB+.
-export function runShell(command : string, opts : {cwd : string, signal : AbortSignal}) : Promise<ExecResult> {
+export function runShell(command: string, opts: {cwd: string, signal: AbortSignal}): Promise<ExecResult> {
     return new Promise((resolve, reject) => {
         const start = performance.now();
         // detached: own process group, so an abort kills grandchildren
@@ -31,14 +31,14 @@ export function runShell(command : string, opts : {cwd : string, signal : AbortS
         if (child.pid !== undefined) {
             livePids.add(child.pid);
         }
-        const chunks : Buffer[] = [];
+        const chunks: Buffer[] = [];
         child.stdout.on('data', c => chunks.push(c));
         child.stderr.on('data', c => chunks.push(c));
         child.stdin.on('error', () => {});  // EPIPE if the shell exits early
         child.stdin.end(command + '\n');
 
-        let killTimer : NodeJS.Timeout | undefined;
-        const kill = (sig : NodeJS.Signals) => {
+        let killTimer: NodeJS.Timeout | undefined;
+        const kill = (sig: NodeJS.Signals) => {
             try {
                 process.kill(-child.pid!, sig);
             } catch {}

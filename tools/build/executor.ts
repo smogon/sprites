@@ -12,38 +12,38 @@ import {substitute} from './subst.ts';
 export type DirtyReason = 'new' | 'cas-missing';
 
 export type RuleOutcome =
-    | {status : 'clean'}                                        // key hit, CAS objects present
-    | {status : 'ran', reason : DirtyReason}
-    | {status : 'would-run', reason : DirtyReason | 'blocked'}  // dry run
-    | {status : 'failed', message : string}
-    | {status : 'blocked'};                                     // a producer failed
+    | {status: 'clean'}                                        // key hit, CAS objects present
+    | {status: 'ran', reason: DirtyReason}
+    | {status: 'would-run', reason: DirtyReason | 'blocked'}  // dry run
+    | {status: 'failed', message: string}
+    | {status: 'blocked'};                                     // a producer failed
 
 export interface BuildResult {
-    outcomes : Map<RuleDecl, RuleOutcome>;   // no entry = not attempted (aborted)
-    keys : Map<RuleDecl, string>;            // only decls whose key resolved
-    ok : boolean;                            // every decl clean or ran
+    outcomes: Map<RuleDecl, RuleOutcome>;   // no entry = not attempted (aborted)
+    keys: Map<RuleDecl, string>;            // only decls whose key resolved
+    ok: boolean;                            // every decl clean or ran
 }
 
 export interface ExecutorOpts {
-    root : string;                           // cwd for commands
-    store : Store;
-    casDir : string;                         // relative to root (substituted into commands)
-    tmpDir : string;
-    jobs : number;
-    dryRun : boolean;
-    failFast : boolean;
-    verbose? : boolean;                      // annotate run lines with the dirty reason
-    sourceHashes : Map<string, Buffer>;      // every source input/dep, pre-reconciled
-    signal : AbortSignal;
-    log? : (line : string) => void;
-    logError? : (line : string) => void;
+    root: string;                           // cwd for commands
+    store: Store;
+    casDir: string;                         // relative to root (substituted into commands)
+    tmpDir: string;
+    jobs: number;
+    dryRun: boolean;
+    failFast: boolean;
+    verbose?: boolean;                      // annotate run lines with the dirty reason
+    sourceHashes: Map<string, Buffer>;      // every source input/dep, pre-reconciled
+    signal: AbortSignal;
+    log?: (line: string) => void;
+    logError?: (line: string) => void;
 }
 
-export function label(decl : RuleDecl) : string {
+export function label(decl: RuleDecl): string {
     return decl.display ?? decl.cmds[0]!;
 }
 
-function indent(text : string) : string {
+function indent(text: string): string {
     return text.replace(/\n$/, '').split('\n').map(l => '    ' + l).join('\n');
 }
 
@@ -54,14 +54,14 @@ class DryDirty extends Error {}
 class Aborted extends Error {}
 
 class Semaphore {
-    private available : number;
-    private waiters : (() => void)[] = [];
+    private available: number;
+    private waiters: (() => void)[] = [];
 
-    constructor(n : number) {
+    constructor(n: number) {
         this.available = n;
     }
 
-    async acquire() : Promise<void> {
+    async acquire(): Promise<void> {
         if (this.available > 0) {
             this.available--;
             return;
@@ -69,7 +69,7 @@ class Semaphore {
         await new Promise<void>(resolve => this.waiters.push(resolve));
     }
 
-    release() : void {
+    release(): void {
         const waiter = this.waiters.shift();
         if (waiter !== undefined) {
             waiter();
@@ -85,20 +85,20 @@ class Semaphore {
 // The artifact graph is a DAG by construction (a rule can only reference
 // artifacts that already exist as values), so there is no cycle check.
 export class Executor {
-    private opts : ExecutorOpts;
+    private opts: ExecutorOpts;
     private memo = new Map<RuleDecl, Promise<string[]>>();
     private inflightByKey = new Map<string, Promise<string[]>>();
     private outcomes = new Map<RuleDecl, RuleOutcome>();
     private keys = new Map<RuleDecl, string>();
-    private semaphore : Semaphore;
+    private semaphore: Semaphore;
     private failAc = new AbortController();
-    private runSignal : AbortSignal;
+    private runSignal: AbortSignal;
     private counter = 0;
     private tmpSeq = 0;
-    private log : (line : string) => void;
-    private logError : (line : string) => void;
+    private log: (line: string) => void;
+    private logError: (line: string) => void;
 
-    constructor(opts : ExecutorOpts) {
+    constructor(opts: ExecutorOpts) {
         this.opts = opts;
         this.semaphore = new Semaphore(opts.jobs);
         this.runSignal = AbortSignal.any([opts.signal, this.failAc.signal]);
@@ -106,7 +106,7 @@ export class Executor {
         this.logError = opts.logError ?? console.error;
     }
 
-    async build(decls : readonly RuleDecl[]) : Promise<BuildResult> {
+    async build(decls: readonly RuleDecl[]): Promise<BuildResult> {
         await Promise.allSettled(decls.map(d => this.demand(d)));
         const ok = decls.every(d => {
             const status = this.outcomes.get(d)?.status;
@@ -115,7 +115,7 @@ export class Executor {
         return {outcomes: this.outcomes, keys: this.keys, ok};
     }
 
-    private demand(decl : RuleDecl) : Promise<string[]> {
+    private demand(decl: RuleDecl): Promise<string[]> {
         let p = this.memo.get(decl);
         if (p === undefined) {
             // Any non-sentinel escape (a store error, a resolve conflict, a
@@ -136,7 +136,7 @@ export class Executor {
         return p;
     }
 
-    private async digestOf(i : Input) : Promise<string> {
+    private async digestOf(i: Input): Promise<string> {
         if (typeof i !== 'string') {
             await this.demand(i.decl);
             return i.hash;
@@ -148,8 +148,8 @@ export class Executor {
         return hash.toString('hex');
     }
 
-    private async demandInner(decl : RuleDecl) : Promise<string[]> {
-        let digests : Map<Input, string>;
+    private async demandInner(decl: RuleDecl): Promise<string[]> {
+        let digests: Map<Input, string>;
         try {
             const inputs = [...decl.inputs, ...decl.deps];
             const resolved = await Promise.all(inputs.map(i => this.digestOf(i)));
@@ -191,7 +191,7 @@ export class Executor {
         return result;
     }
 
-    private async perform(decl : RuleDecl, key : string) : Promise<string[]> {
+    private async perform(decl: RuleDecl, key: string): Promise<string[]> {
         const {store, casDir} = this.opts;
         const stored = store.lookupRule(key);
         if (stored !== null
@@ -201,7 +201,7 @@ export class Executor {
             this.outcomes.set(decl, {status: 'clean'});
             return stored.map(o => o.digest);
         }
-        const reason : DirtyReason = stored === null ? 'new' : 'cas-missing';
+        const reason: DirtyReason = stored === null ? 'new' : 'cas-missing';
 
         if (this.opts.dryRun) {
             this.outcomes.set(decl, {status: 'would-run', reason});
@@ -220,7 +220,7 @@ export class Executor {
         }
     }
 
-    private async execute(decl : RuleDecl, key : string, reason : DirtyReason) : Promise<string[]> {
+    private async execute(decl: RuleDecl, key: string, reason: DirtyReason): Promise<string[]> {
         const {store, casDir, tmpDir, root} = this.opts;
         const ruleTmp = pathlib.join(tmpDir, String(this.tmpSeq++));
         fs.mkdirSync(ruleTmp, {recursive: true});
@@ -261,7 +261,7 @@ export class Executor {
 
     // Nothing is recorded for a failure: failed and never-ran are the same
     // state, so the rule stays dirty.
-    private fail(decl : RuleDecl, command : string, output : string, message : string) : never {
+    private fail(decl: RuleDecl, command: string, output: string, message: string): never {
         this.outcomes.set(decl, {status: 'failed', message});
         this.logError(`FAILED: ${label(decl)} (${message})`);
         this.logError(`    command: ${command}`);

@@ -3,12 +3,12 @@ import path from 'path';
 import fs from 'fs';
 import root from '@smogon/sprite-root/index.ts';
 
-const libdir = path.join(root, "data");
+const libdir = path.join(root, 'data');
 
 export type Id = string;
 
 export type SpecieEntry = {
-    type : 'specie',
+    type: 'specie',
     num: number,
     formeNum: number,
     base: string,
@@ -17,56 +17,56 @@ export type SpecieEntry = {
 };
 
 export type ItemEntry = {
-    type : 'item',
-    sid : string,
-    names : string[]
+    type: 'item',
+    sid: string,
+    names: string[]
 };
 
 export type Entry = SpecieEntry | ItemEntry;
 
-const objects : Record<Id, Entry> = {};
-Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, "species.json"), 'utf8')));
-Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, "items.json"), 'utf8')));
+const objects: Record<Id, Entry> = {};
+Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, 'species.json'), 'utf8')));
+Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, 'items.json'), 'utf8')));
 
 const map = new Map<Id, Entry>();
 for (const entry of Object.values(objects)) {
     map.set(entry.sid, entry);
 }
 
-export function get(id : Id) : Entry {
+export function get(id: Id): Entry {
     const entry = map.get(id);
     if (entry === undefined)
         throw new Error(`No id for ${id}`);
     return entry;
 }
 
-export function entries() : Entry[] {
+export function entries(): Entry[] {
     return Array.from(map.values());
 }
 
 
 // TODO Moved here from deploy/spritename.ts, better place to put these??
 export type SpriteFilename = ({
-    extension : true,
-    name : string
+    extension: true,
+    name: string
 } | {
-    extension : false,
-    id : Id
+    extension: false,
+    id: Id
 }) & {
-    extra : Map<string, string>
+    extra: Map<string, string>
 };
 
 export type InputSpriteFilename = ({
-    extension : true,
-    name : string
+    extension: true,
+    name: string
 } | {
-    extension? : false,
-    id : Id
+    extension?: false,
+    id: Id
 }) & {
-    extra? : Map<string, string>
+    extra?: Map<string, string>
 };
 
-export function parseFilename(s : string) : SpriteFilename {
+export function parseFilename(s: string): SpriteFilename {
     if (s.length < 2)
         throw new Error(`Filename ${s} needs to be at least 2 characters'`);
 
@@ -74,7 +74,7 @@ export function parseFilename(s : string) : SpriteFilename {
     if (!prefix.match(/[a-z]/))
         throw new Error(`Filename ${s} must start with alpha character`);
 
-    const parts = s.split("-");
+    const parts = s.split('-');
     const extra = new Map<string, string>();
     for (const part of parts.slice(1)) {
         if (part.length === 0)
@@ -91,8 +91,8 @@ export function parseFilename(s : string) : SpriteFilename {
     }
 }
 
-export function formatFilename(si : InputSpriteFilename) {
-    let s : string;
+export function formatFilename(si: InputSpriteFilename) {
+    let s: string;
     if (si.extension) {
         s = `x${si.name}`;
     } else {

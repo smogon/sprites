@@ -1,4 +1,4 @@
 
 import path from 'path';
 
-export default path.resolve(import.meta.dirname, "../../");
+export default path.resolve(import.meta.dirname, '../../');

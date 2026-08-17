@@ -13,15 +13,15 @@ const xyGen5 = gen5Gifs();
 deploy(ctx => {
     const seenModels = new Set<string>();
     const manifest = new Manifest(ctx);
-    const xycopy = (f : Sprite) => {
+    const xycopy = (f: Sprite) => {
         if (seenModels.has(f.name)) {
             return;
         }
         seenModels.add(f.name);
-        spritecopy(manifest, f, {dir: "xy"});
+        spritecopy(manifest, f, {dir: 'xy'});
     };
 
-    for (const f of ctx.list("src/models")) {
+    for (const f of ctx.list('src/models')) {
         xycopy(f);
     }
     for (const f of xyModels) {
@@ -31,7 +31,7 @@ deploy(ctx => {
         xycopy(f);
     }
     // Non-model CAPs
-    for (const f of ctx.list("src/sprites/gen5")) {
+    for (const f of ctx.list('src/sprites/gen5')) {
         if (f.ext === 'gif') {
             xycopy(f);
         }
@@ -39,7 +39,7 @@ deploy(ctx => {
     for (const f of xyGen5) {
         xycopy(f);
     }
-    manifest.write("xy/manifest.json");
+    manifest.write('xy/manifest.json');
 });
 
 // xyicons/: trimmed gen6 minisprites.
@@ -49,9 +49,9 @@ const xyIcons = gen6Trimmed();
 deploy(ctx => {
     const manifest = new Manifest(ctx);
     for (const f of xyIcons) {
-        spritecopy(manifest, f, {dir: "xyicons"});
+        spritecopy(manifest, f, {dir: 'xyicons'});
     }
-    manifest.write("xyicons/manifest.json");
+    manifest.write('xyicons/manifest.json');
 });
 
 // Deprecated, unstamped sets:

@@ -10,30 +10,30 @@ if (!sheetjs || !dest) {
 }
 
 // Must have file:/// for Windows
-const {default: sheet} = await import(path.join("file:///", process.cwd(), sheetjs));
+const {default: sheet} = await import(path.join('file:///', process.cwd(), sheetjs));
 
 for (let i = 0; i < sheet.entries.length; i++) {
     if (sheet.entries[i] === undefined)
         throw new Error(`gap: ${i}`);
     if (sheet.entries[i] === null) {
         // ImageMagick blank entry
-        sheet.entries[i] = "xc:transparent";
+        sheet.entries[i] = 'xc:transparent';
     }
 }
 
 // Write list of filenames to stdin, Windows can't handle large cli arg lists.
 // Before we wrote a tmp file and deleted it afterwards, but apparently tup
 // can't track unlinkSync on Windows?
-const proc = cp.spawn("magick", [
-    "montage",
-    "@-",
+const proc = cp.spawn('magick', [
+    'montage',
+    '@-',
     // Keep sheet bytes deterministic for the content-addressed build.
-    "-define", "png:exclude-chunks=date,time",
-    "-background", "transparent",
-    "-geometry", `${sheet.width}x${sheet.height}>`,
-    "-gravity", "center",
-    "-tile", `${sheet.tile}x`,
-    "-depth", "8",
+    '-define', 'png:exclude-chunks=date,time',
+    '-background', 'transparent',
+    '-geometry', `${sheet.width}x${sheet.height}>`,
+    '-gravity', 'center',
+    '-tile', `${sheet.tile}x`,
+    '-depth', '8',
     dest
 ], {
     stdio: ['pipe', 'inherit', 'inherit']

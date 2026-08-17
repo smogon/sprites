@@ -12,19 +12,19 @@ import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 // hence nameSensitive.
 
 const sheetDeps = [
-    "data/species.json",
-    "data/items.json",
-    "data/lib/index.ts",
-    "lib/root/index.ts",
-    "tools/sheet/index.ts",
+    'data/species.json',
+    'data/items.json',
+    'data/lib/index.ts',
+    'lib/root/index.ts',
+    'tools/sheet/index.ts',
 ];
 
-rule("ps-pokemon.sheet.mjs", {
-    display: "ps pokemon sheet",
+rule('ps-pokemon.sheet.mjs', {
+    display: 'ps pokemon sheet',
     nameSensitive: true,
-    deps: ["src/minisprites/pokemon/gen6/*", ...sheetDeps],
-    cmds: ["node tools/sheet/index.ts %f %o", compresspng({config: "SPRITESHEET"})],
-}, "pokemonicons-sheet.png");
+    deps: ['src/minisprites/pokemon/gen6/*', ...sheetDeps],
+    cmds: ['node tools/sheet/index.ts %f %o', compresspng({config: 'SPRITESHEET'})],
+}, 'pokemonicons-sheet.png');
 
 // TODO: reenable when trainers are moved
 // rule("ps-trainers.sheet.mjs", {
@@ -33,37 +33,37 @@ rule("ps-pokemon.sheet.mjs", {
 //     cmds: ["node tools/sheet/index.ts %f %o", compresspng({config: "SPRITESHEET"})],
 // }, "trainers-sheet.png");
 
-rule("ps-items.sheet.mjs", {
-    display: "ps items sheet",
+rule('ps-items.sheet.mjs', {
+    display: 'ps items sheet',
     nameSensitive: true,
-    deps: ["src/minisprites/items/*", ...sheetDeps],
-    cmds: ["node tools/sheet/index.ts %f %o", compresspng({config: "SPRITESHEET"})],
-}, "itemicons-sheet.png");
+    deps: ['src/minisprites/items/*', ...sheetDeps],
+    cmds: ['node tools/sheet/index.ts %f %o', compresspng({config: 'SPRITESHEET'})],
+}, 'itemicons-sheet.png');
 
 // PS pokeball icons; input order is the sheet order.
 
 rule([
-    "src/_uncategorized/noncanonical/ui/battle/Ball-Normal.png",
-    "src/_uncategorized/noncanonical/ui/battle/Ball-Sick.png",
-    "src/_uncategorized/noncanonical/ui/battle/Ball-Null.png",
+    'src/_uncategorized/noncanonical/ui/battle/Ball-Normal.png',
+    'src/_uncategorized/noncanonical/ui/battle/Ball-Sick.png',
+    'src/_uncategorized/noncanonical/ui/battle/Ball-Null.png',
 ], {
-    display: "pokemonicons-pokeball-sheet",
+    display: 'pokemonicons-pokeball-sheet',
     cmds: [
         `magick convert ${PNG_DETERMINISTIC} -background transparent -gravity center -extent 40x30 %f +append %o`,
-        compresspng({config: "SPRITESHEET"}),
+        compresspng({config: 'SPRITESHEET'}),
     ],
-}, "pokemonicons-pokeball-sheet.png");
+}, 'pokemonicons-pokeball-sheet.png');
 
 // Padded Dex, plus missing CAPs backfilled from the gen5/model gifs.
 
-const dex = forEachRule("src/dex/*", {
-    display: "pad dex %f",
-    cmds: [pad({w: 120, h: 120}), compresspng({config: "DEX"})],
-}, "%b");
+const dex = forEachRule('src/dex/*', {
+    display: 'pad dex %f',
+    cmds: [pad({w: 120, h: 120}), compresspng({config: 'DEX'})],
+}, '%b');
 
 const dexSet = new Set(dex.map(base));
 const dexMissing = [];
-for (const file of spriteglob(["src/sprites/gen5/*.gif", "src/models/*.gif"], {b: false, s: false})) {
+for (const file of spriteglob(['src/sprites/gen5/*.gif', 'src/models/*.gif'], {b: false, s: false})) {
     if (!dexSet.has(base(file))) {
         dexMissing.push(file);
         dexSet.add(base(file));
@@ -71,13 +71,13 @@ for (const file of spriteglob(["src/sprites/gen5/*.gif", "src/models/*.gif"], {b
 }
 
 forEachRule(dexMissing, {
-    display: "missing dex %B",
+    display: 'missing dex %B',
     cmds: [
         `magick convert "%f[0]" ${PNG_DETERMINISTIC} -trim %o`,
         `magick mogrify ${PNG_DETERMINISTIC} -background transparent -gravity center -resize "120x120>" -extent 120x120 %o`,
-        compresspng({config: "DEX"}),
+        compresspng({config: 'DEX'}),
     ],
-}, "%B.png");
+}, '%B.png');
 
 // ani/: the models plus champions backfill, under PS ids.
 
@@ -86,9 +86,9 @@ const aniChampions = gen10Modelslike();
 deploy(ctx => {
     const seenModels = new Set<string>();
 
-    for (const f of ctx.list("src/models")) {
+    for (const f of ctx.list('src/models')) {
         seenModels.add(f.name);
-        psSpritecopy(ctx, f, "ani");
+        psSpritecopy(ctx, f, 'ani');
     }
 
     for (const f of aniChampions) {
@@ -96,7 +96,7 @@ deploy(ctx => {
             continue;
         }
         seenModels.add(f.name);
-        psSpritecopy(ctx, f, "ani");
+        psSpritecopy(ctx, f, 'ani');
     }
 
     // TODO: ship the padded dex, sheets, trainers, types/categories when
@@ -104,12 +104,12 @@ deploy(ctx => {
 });
 
 // PS ids keep the forme dash, unlike the smogon aliases.
-function psSpritecopy(ctx : DeployCtx, f : Sprite, dir : string) : void {
+function psSpritecopy(ctx: DeployCtx, f: Sprite, dir: string): void {
     const sn = spritedata.parseFilename(f.name);
-    let name : string;
+    let name: string;
 
     // Skip asymmetrical for now
-    if (sn.extra.has("a") || sn.extra.has("b") || sn.extra.has("s")) {
+    if (sn.extra.has('a') || sn.extra.has('b') || sn.extra.has('s')) {
         return;
     }
 
@@ -125,11 +125,11 @@ function psSpritecopy(ctx : DeployCtx, f : Sprite, dir : string) : void {
     if (sd.forme) {
         name += `-${toPSID(sd.forme)}`;
     }
-    if (sn.extra.has("f")) {
-        name += "-f";
+    if (sn.extra.has('f')) {
+        name += '-f';
     }
-    if (sn.extra.has("g")) {
-        name += "-gmax";
+    if (sn.extra.has('g')) {
+        name += '-gmax';
     }
 
     if (f.ext === null) {

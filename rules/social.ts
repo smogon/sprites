@@ -5,10 +5,10 @@ import {PNG_DETERMINISTIC, base, compresspng, spriteglob} from '../tools/build/h
 // Smogdex social images: models, backfilled with gen9 species not yet in
 // models (first source wins).
 
-function socialInputs() : string[] {
-    const social = spriteglob(["src/models/*"], {b: false, s: false});
+function socialInputs(): string[] {
+    const social = spriteglob(['src/models/*'], {b: false, s: false});
     const socialSeen = new Set(social.map(base));
-    for (const file of spriteglob(["src/gen9species/*"], {b: false, s: false})) {
+    for (const file of spriteglob(['src/gen9species/*'], {b: false, s: false})) {
         if (!socialSeen.has(base(file))) {
             social.push(file);
             socialSeen.add(base(file));
@@ -17,22 +17,22 @@ function socialInputs() : string[] {
     return social;
 }
 
-export function fbSprites() : Artifact[] {
+export function fbSprites(): Artifact[] {
     return forEachRule(socialInputs(), {
-        display: "fbsprite %f",
+        display: 'fbsprite %f',
         cmds: [
             `magick convert "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 150x150 -background white -gravity center -extent 198x198 -bordercolor black -border 1 %o`,
-            compresspng({config: "MODELS"}),
+            compresspng({config: 'MODELS'}),
         ],
-    }, "%B.png");
+    }, '%B.png');
 }
 
-export function twitterSprites() : Artifact[] {
+export function twitterSprites(): Artifact[] {
     return forEachRule(socialInputs(), {
-        display: "twittersprite %f",
+        display: 'twittersprite %f',
         cmds: [
             `magick convert "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 115x115 -background white -gravity center -extent 120x120 %o`,
-            compresspng({config: "MODELS"}),
+            compresspng({config: 'MODELS'}),
         ],
-    }, "%B.png");
+    }, '%B.png');
 }

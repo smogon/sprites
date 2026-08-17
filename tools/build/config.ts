@@ -1,7 +1,7 @@
 
 import fs from 'fs';
 
-export function parseConfig(text : string) : Map<string, string> {
+export function parseConfig(text: string): Map<string, string> {
     const result = new Map<string, string>();
     for (let line of text.split('\n')) {
         line = line.trim();
@@ -17,7 +17,7 @@ export function parseConfig(text : string) : Map<string, string> {
     return result;
 }
 
-export function loadConfig(path : string) : Map<string, string> {
+export function loadConfig(path: string): Map<string, string> {
     if (!fs.existsSync(path)) {
         return new Map();
     }

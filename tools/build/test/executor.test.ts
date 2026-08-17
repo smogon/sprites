@@ -14,14 +14,14 @@ import {Store} from '../store.ts';
 beforeEach(resetDecls);
 
 interface Env {
-    root : string;
-    dbPath : string;
-    casDir : string;
-    tmpDir : string;
-    execLog : string;
+    root: string;
+    dbPath: string;
+    casDir: string;
+    tmpDir: string;
+    execLog: string;
 }
 
-function setup() : Env {
+function setup(): Env {
     const root = fs.mkdtempSync(pathlib.join(os.tmpdir(), 'executor-test-'));
     fs.mkdirSync(pathlib.join(root, 'src'));
     return {
@@ -33,19 +33,19 @@ function setup() : Env {
     };
 }
 
-function src(env : Env, name : string, content : string) : string {
+function src(env: Env, name: string, content: string): string {
     const p = pathlib.join(env.root, 'src', name);
     fs.writeFileSync(p, content);
     return p;
 }
 
 // A copy rule that also counts its executions in env.execLog.
-function copyRule(env : Env, input : string | Artifact, out : string,
-                  extra : Partial<CmdSpec> = {}) : Artifact {
+function copyRule(env: Env, input: string | Artifact, out: string,
+                  extra: Partial<CmdSpec> = {}): Artifact {
     return rule(input, {cmds: [`cat %f > %o && echo x >> ${env.execLog}`], ...extra}, out);
 }
 
-function execCount(env : Env) : number {
+function execCount(env: Env): number {
     try {
         return fs.readFileSync(env.execLog, 'utf8').split('\n').filter(l => l !== '').length;
     } catch {
@@ -53,8 +53,8 @@ function execCount(env : Env) : number {
     }
 }
 
-async function runBuild(env : Env, opts : {dryRun? : boolean, gc? : boolean} = {},
-                        decls = getDecls()) : Promise<DriveResult> {
+async function runBuild(env: Env, opts: {dryRun?: boolean, gc?: boolean} = {},
+                        decls = getDecls()): Promise<DriveResult> {
     const store = new Store(env.dbPath);
     try {
         return await build(decls, {
@@ -76,7 +76,7 @@ async function runBuild(env : Env, opts : {dryRun? : boolean, gc? : boolean} = {
     }
 }
 
-function statuses(result : DriveResult) : RuleOutcome['status'][] {
+function statuses(result: DriveResult): RuleOutcome['status'][] {
     return getDecls().map(d => result.outcomes.get(d)!.status);
 }
 
@@ -147,7 +147,7 @@ test('byte-identical inputs share one execution across two declarations', async 
 
 // The consumer must be a *different* computation: an identical command over
 // identical bytes would share the producer's key (by design).
-function upcaseRule(env : Env, input : Artifact, out : string) : Artifact {
+function upcaseRule(env: Env, input: Artifact, out: string): Artifact {
     return rule(input, [`tr a-z A-Z < %f > %o && echo x >> ${env.execLog}`], out);
 }
 
@@ -213,7 +213,7 @@ test('a missing declared output fails the rule', async () => {
     assert.ok(!result.ok);
     const outcome = result.outcomes.get(getDecls()[0]!)!;
     assert.equal(outcome.status, 'failed');
-    assert.match((outcome as {message : string}).message, /did not produce: missing.css/);
+    assert.match((outcome as {message: string}).message, /did not produce: missing.css/);
     const store = new Store(env.dbPath);
     assert.equal(store.liveObjects().size, 0);
     store.close();

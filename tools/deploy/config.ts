@@ -7,32 +7,32 @@ import JSON5 from 'json5';
 import {BuildError} from '../build/errors.ts';
 
 export interface DeployEntry {
-    subset : string[];
-    cmd : string;
+    subset: string[];
+    cmd: string;
     // dir entries get their subset materialized into a temp directory whose
     // path replaces %d in cmd; tar entries get the subset tarred on stdin.
-    dir? : boolean;
+    dir?: boolean;
 }
 
 export interface DeployTarget {
-    buildFile : string;
-    deploy : DeployEntry[];
+    buildFile: string;
+    deploy: DeployEntry[];
 }
 
 export type DeployConfig = Map<string, DeployTarget>;
 
-function isStringArray(v : unknown) : v is string[] {
+function isStringArray(v: unknown): v is string[] {
     return Array.isArray(v) && v.every(x => typeof x === 'string');
 }
 
-export function loadDeployConfig(path : string) : DeployConfig {
-    let text : string;
+export function loadDeployConfig(path: string): DeployConfig {
+    let text: string;
     try {
         text = fs.readFileSync(path, 'utf8');
     } catch {
         throw new BuildError(`missing ${path}; see README ("Deploying") for the schema`);
     }
-    let raw : unknown;
+    let raw: unknown;
     try {
         raw = JSON5.parse(text);
     } catch (err) {
@@ -42,7 +42,7 @@ export function loadDeployConfig(path : string) : DeployConfig {
         throw new BuildError(`${path}: top level must be an object of deploy names`);
     }
 
-    const config : DeployConfig = new Map();
+    const config: DeployConfig = new Map();
     for (const [name, t] of Object.entries(raw)) {
         const target = t as Partial<DeployTarget>;
         if (typeof t !== 'object' || t === null || typeof target.buildFile !== 'string'
@@ -70,8 +70,8 @@ export function loadDeployConfig(path : string) : DeployConfig {
 // Route finish outputs to deploy entries: per entry, the set of dsts its
 // subset globs match. Every glob must match something and every dst must be
 // covered by some entry; to unship an output, don't emit it in finish.
-export function matchSubsets(dsts : readonly string[],
-                             entries : readonly DeployEntry[]) : Set<string>[] {
+export function matchSubsets(dsts: readonly string[],
+                             entries: readonly DeployEntry[]): Set<string>[] {
     const covered = new Set<string>();
     const perEntry = entries.map(entry => {
         const matched = new Set<string>();

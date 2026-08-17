@@ -16,16 +16,16 @@ import {ActionQueue} from '../queue.ts';
 
 beforeEach(resetDecls);
 
-function tmpdir() : string {
+function tmpdir(): string {
     return fs.mkdtempSync(pathlib.join(os.tmpdir(), 'deploy-api-test-'));
 }
 
-function shortHash(data : Buffer | string) : string {
+function shortHash(data: Buffer | string): string {
     return b32encode(createHash('sha256').update(data).digest(), 'RFC4648').slice(0, 8);
 }
 
 // Stage `content` as a built artifact in a scratch CAS.
-function makeArtifact(casDir : string, content : string, ext : string) {
+function makeArtifact(casDir: string, content: string, ext: string) {
     const digest = createHash('sha256').update(content).digest('hex');
     const artifact = rule('in.png', ['t %f %o'], `art.${ext}`);
     artifact.resolve(digest);
@@ -70,7 +70,7 @@ test('ctx queues artifact copies from the CAS, writes and reads', () => {
     assert.equal(ctx.read(artifact), 'bytes');
     const ops = aq.log.filter(e => e.type === 'Op');
     assert.deepEqual(ops.map(e => e.dst), ['m.json', 'sprites/x.webp']);
-    assert.equal((ops[1] as {op : {src : string}}).op.src, casPath(casDir, artifact.hash, 'webp'));
+    assert.equal((ops[1] as {op: {src: string}}).op.src, casPath(casDir, artifact.hash, 'webp'));
 });
 
 test('ctx.list sorts, parses extensions, skips dotfiles and directories', () => {
@@ -88,13 +88,13 @@ test('ctx.list sorts, parses extensions, skips dotfiles and directories', () => 
     ]);
 });
 
-function packedEntries(aq : ActionQueue, filter? : (dst : string) => boolean)
-    : Promise<{name : string, data : string}[]> {
+function packedEntries(aq: ActionQueue, filter?: (dst: string) => boolean)
+    : Promise<{name: string, data: string}[]> {
     return new Promise((resolve, reject) => {
         const extract = tar.extract();
-        const entries : {name : string, data : string}[] = [];
+        const entries: {name: string, data: string}[] = [];
         extract.on('entry', (header, stream, next) => {
-            const chunks : Buffer[] = [];
+            const chunks: Buffer[] = [];
             stream.on('data', c => chunks.push(c));
             stream.on('end', () => {
                 entries.push({name: header.name, data: Buffer.concat(chunks).toString()});

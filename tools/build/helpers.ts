@@ -7,16 +7,16 @@ import {type Cmd, basenameNoExt} from './subst.ts';
 
 let config = new Map<string, string>();
 
-export function setConfig(cfg : Map<string, string>) : void {
+export function setConfig(cfg: Map<string, string>): void {
     config = cfg;
 }
 
-export function getconfig(name : string) : string | undefined {
+export function getconfig(name: string): string | undefined {
     const value = config.get(name);
     return value === '' ? undefined : value;
 }
 
-export function astable(x : string | readonly string[] | undefined) : string[] {
+export function astable(x: string | readonly string[] | undefined): string[] {
     if (x === undefined) {
         return [];
     }
@@ -27,7 +27,7 @@ export function astable(x : string | readonly string[] | undefined) : string[] {
 // Non-glob strings pass through literally; existence is checked at hash time.
 // Results are sorted within a pattern; declared order is preserved across
 // patterns (some rules, e.g. the pokeball sheet, are input-order-sensitive).
-function globOne(pat : string) : string[] {
+function globOne(pat: string): string[] {
     if (!pat.includes('*')) {
         return [pat];
     }
@@ -55,26 +55,26 @@ function globOne(pat : string) : string[] {
     return results;
 }
 
-export function glob(pats : string | string[]) : string[] {
+export function glob(pats: string | string[]): string[] {
     return astable(pats).flatMap(globOne);
 }
 
 // tup.base: basename without directory or final extension. For an artifact,
 // its nominal name.
-export function base(x : string | Artifact) : string {
+export function base(x: string | Artifact): string {
     return typeof x === 'string' ? basenameNoExt(x) : x.name;
 }
 
 export interface SpriteData {
-    id : string;
-    data : Record<string, string | true>;
+    id: string;
+    data: Record<string, string | true>;
 }
 
 // Port of util/sprites.lua spritedata. Lua used gmatch("[^-]+"), which skips
 // empty segments, hence the filter.
-export function spritedata(basename : string) : SpriteData {
+export function spritedata(basename: string): SpriteData {
     const parts = basename.split('-').filter(p => p !== '');
-    const data : Record<string, string | true> = {};
+    const data: Record<string, string | true> = {};
     for (const part of parts.slice(1)) {
         if (part.length === 1) {
             data[part] = true;
@@ -85,7 +85,7 @@ export function spritedata(basename : string) : SpriteData {
     return {id: parts[0] ?? '', data};
 }
 
-export function spriteglob(pats : string | string[], flagspec? : Record<string, unknown>) : string[] {
+export function spriteglob(pats: string | string[], flagspec?: Record<string, unknown>): string[] {
     return glob(pats).filter(filename => {
         const sd = spritedata(base(filename));
         for (const [k, v] of Object.entries(flagspec ?? {})) {
@@ -101,31 +101,31 @@ export function spriteglob(pats : string | string[], flagspec? : Record<string, 
 // churn every content-addressed name on a rebuild.
 export const PNG_DETERMINISTIC = '-define png:exclude-chunks=date,time';
 
-export function pad(opts : {w : number, h : number, input? : string, output? : string}) : string {
+export function pad(opts: {w: number, h: number, input?: string, output?: string}): string {
     const input = opts.input ?? '%f';
     const output = opts.output ?? '%o';
     return `magick convert ${input} ${PNG_DETERMINISTIC} -background transparent -gravity center -extent ${opts.w}x${opts.h} ${output}`;
 }
 
-export function trimimg(opts : {input? : string, output? : string} = {}) : string {
+export function trimimg(opts: {input?: string, output?: string} = {}): string {
     return `magick convert ${opts.input ?? '%f'} ${PNG_DETERMINISTIC} -trim ${opts.output ?? '%o'}`;
 }
 
 interface CompressOpts {
-    pngquant? : string;
-    optipng? : string;
-    advpng? : string;
+    pngquant?: string;
+    optipng?: string;
+    advpng?: string;
 }
 
-function compressopts(program : string, copts : CompressOpts) : void {
+function compressopts(program: string, copts: CompressOpts): void {
     copts.pngquant = getconfig(`${program}_PNGQUANT`) ?? copts.pngquant;
     copts.optipng = getconfig(`${program}_OPTIPNG`) ?? copts.optipng;
     copts.advpng = getconfig(`${program}_ADVPNG`) ?? copts.advpng;
 }
 
-export function compresspng(opts : {config? : string, output? : string} = {}) : Cmd[] {
+export function compresspng(opts: {config?: string, output?: string} = {}): Cmd[] {
     const output = opts.output ?? '%o';
-    const copts : CompressOpts = {};
+    const copts: CompressOpts = {};
     compressopts('DEFAULT', copts);
     if (opts.config) {
         compressopts(opts.config, copts);

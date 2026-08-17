@@ -8,11 +8,11 @@ import {test} from 'node:test';
 
 import {casExists, casInsert, casPath, casStat, casSweep} from '../cas.ts';
 
-function makeTmpRoot() : string {
+function makeTmpRoot(): string {
     return fs.mkdtempSync(pathlib.join(os.tmpdir(), 'cas-test-'));
 }
 
-function stage(root : string, data : string) : string {
+function stage(root: string, data: string): string {
     const p = pathlib.join(root, `stage-${Math.random().toString(36).slice(2)}`);
     fs.writeFileSync(p, data);
     return p;

@@ -27,8 +27,8 @@ const removeRe = /[^a-z0-9-]/g
 
 export function toAlias(s: string) {
     s = s.toLowerCase()
-    s = s.replace(spaceRe, "-")
-    s = s.replace(removeRe, "")
+    s = s.replace(spaceRe, '-')
+    s = s.replace(removeRe, '')
     return s
 }
 
@@ -42,11 +42,11 @@ for (let [filename, sprite] of Object.entries(result.coordinates)) {
     let data = spritedata.get(parsed.id);
     if (data.type === 'specie') {
         // TODO would like to use toPSID here, mess with it later.
-        let name = toAlias(data.base + (data.forme ? "-" + data.forme : ""));
-        if (parsed.extra.has("g")) {
-            name += "-gmax";
-        } else if (parsed.extra.has("f")) {
-            name += "-f";
+        let name = toAlias(data.base + (data.forme ? '-' + data.forme : ''));
+        if (parsed.extra.has('g')) {
+            name += '-gmax';
+        } else if (parsed.extra.has('f')) {
+            name += '-f';
         }
         sprites.set(name, sprite);
     } else {
@@ -56,7 +56,7 @@ for (let [filename, sprite] of Object.entries(result.coordinates)) {
     }
 }
 
-let stylesheet = "";
+let stylesheet = '';
 for (let [id, sprite] of sprites) {
     // webp reference depends on optimization in Tupfile, fix it later, just need to ship
     stylesheet += `.sprite-${id} {

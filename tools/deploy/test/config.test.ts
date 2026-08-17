@@ -7,7 +7,7 @@ import {test} from 'node:test';
 
 import {loadDeployConfig, matchSubsets} from '../config.ts';
 
-function configFile(text : string) : string {
+function configFile(text: string): string {
     const dir = fs.mkdtempSync(pathlib.join(os.tmpdir(), 'deploy-config-test-'));
     const p = pathlib.join(dir, 'deploy.json5');
     fs.writeFileSync(p, text);
