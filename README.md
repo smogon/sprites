@@ -62,8 +62,8 @@ reuses the build's digests. All state lives in `.build/`.
 
 ```
 $ pnpm build                                     # build every deploy's rules, GC stale state
-$ pnpm deploy                                    # every deploy in deploy.json5
-$ node tools/deploy/index.ts deploy assets       # one named deploy
+$ pnpm deploy                                    # list the deploys in deploy.json5
+$ pnpm deploy assets                             # run a named deploy
 $ node tools/deploy/index.ts build ps.build.ts   # build one deploy's rules
 $ node tools/deploy/index.ts run smogon.build.ts -o deploy/smogon
 $ node tools/deploy/index.ts inspect src/minisprites/items/i1.png -o /tmp/out

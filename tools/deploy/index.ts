@@ -175,20 +175,29 @@ common(program.command('build [files...]'))
     });
 
 common(program.command('deploy [names...]'))
-    .description('build, finish, and pipe each subset tar to its command from deploy.json5')
+    .description('build, finish, and pipe each subset tar to its command from deploy.json5'
+        + ' (no names: list the available deploys)')
     .action(async (names : string[], opts : CommonOpts) => {
         const config = loadDeployConfig('deploy.json5');
-        const targets = names.length > 0 ? names : [...config.keys()];
-        for (const name of targets) {
+        if (names.length === 0) {
+            for (const [name, target] of config) {
+                console.log(`${name} (${target.buildFile})`);
+                for (const entry of target.deploy) {
+                    console.log(`    ${entry.subset.join(' ')} | ${entry.cmd}`);
+                }
+            }
+            return;
+        }
+        for (const name of names) {
             if (!config.has(name)) {
                 throw new BuildError(`deploy.json5: no deploy named ${name}`);
             }
         }
         setConfig(loadConfig(opts.config));
-        const files = [...new Set(targets.map(n => config.get(n)!.buildFile))];
+        const files = [...new Set(names.map(n => config.get(n)!.buildFile))];
         const specs = await importDeploys(files);
         process.exitCode = await buildThen(getDecls(), opts, false, async () => {
-            for (const name of targets) {
+            for (const name of names) {
                 const target = config.get(name)!;
                 const aq = await runFinish(finishOf(specs, target.buildFile), Boolean(opts.verbose));
                 if (aq === null) {
