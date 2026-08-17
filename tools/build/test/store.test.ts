@@ -16,17 +16,17 @@ function makeDbPath() : string {
 test('recordRule/lookupRule roundtrip, upsert replaces outputs', () => {
     const store = new Store(makeDbPath());
     assert.equal(store.lookupRule('k1'), null);
-    store.recordRule('k1', ['cmd a'], [{digest: 'd1', ext: 'png'}, {digest: 'd2', ext: 'css'}]);
-    assert.deepEqual(store.lookupRule('k1'), [{digest: 'd1', ext: 'png'}, {digest: 'd2', ext: 'css'}]);
-    store.recordRule('k1', ['cmd a'], [{digest: 'd3', ext: 'png'}, {digest: 'd4', ext: 'css'}]);
-    assert.deepEqual(store.lookupRule('k1'), [{digest: 'd3', ext: 'png'}, {digest: 'd4', ext: 'css'}]);
+    store.recordRule('k1', ['cmd a'], [{digest: 'd1', ext: 'png', size: 1n}, {digest: 'd2', ext: 'css', size: 2n}]);
+    assert.deepEqual(store.lookupRule('k1'), [{digest: 'd1', ext: 'png', size: 1n}, {digest: 'd2', ext: 'css', size: 2n}]);
+    store.recordRule('k1', ['cmd a'], [{digest: 'd3', ext: 'png', size: 3n}, {digest: 'd4', ext: 'css', size: 4n}]);
+    assert.deepEqual(store.lookupRule('k1'), [{digest: 'd3', ext: 'png', size: 3n}, {digest: 'd4', ext: 'css', size: 4n}]);
     store.close();
 });
 
 test('deleteKeysNotIn cascades outputs; liveObjects reflects survivors', () => {
     const store = new Store(makeDbPath());
-    store.recordRule('keep', ['c'], [{digest: 'da', ext: 'png'}]);
-    store.recordRule('drop', ['c'], [{digest: 'db', ext: 'gif'}]);
+    store.recordRule('keep', ['c'], [{digest: 'da', ext: 'png', size: 1n}]);
+    store.recordRule('drop', ['c'], [{digest: 'db', ext: 'gif', size: 1n}]);
     assert.deepEqual(store.liveObjects(), new Set(['da.png', 'db.gif']));
     assert.equal(store.deleteKeysNotIn(new Set(['keep'])), 1);
     assert.equal(store.lookupRule('drop'), null);
@@ -77,8 +77,8 @@ test('migrates a v1 db: drops rule tables, keeps file_cache', () => {
     const store = new Store(dbPath);
     assert.deepEqual([...store.loadFileCache().keys()], ['src/a.png']);
     assert.equal(store.lookupRule('old'), null);
-    store.recordRule('new', ['c'], [{digest: 'd', ext: 'png'}]);
-    assert.deepEqual(store.lookupRule('new'), [{digest: 'd', ext: 'png'}]);
+    store.recordRule('new', ['c'], [{digest: 'd', ext: 'png', size: 1n}]);
+    assert.deepEqual(store.lookupRule('new'), [{digest: 'd', ext: 'png', size: 1n}]);
     store.close();
 
     const check = new Database(dbPath);

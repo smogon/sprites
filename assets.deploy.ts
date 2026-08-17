@@ -1,6 +1,6 @@
 
 import {gen6Padded, itemPadded} from './rules/minisprites.ts';
-import {itemspritecopy, type Manifest, newspritecopy, spritecopy, writeManifest} from './rules/publish.ts';
+import {Manifest, itemspritecopy, newspritecopy, spritecopy} from './rules/publish.ts';
 import {forEachRule, rule} from './tools/build/artifact.ts';
 import {spriteglob} from './tools/build/helpers.ts';
 import {defineDeploy} from './tools/deploy/api.ts';
@@ -30,7 +30,7 @@ const [sheetPng, sheetCss] = rule(minispriteInputs, {
     cmds: ["node tools/smogdexspritesheet/index.ts --image %o1 --stylesheet %o2 -- %f"],
 }, ["spritesheet.png", "spritesheet.css"]);
 
-const [sheetWebp] = rule(sheetPng!, ["cwebp -z 9 %f -o %o"], ["spritesheet.webp"]);
+const sheetWebp = rule(sheetPng, ["cwebp -z 9 %f -o %o"], "spritesheet.webp");
 
 // Forumsprites sources. Rules must be declared at import time (the build
 // runs before finish), so these calls cannot live inside finish().
@@ -47,9 +47,9 @@ export default defineDeploy({
         // Dex spritesheet assets: hash-stamped css + webp. The css suffix
         // pointer rides in __meta/ for the dex to read.
         {
-            const wh = ctx.hash(sheetWebp!);
-            ctx.copy(sheetWebp!, `spritesheet-${wh}.webp`);
-            const src = ctx.read(sheetCss!);
+            const wh = ctx.hash(sheetWebp);
+            ctx.copy(sheetWebp, `spritesheet-${wh}.webp`);
+            const src = ctx.read(sheetCss);
             const css = src.replaceAll('url("./spritesheet.webp")', `url("./spritesheet-${wh}.webp")`);
             if (css === src) {
                 throw new Error("spritesheet.css: no webp urls rewritten");
@@ -57,7 +57,7 @@ export default defineDeploy({
             // Suffix from source content: the rewritten css is a pure function
             // of (css, webp), so this changes exactly when the served bytes
             // change.
-            const ch = ctx.hash(sheetCss!, sheetWebp!);
+            const ch = ctx.hash(sheetCss, sheetWebp);
             ctx.write(`spritesheet-${ch}.css`, css);
             ctx.write("__meta/spritesheet_css_suffix.txt", `-${ch}\n`);
         }
@@ -71,22 +71,22 @@ export default defineDeploy({
         }
 
         {
-            const manifest : Manifest = {};
+            const manifest = new Manifest(ctx);
             for (const f of forumItems) {
-                itemspritecopy(ctx, f, {dir: "forumsprites"}, manifest);
+                itemspritecopy(manifest, f, {dir: "forumsprites"});
             }
             for (const f of forumG6) {
-                spritecopy(ctx, f, {dir: "forumsprites"}, true, manifest);
+                spritecopy(manifest, f, {dir: "forumsprites"}, true);
             }
-            writeManifest(ctx, "__meta/forumsprites/manifest.json", manifest);
+            manifest.write("__meta/forumsprites/manifest.json");
         }
 
         {
-            const manifest : Manifest = {};
+            const manifest = new Manifest(ctx);
             for (const f of ctx.list("src/pmd")) {
-                spritecopy(ctx, f, {dir: "pmd"}, false, manifest);
+                spritecopy(manifest, f, {dir: "pmd"});
             }
-            writeManifest(ctx, "__meta/pmd/manifest.json", manifest);
+            manifest.write("__meta/pmd/manifest.json");
         }
     },
 });

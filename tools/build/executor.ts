@@ -3,7 +3,7 @@ import fs from 'fs';
 import pathlib from 'path';
 
 import {type Input, type RuleDecl, computeKey} from './artifact.ts';
-import {casExists, casInsert, casPath} from './cas.ts';
+import {casInsert, casPath, casStat} from './cas.ts';
 import {BuildError} from './errors.ts';
 import {runShell} from './exec.ts';
 import {type Store} from './store.ts';
@@ -118,7 +118,19 @@ export class Executor {
     private demand(decl : RuleDecl) : Promise<string[]> {
         let p = this.memo.get(decl);
         if (p === undefined) {
-            p = this.demandInner(decl);
+            // Any non-sentinel escape (a store error, a resolve conflict, a
+            // bug) must surface as a reported failure, not vanish into the
+            // allSettled in build().
+            p = this.demandInner(decl).catch(err => {
+                if (err instanceof RuleFailed || err instanceof DryDirty || err instanceof Aborted) {
+                    throw err;
+                }
+                this.outcomes.set(decl, {status: 'failed', message: 'internal error'});
+                this.logError(`FAILED (internal error): ${label(decl)}`);
+                this.logError(indent(err instanceof Error ? err.stack ?? err.message : String(err)));
+                this.failAc.abort();
+                throw new RuleFailed();
+            });
             this.memo.set(decl, p);
         }
         return p;
@@ -185,7 +197,7 @@ export class Executor {
         if (stored !== null
             && stored.length === decl.outputs.length
             && stored.every((o, n) => o.ext === decl.outputs[n]!.ext)
-            && stored.every(o => casExists(casDir, o.digest, o.ext))) {
+            && stored.every(o => casStat(casDir, o.digest, o.ext) === o.size)) {
             this.outcomes.set(decl, {status: 'clean'});
             return stored.map(o => o.digest);
         }
@@ -203,17 +215,6 @@ export class Executor {
                 throw new Aborted();
             }
             return await this.execute(decl, key, reason);
-        } catch (err) {
-            if (err instanceof Aborted || err instanceof RuleFailed) {
-                throw err;
-            }
-            // Unexpected (infrastructure) error: count the rule failed and
-            // stop scheduling; something systemic is wrong.
-            this.outcomes.set(decl, {status: 'failed', message: 'internal error'});
-            this.logError(`FAILED (internal error): ${label(decl)}`);
-            this.logError(indent(err instanceof Error ? err.stack ?? err.message : String(err)));
-            this.failAc.abort();
-            throw new RuleFailed();
         } finally {
             this.semaphore.release();
         }
@@ -236,10 +237,10 @@ export class Executor {
             if (result.code === 0) {
                 const missing = tempOutputs.filter(p => !fs.existsSync(p));
                 if (missing.length === 0) {
-                    const outputs = decl.outputs.map((o, n) => ({
-                        digest: casInsert(casDir, tempOutputs[n]!, o.ext),
-                        ext: o.ext,
-                    }));
+                    const outputs = decl.outputs.map((o, n) => {
+                        const object = casInsert(casDir, tempOutputs[n]!, o.ext);
+                        return {digest: object.digest, ext: o.ext, size: object.size};
+                    });
                     store.recordRule(key, decl.cmds, outputs);
                     this.outcomes.set(decl, {status: 'ran', reason});
                     this.log(`[${++this.counter}] ${label(decl)}`

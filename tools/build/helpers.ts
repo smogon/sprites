@@ -16,11 +16,11 @@ export function getconfig(name : string) : string | undefined {
     return value === '' ? undefined : value;
 }
 
-export function astable(x : string | string[] | undefined) : string[] {
+export function astable(x : string | readonly string[] | undefined) : string[] {
     if (x === undefined) {
         return [];
     }
-    return typeof x === 'string' ? [x] : x;
+    return typeof x === 'string' ? [x] : [...x];
 }
 
 // Single-directory, single-'*' glob (all Tupfile patterns were of this form).

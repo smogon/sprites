@@ -8,7 +8,32 @@ import type {DeployCtx, SrcFile} from '../tools/deploy/api.ts';
 // or a raw source file.
 export type Sprite = Artifact | SrcFile;
 
-export type Manifest = Record<string, string>;
+// The unhashed -> hashed name mapping published beside a stamped set.
+export class Manifest {
+    readonly ctx : DeployCtx;
+    private entries = new Map<string, string>();
+
+    constructor(ctx : DeployCtx) {
+        this.ctx = ctx;
+    }
+
+    set(key : string, value : string) : void {
+        // ActionQueue only dedups final dsts; hashed dsts differ even when
+        // unhashed names collide, so check the key explicitly.
+        if (this.entries.has(key)) {
+            throw new Error(`duplicate sprite name ${key}`);
+        }
+        this.entries.set(key, value);
+    }
+
+    write(dst : string) : void {
+        const sorted : Record<string, string> = {};
+        for (const k of [...this.entries.keys()].sort()) {
+            sorted[k] = this.entries.get(k)!;
+        }
+        this.ctx.write(dst, JSON.stringify(sorted, null, 4) + "\n");
+    }
+}
 
 export interface Dest {
     dir : string;
@@ -35,38 +60,14 @@ export function toPSID(name : string) : string {
 
 // Copy with a content-hash-stamped name and record the unhashed -> hashed
 // mapping in `manifest`.
-export function stampcopy(ctx : DeployCtx, f : Sprite, {dir, ext}: Dest, name : string,
-                          manifest : Manifest) : void {
-    const key = `${name}.${extOf(f, ext)}`;
-    // ActionQueue only dedups final dsts; hashed dsts differ even when
-    // unhashed names collide, so check the manifest key explicitly.
-    if (manifest[key] !== undefined) {
-        throw new Error(`duplicate sprite name ${key}`);
-    }
-    const h = ctx.hash(f);
-    manifest[key] = `${name}-${h}.${extOf(f, ext)}`;
-    ctx.copy(f, `${dir}/${name}-${h}.${extOf(f, ext)}`);
+export function stampcopy(manifest : Manifest, f : Sprite, {dir, ext}: Dest, name : string) : void {
+    const h = manifest.ctx.hash(f);
+    manifest.set(`${name}.${extOf(f, ext)}`, `${name}-${h}.${extOf(f, ext)}`);
+    manifest.ctx.copy(f, `${dir}/${name}-${h}.${extOf(f, ext)}`);
 }
 
-export function writeManifest(ctx : DeployCtx, dst : string, manifest : Manifest) : void {
-    const sorted : Manifest = {};
-    for (const k of Object.keys(manifest).sort()) {
-        sorted[k] = manifest[k]!;
-    }
-    ctx.write(dst, JSON.stringify(sorted, null, 4) + "\n");
-}
-
-function emit(ctx : DeployCtx, f : Sprite, dest : Dest, name : string,
-              manifest : Manifest | null) : void {
-    if (manifest) {
-        stampcopy(ctx, f, dest, name, manifest);
-    } else {
-        ctx.copy(f, `${dest.dir}/${name}.${extOf(f, dest.ext)}`);
-    }
-}
-
-export function spritecopy(ctx : DeployCtx, f : Sprite, dest : Dest,
-                           allowUnknown = false, manifest : Manifest | null = null) : void {
+export function spritecopy(manifest : Manifest, f : Sprite, dest : Dest,
+                           allowUnknown = false) : void {
     const sn = spritedata.parseFilename(f.name);
     let name : string;
 
@@ -99,12 +100,11 @@ export function spritecopy(ctx : DeployCtx, f : Sprite, dest : Dest,
         name += "-gmax";
     }
 
-    emit(ctx, f, dest, name, manifest);
+    stampcopy(manifest, f, dest, name);
 }
 
 // TODO: merge with above
-export function itemspritecopy(ctx : DeployCtx, f : Sprite, dest : Dest,
-                               manifest : Manifest | null = null) : void {
+export function itemspritecopy(manifest : Manifest, f : Sprite, dest : Dest) : void {
     const sn = spritedata.parseFilename(f.name);
     if (sn.extension) {
         throw new Error(`Not an item sprite: ${f.name}`);
@@ -114,7 +114,7 @@ export function itemspritecopy(ctx : DeployCtx, f : Sprite, dest : Dest,
         throw new Error(`Not an item sprite: ${f.name}`);
     }
     for (const n of sd.names) {
-        emit(ctx, f, dest, toSmogonAlias(n), manifest);
+        stampcopy(manifest, f, dest, toSmogonAlias(n));
     }
 }
 

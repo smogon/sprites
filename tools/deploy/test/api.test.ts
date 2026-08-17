@@ -27,12 +27,12 @@ function shortHash(data : Buffer | string) : string {
 // Stage `content` as a built artifact in a scratch CAS.
 function makeArtifact(casDir : string, content : string, ext : string) {
     const digest = createHash('sha256').update(content).digest('hex');
-    const [artifact] = rule('in.png', ['t %f %o'], [`art.${ext}`]);
-    artifact!.resolve(digest);
+    const artifact = rule('in.png', ['t %f %o'], `art.${ext}`);
+    artifact.resolve(digest);
     const obj = casPath(casDir, digest, ext);
     fs.mkdirSync(pathlib.dirname(obj), {recursive: true});
     fs.writeFileSync(obj, content);
-    return artifact!;
+    return artifact;
 }
 
 test('ctx.hash matches the historical single-file stamp for artifacts and files', () => {
@@ -73,11 +73,13 @@ test('ctx queues artifact copies from the CAS, writes and reads', () => {
     assert.equal((ops[1] as {op : {src : string}}).op.src, casPath(casDir, artifact.hash, 'webp'));
 });
 
-test('ctx.list sorts and parses extensions', () => {
+test('ctx.list sorts, parses extensions, skips dotfiles and directories', () => {
     const dir = tmpdir();
     fs.writeFileSync(pathlib.join(dir, 'b.png'), '');
     fs.writeFileSync(pathlib.join(dir, 'a.gif'), '');
     fs.writeFileSync(pathlib.join(dir, 'noext'), '');
+    fs.writeFileSync(pathlib.join(dir, '.hidden'), '');
+    fs.mkdirSync(pathlib.join(dir, 'subdir'));
     const ctx = makeCtx('cas', new ActionQueue());
     assert.deepEqual(ctx.list(dir), [
         {dir, name: 'a', ext: 'gif', path: pathlib.join(dir, 'a.gif')},

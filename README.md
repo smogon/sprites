@@ -51,8 +51,10 @@ $ brew install imagemagick gifsicle advancecomp optipng pngquant webp
 Install dependencies once with `pnpm install`.
 
 Each deploy is a root `*.deploy.ts` module: it declares its build rules
-(shared sets live in `rules/`) and a `finish` function that maps the built
-artifacts to their published names. Build outputs are content-addressed:
+(shared sets are plain functions in `rules/`; declaring an identical rule
+twice is a no-op returning the existing artifacts, so any number of deploys
+can call the same set) and a `finish` function that maps the built artifacts
+to their published names. Build outputs are content-addressed:
 rules declare nominal output filenames but the store names every object by
 the hash of its bytes (under `.build/cas/`), so incrementality keys on
 content, same-byte renames rebuild nothing, and hash-stamped publishing

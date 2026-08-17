@@ -34,14 +34,24 @@ export async function build(decls : readonly RuleDecl[], opts : BuildOpts) : Pro
     const logError = opts.logError ?? console.error;
     const {store} = opts;
 
+    // Hash sources over the producer closure: demanding a rule demands the
+    // producers of its artifact inputs, even ones outside `decls`.
+    const closure = new Set<RuleDecl>();
     const sources = new Set<string>();
-    for (const decl of decls) {
+    const add = (decl : RuleDecl) => {
+        if (closure.has(decl)) {
+            return;
+        }
+        closure.add(decl);
         for (const input of [...decl.inputs, ...decl.deps]) {
             if (typeof input === 'string') {
                 sources.add(input);
+            } else {
+                add(input.decl);
             }
         }
-    }
+    };
+    decls.forEach(add);
     const {hashes, updated, missing} = reconcileHashes(sources, store.loadFileCache());
     if (missing.length > 0) {
         throw new BuildError(`Missing input files:\n  ${missing.slice(0, 20).join('\n  ')}`

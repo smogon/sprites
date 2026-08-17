@@ -16,26 +16,49 @@ export function casPath(casDir : string, digest : string, ext : string) : string
 }
 
 export function casExists(casDir : string, digest : string, ext : string) : boolean {
+    return casStat(casDir, digest, ext) !== null;
+}
+
+// Size of an object, or null if absent. Callers verify it against the
+// recorded size: a crash between rename and data flush can leave a
+// truncated object, which must read as dirty, not clean.
+export function casStat(casDir : string, digest : string, ext : string) : bigint | null {
     try {
-        return fs.statSync(casPath(casDir, digest, ext)).isFile();
+        const st = fs.statSync(casPath(casDir, digest, ext), {bigint: true});
+        return st.isFile() ? st.size : null;
     } catch {
-        return false;
+        return null;
     }
 }
 
-// Move tmpPath into the store, returning the content digest (hex). If the
-// object already exists the temp file is simply discarded.
-export function casInsert(casDir : string, tmpPath : string, ext : string) : string {
+export interface CasObject {
+    digest : string;   // sha256 hex of the bytes
+    size : bigint;
+}
+
+// Move tmpPath into the store, returning the content digest and size. An
+// existing object is trusted only if its bytes actually hash to the digest;
+// otherwise (crash-truncated object) the fresh bytes replace it.
+export function casInsert(casDir : string, tmpPath : string, ext : string) : CasObject {
     const digest = hashFileSync(tmpPath).toString('hex');
+    const size = fs.statSync(tmpPath, {bigint: true}).size;
     const target = casPath(casDir, digest, ext);
-    if (fs.existsSync(target)) {
+    if (fs.existsSync(target) && hashFileSync(target).toString('hex') === digest) {
         fs.unlinkSync(tmpPath);
-        return digest;
+        return {digest, size};
     }
     fs.mkdirSync(pathlib.dirname(target), {recursive: true});
     fs.chmodSync(tmpPath, 0o444);
+    // Flush the bytes before the rename becomes visible, so a power loss
+    // cannot journal the rename while dropping the data pages.
+    const fd = fs.openSync(tmpPath, 'r');
+    try {
+        fs.fsyncSync(fd);
+    } finally {
+        fs.closeSync(fd);
+    }
     fs.renameSync(tmpPath, target);
-    return digest;
+    return {digest, size};
 }
 
 // Remove every object not in `live` (keys are "<digest>.<ext>", the object

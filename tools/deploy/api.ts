@@ -71,8 +71,13 @@ export function makeCtx(casDir : string, queue : ActionQueue) : DeployCtx {
         },
         list(dir : string) : SrcFile[] {
             const result = [];
-            for (const filename of fs.readdirSync(dir).sort()) {
-                const p = pathlib.path(filename, {dir});
+            // Files only, no dotfiles: the same filtering the build-side
+            // glob applies to rule inputs.
+            for (const ent of fs.readdirSync(dir, {withFileTypes: true}).sort((a, b) => a.name < b.name ? -1 : 1)) {
+                if (ent.name.startsWith('.') || (!ent.isFile() && !ent.isSymbolicLink())) {
+                    continue;
+                }
+                const p = pathlib.path(ent.name, {dir});
                 result.push({...p, path: pathlib.format(p)});
             }
             return result;

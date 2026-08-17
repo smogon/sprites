@@ -19,6 +19,15 @@ export function basenameNoExt(path : string) : string {
     return dot > 0 ? base.slice(0, dot) : base;
 }
 
+// Expand only the name substitutions (%b/%B). They are static per rule, so
+// declarations expand them eagerly; %f/%o/%oN wait for execution, when
+// concrete paths exist.
+export function substituteNames(s : string, inputs : string[]) : string {
+    return s.replace(/%([bB])/g, (_, c : string) =>
+        c === 'b' ? inputs.map(p => pathlib.basename(p)).join(' ')
+                  : inputs.map(basenameNoExt).join(' '));
+}
+
 // Tup-style substitutions:
 //   %f  inputs, space-joined        %b  input basenames
 //   %o  outputs, space-joined       %B  input basenames without extension

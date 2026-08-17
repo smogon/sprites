@@ -3,7 +3,7 @@ import pathlib from 'path';
 import {createHash} from 'crypto';
 
 import {astable, glob} from './helpers.ts';
-import {type Cmd, basenameNoExt, flattenCmds, substitute} from './subst.ts';
+import {type Cmd, basenameNoExt, flattenCmds, substitute, substituteNames} from './subst.ts';
 
 // A rule's output: content-addressed bytes with a nominal name. The nominal
 // name exists for provenance, inspection, and deploy-time naming; it is NOT
@@ -65,6 +65,7 @@ export interface CmdSpec {
 }
 
 export interface RuleDecl {
+    id : number;                    // registration order; identity for artifact inputs
     inputs : Input[];               // ordered (%f order; some rules are order-sensitive)
     deps : Input[];
     outputs : Artifact[];
@@ -75,6 +76,9 @@ export interface RuleDecl {
 }
 
 let decls : RuleDecl[] = [];
+// Declaring an identical rule twice returns the existing artifacts, so
+// shared rule sets are plain functions that any number of deploys may call.
+let declIndex = new Map<string, RuleDecl>();
 
 export function getDecls() : RuleDecl[] {
     return decls;
@@ -82,20 +86,7 @@ export function getDecls() : RuleDecl[] {
 
 export function resetDecls() : void {
     decls = [];
-}
-
-// Share a rule set between deploys: importing declares nothing, the first
-// call declares once, later calls return the same artifacts.
-export function memo<T>(fn : () => T) : () => T {
-    let called = false;
-    let value : T;
-    return () => {
-        if (!called) {
-            value = fn();
-            called = true;
-        }
-        return value!;
-    };
+    declIndex = new Map();
 }
 
 // Nominal path of an input, for %b/%B and displays.
@@ -123,7 +114,9 @@ export function computeKey(decl : RuleDecl, digestOf : (i : Input) => string) : 
     const h = createHash('sha256');
     h.update([
         'v2',
-        decl.cmds.join('\n'),
+        // \0, not \n: a single multi-line command executes differently from
+        // the same lines as separate ' && '-joined commands.
+        decl.cmds.join('\0'),
         decl.inputs.map(digestOf).join('\0'),
         decl.inputs.map(extOf).join('\0'),
         decl.deps.map(digestOf).join('\0'),
@@ -146,11 +139,36 @@ function resolveInputs(input : Input | Input[] | undefined) : Input[] {
 }
 
 function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : string[]) : RuleDecl {
-    const cmds = flattenCmds(spec.cmds);
+    const nominalInputs = inputs.map(nominal);
+    // %b/%B expand to nominal input names, never CAS paths, so they are
+    // resolved at declaration. This also lands them in the identity key: a
+    // command embedding input names is name-dependent by construction.
+    const cmds = flattenCmds(spec.cmds).map(c => substituteNames(c, nominalInputs));
     if (cmds.length === 0) {
         throw new Error(`Rule with no commands (outputs: ${outputs.join(' ')})`);
     }
+    if (outputs.length === 0) {
+        throw new Error(`Rule with no outputs (cmds: ${cmds[0]!})`);
+    }
+
+    // An identical declaration returns the already-registered rule. Artifact
+    // inputs are keyed by their producing rule's id, so chains dedupe too.
+    const token = (i : Input) => typeof i === 'string' ? `s:${i}` : `a:${i.decl.id}:${i.index}`;
+    const identity = [
+        cmds.join('\0'),
+        inputs.map(token).join('\0'),
+        deps.map(token).join('\0'),
+        outputs.join('\0'),
+        spec.display ?? '',
+        spec.nameSensitive ? '1' : '0',
+    ].join('\x01');
+    const existing = declIndex.get(identity);
+    if (existing !== undefined) {
+        return existing;
+    }
+
     const decl : RuleDecl = {
+        id: decls.length,
         inputs,
         deps,
         outputs: [],
@@ -168,6 +186,10 @@ function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : st
         if (out.includes('/') || out.includes('%')) {
             throw new Error(`Rule outputs are nominal filenames, no paths or substitutions: ${out}`);
         }
+        if (/[\s'"\\]/.test(out)) {
+            // Output names are substituted into shell commands unquoted.
+            throw new Error(`Rule output name has shell-hostile characters: ${out}`);
+        }
         if (outputs.indexOf(out) !== index) {
             throw new Error(`Duplicate rule output: ${out}`);
         }
@@ -179,7 +201,6 @@ function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : st
     });
     // Validate substitutions now (unknown escapes, out-of-range %oN) rather
     // than at execution; the results are discarded.
-    const nominalInputs = inputs.map(nominal);
     const nominalOutputs = decl.outputs.map(o => o.filename);
     for (const cmd of cmds) {
         substitute(cmd, nominalInputs, nominalOutputs);
@@ -188,13 +209,23 @@ function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : st
         decl.display = substitute(spec.display, nominalInputs, nominalOutputs);
     }
     decls.push(decl);
+    declIndex.set(identity, decl);
     return decl;
 }
 
+// One Artifact per declared output, as a tuple when the output list is a
+// literal, so `const [png, css] = rule(...)` needs no undefined checks. A
+// single string output returns its Artifact directly.
 export function rule(input : Input | Input[], spec : CmdSpec | Cmd[],
-                     output : string | string[]) : Artifact[] {
+                     output : string) : Artifact;
+export function rule<const T extends readonly string[]>(
+    input : Input | Input[], spec : CmdSpec | Cmd[],
+    output : T) : {[K in keyof T] : Artifact};
+export function rule(input : Input | Input[], spec : CmdSpec | Cmd[],
+                     output : string | readonly string[]) : Artifact | Artifact[] {
     const s = normalizeSpec(spec);
-    return makeDecl(resolveInputs(input), resolveInputs(s.deps), s, astable(output)).outputs;
+    const decl = makeDecl(resolveInputs(input), resolveInputs(s.deps), s, astable(output));
+    return typeof output === 'string' ? decl.outputs[0]! : decl.outputs;
 }
 
 export function forEachRule(input : Input | Input[], spec : CmdSpec | Cmd[],

@@ -42,7 +42,7 @@ function src(env : Env, name : string, content : string) : string {
 // A copy rule that also counts its executions in env.execLog.
 function copyRule(env : Env, input : string | Artifact, out : string,
                   extra : Partial<CmdSpec> = {}) : Artifact {
-    return rule(input, {cmds: [`cat %f > %o && echo x >> ${env.execLog}`], ...extra}, [out])[0]!;
+    return rule(input, {cmds: [`cat %f > %o && echo x >> ${env.execLog}`], ...extra}, out);
 }
 
 function execCount(env : Env) : number {
@@ -53,10 +53,11 @@ function execCount(env : Env) : number {
     }
 }
 
-async function runBuild(env : Env, opts : {dryRun? : boolean, gc? : boolean} = {}) : Promise<DriveResult> {
+async function runBuild(env : Env, opts : {dryRun? : boolean, gc? : boolean} = {},
+                        decls = getDecls()) : Promise<DriveResult> {
     const store = new Store(env.dbPath);
     try {
-        return await build(getDecls(), {
+        return await build(decls, {
             root: env.root,
             store,
             casDir: env.casDir,
@@ -147,7 +148,7 @@ test('byte-identical inputs share one execution across two declarations', async 
 // The consumer must be a *different* computation: an identical command over
 // identical bytes would share the producer's key (by design).
 function upcaseRule(env : Env, input : Artifact, out : string) : Artifact {
-    return rule(input, [`tr a-z A-Z < %f > %o && echo x >> ${env.execLog}`], [out])[0]!;
+    return rule(input, [`tr a-z A-Z < %f > %o && echo x >> ${env.execLog}`], out);
 }
 
 test('chained rules: consumer follows producer, cas-missing reruns alone', async () => {
@@ -177,7 +178,7 @@ test('chained rules: consumer follows producer, cas-missing reruns alone', async
 
 test('failed producer blocks the consumer; nothing is recorded', async () => {
     const env = setup();
-    const bad = rule(src(env, 'a.txt', 'x'), ['false'], ['mid.txt'])[0]!;
+    const bad = rule(src(env, 'a.txt', 'x'), ['false'], 'mid.txt');
     copyRule(env, bad, 'final.txt');
     const result = await runBuild(env);
     assert.ok(!result.ok);
@@ -194,11 +195,11 @@ test('multi-output rules route %oN and skip all-or-nothing', async () => {
         ['x.txt', 'y.css']);
     const [x1, y1] = declare();
     await runBuild(env);
-    assert.equal(fs.readFileSync(casPath(env.casDir, x1!.hash, 'txt'), 'utf8'), 'one');
-    assert.equal(fs.readFileSync(casPath(env.casDir, y1!.hash, 'css'), 'utf8'), 'two');
+    assert.equal(fs.readFileSync(casPath(env.casDir, x1.hash, 'txt'), 'utf8'), 'one');
+    assert.equal(fs.readFileSync(casPath(env.casDir, y1.hash, 'css'), 'utf8'), 'two');
 
     resetDecls();
-    fs.rmSync(casPath(env.casDir, y1!.hash, 'css'));
+    fs.rmSync(casPath(env.casDir, y1.hash, 'css'));
     declare();
     const rerun = await runBuild(env);
     assert.deepEqual(statuses(rerun), ['ran']);
@@ -231,6 +232,32 @@ test('dry run reports without writing state', async () => {
     const store = new Store(env.dbPath);
     assert.equal(store.liveObjects().size, 0);
     store.close();
+});
+
+test('a truncated CAS object reads as dirty and is repaired', async () => {
+    const env = setup();
+    const out = copyRule(env, src(env, 'a.txt', 'truncate-me'), 'out.txt');
+    await runBuild(env);
+    const obj = casPath(env.casDir, out.hash, 'txt');
+    fs.chmodSync(obj, 0o644);
+    fs.truncateSync(obj);
+
+    resetDecls();
+    copyRule(env, pathlib.join(env.root, 'src/a.txt'), 'out.txt');
+    const rerun = await runBuild(env);
+    assert.deepEqual(statuses(rerun), ['ran']);
+    assert.equal(fs.readFileSync(obj, 'utf8'), 'truncate-me');
+    assert.equal(fs.statSync(obj).mode & 0o777, 0o444);
+});
+
+test('building a consumer alone pulls in and hashes its producer', async () => {
+    const env = setup();
+    const mid = copyRule(env, src(env, 'a.txt', 'solo'), 'mid.txt');
+    const final = rule(mid, [`tr a-z A-Z < %f > %o && echo x >> ${env.execLog}`], 'final.txt');
+    const result = await runBuild(env, {}, [final.decl]);
+    assert.ok(result.ok);
+    assert.equal(execCount(env), 2);
+    assert.equal(fs.readFileSync(casPath(env.casDir, final.hash, 'txt'), 'utf8'), 'SOLO');
 });
 
 test('missing sources fail upfront', async () => {

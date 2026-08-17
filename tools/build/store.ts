@@ -9,6 +9,7 @@ import type {FileStat} from './hash.ts';
 export interface StoredOutput {
     digest : string;   // sha256 hex of the bytes; the CAS object is <digest>.<ext>
     ext : string;
+    size : bigint;     // verified against the object on every clean check
 }
 
 const DDL = `
@@ -33,6 +34,7 @@ CREATE TABLE IF NOT EXISTS rule_outputs (
     ord     INTEGER NOT NULL,
     digest  TEXT NOT NULL,
     ext     TEXT NOT NULL,
+    size    INTEGER NOT NULL,
     PRIMARY KEY (rule_id, ord)
 );
 `;
@@ -111,8 +113,8 @@ export class Store {
             if (rule === undefined) {
                 return null;
             }
-            return this.db.prepare<[bigint], {digest : string, ext : string}>(
-                'SELECT digest, ext FROM rule_outputs WHERE rule_id = ? ORDER BY ord').all(rule.id);
+            return this.db.prepare<[bigint], StoredOutput>(
+                'SELECT digest, ext, size FROM rule_outputs WHERE rule_id = ? ORDER BY ord').all(rule.id);
         })();
     }
 
@@ -125,11 +127,11 @@ export class Store {
             RETURNING id`);
         const delOutputs = this.db.prepare('DELETE FROM rule_outputs WHERE rule_id = ?');
         const insOutput = this.db.prepare(
-            'INSERT INTO rule_outputs (rule_id, ord, digest, ext) VALUES (?, ?, ?, ?)');
+            'INSERT INTO rule_outputs (rule_id, ord, digest, ext, size) VALUES (?, ?, ?, ?, ?)');
         this.db.transaction(() => {
             const {id} = upsert.get(key, cmds.join('\n'))!;
             delOutputs.run(id);
-            outputs.forEach((o, i) => insOutput.run(id, i, o.digest, o.ext));
+            outputs.forEach((o, i) => insOutput.run(id, i, o.digest, o.ext, o.size));
         })();
     }
 

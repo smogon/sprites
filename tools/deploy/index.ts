@@ -19,6 +19,7 @@ import {type DeploySpec, makeCtx} from './api.ts';
 import {ActionQueue} from './queue.ts';
 
 const root = nodePath.resolve(fileURLToPath(import.meta.url), '../../..');
+const invocationCwd = process.cwd();
 process.chdir(root);
 
 const DB_PATH = '.build/db.sqlite';
@@ -235,7 +236,15 @@ common(program.command('inspect <paths...>'))
     .action(async (paths : string[], opts : CommonOpts & {output : string}) => {
         setConfig(loadConfig(opts.config));
         await importDeploys(discoverDeployFiles());
-        const targets = paths.map(p => nodePath.normalize(p).replace(/\/+$/, ''));
+        // Accept absolute paths and paths relative to where the user ran the
+        // command; rules declare repo-root-relative paths.
+        const targets = paths.map(p => {
+            const target = nodePath.relative(root, nodePath.resolve(invocationCwd, p));
+            if (target.startsWith('..')) {
+                throw new BuildError(`Not under the repo root: ${p}`);
+            }
+            return target;
+        });
 
         const closure = new Set<RuleDecl>();
         for (const decl of getDecls()) {

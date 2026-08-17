@@ -1,9 +1,9 @@
 
 import * as spritedata from '@smogon/sprite-data/index.ts';
 
-import {gen10Modelslike, gen5Gifs} from './rules/modelslike.ts';
+import {gen10Modelslike} from './rules/modelslike.ts';
 import {type Sprite, toPSID} from './rules/publish.ts';
-import {forEachRule, memo, rule} from './tools/build/artifact.ts';
+import {forEachRule, rule} from './tools/build/artifact.ts';
 import {PNG_DETERMINISTIC, base, compresspng, pad, spriteglob} from './tools/build/helpers.ts';
 import {type DeployCtx, defineDeploy} from './tools/deploy/api.ts';
 
@@ -24,21 +24,21 @@ rule("ps-pokemon.sheet.mjs", {
     nameSensitive: true,
     deps: ["src/minisprites/pokemon/gen6/*", ...sheetDeps],
     cmds: ["node tools/sheet/index.ts %f %o", compresspng({config: "SPRITESHEET"})],
-}, ["pokemonicons-sheet.png"]);
+}, "pokemonicons-sheet.png");
 
 // TODO: reenable when trainers are moved
 // rule("ps-trainers.sheet.mjs", {
 //     display: "ps trainers sheet",
 //     nameSensitive: true,
 //     cmds: ["node tools/sheet/index.ts %f %o", compresspng({config: "SPRITESHEET"})],
-// }, ["trainers-sheet.png"]);
+// }, "trainers-sheet.png");
 
 rule("ps-items.sheet.mjs", {
     display: "ps items sheet",
     nameSensitive: true,
     deps: ["src/minisprites/items/*", ...sheetDeps],
     cmds: ["node tools/sheet/index.ts %f %o", compresspng({config: "SPRITESHEET"})],
-}, ["itemicons-sheet.png"]);
+}, "itemicons-sheet.png");
 
 // PS pokeball icons; input order is the sheet order.
 
@@ -52,38 +52,34 @@ rule([
         `magick convert ${PNG_DETERMINISTIC} -background transparent -gravity center -extent 40x30 %f +append %o`,
         compresspng({config: "SPRITESHEET"}),
     ],
-}, ["pokemonicons-pokeball-sheet.png"]);
+}, "pokemonicons-pokeball-sheet.png");
 
 // Padded Dex, plus missing CAPs backfilled from the gen5/model gifs.
 
-const paddedDex = memo(() => {
-    const dex = forEachRule("src/dex/*", {
-        display: "pad dex %f",
-        cmds: [pad({w: 120, h: 120}), compresspng({config: "DEX"})],
-    }, "%b");
+const dex = forEachRule("src/dex/*", {
+    display: "pad dex %f",
+    cmds: [pad({w: 120, h: 120}), compresspng({config: "DEX"})],
+}, "%b");
 
-    const dexSet = new Set(dex.map(base));
-    const dexMissing = [];
-    for (const file of spriteglob(["src/sprites/gen5/*.gif", "src/models/*.gif"], {b: false, s: false})) {
-        if (!dexSet.has(base(file))) {
-            dexMissing.push(file);
-            dexSet.add(base(file));
-        }
+const dexSet = new Set(dex.map(base));
+const dexMissing = [];
+for (const file of spriteglob(["src/sprites/gen5/*.gif", "src/models/*.gif"], {b: false, s: false})) {
+    if (!dexSet.has(base(file))) {
+        dexMissing.push(file);
+        dexSet.add(base(file));
     }
+}
 
-    return dex.concat(forEachRule(dexMissing, {
-        display: "missing dex %B",
-        cmds: [
-            `magick convert "%f[0]" ${PNG_DETERMINISTIC} -trim %o`,
-            `magick mogrify ${PNG_DETERMINISTIC} -background transparent -gravity center -resize "120x120>" -extent 120x120 %o`,
-            compresspng({config: "DEX"}),
-        ],
-    }, "%B.png"));
-});
-paddedDex();
+forEachRule(dexMissing, {
+    display: "missing dex %B",
+    cmds: [
+        `magick convert "%f[0]" ${PNG_DETERMINISTIC} -trim %o`,
+        `magick mogrify ${PNG_DETERMINISTIC} -background transparent -gravity center -resize "120x120>" -extent 120x120 %o`,
+        compresspng({config: "DEX"}),
+    ],
+}, "%B.png");
 
 const aniChampions = gen10Modelslike();
-gen5Gifs();
 
 // PS ids keep the forme dash, unlike the smogon aliases.
 function psSpritecopy(ctx : DeployCtx, f : Sprite, dir : string) : void {

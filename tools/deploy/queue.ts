@@ -136,12 +136,13 @@ export class ActionQueue {
                 const dst = nodePath.join(dir, entry.dst);
                 fs.mkdirSync(nodePath.dirname(dst), {recursive: true});
                 if (op.type === 'Copy'){
-                    if (mode === 'link') {
+                    // Read-only sources are CAS objects; their mode must not
+                    // leak into deploy trees (rsync -a would ship it), and a
+                    // hardlink cannot carry its own mode, so copy those.
+                    if (mode === 'link' && (fs.statSync(op.src).mode & 0o200) !== 0) {
                         fs.linkSync(op.src, dst);
                     } else {
                         fs.copyFileSync(op.src, dst);
-                        // The copy inherits the source mode; CAS objects are
-                        // read-only, which must not leak into deploy trees.
                         fs.chmodSync(dst, 0o644);
                     }
                 } else if (op.type === 'Write') {
