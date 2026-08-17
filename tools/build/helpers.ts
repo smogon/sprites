@@ -97,14 +97,18 @@ export function spriteglob(pats : string | string[], flagspec? : Record<string, 
     });
 }
 
+// PNG date/time tEXt chunks make magick output nondeterministic, which would
+// churn every content-addressed name on a rebuild.
+export const PNG_DETERMINISTIC = '-define png:exclude-chunks=date,time';
+
 export function pad(opts : {w : number, h : number, input? : string, output? : string}) : string {
     const input = opts.input ?? '%f';
     const output = opts.output ?? '%o';
-    return `magick convert ${input} -background transparent -gravity center -extent ${opts.w}x${opts.h} ${output}`;
+    return `magick convert ${input} ${PNG_DETERMINISTIC} -background transparent -gravity center -extent ${opts.w}x${opts.h} ${output}`;
 }
 
 export function trimimg(opts : {input? : string, output? : string} = {}) : string {
-    return `magick convert ${opts.input ?? '%f'} -trim ${opts.output ?? '%o'}`;
+    return `magick convert ${opts.input ?? '%f'} ${PNG_DETERMINISTIC} -trim ${opts.output ?? '%o'}`;
 }
 
 interface CompressOpts {

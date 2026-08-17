@@ -4,7 +4,7 @@ import * as spritedata from '@smogon/sprite-data/index.ts';
 import {gen10Modelslike, gen5Gifs} from './rules/modelslike.ts';
 import {type Sprite, toPSID} from './rules/publish.ts';
 import {forEachRule, memo, rule} from './tools/build/artifact.ts';
-import {base, compresspng, pad, spriteglob} from './tools/build/helpers.ts';
+import {PNG_DETERMINISTIC, base, compresspng, pad, spriteglob} from './tools/build/helpers.ts';
 import {type DeployCtx, defineDeploy} from './tools/deploy/api.ts';
 
 // PS spritesheets. The sheet tools readdir the minisprite dirs and resolve
@@ -49,7 +49,7 @@ rule([
 ], {
     display: "pokemonicons-pokeball-sheet",
     cmds: [
-        "magick convert -background transparent -gravity center -extent 40x30 %f +append %o",
+        `magick convert ${PNG_DETERMINISTIC} -background transparent -gravity center -extent 40x30 %f +append %o`,
         compresspng({config: "SPRITESHEET"}),
     ],
 }, ["pokemonicons-pokeball-sheet.png"]);
@@ -74,8 +74,8 @@ const paddedDex = memo(() => {
     return dex.concat(forEachRule(dexMissing, {
         display: "missing dex %B",
         cmds: [
-            'magick convert "%f[0]" -trim %o',
-            'magick mogrify -background transparent -gravity center -resize "120x120>" -extent 120x120 %o',
+            `magick convert "%f[0]" ${PNG_DETERMINISTIC} -trim %o`,
+            `magick mogrify ${PNG_DETERMINISTIC} -background transparent -gravity center -resize "120x120>" -extent 120x120 %o`,
             compresspng({config: "DEX"}),
         ],
     }, "%B.png"));

@@ -28,6 +28,8 @@ for (let i = 0; i < sheet.entries.length; i++) {
 const proc = cp.spawn("magick", [
     "montage",
     "@-",
+    // Keep sheet bytes deterministic for the content-addressed build.
+    "-define", "png:exclude-chunks=date,time",
     "-background", "transparent",
     "-geometry", `${sheet.width}x${sheet.height}>`,
     "-gravity", "center",
