@@ -162,6 +162,20 @@ export class Store {
     }
 }
 
+// Schema version of an existing db, without opening it for writing (the
+// Store constructor migrates); null if there is no db.
+export function dbVersion(dbPath : string) : number | null {
+    if (!fs.existsSync(dbPath)) {
+        return null;
+    }
+    const db = new Database(dbPath, {readonly: true});
+    try {
+        return Number(db.pragma('user_version', {simple: true}));
+    } finally {
+        db.close();
+    }
+}
+
 // Guards against two concurrent builds; the exclusive transaction is released
 // by the OS on any crash, so there are no stale lock files.
 export function acquireLock(lockPath : string) : () => void {
