@@ -1,20 +1,25 @@
 
-import program from 'commander'
 import spritesmith from 'spritesmith'
 import path from 'path'
 import fs from 'fs'
 import util from 'util';
 import * as spritedata from '@smogon/sprite-data/index.ts';
 
-program
-    .option('--image <file>', 'where to put image')
-    .option('--stylesheet <file>', 'where to put stylesheet')
-    .parse(process.argv)
+const {values: opts, positionals: srcs} = util.parseArgs({
+    options: {
+        image: {type: 'string'},
+        stylesheet: {type: 'string'},
+    },
+    allowPositionals: true,
+});
+if (opts.image === undefined || opts.stylesheet === undefined) {
+    throw new Error('usage: --image <file> --stylesheet <file> -- <sprites...>');
+}
 
 const run = util.promisify(spritesmith.run);
 
 let result = await run({
-    src: program.args
+    src: srcs
 });
 
 const spaceRe = /[ _]+/g
@@ -63,5 +68,5 @@ for (let [id, sprite] of sprites) {
     }`;
 }
 
-fs.writeFileSync(program.image, result.image, 'binary');
-fs.writeFileSync(program.stylesheet, stylesheet);
+fs.writeFileSync(opts.image, result.image, 'binary');
+fs.writeFileSync(opts.stylesheet, stylesheet);

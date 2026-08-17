@@ -1,7 +1,6 @@
 {
     "dependencies": {
-        "@types/node": "^24.10.7",
-        "commander": "^5.1.0"
+        "@types/node": "^24.10.7"
     },
     "type": "module"
 }

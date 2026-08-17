@@ -4,8 +4,7 @@ import fs from 'fs';
 import os from 'os';
 import nodePath from 'path';
 import {fileURLToPath, pathToFileURL} from 'url';
-
-import {program} from 'commander';
+import {parseArgs} from 'util';
 
 import {type RuleDecl, getDecls} from '../build/artifact.ts';
 import {casPath} from '../build/cas.ts';
@@ -36,13 +35,60 @@ interface CommonOpts {
     verbose? : boolean;
 }
 
-function common(cmd : ReturnType<typeof program.command>) : ReturnType<typeof program.command> {
-    return cmd
-        .option('-j, --jobs <n>', 'number of parallel jobs', String(os.availableParallelism()))
-        .option('-n, --dry-run', 'print what would run without changing anything')
-        .option('--fail-fast', 'stop scheduling new rules after the first failure')
-        .option('--config <file>', 'config file', 'build.config')
-        .option('-v, --verbose', 'print more detail');
+interface VerbOpts extends CommonOpts {
+    output? : string;
+    link? : boolean;
+    tar? : boolean;
+}
+
+const USAGE = `usage: node tools/deploy/index.ts <command> [options]
+
+commands:
+  build [files...]            build the rules of the given deploys (default: all *.build.ts)
+  deploy [names...]           build, finish, and pipe each subset tar (or %d dir) to its
+                              command from deploy.json5 (no names: list the deploys)
+  run <file> -o <dir>         build, finish, and materialize to a directory (or tar file)
+  inspect <paths...> -o <dir> build every rule touching the given source paths and copy
+                              the outputs out
+
+options:
+  -j, --jobs <n>       number of parallel jobs (default: all cores)
+  -n, --dry-run        print what would run without changing anything
+      --fail-fast      stop scheduling new rules after the first failure
+      --config <file>  config file (default: build.config)
+  -o, --output <dir>   run/inspect: output directory (a file with --tar)
+      --link           run: hardlink instead of copying
+      --tar            run: write a tar file
+  -v, --verbose        print more detail
+  -h, --help           show this help`;
+
+const COMMON_OPTIONS = {
+    jobs: {type: 'string', short: 'j', default: String(os.availableParallelism())},
+    'dry-run': {type: 'boolean', short: 'n'},
+    'fail-fast': {type: 'boolean'},
+    config: {type: 'string', default: 'build.config'},
+    verbose: {type: 'boolean', short: 'v'},
+    help: {type: 'boolean', short: 'h'},
+} as const;
+
+const VERB_OPTIONS = {
+    build: {},
+    deploy: {},
+    run: {
+        output: {type: 'string', short: 'o'},
+        link: {type: 'boolean'},
+        tar: {type: 'boolean'},
+    },
+    inspect: {
+        output: {type: 'string', short: 'o'},
+    },
+} as const;
+
+function requireOutput(opts : VerbOpts) : string {
+    if (opts.output === undefined) {
+        throw new BuildError('missing -o/--output');
+    }
+    return opts.output;
 }
 
 function discoverDeployFiles() : string[] {
@@ -163,100 +209,91 @@ function waitExit(child : ChildProcess) : Promise<number | null> {
     });
 }
 
-common(program.command('build [files...]'))
-    .description('build the rules of the given deploys (default: all *.build.ts)')
-    .action(async (files : string[], opts : CommonOpts) => {
-        setConfig(loadConfig(opts.config));
-        // GC needs the full rule universe: only an unfiltered union build
-        // can know which keys are no longer declared anywhere.
-        const gc = files.length === 0 && !Boolean(opts.dryRun);
-        await importDeploys(files.length > 0 ? files : discoverDeployFiles());
-        process.exitCode = await buildThen(getDecls(), opts, gc);
-    });
+async function cmdBuild(files : string[], opts : CommonOpts) : Promise<void> {
+    setConfig(loadConfig(opts.config));
+    // GC needs the full rule universe: only an unfiltered union build
+    // can know which keys are no longer declared anywhere.
+    const gc = files.length === 0 && !Boolean(opts.dryRun);
+    await importDeploys(files.length > 0 ? files : discoverDeployFiles());
+    process.exitCode = await buildThen(getDecls(), opts, gc);
+}
 
-common(program.command('deploy [names...]'))
-    .description('build, finish, and pipe each subset tar to its command from deploy.json5'
-        + ' (no names: list the available deploys)')
-    .action(async (names : string[], opts : CommonOpts) => {
-        const config = loadDeployConfig('deploy.json5');
-        if (names.length === 0) {
-            for (const [name, target] of config) {
-                console.log(`${name} (${target.buildFile})`);
-                for (const entry of target.deploy) {
-                    console.log(`    ${entry.subset.join(' ')} | ${entry.cmd}`);
-                }
+async function cmdDeploy(names : string[], opts : CommonOpts) : Promise<void> {
+    const config = loadDeployConfig('deploy.json5');
+    if (names.length === 0) {
+        for (const [name, target] of config) {
+            console.log(`${name} (${target.buildFile})`);
+            for (const entry of target.deploy) {
+                console.log(`    ${entry.subset.join(' ')} | ${entry.cmd}`);
             }
-            return;
         }
+        return;
+    }
+    for (const name of names) {
+        if (!config.has(name)) {
+            throw new BuildError(`deploy.json5: no deploy named ${name}`);
+        }
+    }
+    setConfig(loadConfig(opts.config));
+    const files = [...new Set(names.map(n => config.get(n)!.buildFile))];
+    const specs = await importDeploys(files);
+    process.exitCode = await buildThen(getDecls(), opts, false, async () => {
         for (const name of names) {
-            if (!config.has(name)) {
-                throw new BuildError(`deploy.json5: no deploy named ${name}`);
-            }
-        }
-        setConfig(loadConfig(opts.config));
-        const files = [...new Set(names.map(n => config.get(n)!.buildFile))];
-        const specs = await importDeploys(files);
-        process.exitCode = await buildThen(getDecls(), opts, false, async () => {
-            for (const name of names) {
-                const target = config.get(name)!;
-                const aq = await runFinish(finishOf(specs, target.buildFile), Boolean(opts.verbose));
-                if (aq === null) {
-                    return 1;
-                }
-                const dsts = aq.log.filter(e => e.type === 'Op').map(e => e.dst);
-                const subsets = matchSubsets(dsts, target.deploy);
-                for (const [i, entry] of target.deploy.entries()) {
-                    const matched = subsets[i]!;
-                    console.log(`${name}: ${matched.size} files | ${entry.cmd}`);
-                    if (entry.dir) {
-                        fs.mkdirSync(TMP_DIR, {recursive: true});
-                        const tmp = fs.mkdtempSync(nodePath.join(TMP_DIR, 'deploy-'));
-                        try {
-                            await aq.run(tmp, 'copy', dst => matched.has(dst));
-                            const cmd = spawn(entry.cmd.replaceAll('%d', tmp),
-                                {shell: true, stdio: ['ignore', 'inherit', 'inherit']});
-                            if (await waitExit(cmd) !== 0) {
-                                return 1;
-                            }
-                        } finally {
-                            fs.rmSync(tmp, {recursive: true, force: true});
-                        }
-                        continue;
-                    }
-                    const upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
-                    // If the command dies early we report its exit code; don't
-                    // also crash on the resulting EPIPE, which reaches both
-                    // stdin and (via streamx's destroy propagation) the pack.
-                    upload.stdin!.on('error', () => {});
-                    const pack = aq.pack(dst => matched.has(dst));
-                    pack.on('error', () => {});
-                    pack.pipe(upload.stdin!);
-                    if (await waitExit(upload) !== 0) {
-                        return 1;
-                    }
-                }
-            }
-            return 0;
-        });
-    });
-
-common(program.command('run <file>'))
-    .description('build, finish, and materialize to a directory (or tar file)')
-    .requiredOption('-o, --output <dir>', 'output directory (a file with --tar)')
-    .option('--link', 'hardlink instead of copying')
-    .option('--tar', 'write a tar file')
-    .action(async (file : string, opts : CommonOpts & {output : string, link? : boolean, tar? : boolean}) => {
-        setConfig(loadConfig(opts.config));
-        const specs = await importDeploys([file]);
-        process.exitCode = await buildThen(getDecls(), opts, false, async () => {
-            const aq = await runFinish(finishOf(specs, file), Boolean(opts.verbose));
+            const target = config.get(name)!;
+            const aq = await runFinish(finishOf(specs, target.buildFile), Boolean(opts.verbose));
             if (aq === null) {
                 return 1;
             }
-            await aq.run(opts.output, opts.tar ? 'tar' : opts.link ? 'link' : 'copy');
-            return 0;
-        });
+            const dsts = aq.log.filter(e => e.type === 'Op').map(e => e.dst);
+            const subsets = matchSubsets(dsts, target.deploy);
+            for (const [i, entry] of target.deploy.entries()) {
+                const matched = subsets[i]!;
+                console.log(`${name}: ${matched.size} files | ${entry.cmd}`);
+                if (entry.dir) {
+                    fs.mkdirSync(TMP_DIR, {recursive: true});
+                    const tmp = fs.mkdtempSync(nodePath.join(TMP_DIR, 'deploy-'));
+                    try {
+                        await aq.run(tmp, 'copy', dst => matched.has(dst));
+                        const cmd = spawn(entry.cmd.replaceAll('%d', tmp),
+                            {shell: true, stdio: ['ignore', 'inherit', 'inherit']});
+                        if (await waitExit(cmd) !== 0) {
+                            return 1;
+                        }
+                    } finally {
+                        fs.rmSync(tmp, {recursive: true, force: true});
+                    }
+                    continue;
+                }
+                const upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
+                // If the command dies early we report its exit code; don't
+                // also crash on the resulting EPIPE, which reaches both
+                // stdin and (via streamx's destroy propagation) the pack.
+                upload.stdin!.on('error', () => {});
+                const pack = aq.pack(dst => matched.has(dst));
+                pack.on('error', () => {});
+                pack.pipe(upload.stdin!);
+                if (await waitExit(upload) !== 0) {
+                    return 1;
+                }
+            }
+        }
+        return 0;
     });
+}
+
+async function cmdRun(file : string, opts : VerbOpts) : Promise<void> {
+    const output = requireOutput(opts);
+    setConfig(loadConfig(opts.config));
+    const specs = await importDeploys([file]);
+    process.exitCode = await buildThen(getDecls(), opts, false, async () => {
+        const aq = await runFinish(finishOf(specs, file), Boolean(opts.verbose));
+        if (aq === null) {
+            return 1;
+        }
+        await aq.run(output, opts.tar ? 'tar' : opts.link ? 'link' : 'copy');
+        return 0;
+    });
+}
 
 function slugOf(decl : RuleDecl) : string {
     const template = decl.displayTemplate ?? decl.cmds[0]!;
@@ -265,73 +302,121 @@ function slugOf(decl : RuleDecl) : string {
     return slug === '' ? 'rule' : slug;
 }
 
-common(program.command('inspect <paths...>'))
-    .description('build every rule touching the given source paths and copy the outputs out')
-    .requiredOption('-o, --output <dir>', 'output directory')
-    .action(async (paths : string[], opts : CommonOpts & {output : string}) => {
-        setConfig(loadConfig(opts.config));
-        await importDeploys(discoverDeployFiles());
-        // Accept absolute paths and paths relative to where the user ran the
-        // command; rules declare repo-root-relative paths.
-        const targets = paths.map(p => {
-            const target = nodePath.relative(root, nodePath.resolve(invocationCwd, p));
-            if (target.startsWith('..')) {
-                throw new BuildError(`Not under the repo root: ${p}`);
-            }
-            return target;
-        });
-
-        const closure = new Set<RuleDecl>();
-        for (const decl of getDecls()) {
-            const hit = [...decl.inputs, ...decl.deps].some(i => typeof i === 'string'
-                && targets.some(t => i === t || i.startsWith(t + '/')));
-            if (hit) {
-                closure.add(decl);
-            }
+async function cmdInspect(paths : string[], opts : VerbOpts) : Promise<void> {
+    const output = requireOutput(opts);
+    setConfig(loadConfig(opts.config));
+    await importDeploys(discoverDeployFiles());
+    // Accept absolute paths and paths relative to where the user ran the
+    // command; rules declare repo-root-relative paths.
+    const targets = paths.map(p => {
+        const target = nodePath.relative(root, nodePath.resolve(invocationCwd, p));
+        if (target.startsWith('..')) {
+            throw new BuildError(`Not under the repo root: ${p}`);
         }
-        if (closure.size === 0) {
-            throw new BuildError(`No rules consume: ${targets.join(' ')}`);
-        }
-        // Transitive consumers: show everything these files end up in. The
-        // executor pulls in any producers the closure needs on its own.
-        for (let grew = true; grew;) {
-            grew = false;
-            for (const decl of getDecls()) {
-                if (closure.has(decl)) {
-                    continue;
-                }
-                if ([...decl.inputs, ...decl.deps].some(i => typeof i !== 'string' && closure.has(i.decl))) {
-                    closure.add(decl);
-                    grew = true;
-                }
-            }
-        }
-
-        const decls = getDecls().filter(d => closure.has(d));
-        console.log(`inspect: ${decls.length} rules`);
-        process.exitCode = await buildThen(decls, opts, false, async () => {
-            for (const decl of decls) {
-                const dir = nodePath.join(opts.output, slugOf(decl));
-                fs.mkdirSync(dir, {recursive: true});
-                for (const artifact of decl.outputs) {
-                    let dst = nodePath.join(dir, artifact.filename);
-                    for (let n = 2; fs.existsSync(dst); n++) {
-                        dst = nodePath.join(dir, `${artifact.name}-${n}.${artifact.ext}`);
-                    }
-                    fs.copyFileSync(casPath(CAS_DIR, artifact.hash, artifact.ext), dst);
-                    fs.chmodSync(dst, 0o644);
-                    console.log(`${nodePath.relative(opts.output, dst)}`);
-                }
-            }
-            return 0;
-        });
+        return target;
     });
 
-try {
-    await program.parseAsync(process.argv);
-    if (process.argv.slice(2).length === 0) {
-        program.outputHelp();
+    const closure = new Set<RuleDecl>();
+    for (const decl of getDecls()) {
+        const hit = [...decl.inputs, ...decl.deps].some(i => typeof i === 'string'
+            && targets.some(t => i === t || i.startsWith(t + '/')));
+        if (hit) {
+            closure.add(decl);
+        }
     }
+    if (closure.size === 0) {
+        throw new BuildError(`No rules consume: ${targets.join(' ')}`);
+    }
+    // Transitive consumers: show everything these files end up in. The
+    // executor pulls in any producers the closure needs on its own.
+    for (let grew = true; grew;) {
+        grew = false;
+        for (const decl of getDecls()) {
+            if (closure.has(decl)) {
+                continue;
+            }
+            if ([...decl.inputs, ...decl.deps].some(i => typeof i !== 'string' && closure.has(i.decl))) {
+                closure.add(decl);
+                grew = true;
+            }
+        }
+    }
+
+    const decls = getDecls().filter(d => closure.has(d));
+    console.log(`inspect: ${decls.length} rules`);
+    process.exitCode = await buildThen(decls, opts, false, async () => {
+        for (const decl of decls) {
+            const dir = nodePath.join(output, slugOf(decl));
+            fs.mkdirSync(dir, {recursive: true});
+            for (const artifact of decl.outputs) {
+                let dst = nodePath.join(dir, artifact.filename);
+                for (let n = 2; fs.existsSync(dst); n++) {
+                    dst = nodePath.join(dir, `${artifact.name}-${n}.${artifact.ext}`);
+                }
+                fs.copyFileSync(casPath(CAS_DIR, artifact.hash, artifact.ext), dst);
+                fs.chmodSync(dst, 0o644);
+                console.log(`${nodePath.relative(output, dst)}`);
+            }
+        }
+        return 0;
+    });
+}
+
+async function main(argv : string[]) : Promise<void> {
+    const [verb, ...rest] = argv;
+    if (verb === undefined || verb === '-h' || verb === '--help') {
+        console.log(USAGE);
+        return;
+    }
+    if (!(verb in VERB_OPTIONS)) {
+        throw new BuildError(`Unknown command: ${verb} (-h for usage)`);
+    }
+    let parsed;
+    try {
+        parsed = parseArgs({
+            args: rest,
+            options: {...COMMON_OPTIONS, ...VERB_OPTIONS[verb as keyof typeof VERB_OPTIONS]},
+            allowPositionals: true,
+        });
+    } catch (err) {
+        throw new BuildError(`${(err as Error).message.split('\n')[0]} (-h for usage)`);
+    }
+    const v = parsed.values as {[k : string] : string | boolean | undefined};
+    const positionals = parsed.positionals;
+    if (v.help) {
+        console.log(USAGE);
+        return;
+    }
+    const opts : VerbOpts = {
+        jobs: v.jobs as string,
+        dryRun: Boolean(v['dry-run']),
+        failFast: Boolean(v['fail-fast']),
+        config: v.config as string,
+        verbose: Boolean(v.verbose),
+        output: v.output as string | undefined,
+        link: Boolean(v.link),
+        tar: Boolean(v.tar),
+    };
+    switch (verb) {
+        case 'build':
+            return cmdBuild(positionals, opts);
+        case 'deploy':
+            return cmdDeploy(positionals, opts);
+        case 'run':
+            if (positionals.length !== 1) {
+                throw new BuildError('run takes exactly one deploy file');
+            }
+            return cmdRun(positionals[0]!, opts);
+        case 'inspect':
+            if (positionals.length === 0) {
+                throw new BuildError('inspect takes at least one source path');
+            }
+            return cmdInspect(positionals, opts);
+    }
+}
+
+try {
+    await main(process.argv.slice(2));
 } catch (err) {
     if (err instanceof BuildError) {
         console.error(err.message);

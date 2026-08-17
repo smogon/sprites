@@ -1,21 +1,25 @@
 
-import program from 'commander';
+import {parseArgs} from 'util';
+
 import * as image from './image.ts';
 
-program
-    .option('-c, --check', 'Check only')
-    .option('-v, --verbose', 'Print info')
-    .option('-f, --force', 'Force write even when already cropped')
-    .parse(process.argv);
+const {values: opts, positionals: files} = parseArgs({
+    options: {
+        check: {type: 'boolean', short: 'c'},
+        verbose: {type: 'boolean', short: 'v'},
+        force: {type: 'boolean', short: 'f'},
+    },
+    allowPositionals: true,
+});
 
 let retVal = 0;
 
-for (const file of program.args) {
+for (const file of files) {
     const dims = image.getDims(file);
     const alreadyCropped = (dims.left === 0 || dims.right === 0) &&
           (dims.top === 0 || dims.bottom === 0);
 
-    if (program.verbose) {
+    if (opts.verbose) {
         let msg = `${file}: ${dims.width}x${dims.height}, `;
         if (alreadyCropped) {
             msg += `displacement horiz ${dims.left - dims.right}, vert ${dims.top - dims.bottom}`;
@@ -25,14 +29,14 @@ for (const file of program.args) {
         console.log(msg);
     }
 
-    if (program.check && !alreadyCropped) {
+    if (opts.check && !alreadyCropped) {
         retVal = 1;
-        if (!program.verbose) {
+        if (!opts.verbose) {
             break;
         }
     }
         
-    if (!program.check && (!alreadyCropped || program.force)) {
+    if (!opts.check && (!alreadyCropped || opts.force)) {
         const trimDims = image.losslessTrim(dims);
         image.crop(file, trimDims, file);
     }

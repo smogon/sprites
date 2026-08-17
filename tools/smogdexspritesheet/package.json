@@ -4,7 +4,6 @@
         "@smogon/sprite-data": "workspace:*",
         "@types/node": "^24.10.7",
         "@types/spritesmith": "^3.4.1",
-        "commander": "^5.0.0",
         "spritesmith": "^3.4.1"
     }
 }

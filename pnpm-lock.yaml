@@ -51,9 +51,6 @@ importers:
       better-sqlite3:
         specifier: ^12.4.1
         version: 12.11.1
-      commander:
-        specifier: ^5.1.0
-        version: 5.1.0
       debug:
         specifier: ^4.1.1
         version: 4.4.3
@@ -72,9 +69,6 @@ importers:
       base32-encode:
         specifier: ^2.0.0
         version: 2.0.0
-      commander:
-        specifier: ^5.1.0
-        version: 5.1.0
       debug:
         specifier: ^4.1.1
         version: 4.4.3
@@ -105,9 +99,6 @@ importers:
       '@types/spritesmith':
         specifier: ^3.4.1
         version: 3.4.5
-      commander:
-        specifier: ^5.0.0
-        version: 5.1.0
       spritesmith:
         specifier: ^3.4.1
         version: 3.5.1
@@ -117,9 +108,6 @@ importers:
       '@types/node':
         specifier: ^24.10.7
         version: 24.13.3
-      commander:
-        specifier: ^5.1.0
-        version: 5.1.0
 
 packages:
 
@@ -376,10 +364,6 @@ packages:
   combined-stream@1.0.8:
     resolution: {integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==}
     engines: {node: '>= 0.8'}
-
-  commander@5.1.0:
-    resolution: {integrity: sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==}
-    engines: {node: '>= 6'}
 
   concat-stream@1.5.2:
     resolution: {integrity: sha512-H6xsIBfQ94aESBG8jGHXQ7i5AEpy5ZeVaLDOisDICiTCKpqEfr34/KmTrspKQNoLKNu9gTkovlpQcUi630AKiQ==}
@@ -1018,8 +1002,6 @@ snapshots:
   combined-stream@1.0.8:
     dependencies:
       delayed-stream: 1.0.0
-
-  commander@5.1.0: {}
 
   concat-stream@1.5.2:
     dependencies:
