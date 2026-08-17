@@ -208,6 +208,21 @@ common(program.command('deploy [names...]'))
                 for (const [i, entry] of target.deploy.entries()) {
                     const matched = subsets[i]!;
                     console.log(`${name}: ${matched.size} files | ${entry.cmd}`);
+                    if (entry.dir) {
+                        fs.mkdirSync(TMP_DIR, {recursive: true});
+                        const tmp = fs.mkdtempSync(nodePath.join(TMP_DIR, 'deploy-'));
+                        try {
+                            await aq.run(tmp, 'copy', dst => matched.has(dst));
+                            const cmd = spawn(entry.cmd.replaceAll('%d', tmp),
+                                {shell: true, stdio: ['ignore', 'inherit', 'inherit']});
+                            if (await waitExit(cmd) !== 0) {
+                                return 1;
+                            }
+                        } finally {
+                            fs.rmSync(tmp, {recursive: true, force: true});
+                        }
+                        continue;
+                    }
                     const upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
                     // If the command dies early we report its exit code; don't
                     // also crash on the resulting EPIPE, which reaches both

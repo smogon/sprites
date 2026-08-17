@@ -141,6 +141,17 @@ test('duplicate and absolute destinations invalidate the queue', () => {
     assert.ok(!abs.valid);
 });
 
+test('run with a filter materializes only matching entries', async () => {
+    const dir = tmpdir();
+    const aq = new ActionQueue();
+    aq.write('1', 'ani/a.gif');
+    aq.write('2', 'dex/b.png');
+    const out = pathlib.join(dir, 'deploy');
+    await aq.run(out, 'copy', dst => dst.startsWith('ani/'));
+    assert.equal(fs.readFileSync(pathlib.join(out, 'ani/a.gif'), 'utf8'), '1');
+    assert.ok(!fs.existsSync(pathlib.join(out, 'dex')));
+});
+
 test('copy-mode materialization restores 0644 on read-only sources', async () => {
     const dir = tmpdir();
     const src = pathlib.join(dir, 'obj');

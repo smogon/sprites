@@ -83,15 +83,23 @@ Useful flags: `-j <n>` parallelism, `-n` dry run, `-v` verbose,
 deploy names to a buildFile and a list of (subset, cmd) entries: after
 building and finishing the buildFile, each entry's globs select a subset of
 the finish outputs, which are tarred and piped to the entry's command on
-stdin. Every glob must match something, and every output must be covered by
-some entry.
+stdin. An entry with `dir: true` instead materializes the subset into a temp
+directory whose path replaces `%d` in the command (for rsync-style
+transports). Every glob must match something, and every output must be
+covered by some entry.
 
 ```json5
 {
     assets: {
         buildFile: "assets.build.ts",
         deploy: [
-            {subset: ["**"], cmd: "ssh smogon smogonctl assets upload sprites"},
+            {subset: ["**"], cmd: "smogonctl assets upload sprites1"},
+        ],
+    },
+    ps: {
+        buildFile: "ps.build.ts",
+        deploy: [
+            {subset: ["ani/**"], dir: true, cmd: "rsync -a %d/ani/ ps:sprites/ani/"},
         ],
     },
 }

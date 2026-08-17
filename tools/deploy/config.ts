@@ -9,6 +9,9 @@ import {BuildError} from '../build/errors.ts';
 export interface DeployEntry {
     subset : string[];
     cmd : string;
+    // dir entries get their subset materialized into a temp directory whose
+    // path replaces %d in cmd; tar entries get the subset tarred on stdin.
+    dir? : boolean;
 }
 
 export interface DeployTarget {
@@ -48,9 +51,15 @@ export function loadDeployConfig(path : string) : DeployConfig {
         }
         for (const e of target.deploy as Partial<DeployEntry>[]) {
             if (typeof e !== 'object' || e === null
-                || !isStringArray(e.subset) || typeof e.cmd !== 'string') {
+                || !isStringArray(e.subset) || typeof e.cmd !== 'string'
+                || (e.dir !== undefined && typeof e.dir !== 'boolean')) {
                 throw new BuildError(
-                    `${path}: ${name}: each deploy entry needs {subset: string[], cmd: string}`);
+                    `${path}: ${name}: each deploy entry needs {subset: string[], cmd: string, dir?: boolean}`);
+            }
+            if (Boolean(e.dir) !== e.cmd.includes('%d')) {
+                throw new BuildError(`${path}: ${name}: ${e.dir
+                    ? 'a dir entry\'s cmd must use %d'
+                    : 'a tar entry\'s cmd must not use %d (missing dir: true?)'}: ${e.cmd}`);
             }
         }
         config.set(name, target as DeployTarget);

@@ -125,12 +125,12 @@ export class ActionQueue {
         }
     }
 
-    async run(dir : string, mode : 'link' | 'copy' | 'tar') {
+    async run(dir : string, mode : 'link' | 'copy' | 'tar', filter? : (dst : string) => boolean) {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
         if (mode !== 'tar') {
             for (const entry of this.log) {
-                if (entry.type !== 'Op')
+                if (entry.type !== 'Op' || (filter !== undefined && !filter(entry.dst)))
                     continue;
                 const op = entry.op;
                 const dst = nodePath.join(dir, entry.dst);
@@ -152,7 +152,7 @@ export class ActionQueue {
         } else {
             // In this case, I guess its a file rather than a dir.
             const out = fs.createWriteStream(dir);
-            this.pack().pipe(out);
+            this.pack(filter).pipe(out);
             return new Promise<void>((resolve, reject) => {
                 out.on('error', reject);
                 out.on('finish', () => resolve());

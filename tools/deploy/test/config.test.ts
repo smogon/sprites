@@ -31,6 +31,18 @@ test('loadDeployConfig parses json5 with comments and trailing commas', () => {
     });
 });
 
+test('loadDeployConfig ties the dir flag to %d in the cmd', () => {
+    const dir = loadDeployConfig(configFile(
+        '{ps: {buildFile: "ps.build.ts", deploy: [{subset: ["ani/**"], dir: true, cmd: "rsync -a %d/ani/ h:a/"}]}}'));
+    assert.equal(dir.get('ps')!.deploy[0]!.dir, true);
+    assert.throws(() => loadDeployConfig(configFile(
+        '{a: {buildFile: "x.build.ts", deploy: [{subset: ["**"], dir: true, cmd: "rsync -a h:a/"}]}}')),
+    /dir entry's cmd must use %d/);
+    assert.throws(() => loadDeployConfig(configFile(
+        '{a: {buildFile: "x.build.ts", deploy: [{subset: ["**"], cmd: "rsync -a %d/ h:a/"}]}}')),
+    /must not use %d \(missing dir: true\?\)/);
+});
+
 test('loadDeployConfig rejects missing files and malformed shapes', () => {
     assert.throws(() => loadDeployConfig('/nonexistent/deploy.json5'), /missing/);
     assert.throws(() => loadDeployConfig(configFile('[1]')), /must be an object/);
