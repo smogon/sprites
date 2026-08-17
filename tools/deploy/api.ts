@@ -18,8 +18,7 @@ export interface SrcFile extends pathlib.Path {
 export type CopySource = Artifact | SrcFile | string;   // string = repo-relative path
 
 // The finish API: nice naming over built artifacts and raw sources. Ops are
-// queued in call order (the tar entry order), so __key-style entries must be
-// written first.
+// queued in call order, which is the tar entry order.
 export interface DeployCtx {
     copy(src : CopySource, dst : string) : void;
     write(dst : string, data : string) : void;

@@ -65,11 +65,11 @@ test('ctx queues artifact copies from the CAS, writes and reads', () => {
     const artifact = makeArtifact(casDir, 'bytes', 'webp');
     const aq = new ActionQueue();
     const ctx = makeCtx(casDir, aq);
-    ctx.write('__key', 'sprites');
+    ctx.write('m.json', '{}');
     ctx.copy(artifact, 'sprites/x.webp');
     assert.equal(ctx.read(artifact), 'bytes');
     const ops = aq.log.filter(e => e.type === 'Op');
-    assert.deepEqual(ops.map(e => e.dst), ['__key', 'sprites/x.webp']);
+    assert.deepEqual(ops.map(e => e.dst), ['m.json', 'sprites/x.webp']);
     assert.equal((ops[1] as {op : {src : string}}).op.src, casPath(casDir, artifact.hash, 'webp'));
 });
 
