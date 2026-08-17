@@ -28,10 +28,10 @@ export class Manifest {
 
     write(dst: string): void {
         let sorted: Record<string, string> = {};
-        for (let k of [...this.#entries.keys()].sort()) {
-            sorted[k] = this.#entries.get(k)!;
+        for (let [k, v] of [...this.#entries].sort((a, b) => a[0] < b[0] ? -1 : 1)) {
+            sorted[k] = v;
         }
-        this.ctx.write(dst, JSON.stringify(sorted, null, 4) + "\n");
+        this.ctx.write(dst, JSON.stringify(sorted, null, 4) + '\n');
     }
 }
 

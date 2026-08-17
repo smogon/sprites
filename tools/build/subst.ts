@@ -35,11 +35,11 @@ export function substituteNames(s: string, inputs: string[]): string {
 export function substitute(s: string, inputs: string[], outputs: string[]): string {
     return s.replace(/%o(\d+)|%([a-zA-Z])/g, (match, n: string | undefined, c: string | undefined) => {
         if (n !== undefined) {
-            let i = Number(n);
-            if (i < 1 || i > outputs.length) {
+            let out = outputs[Number(n) - 1];
+            if (out === undefined) {
                 throw new Error(`Output index out of range (${outputs.length} outputs): ${match} in: ${s}`);
             }
-            return outputs[i - 1]!;
+            return out;
         }
         switch (c) {
             case 'f': return inputs.join(' ');

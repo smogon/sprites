@@ -148,7 +148,7 @@ function makeDecl(inputs: Input[], deps: Input[], spec: CmdSpec, outputs: string
         throw new Error(`Rule with no commands (outputs: ${outputs.join(' ')})`);
     }
     if (outputs.length === 0) {
-        throw new Error(`Rule with no outputs (cmds: ${cmds[0]!})`);
+        throw new Error(`Rule with no outputs (cmds: ${cmds[0] ?? ''})`);
     }
 
     // An identical declaration returns the already-registered rule. Artifact
@@ -225,7 +225,14 @@ export function rule(input: Input | Input[], spec: CmdSpec | subst.Cmd[],
                      output: string | readonly string[]): Artifact | Artifact[] {
     let s = normalizeSpec(spec);
     let decl = makeDecl(resolveInputs(input), resolveInputs(s.deps), s, astable(output));
-    return typeof output === 'string' ? decl.outputs[0]! : decl.outputs;
+    if (typeof output !== 'string') {
+        return decl.outputs;
+    }
+    let first = decl.outputs[0];
+    if (first === undefined) {
+        throw new Error('Rule with no outputs');
+    }
+    return first;
 }
 
 export function forEachRule(input: Input | Input[], spec: CmdSpec | subst.Cmd[],

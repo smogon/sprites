@@ -40,7 +40,17 @@ export type ExecutorOpts = {
 };
 
 export function label(decl: artifact.RuleDecl): string {
-    return decl.display ?? decl.cmds[0]!;
+    return decl.display ?? decl.cmds[0] ?? '(no commands)';
+}
+
+// Parallel-array access: the arrays are constructed the same length, so a
+// miss is a bug worth crashing on.
+function paired<T>(xs: readonly T[], n: number): T {
+    let x = xs[n];
+    if (x === undefined) {
+        throw new Error('parallel array length mismatch');
+    }
+    return x;
 }
 
 function indent(text: string): string {
@@ -153,7 +163,7 @@ export class Executor {
         try {
             let inputs = [...decl.inputs, ...decl.deps];
             let resolved = await Promise.all(inputs.map(i => this.#digestOf(i)));
-            digests = new Map(inputs.map((i, n) => [i, resolved[n]!]));
+            digests = new Map(inputs.map((i, n) => [i, paired(resolved, n)]));
         } catch (err) {
             if (err instanceof RuleFailed) {
                 this.#outcomes.set(decl, {status: 'blocked'});
@@ -164,7 +174,13 @@ export class Executor {
             throw err;
         }
 
-        let key = artifact.computeKey(decl, i => digests.get(i)!);
+        let key = artifact.computeKey(decl, i => {
+            let d = digests.get(i);
+            if (d === undefined) {
+                throw new Error(`No digest for input ${typeof i === 'string' ? i : i.filename}`);
+            }
+            return d;
+        });
         this.#keys.set(decl, key);
 
         // Byte-identical duplicate declarations share one execution.
@@ -172,7 +188,7 @@ export class Executor {
         if (existing !== undefined) {
             try {
                 let shared = await existing;
-                decl.outputs.forEach((o, n) => o.resolve(shared[n]!));
+                decl.outputs.forEach((o, n) => o.resolve(paired(shared, n)));
                 this.#outcomes.set(decl, {status: 'clean'});
                 return shared;
             } catch (err) {
@@ -187,7 +203,7 @@ export class Executor {
         let work = this.#perform(decl, key);
         this.#inflightByKey.set(key, work);
         let result = await work;
-        decl.outputs.forEach((o, n) => o.resolve(result[n]!));
+        decl.outputs.forEach((o, n) => o.resolve(paired(result, n)));
         return result;
     }
 
@@ -196,7 +212,7 @@ export class Executor {
         let stored = store.lookupRule(key);
         if (stored !== null
             && stored.length === decl.outputs.length
-            && stored.every((o, n) => o.ext === decl.outputs[n]!.ext)
+            && stored.every((o, n) => o.ext === paired(decl.outputs, n).ext)
             && stored.every(o => cas.casStat(casDir, o.digest, o.ext) === o.size)) {
             this.#outcomes.set(decl, {status: 'clean'});
             return stored.map(o => o.digest);
@@ -238,7 +254,7 @@ export class Executor {
                 let missing = tempOutputs.filter(p => !fs.existsSync(p));
                 if (missing.length === 0) {
                     let outputs = decl.outputs.map((o, n) => {
-                        let object = cas.casInsert(casDir, tempOutputs[n]!, o.ext);
+                        let object = cas.casInsert(casDir, paired(tempOutputs, n), o.ext);
                         return {digest: object.digest, ext: o.ext, size: object.size};
                     });
                     store.recordRule(key, decl.cmds, outputs);

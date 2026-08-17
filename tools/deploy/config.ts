@@ -70,8 +70,8 @@ export function loadDeployConfig(path: string): DeployConfig {
 // Route finish outputs to deploy entries: per entry, the set of dsts its
 // subset globs match. Every glob must match something and every dst must be
 // covered by some entry; to unship an output, don't emit it in finish.
-export function matchSubsets(dsts: readonly string[],
-                             entries: readonly DeployEntry[]): Set<string>[] {
+export function matchSubsets(dsts: readonly string[], entries: readonly DeployEntry[])
+    : {entry: DeployEntry, matched: Set<string>}[] {
     let covered = new Set<string>();
     let perEntry = entries.map(entry => {
         let matched = new Set<string>();
@@ -85,7 +85,7 @@ export function matchSubsets(dsts: readonly string[],
                 covered.add(hit);
             }
         }
-        return matched;
+        return {entry, matched};
     });
     let uncovered = dsts.filter(d => !covered.has(d));
     if (uncovered.length > 0) {

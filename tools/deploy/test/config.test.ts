@@ -59,8 +59,9 @@ test('matchSubsets routes dsts to entries, overlap allowed', () => {
         {subset: ['xy/**', 'xyicons/**'], cmd: 'one'},
         {subset: ['**/manifest.json'], cmd: 'two'},
     ]);
-    assert.deepEqual([...xy!].sort(), dsts);
-    assert.deepEqual([...manifests!], ['xy/manifest.json']);
+    assert.deepEqual([...xy!.matched].sort(), dsts);
+    assert.equal(xy!.entry.cmd, 'one');
+    assert.deepEqual([...manifests!.matched], ['xy/manifest.json']);
 });
 
 test('matchSubsets errors on a glob matching nothing', () => {

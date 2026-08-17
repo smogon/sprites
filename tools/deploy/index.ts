@@ -232,25 +232,24 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
         }
         return;
     }
-    for (let name of names) {
-        if (!config.has(name)) {
+    let targets = names.map(name => {
+        let target = config.get(name);
+        if (target === undefined) {
             throw new BuildError(`deploy.json5: no deploy named ${name}`);
         }
-    }
+        return {name, target};
+    });
     setConfig(loadConfig(opts.config));
-    let files = [...new Set(names.map(n => config.get(n)!.buildFile))];
+    let files = [...new Set(targets.map(t => t.target.buildFile))];
     let specs = await importDeploys(files);
     process.exitCode = await buildThen(artifact.getDecls(), opts, false, async () => {
-        for (let name of names) {
-            let target = config.get(name)!;
+        for (let {name, target} of targets) {
             let aq = await runFinish(finishOf(specs, target.buildFile), Boolean(opts.verbose));
             if (aq === null) {
                 return 1;
             }
             let dsts = aq.log.filter(e => e.type === 'Op').map(e => e.dst);
-            let subsets = matchSubsets(dsts, target.deploy);
-            for (let [i, entry] of target.deploy.entries()) {
-                let matched = subsets[i]!;
+            for (let [i, {entry, matched}] of matchSubsets(dsts, target.deploy).entries()) {
                 console.log(`${name}: ${matched.size} files | ${entry.cmd}`);
                 // Debug mode: materialize what each entry would ship (tar
                 // entries included) instead of running its command.
@@ -276,13 +275,17 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                     continue;
                 }
                 let upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
+                let stdin = upload.stdin;
+                if (stdin === null) {
+                    throw new BuildError(`no stdin pipe for: ${entry.cmd}`);
+                }
                 // If the command dies early we report its exit code; don't
                 // also crash on the resulting EPIPE, which reaches both
                 // stdin and (via streamx's destroy propagation) the pack.
-                upload.stdin!.on('error', () => {});
+                stdin.on('error', () => {});
                 let pack = aq.pack(dst => matched.has(dst));
                 pack.on('error', () => {});
-                pack.pipe(upload.stdin!);
+                pack.pipe(stdin);
                 if (await waitExit(upload) !== 0) {
                     return 1;
                 }
@@ -307,7 +310,7 @@ async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
 }
 
 function slugOf(decl: artifact.RuleDecl): string {
-    let template = decl.displayTemplate ?? decl.cmds[0]!;
+    let template = decl.displayTemplate ?? decl.cmds[0] ?? '';
     let slug = template.replace(/%[a-zA-Z0-9]+/g, ' ')
         .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
     return slug === '' ? 'rule' : slug;
@@ -413,11 +416,13 @@ async function main(argv: string[]): Promise<void> {
             return cmdBuild(positionals, opts);
         case 'deploy':
             return cmdDeploy(positionals, opts);
-        case 'run':
-            if (positionals.length !== 1) {
+        case 'run': {
+            let [file, ...extra] = positionals;
+            if (file === undefined || extra.length > 0) {
                 throw new BuildError('run takes exactly one deploy file');
             }
-            return cmdRun(positionals[0]!, opts);
+            return cmdRun(file, opts);
+        }
         case 'inspect':
             if (positionals.length === 0) {
                 throw new BuildError('inspect takes at least one source path');

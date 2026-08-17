@@ -39,8 +39,11 @@ export function runShell(command: string, opts: {cwd: string, signal: AbortSigna
 
         let killTimer: NodeJS.Timeout | undefined;
         let kill = (sig: NodeJS.Signals) => {
+            if (child.pid === undefined) {
+                return;
+            }
             try {
-                process.kill(-child.pid!, sig);
+                process.kill(-child.pid, sig);
             } catch {}
         };
         let onAbort = () => {

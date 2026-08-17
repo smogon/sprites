@@ -70,7 +70,7 @@ export function parseFilename(s: string): SpriteFilename {
     if (s.length < 2)
         throw new Error(`Filename ${s} needs to be at least 2 characters'`);
 
-    let prefix = s[0]!;
+    let prefix = s.charAt(0);
     if (!prefix.match(/[a-z]/))
         throw new Error(`Filename ${s} must start with alpha character`);
 
@@ -79,15 +79,16 @@ export function parseFilename(s: string): SpriteFilename {
     for (let part of parts.slice(1)) {
         if (part.length === 0)
             throw new Error(`Can't parse ${s}`);
-        extra.set(part[0]!, part.slice(1));
+        extra.set(part.charAt(0), part.slice(1));
     }
-    
+
+    let first = parts[0];
+    if (first === undefined)
+        throw new Error(`Can't parse ${s}`);
     if (prefix === 'x') {
-        let name = parts[0]!.slice(1);
-        return {extension: true, name, extra};
+        return {extension: true, name: first.slice(1), extra};
     } else {
-        let id = parts[0]!;
-        return {extension: false, id, extra};
+        return {extension: false, id: first, extra};
     }
 }
 

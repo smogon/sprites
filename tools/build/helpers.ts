@@ -79,7 +79,7 @@ export function spritedata(basename: string): SpriteData {
         if (part.length === 1) {
             data[part] = true;
         } else {
-            data[part[0]!] = part.slice(1);
+            data[part.charAt(0)] = part.slice(1);
         }
     }
     return {id: parts[0] ?? '', data};

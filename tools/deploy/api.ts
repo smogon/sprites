@@ -91,8 +91,9 @@ export function makeCtx(casDir: string, queue: ActionQueue): DeployCtx {
             return result;
         },
         hash(...srcs: CopySource[]): string {
-            if (srcs.length === 1) {
-                return shortHash(digestOf(srcs[0]!));
+            let [only] = srcs;
+            if (only !== undefined && srcs.length === 1) {
+                return shortHash(digestOf(only));
             }
             let digests = srcs.map(digestOf).sort(Buffer.compare);
             let h = crypto.createHash('sha256');
