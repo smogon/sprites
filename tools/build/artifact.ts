@@ -166,6 +166,9 @@ function makeDecl(inputs : Input[], deps : Input[], spec : CmdSpec, outputs : st
         if (out.includes('/') || out.includes('%')) {
             throw new Error(`Rule outputs are nominal filenames, no paths or substitutions: ${out}`);
         }
+        if (outputs.indexOf(out) !== index) {
+            throw new Error(`Duplicate rule output: ${out}`);
+        }
         const ext = pathlib.extname(out);
         if (ext === '' || ext === '.') {
             throw new Error(`Rule output needs an extension: ${out}`);
