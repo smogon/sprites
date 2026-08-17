@@ -1,6 +1,5 @@
 {
     "extends": "../../tsconfig-base",
-    "exclude": ["test"],
     "references": [
         {"path": "../../data/lib"},
         {"path": "../build"},

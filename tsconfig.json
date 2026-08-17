@@ -1,6 +1,6 @@
 {
     "extends": "./tsconfig-base",
-    "include": ["Buildfile.ts", "*.deploy.ts", "rules/*.ts"],
+    "include": ["*.deploy.ts", "rules/*.ts"],
     "references": [
         {"path": "tools/build"},
         {"path": "tools/deploy"},

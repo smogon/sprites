@@ -5,7 +5,7 @@ import os from 'node:os';
 import pathlib from 'node:path';
 import {test} from 'node:test';
 
-import {base, spritedata, spriteglob} from '../api.ts';
+import {base, spritedata, spriteglob} from '../helpers.ts';
 
 test('spritedata parses id and flags', () => {
     assert.deepEqual(spritedata('10080'), {id: '10080', data: {}});

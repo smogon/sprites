@@ -79,25 +79,3 @@ export function runShell(command : string, opts : {cwd : string, signal : AbortS
     });
 }
 
-// A worker that throws stops its own loop, but the pool always waits for
-// every other worker to finish before rethrowing: failing fast here would
-// return control (and e.g. close the database) while rules are still running.
-export async function workerPool<T>(items : readonly T[], jobs : number,
-                                    fn : (item : T, index : number) => Promise<void>) : Promise<void> {
-    let next = 0;
-    const workers = [];
-    for (let i = 0; i < Math.max(1, Math.min(jobs, items.length)); i++) {
-        workers.push((async () => {
-            while (next < items.length) {
-                const index = next++;
-                await fn(items[index]!, index);
-            }
-        })());
-    }
-    const results = await Promise.allSettled(workers);
-    for (const result of results) {
-        if (result.status === 'rejected') {
-            throw result.reason;
-        }
-    }
-}

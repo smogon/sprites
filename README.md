@@ -46,21 +46,33 @@ Using [`brew`](https://brew.sh/) on  a macOS:
 $ brew install imagemagick gifsicle advancecomp optipng pngquant webp
 ```
 
-## Building
+## Building and deploying
 
-Install dependencies once with `pnpm install`. Then, to build:
+Install dependencies once with `pnpm install`.
+
+Each deploy is a root `*.deploy.ts` module: it declares its build rules
+(shared sets live in `rules/`) and a `finish` function that maps the built
+artifacts to their published names. Build outputs are content-addressed:
+rules declare nominal output filenames but the store names every object by
+the hash of its bytes (under `.build/cas/`), so incrementality keys on
+content, same-byte renames rebuild nothing, and hash-stamped publishing
+reuses the build's digests. All state lives in `.build/`.
 
 ```
-$ pnpm build
+$ pnpm build                                     # build every deploy's rules, GC stale state
+$ pnpm deploy                                    # assets.deploy.ts -> tar -> DEPLOY_COMMAND (.env)
+$ node tools/deploy/index.ts build ps.deploy.ts  # build one deploy's rules
+$ node tools/deploy/index.ts run smogon.deploy.ts -o deploy/smogon
+$ node tools/deploy/index.ts inspect src/minisprites/items/i1.png -o /tmp/out
 ```
 
-The rules live in `Buildfile.ts`. Build state (content hashes, rule records)
-is kept in `.build/`; outputs of removed rules are deleted automatically, and
-renamed sources are detected and their outputs copied instead of rebuilt.
+`run` materializes a deploy to a directory (`--link` hardlinks, `--tar`
+writes a tar file) without uploading anything. `inspect` builds every rule
+that consumes the given source paths (and their transitive consumers) and
+copies the outputs out under readable names for eyeballing.
 
 Useful flags: `-j <n>` parallelism, `-n` dry run, `-v` verbose,
-`--adopt` record already-existing `build/` outputs as up to date instead of
-rebuilding them (useful when `build/` was produced elsewhere).
+`--fail-fast` stop after the first failure.
 
 ## Configuration
 
@@ -88,7 +100,13 @@ DEFAULT_ADVPNG=-z4 -i5000
 
 - The build tool only tracks the inputs a rule declares. If a build tool reads
   files that aren't on its command line (e.g. it does a `readdir()`), declare
-  them with the rule's `deps:` in `Buildfile.ts` so changes are detected.
+  them with the rule's `deps:` so changes are detected.
+- Rule identity is content-only by default: renaming a source without
+  changing its bytes rebuilds nothing. If a tool bakes input *names* into
+  its output bytes (the spritesheet builders do), the rule must set
+  `nameSensitive: true` or renames will leave its output silently stale.
+- Rules must be declared when a deploy module is imported (top level), not
+  inside `finish` — the build runs before finish does.
 
 ## License
 

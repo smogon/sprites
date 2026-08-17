@@ -1,8 +1,8 @@
 {
     "type": "module",
     "scripts": {
-        "build": "node tools/build/index.ts",
-        "deploy": "node tools/deploy/index.ts deploy assets.deploy.js",
+        "build": "node tools/deploy/index.ts build",
+        "deploy": "node tools/deploy/index.ts deploy assets.deploy.ts",
         "check": "tsc --build tsconfig-workspace.json"
     },
     "dependencies": {
