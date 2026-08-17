@@ -1,8 +1,8 @@
 
 import spritesmith from 'spritesmith'
-import path from 'path'
-import fs from 'fs'
-import util from 'util';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
+import * as util from 'node:util';
 import * as spritedata from '@smogon/sprite-data/index.ts';
 
 let {values: opts, positionals: srcs} = util.parseArgs({

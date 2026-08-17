@@ -1,5 +1,5 @@
 
-import fs from 'fs';
+import * as fs from 'node:fs';
 
 export function parseConfig(text: string): Map<string, string> {
     let result = new Map<string, string>();

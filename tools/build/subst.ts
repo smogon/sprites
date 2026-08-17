@@ -1,5 +1,5 @@
 
-import pathlib from 'path';
+import * as pathlib from 'node:path';
 
 // A command spec entry: a shell command string, or an arbitrarily nested list
 // of them (flattened, like the Lua flatten()).

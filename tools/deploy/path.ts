@@ -1,5 +1,5 @@
 
-import pathlib from 'path';
+import * as pathlib from 'node:path';
 
 // Slight variation of pathlib parse, less fields, different ext handling
 export type Path = {dir: string, name: string, ext: string | null};

@@ -1,6 +1,6 @@
 
-import fs from 'fs';
-import {createHash} from 'crypto';
+import * as fs from 'node:fs';
+import {createHash} from 'node:crypto';
 
 export interface FileStat {
     size: bigint;

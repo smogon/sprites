@@ -1,5 +1,5 @@
 
-import cp from 'child_process';
+import * as cp from 'node:child_process';
 
 export function getDims(input: string) {
     let info = cp.execFileSync('magick', ['convert', input, '-format', '%w+%h+%@', 'info:'],

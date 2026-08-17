@@ -1,6 +1,6 @@
 
-import fs from 'fs';
-import pathlib from 'path';
+import * as fs from 'node:fs';
+import * as pathlib from 'node:path';
 import {DatabaseSync} from 'node:sqlite';
 
 import {BuildError} from './errors.ts';

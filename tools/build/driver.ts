@@ -2,7 +2,7 @@
 import {type RuleDecl} from './artifact.ts';
 import {casSweep} from './cas.ts';
 import {BuildError} from './errors.ts';
-import {type BuildResult, Executor, label} from './executor.ts';
+import * as executor from './executor.ts';
 import {reconcileHashes} from './hash.ts';
 import {type Store} from './store.ts';
 
@@ -25,7 +25,7 @@ export interface BuildOpts {
     logError?: (line: string) => void;
 }
 
-export interface DriveResult extends BuildResult {
+export interface DriveResult extends executor.BuildResult {
     interrupted: boolean;
 }
 
@@ -61,7 +61,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
         store.saveFileCache(updated);
     }
 
-    let executor = new Executor({
+    let exe = new executor.Executor({
         root: opts.root,
         store,
         casDir: opts.casDir,
@@ -75,7 +75,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
         log,
         logError,
     });
-    let result = await executor.build(decls);
+    let result = await exe.build(decls);
     let interrupted = opts.signal.aborted;
 
     let counts = {clean: 0, ran: 0, 'would-run': 0, failed: 0, blocked: 0};
@@ -103,7 +103,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
             logError('Failed rules:');
             for (let decl of decls) {
                 if (result.outcomes.get(decl)?.status === 'failed') {
-                    logError(`  ${label(decl)}`);
+                    logError(`  ${executor.label(decl)}`);
                 }
             }
         }

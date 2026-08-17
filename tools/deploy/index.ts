@@ -1,20 +1,20 @@
 
-import {spawn, type ChildProcess} from 'child_process';
-import fs from 'fs';
-import os from 'os';
-import nodePath from 'path';
-import {fileURLToPath, pathToFileURL} from 'url';
-import {parseArgs} from 'util';
+import {spawn, type ChildProcess} from 'node:child_process';
+import * as fs from 'node:fs';
+import * as os from 'node:os';
+import * as nodePath from 'node:path';
+import {fileURLToPath, pathToFileURL} from 'node:url';
+import {parseArgs} from 'node:util';
 
-import {type RuleDecl, getDecls} from '../build/artifact.ts';
+import * as artifact from '../build/artifact.ts';
 import {casPath} from '../build/cas.ts';
 import {loadConfig} from '../build/config.ts';
 import {build} from '../build/driver.ts';
 import {BuildError} from '../build/errors.ts';
 import {killAllProcessGroups} from '../build/exec.ts';
 import {setConfig} from '../build/helpers.ts';
-import {Store, acquireLock, dbVersion} from '../build/store.ts';
-import {type DeployFn, getDeploys, makeCtx} from './api.ts';
+import * as db from '../build/store.ts';
+import * as api from './api.ts';
 import {loadDeployConfig, matchSubsets} from './config.ts';
 import {ActionQueue} from './queue.ts';
 
@@ -106,12 +106,12 @@ function discoverDeployFiles(): string[] {
 // Importing a deploy module declares its rules and registers its deploy
 // blocks; the registry delta over each sequential import is that file's
 // blocks.
-async function importDeploys(files: string[]): Promise<Map<string, readonly DeployFn[]>> {
-    let specs = new Map<string, readonly DeployFn[]>();
+async function importDeploys(files: string[]): Promise<Map<string, readonly api.DeployFn[]>> {
+    let specs = new Map<string, readonly api.DeployFn[]>();
     for (let file of files) {
-        let before = getDeploys().length;
+        let before = api.getDeploys().length;
         await import(pathToFileURL(nodePath.resolve(file)).href);
-        specs.set(file, getDeploys().slice(before));
+        specs.set(file, api.getDeploys().slice(before));
     }
     return specs;
 }
@@ -119,19 +119,19 @@ async function importDeploys(files: string[]): Promise<Map<string, readonly Depl
 // Build `decls` and, on success, run `then` while still holding the lock (a
 // concurrent GC must not sweep CAS objects out from under a finish). Returns
 // the process exit code.
-async function buildThen(decls: readonly RuleDecl[], opts: CommonOpts, gc: boolean,
+async function buildThen(decls: readonly artifact.RuleDecl[], opts: CommonOpts, gc: boolean,
                          then?: () => Promise<number>): Promise<number> {
     let jobs = Number(opts.jobs);
     if (!Number.isInteger(jobs) || jobs < 1) {
         throw new BuildError(`Invalid --jobs value: ${opts.jobs}`);
     }
     let dryRun = Boolean(opts.dryRun);
-    let release = dryRun ? null : acquireLock(LOCK_PATH);
+    let release = dryRun ? null : db.acquireLock(LOCK_PATH);
     try {
         // A dry run must not create state (opening a db migrates it);
         // without a current-version db it reads from an empty in-memory one.
-        let dbPath = dryRun && dbVersion(DB_PATH) !== 2 ? ':memory:' : DB_PATH;
-        let store = new Store(dbPath);
+        let dbPath = dryRun && db.dbVersion(DB_PATH) !== 2 ? ':memory:' : DB_PATH;
+        let store = new db.Store(dbPath);
         if (!dryRun) {
             fs.rmSync(TMP_DIR, {recursive: true, force: true});
         }
@@ -184,7 +184,7 @@ async function buildThen(decls: readonly RuleDecl[], opts: CommonOpts, gc: boole
     }
 }
 
-function finishOf(specs: Map<string, readonly DeployFn[]>, file: string): readonly DeployFn[] {
+function finishOf(specs: Map<string, readonly api.DeployFn[]>, file: string): readonly api.DeployFn[] {
     let fns = specs.get(file);
     if (fns === undefined || fns.length === 0) {
         throw new BuildError(`${file} registers no deploy blocks (use deploy())`);
@@ -192,9 +192,9 @@ function finishOf(specs: Map<string, readonly DeployFn[]>, file: string): readon
     return fns;
 }
 
-async function runFinish(fns: readonly DeployFn[], verbose: boolean): Promise<ActionQueue | null> {
+async function runFinish(fns: readonly api.DeployFn[], verbose: boolean): Promise<ActionQueue | null> {
     let aq = new ActionQueue();
-    let ctx = makeCtx(CAS_DIR, aq);
+    let ctx = api.makeCtx(CAS_DIR, aq);
     for (let fn of fns) {
         await fn(ctx);
     }
@@ -218,7 +218,7 @@ async function cmdBuild(files: string[], opts: CommonOpts): Promise<void> {
     // can know which keys are no longer declared anywhere.
     let gc = files.length === 0 && !Boolean(opts.dryRun);
     await importDeploys(files.length > 0 ? files : discoverDeployFiles());
-    process.exitCode = await buildThen(getDecls(), opts, gc);
+    process.exitCode = await buildThen(artifact.getDecls(), opts, gc);
 }
 
 async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
@@ -240,7 +240,7 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
     setConfig(loadConfig(opts.config));
     let files = [...new Set(names.map(n => config.get(n)!.buildFile))];
     let specs = await importDeploys(files);
-    process.exitCode = await buildThen(getDecls(), opts, false, async () => {
+    process.exitCode = await buildThen(artifact.getDecls(), opts, false, async () => {
         for (let name of names) {
             let target = config.get(name)!;
             let aq = await runFinish(finishOf(specs, target.buildFile), Boolean(opts.verbose));
@@ -296,7 +296,7 @@ async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
     let output = requireOutput(opts);
     setConfig(loadConfig(opts.config));
     let specs = await importDeploys([file]);
-    process.exitCode = await buildThen(getDecls(), opts, false, async () => {
+    process.exitCode = await buildThen(artifact.getDecls(), opts, false, async () => {
         let aq = await runFinish(finishOf(specs, file), Boolean(opts.verbose));
         if (aq === null) {
             return 1;
@@ -306,7 +306,7 @@ async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
     });
 }
 
-function slugOf(decl: RuleDecl): string {
+function slugOf(decl: artifact.RuleDecl): string {
     let template = decl.displayTemplate ?? decl.cmds[0]!;
     let slug = template.replace(/%[a-zA-Z0-9]+/g, ' ')
         .toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
@@ -327,8 +327,8 @@ async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
         return target;
     });
 
-    let closure = new Set<RuleDecl>();
-    for (let decl of getDecls()) {
+    let closure = new Set<artifact.RuleDecl>();
+    for (let decl of artifact.getDecls()) {
         let hit = [...decl.inputs, ...decl.deps].some(i => typeof i === 'string'
             && targets.some(t => i === t || i.startsWith(t + '/')));
         if (hit) {
@@ -342,7 +342,7 @@ async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
     // executor pulls in any producers the closure needs on its own.
     for (let grew = true; grew;) {
         grew = false;
-        for (let decl of getDecls()) {
+        for (let decl of artifact.getDecls()) {
             if (closure.has(decl)) {
                 continue;
             }
@@ -353,7 +353,7 @@ async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
         }
     }
 
-    let decls = getDecls().filter(d => closure.has(d));
+    let decls = artifact.getDecls().filter(d => closure.has(d));
     console.log(`inspect: ${decls.length} rules`);
     process.exitCode = await buildThen(decls, opts, false, async () => {
         for (let decl of decls) {

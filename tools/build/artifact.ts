@@ -1,9 +1,9 @@
 
-import pathlib from 'path';
-import {createHash} from 'crypto';
+import * as pathlib from 'node:path';
+import {createHash} from 'node:crypto';
 
 import {astable, glob} from './helpers.ts';
-import {type Cmd, basenameNoExt, flattenCmds, substitute, substituteNames} from './subst.ts';
+import * as subst from './subst.ts';
 
 // A rule's output: content-addressed bytes with a nominal name. The nominal
 // name exists for provenance, inspection, and deploy-time naming; it is NOT
@@ -61,7 +61,7 @@ export interface CmdSpec {
     // the spritesheet builders). Identity is normally content-only, so
     // without this flag a same-bytes rename would leave the output stale.
     nameSensitive?: boolean;
-    cmds: Cmd[];
+    cmds: subst.Cmd[];
 }
 
 export interface RuleDecl {
@@ -128,7 +128,7 @@ export function computeKey(decl: RuleDecl, digestOf: (i: Input) => string): stri
     return h.digest('hex');
 }
 
-function normalizeSpec(spec: CmdSpec | Cmd[]): CmdSpec {
+function normalizeSpec(spec: CmdSpec | subst.Cmd[]): CmdSpec {
     return Array.isArray(spec) ? {cmds: spec} : spec;
 }
 
@@ -143,7 +143,7 @@ function makeDecl(inputs: Input[], deps: Input[], spec: CmdSpec, outputs: string
     // %b/%B expand to nominal input names, never CAS paths, so they are
     // resolved at declaration. This also lands them in the identity key: a
     // command embedding input names is name-dependent by construction.
-    let cmds = flattenCmds(spec.cmds).map(c => substituteNames(c, nominalInputs));
+    let cmds = subst.flattenCmds(spec.cmds).map(c => subst.substituteNames(c, nominalInputs));
     if (cmds.length === 0) {
         throw new Error(`Rule with no commands (outputs: ${outputs.join(' ')})`);
     }
@@ -197,16 +197,16 @@ function makeDecl(inputs: Input[], deps: Input[], spec: CmdSpec, outputs: string
         if (ext === '' || ext === '.') {
             throw new Error(`Rule output needs an extension: ${out}`);
         }
-        decl.outputs.push(new Artifact(basenameNoExt(out), ext.slice(1), decl, index));
+        decl.outputs.push(new Artifact(subst.basenameNoExt(out), ext.slice(1), decl, index));
     });
     // Validate substitutions now (unknown escapes, out-of-range %oN) rather
     // than at execution; the results are discarded.
     let nominalOutputs = decl.outputs.map(o => o.filename);
     for (let cmd of cmds) {
-        substitute(cmd, nominalInputs, nominalOutputs);
+        subst.substitute(cmd, nominalInputs, nominalOutputs);
     }
     if (spec.display !== undefined) {
-        decl.display = substitute(spec.display, nominalInputs, nominalOutputs);
+        decl.display = subst.substitute(spec.display, nominalInputs, nominalOutputs);
     }
     decls.push(decl);
     declIndex.set(identity, decl);
@@ -216,19 +216,19 @@ function makeDecl(inputs: Input[], deps: Input[], spec: CmdSpec, outputs: string
 // One Artifact per declared output, as a tuple when the output list is a
 // literal, so `let [png, css] = rule(...)` needs no undefined checks. A
 // single string output returns its Artifact directly.
-export function rule(input: Input | Input[], spec: CmdSpec | Cmd[],
+export function rule(input: Input | Input[], spec: CmdSpec | subst.Cmd[],
                      output: string): Artifact;
 export function rule<const T extends readonly string[]>(
-    input: Input | Input[], spec: CmdSpec | Cmd[],
+    input: Input | Input[], spec: CmdSpec | subst.Cmd[],
     output: T): {[K in keyof T]: Artifact};
-export function rule(input: Input | Input[], spec: CmdSpec | Cmd[],
+export function rule(input: Input | Input[], spec: CmdSpec | subst.Cmd[],
                      output: string | readonly string[]): Artifact | Artifact[] {
     let s = normalizeSpec(spec);
     let decl = makeDecl(resolveInputs(input), resolveInputs(s.deps), s, astable(output));
     return typeof output === 'string' ? decl.outputs[0]! : decl.outputs;
 }
 
-export function forEachRule(input: Input | Input[], spec: CmdSpec | Cmd[],
+export function forEachRule(input: Input | Input[], spec: CmdSpec | subst.Cmd[],
                             output: string): Artifact[] {
     let s = normalizeSpec(spec);
     if (/%[fo]/.test(output)) {
@@ -237,7 +237,7 @@ export function forEachRule(input: Input | Input[], spec: CmdSpec | Cmd[],
     let deps = resolveInputs(s.deps);
     let outputs = [];
     for (let file of resolveInputs(input)) {
-        let decl = makeDecl([file], deps, s, [substitute(output, [nominal(file)], [])]);
+        let decl = makeDecl([file], deps, s, [subst.substitute(output, [nominal(file)], [])]);
         outputs.push(...decl.outputs);
     }
     return outputs;

@@ -1,6 +1,6 @@
 
-import fs from 'fs';
-import nodePath from 'path';
+import * as fs from 'node:fs';
+import * as nodePath from 'node:path';
 import tar from 'tar-stream';
 
 type Op = {

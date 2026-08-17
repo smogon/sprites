@@ -1,9 +1,9 @@
 
 import assert from 'node:assert/strict';
 import {createHash} from 'node:crypto';
-import fs from 'node:fs';
-import os from 'node:os';
-import pathlib from 'node:path';
+import * as fs from 'node:fs';
+import * as os from 'node:os';
+import * as pathlib from 'node:path';
 import {beforeEach, test} from 'node:test';
 
 import b32encode from 'base32-encode';

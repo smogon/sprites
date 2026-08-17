@@ -1,6 +1,6 @@
 
-import crypto from 'crypto';
-import fs from 'fs';
+import * as crypto from 'node:crypto';
+import * as fs from 'node:fs';
 
 import b32encode from 'base32-encode';
 

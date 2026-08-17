@@ -1,9 +1,9 @@
 
-import fs from 'fs';
-import pathlib from 'path';
+import * as fs from 'node:fs';
+import * as pathlib from 'node:path';
 
-import {type Input, type RuleDecl, computeKey} from './artifact.ts';
-import {casInsert, casPath, casStat} from './cas.ts';
+import * as artifact from './artifact.ts';
+import * as cas from './cas.ts';
 import {BuildError} from './errors.ts';
 import {runShell} from './exec.ts';
 import {type Store} from './store.ts';
@@ -19,8 +19,8 @@ export type RuleOutcome =
     | {status: 'blocked'};                                     // a producer failed
 
 export interface BuildResult {
-    outcomes: Map<RuleDecl, RuleOutcome>;   // no entry = not attempted (aborted)
-    keys: Map<RuleDecl, string>;            // only decls whose key resolved
+    outcomes: Map<artifact.RuleDecl, RuleOutcome>;   // no entry = not attempted (aborted)
+    keys: Map<artifact.RuleDecl, string>;            // only decls whose key resolved
     ok: boolean;                            // every decl clean or ran
 }
 
@@ -39,7 +39,7 @@ export interface ExecutorOpts {
     logError?: (line: string) => void;
 }
 
-export function label(decl: RuleDecl): string {
+export function label(decl: artifact.RuleDecl): string {
     return decl.display ?? decl.cmds[0]!;
 }
 
@@ -86,10 +86,10 @@ class Semaphore {
 // artifacts that already exist as values), so there is no cycle check.
 export class Executor {
     private opts: ExecutorOpts;
-    private memo = new Map<RuleDecl, Promise<string[]>>();
+    private memo = new Map<artifact.RuleDecl, Promise<string[]>>();
     private inflightByKey = new Map<string, Promise<string[]>>();
-    private outcomes = new Map<RuleDecl, RuleOutcome>();
-    private keys = new Map<RuleDecl, string>();
+    private outcomes = new Map<artifact.RuleDecl, RuleOutcome>();
+    private keys = new Map<artifact.RuleDecl, string>();
     private semaphore: Semaphore;
     private failAc = new AbortController();
     private runSignal: AbortSignal;
@@ -106,7 +106,7 @@ export class Executor {
         this.logError = opts.logError ?? console.error;
     }
 
-    async build(decls: readonly RuleDecl[]): Promise<BuildResult> {
+    async build(decls: readonly artifact.RuleDecl[]): Promise<BuildResult> {
         await Promise.allSettled(decls.map(d => this.demand(d)));
         let ok = decls.every(d => {
             let status = this.outcomes.get(d)?.status;
@@ -115,7 +115,7 @@ export class Executor {
         return {outcomes: this.outcomes, keys: this.keys, ok};
     }
 
-    private demand(decl: RuleDecl): Promise<string[]> {
+    private demand(decl: artifact.RuleDecl): Promise<string[]> {
         let p = this.memo.get(decl);
         if (p === undefined) {
             // Any non-sentinel escape (a store error, a resolve conflict, a
@@ -136,7 +136,7 @@ export class Executor {
         return p;
     }
 
-    private async digestOf(i: Input): Promise<string> {
+    private async digestOf(i: artifact.Input): Promise<string> {
         if (typeof i !== 'string') {
             await this.demand(i.decl);
             return i.hash;
@@ -148,8 +148,8 @@ export class Executor {
         return hash.toString('hex');
     }
 
-    private async demandInner(decl: RuleDecl): Promise<string[]> {
-        let digests: Map<Input, string>;
+    private async demandInner(decl: artifact.RuleDecl): Promise<string[]> {
+        let digests: Map<artifact.Input, string>;
         try {
             let inputs = [...decl.inputs, ...decl.deps];
             let resolved = await Promise.all(inputs.map(i => this.digestOf(i)));
@@ -164,7 +164,7 @@ export class Executor {
             throw err;
         }
 
-        let key = computeKey(decl, i => digests.get(i)!);
+        let key = artifact.computeKey(decl, i => digests.get(i)!);
         this.keys.set(decl, key);
 
         // Byte-identical duplicate declarations share one execution.
@@ -191,13 +191,13 @@ export class Executor {
         return result;
     }
 
-    private async perform(decl: RuleDecl, key: string): Promise<string[]> {
+    private async perform(decl: artifact.RuleDecl, key: string): Promise<string[]> {
         let {store, casDir} = this.opts;
         let stored = store.lookupRule(key);
         if (stored !== null
             && stored.length === decl.outputs.length
             && stored.every((o, n) => o.ext === decl.outputs[n]!.ext)
-            && stored.every(o => casStat(casDir, o.digest, o.ext) === o.size)) {
+            && stored.every(o => cas.casStat(casDir, o.digest, o.ext) === o.size)) {
             this.outcomes.set(decl, {status: 'clean'});
             return stored.map(o => o.digest);
         }
@@ -220,13 +220,13 @@ export class Executor {
         }
     }
 
-    private async execute(decl: RuleDecl, key: string, reason: DirtyReason): Promise<string[]> {
+    private async execute(decl: artifact.RuleDecl, key: string, reason: DirtyReason): Promise<string[]> {
         let {store, casDir, tmpDir, root} = this.opts;
         let ruleTmp = pathlib.join(tmpDir, String(this.tmpSeq++));
         fs.mkdirSync(ruleTmp, {recursive: true});
         let tempOutputs = decl.outputs.map(o => pathlib.join(ruleTmp, o.filename));
         let concreteInputs = decl.inputs.map(
-            i => typeof i === 'string' ? i : casPath(casDir, i.hash, i.ext));
+            i => typeof i === 'string' ? i : cas.casPath(casDir, i.hash, i.ext));
         let command = decl.cmds.map(c => substitute(c, concreteInputs, tempOutputs)).join(' && ');
 
         try {
@@ -238,7 +238,7 @@ export class Executor {
                 let missing = tempOutputs.filter(p => !fs.existsSync(p));
                 if (missing.length === 0) {
                     let outputs = decl.outputs.map((o, n) => {
-                        let object = casInsert(casDir, tempOutputs[n]!, o.ext);
+                        let object = cas.casInsert(casDir, tempOutputs[n]!, o.ext);
                         return {digest: object.digest, ext: o.ext, size: object.size};
                     });
                     store.recordRule(key, decl.cmds, outputs);
@@ -261,7 +261,7 @@ export class Executor {
 
     // Nothing is recorded for a failure: failed and never-ran are the same
     // state, so the rule stays dirty.
-    private fail(decl: RuleDecl, command: string, output: string, message: string): never {
+    private fail(decl: artifact.RuleDecl, command: string, output: string, message: string): never {
         this.outcomes.set(decl, {status: 'failed', message});
         this.logError(`FAILED: ${label(decl)} (${message})`);
         this.logError(`    command: ${command}`);

@@ -1,6 +1,6 @@
 
-import path from 'path';
-import fs from 'fs';
+import * as path from 'node:path';
+import * as fs from 'node:fs';
 import root from '@smogon/sprite-root/index.ts';
 
 let libdir = path.join(root, 'data');

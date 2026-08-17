@@ -1,5 +1,5 @@
 
-import {parseArgs} from 'util';
+import {parseArgs} from 'node:util';
 
 import * as image from './image.ts';
 

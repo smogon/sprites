@@ -1,6 +1,6 @@
 
-import fs from 'fs';
-import pathlib from 'path';
+import * as fs from 'node:fs';
+import * as pathlib from 'node:path';
 
 import type {Artifact} from './artifact.ts';
 import {type Cmd, basenameNoExt} from './subst.ts';
