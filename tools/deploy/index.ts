@@ -45,9 +45,9 @@ function common(cmd : ReturnType<typeof program.command>) : ReturnType<typeof pr
 }
 
 function discoverDeployFiles() : string[] {
-    const files = fs.readdirSync('.').filter(f => f.endsWith('.deploy.ts')).sort();
+    const files = fs.readdirSync('.').filter(f => f.endsWith('.build.ts')).sort();
     if (files.length === 0) {
-        throw new BuildError('No *.deploy.ts files at the repo root');
+        throw new BuildError('No *.build.ts files at the repo root');
     }
     return files;
 }
@@ -163,7 +163,7 @@ function waitExit(child : ChildProcess) : Promise<number | null> {
 }
 
 common(program.command('build [files...]'))
-    .description('build the rules of the given deploys (default: all *.deploy.ts)')
+    .description('build the rules of the given deploys (default: all *.build.ts)')
     .action(async (files : string[], opts : CommonOpts) => {
         setConfig(loadConfig(opts.config));
         // GC needs the full rule universe: only an unfiltered union build

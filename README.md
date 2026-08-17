@@ -50,7 +50,7 @@ $ brew install imagemagick gifsicle advancecomp optipng pngquant webp
 
 Install dependencies once with `pnpm install`.
 
-Each deploy is a root `*.deploy.ts` module: it declares its build rules
+Each deploy is a root `*.build.ts` module: it declares its build rules
 (shared sets are plain functions in `rules/`; declaring an identical rule
 twice is a no-op returning the existing artifacts, so any number of deploys
 can call the same set) and a `finish` function that maps the built artifacts
@@ -62,9 +62,9 @@ reuses the build's digests. All state lives in `.build/`.
 
 ```
 $ pnpm build                                     # build every deploy's rules, GC stale state
-$ pnpm deploy                                    # assets.deploy.ts -> tar -> DEPLOY_COMMAND (.env)
-$ node tools/deploy/index.ts build ps.deploy.ts  # build one deploy's rules
-$ node tools/deploy/index.ts run smogon.deploy.ts -o deploy/smogon
+$ pnpm deploy                                    # assets.build.ts -> tar -> DEPLOY_COMMAND (.env)
+$ node tools/deploy/index.ts build ps.build.ts  # build one deploy's rules
+$ node tools/deploy/index.ts run smogon.build.ts -o deploy/smogon
 $ node tools/deploy/index.ts inspect src/minisprites/items/i1.png -o /tmp/out
 ```
 
