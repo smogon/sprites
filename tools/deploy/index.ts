@@ -16,6 +16,7 @@ import {killAllProcessGroups} from '../build/exec.ts';
 import {setConfig} from '../build/helpers.ts';
 import {Store, acquireLock, dbVersion} from '../build/store.ts';
 import {type DeploySpec, makeCtx} from './api.ts';
+import {loadDeployConfig, matchSubsets} from './config.ts';
 import {ActionQueue} from './queue.ts';
 
 const root = nodePath.resolve(fileURLToPath(import.meta.url), '../../..');
@@ -173,35 +174,42 @@ common(program.command('build [files...]'))
         process.exitCode = await buildThen(getDecls(), opts, gc);
     });
 
-common(program.command('deploy <file>'))
-    .description('build, finish, and pipe the tar to DEPLOY_COMMAND from .env')
-    .action(async (file : string, opts : CommonOpts) => {
-        try {
-            process.loadEnvFile('.env');
-        } catch {
-            console.error(`missing .env; set DEPLOY_COMMAND="ssh smogon smogonctl assets upload"`);
-            process.exitCode = 1;
-            return;
-        }
-        const command = process.env.DEPLOY_COMMAND;
-        if (command === undefined) {
-            console.error(`DEPLOY_COMMAND not set in .env`);
-            process.exitCode = 1;
-            return;
+common(program.command('deploy [names...]'))
+    .description('build, finish, and pipe each subset tar to its command from deploy.json5')
+    .action(async (names : string[], opts : CommonOpts) => {
+        const config = loadDeployConfig('deploy.json5');
+        const targets = names.length > 0 ? names : [...config.keys()];
+        for (const name of targets) {
+            if (!config.has(name)) {
+                throw new BuildError(`deploy.json5: no deploy named ${name}`);
+            }
         }
         setConfig(loadConfig(opts.config));
-        const specs = await importDeploys([file]);
+        const files = [...new Set(targets.map(n => config.get(n)!.buildFile))];
+        const specs = await importDeploys(files);
         process.exitCode = await buildThen(getDecls(), opts, false, async () => {
-            const aq = await runFinish(finishOf(specs, file), Boolean(opts.verbose));
-            if (aq === null) {
-                return 1;
+            for (const name of targets) {
+                const target = config.get(name)!;
+                const aq = await runFinish(finishOf(specs, target.buildFile), Boolean(opts.verbose));
+                if (aq === null) {
+                    return 1;
+                }
+                const dsts = aq.log.filter(e => e.type === 'Op').map(e => e.dst);
+                const subsets = matchSubsets(dsts, target.deploy);
+                for (const [i, entry] of target.deploy.entries()) {
+                    const matched = subsets[i]!;
+                    console.log(`${name}: ${matched.size} files | ${entry.cmd}`);
+                    const upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
+                    // If the command dies early we report its exit code; don't
+                    // also crash on the resulting EPIPE.
+                    upload.stdin!.on('error', () => {});
+                    aq.pack(dst => matched.has(dst)).pipe(upload.stdin!);
+                    if (await waitExit(upload) !== 0) {
+                        return 1;
+                    }
+                }
             }
-            const upload = spawn(command, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
-            // If the command dies early we report its exit code; don't also
-            // crash on the resulting EPIPE.
-            upload.stdin!.on('error', () => {});
-            aq.pack().pipe(upload.stdin!);
-            return await waitExit(upload) !== 0 ? 1 : 0;
+            return 0;
         });
     });
 

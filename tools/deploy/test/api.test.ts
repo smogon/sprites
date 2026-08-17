@@ -88,7 +88,8 @@ test('ctx.list sorts, parses extensions, skips dotfiles and directories', () => 
     ]);
 });
 
-function packedEntries(aq : ActionQueue) : Promise<{name : string, data : string}[]> {
+function packedEntries(aq : ActionQueue, filter? : (dst : string) => boolean)
+    : Promise<{name : string, data : string}[]> {
     return new Promise((resolve, reject) => {
         const extract = tar.extract();
         const entries : {name : string, data : string}[] = [];
@@ -102,19 +103,29 @@ function packedEntries(aq : ActionQueue) : Promise<{name : string, data : string
         });
         extract.on('finish', () => resolve(entries));
         extract.on('error', reject);
-        aq.pack().pipe(extract);
+        aq.pack(filter).pipe(extract);
     });
 }
 
-test('pack preserves op order with __key first', async () => {
+test('pack preserves op order', async () => {
     const aq = new ActionQueue();
-    aq.write('sprites', '__key');
     aq.write('zzz', 'z.txt');
     aq.write('aaa', 'a.txt');
     assert.deepEqual(await packedEntries(aq), [
-        {name: '__key', data: 'sprites'},
         {name: 'z.txt', data: 'zzz'},
         {name: 'a.txt', data: 'aaa'},
+    ]);
+});
+
+test('pack with a filter packs only matching entries in order', async () => {
+    const aq = new ActionQueue();
+    aq.write('1', 'xy/a.png');
+    aq.write('2', 'meta/m.json');
+    aq.write('3', 'xy/b.png');
+    const subset = await packedEntries(aq, dst => dst.startsWith('xy/'));
+    assert.deepEqual(subset, [
+        {name: 'xy/a.png', data: '1'},
+        {name: 'xy/b.png', data: '3'},
     ]);
 });
 

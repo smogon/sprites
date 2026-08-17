@@ -4,4 +4,4 @@ pnpm-debug.log
 .cache/
 .build/
 build.config
-.env
+deploy.json5

@@ -6,6 +6,7 @@
         "base32-encode": "^2.0.0",
         "commander": "^5.1.0",
         "debug": "^4.1.1",
+        "json5": "^2.2.3",
         "tar-stream": "^3.0.0"
     },
     "scripts": {

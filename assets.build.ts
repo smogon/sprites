@@ -39,11 +39,6 @@ const forumG6 = gen6Padded();
 
 export default defineDeploy({
     finish(ctx) {
-        // The upload contract wants __key first in the tar, naming the asset
-        // set; the tar packer emits ops in queue order, so it has to be the
-        // first op.
-        ctx.write("__key", "sprites");
-
         // Dex spritesheet assets: hash-stamped css + webp. The css suffix
         // pointer rides in __meta/ for the dex to read.
         {

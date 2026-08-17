@@ -62,8 +62,9 @@ reuses the build's digests. All state lives in `.build/`.
 
 ```
 $ pnpm build                                     # build every deploy's rules, GC stale state
-$ pnpm deploy                                    # assets.build.ts -> tar -> DEPLOY_COMMAND (.env)
-$ node tools/deploy/index.ts build ps.build.ts  # build one deploy's rules
+$ pnpm deploy                                    # every deploy in deploy.json5
+$ node tools/deploy/index.ts deploy assets       # one named deploy
+$ node tools/deploy/index.ts build ps.build.ts   # build one deploy's rules
 $ node tools/deploy/index.ts run smogon.build.ts -o deploy/smogon
 $ node tools/deploy/index.ts inspect src/minisprites/items/i1.png -o /tmp/out
 ```
@@ -75,6 +76,26 @@ copies the outputs out under readable names for eyeballing.
 
 Useful flags: `-j <n>` parallelism, `-n` dry run, `-v` verbose,
 `--fail-fast` stop after the first failure.
+
+## Deploying
+
+`deploy` reads `deploy.json5` at the repo root (not tracked by git). It maps
+deploy names to a buildFile and a list of (subset, cmd) entries: after
+building and finishing the buildFile, each entry's globs select a subset of
+the finish outputs, which are tarred and piped to the entry's command on
+stdin. Every glob must match something, and every output must be covered by
+some entry.
+
+```json5
+{
+    assets: {
+        buildFile: "assets.build.ts",
+        deploy: [
+            {subset: ["**"], cmd: "ssh smogon smogonctl assets upload sprites"},
+        ],
+    },
+}
+```
 
 ## Configuration
 

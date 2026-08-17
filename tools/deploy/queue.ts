@@ -160,12 +160,12 @@ export class ActionQueue {
         }
     }
 
-    pack() : NodeJS.ReadableStream {
+    pack(filter? : (dst : string) => boolean) : NodeJS.ReadableStream {
         if (!this.valid)
             throw new Error(`Invalid ActionQueue`);
         let t = tar.pack();
         for (const entry of this.log) {
-            if (entry.type !== 'Op')
+            if (entry.type !== 'Op' || (filter !== undefined && !filter(entry.dst)))
                 continue;
             const op = entry.op;
             if (op.type === 'Copy'){
