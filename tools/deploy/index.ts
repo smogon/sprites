@@ -210,9 +210,12 @@ common(program.command('deploy [names...]'))
                     console.log(`${name}: ${matched.size} files | ${entry.cmd}`);
                     const upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
                     // If the command dies early we report its exit code; don't
-                    // also crash on the resulting EPIPE.
+                    // also crash on the resulting EPIPE, which reaches both
+                    // stdin and (via streamx's destroy propagation) the pack.
                     upload.stdin!.on('error', () => {});
-                    aq.pack(dst => matched.has(dst)).pipe(upload.stdin!);
+                    const pack = aq.pack(dst => matched.has(dst));
+                    pack.on('error', () => {});
+                    pack.pipe(upload.stdin!);
                     if (await waitExit(upload) !== 0) {
                         return 1;
                     }

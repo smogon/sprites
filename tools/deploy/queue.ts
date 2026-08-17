@@ -168,11 +168,11 @@ export class ActionQueue {
             if (entry.type !== 'Op' || (filter !== undefined && !filter(entry.dst)))
                 continue;
             const op = entry.op;
-            if (op.type === 'Copy'){
-                t.entry({name: entry.dst}, fs.readFileSync(op.src));
-            } else if (op.type === 'Write') {
-                t.entry({name: entry.dst}, op.data);
-            }
+            const data = op.type === 'Copy' ? fs.readFileSync(op.src) : op.data;
+            // A dying consumer destroys the pack and every pending entry
+            // sink, and each sink emits the error; the consumer is the one
+            // reporting the failure, so keep the sinks quiet.
+            t.entry({name: entry.dst}, data).on('error', () => {});
         }
         // Without this the archive has no end-of-archive marker, and strict
         // readers (Python tarfile in stream mode) die on the truncation.
