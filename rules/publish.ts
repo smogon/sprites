@@ -8,27 +8,38 @@ import type {DeployCtx, SrcFile} from '../tools/deploy/api.ts';
 // or a raw source file.
 export type Sprite = Artifact | SrcFile;
 
-// The unhashed -> hashed name mapping published beside a stamped set.
+// The unhashed name -> served url mapping published beside a stamped set.
+// `base` is the url this deploy's tree is served at, so an entry is just that
+// plus the copy's destination and no consumer needs a prefix of its own. The
+// rsync sets don't know their url yet and pass none, keeping the older
+// `name.ext` -> stamped filename shape.
 export class Manifest {
     #ctx: DeployCtx;
+    #base: string | null;
     #entries = new Map<string, string>();
 
-    constructor(ctx: DeployCtx) {
+    constructor(ctx: DeployCtx, base: string | null = null) {
         this.#ctx = ctx;
+        this.#base = base;
     }
 
     // Queue a copy of `f` under `dir` with a content-stamped name and record
-    // the unhashed -> hashed mapping.
+    // the entry that points at it.
     async copy(f: Sprite, {dir, ext}: Dest, name: string): Promise<void> {
         let h = await this.#ctx.hash(f);
-        let key = `${name}.${extOf(f, ext)}`;
+        let e = extOf(f, ext);
+        let stamped = `${name}-${h}.${e}`;
+        let dst = `${dir}/${stamped}`;
+        // A url names the whole path, so its key has nothing to disambiguate
+        // with an extension.
+        let key = this.#base === null ? `${name}.${e}` : name;
         // ActionQueue only dedups final dsts; hashed dsts differ even when
         // unhashed names collide, so check the key explicitly.
         if (this.#entries.has(key)) {
             throw new Error(`duplicate sprite name ${key}`);
         }
-        this.#entries.set(key, `${name}-${h}.${extOf(f, ext)}`);
-        this.#ctx.copy(f, `${dir}/${name}-${h}.${extOf(f, ext)}`);
+        this.#entries.set(key, this.#base === null ? stamped : `${this.#base}/${dst}`);
+        this.#ctx.copy(f, dst);
     }
 
     write(dst: string): void {
@@ -112,23 +123,5 @@ export async function itemspritecopy(manifest: Manifest, f: Sprite, dest: Dest):
     }
     for (let n of sd.names) {
         await manifest.copy(f, dest, toSmogonAlias(n));
-    }
-}
-
-export function newspritecopy(ctx: DeployCtx, f: Sprite, dest: Dest): void {
-    let sn = spritedata.parseFilename(f.name);
-    if (sn.extension) {
-        return;
-    }
-    let sd = spritedata.get(sn.id);
-    for (let n of sd.type === 'item' ? sd.names : [sd.base + sd.forme]) {
-        let name = toPSID(n);
-        if (sn.extra.has('f')) {
-            name += 'f';
-        }
-        if (sn.extra.has('g')) {
-            name += 'gmax';
-        }
-        ctx.copy(f, `${dest.dir}/${name}.${extOf(f, dest.ext)}`);
     }
 }

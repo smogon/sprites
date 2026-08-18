@@ -96,7 +96,7 @@ for eyeballing what would ship.
     assets: {
         buildFile: "assets.build.ts",
         deploy: [
-            {subset: ["**"], cmd: "smogonctl assets upload sprites1"},
+            {subset: ["**"], cmd: "smogonctl assets upload sprites"},
         ],
     },
     ps: {
@@ -107,6 +107,21 @@ for eyeballing what would ship.
     },
 }
 ```
+
+### The asset upload's tar layout
+
+`smogonctl assets upload` publishes a tar into a served tree under a prefix
+named in the receiving home's `services.toml`, which this side can't read. So
+`assets.build.ts` writes that prefix itself -- everything served ships under
+`sprites/` -- and the upload rejects a tar whose tree disagrees. The two are
+checked against each other instead of each guessing, which is what lets the
+manifests and pointers in `__meta/` name whole urls (`/__assets/sprites/...`)
+and their readers hold no configuration at all.
+
+`__meta/` is the exception and stays at the tar root: the upload diverts it to
+`assets-meta/`, beside the served tree rather than in it, because a served
+name carries a content hash and something un-stamped has to say which name to
+ask for.
 
 ## Configuration
 
