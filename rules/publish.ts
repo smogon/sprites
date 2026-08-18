@@ -10,20 +10,25 @@ export type Sprite = Artifact | SrcFile;
 
 // The unhashed -> hashed name mapping published beside a stamped set.
 export class Manifest {
-    readonly ctx: DeployCtx;
+    #ctx: DeployCtx;
     #entries = new Map<string, string>();
 
     constructor(ctx: DeployCtx) {
-        this.ctx = ctx;
+        this.#ctx = ctx;
     }
 
-    set(key: string, value: string): void {
+    // Queue a copy of `f` under `dir` with a content-stamped name and record
+    // the unhashed -> hashed mapping.
+    async copy(f: Sprite, {dir, ext}: Dest, name: string): Promise<void> {
+        let h = await this.#ctx.hash(f);
+        let key = `${name}.${extOf(f, ext)}`;
         // ActionQueue only dedups final dsts; hashed dsts differ even when
         // unhashed names collide, so check the key explicitly.
         if (this.#entries.has(key)) {
             throw new Error(`duplicate sprite name ${key}`);
         }
-        this.#entries.set(key, value);
+        this.#entries.set(key, `${name}-${h}.${extOf(f, ext)}`);
+        this.#ctx.copy(f, `${dir}/${name}-${h}.${extOf(f, ext)}`);
     }
 
     write(dst: string): void {
@@ -31,7 +36,7 @@ export class Manifest {
         for (let [k, v] of [...this.#entries].sort((a, b) => a[0] < b[0] ? -1 : 1)) {
             sorted[k] = v;
         }
-        this.ctx.write(dst, JSON.stringify(sorted, null, 4) + '\n');
+        this.#ctx.write(dst, JSON.stringify(sorted, null, 4) + '\n');
     }
 }
 
@@ -56,14 +61,6 @@ export function toSmogonAlias(name: string): string {
 
 export function toPSID(name: string): string {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
-}
-
-// Copy with a content-hash-stamped name and record the unhashed -> hashed
-// mapping in `manifest`.
-export async function stampcopy(manifest: Manifest, f: Sprite, {dir, ext}: Dest, name: string): Promise<void> {
-    let h = await manifest.ctx.hash(f);
-    manifest.set(`${name}.${extOf(f, ext)}`, `${name}-${h}.${extOf(f, ext)}`);
-    manifest.ctx.copy(f, `${dir}/${name}-${h}.${extOf(f, ext)}`);
 }
 
 export async function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
@@ -100,7 +97,7 @@ export async function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
         name += '-gmax';
     }
 
-    await stampcopy(manifest, f, dest, name);
+    await manifest.copy(f, dest, name);
 }
 
 // TODO: merge with above
@@ -114,7 +111,7 @@ export async function itemspritecopy(manifest: Manifest, f: Sprite, dest: Dest):
         throw new Error(`Not an item sprite: ${f.name}`);
     }
     for (let n of sd.names) {
-        await stampcopy(manifest, f, dest, toSmogonAlias(n));
+        await manifest.copy(f, dest, toSmogonAlias(n));
     }
 }
 
