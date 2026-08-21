@@ -1,8 +1,7 @@
 
-import {gen6Padded, itemPadded} from './rules/minisprites.ts';
 import {Manifest, itemspritecopy, spritecopy} from './rules/publish.ts';
-import {rule} from './tools/build/artifact.ts';
-import {spriteglob} from './tools/build/helpers.ts';
+import {forEachRule, rule} from './tools/build/artifact.ts';
+import {compresspng, pad, spriteglob} from './tools/build/helpers.ts';
 import {deploy} from './tools/deploy/api.ts';
 
 // The tar root maps onto the served tree: sprites/x is served at
@@ -54,11 +53,18 @@ deploy(async ctx => {
     ctx.write('__meta/spritesheet-css-url.txt', `${SERVED}/${ASSETS}/spritesheet-${ch}.css\n`);
 });
 
-// Forumsprites: padded minisprites under stamped names, with the
+// Forumsprites: uniform-size minisprites under stamped names, with the
 // unhashed -> url mapping in a manifest.
 
-let forumItems = itemPadded();
-let forumG6 = gen6Padded();
+let forumItems = forEachRule('src/minisprites/items/*.png', {
+    display: 'pad item minisprite %f',
+    cmds: [pad({w: 24, h: 24}), compresspng({config: 'MINISPRITE'})],
+}, '%b');
+
+let forumG6 = forEachRule('src/minisprites/pokemon/gen6/*.png', {
+    display: 'pad g6 minisprite %f',
+    cmds: [pad({w: 40, h: 30}), compresspng({config: 'MINISPRITE'})],
+}, '%b');
 
 deploy(async ctx => {
     let manifest = new Manifest(ctx, SERVED);
