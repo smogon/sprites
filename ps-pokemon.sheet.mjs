@@ -4,6 +4,8 @@ import path from 'path';
 import * as spritedata from '@smogon/sprite-data/index.ts';
 import root from '@smogon/sprite-root/index.ts';
 
+import {DEX_NUMS} from './ps-pokemon.dexnums.mjs';
+
 const srcDir = path.join(root, "src");
 const spritesDir = path.join(srcDir, "minisprites/pokemon/gen6");
 
@@ -687,8 +689,10 @@ for (const name of fs.readdirSync(spritesDir)) {
     }
     
     if (index === undefined) {
+        // A base species sits at the slot named by its dex number; only alt
+        // formes need the hand-kept table above.
         if (entry && !entry.forme) {
-            index = entry.num;
+            index = DEX_NUMS[toPSID(entry.base)];
         } else {
             errors.push(`can't find ${name}`);
             continue;

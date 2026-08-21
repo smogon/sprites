@@ -22,7 +22,7 @@ let sheetDeps = [
 rule('ps-pokemon.sheet.mjs', {
     display: 'ps pokemon sheet',
     nameSensitive: true,
-    deps: ['src/minisprites/pokemon/gen6/*', ...sheetDeps],
+    deps: ['src/minisprites/pokemon/gen6/*', 'ps-pokemon.dexnums.mjs', ...sheetDeps],
     cmds: ['node tools/sheet/index.ts %f %o', compresspng({config: 'SPRITESHEET'})],
 }, 'pokemonicons-sheet.png');
 
