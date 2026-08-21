@@ -6,6 +6,7 @@
         {"path": "tools/deploy"},
         {"path": "tools/sheet"},
         {"path": "tools/smogdexspritesheet"},
+        {"path": "tools/spritedata"},
         {"path": "tools/trim"},
         {"path": "lib/root"},
         {"path": "data/lib"},
