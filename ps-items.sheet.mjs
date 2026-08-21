@@ -1,11 +1,10 @@
 
+import fs from 'fs';
 import path from 'path';
 import * as spritedata from '@smogon/sprite-data/index.ts';
 import root from '@smogon/sprite-root/index.ts';
 
-function toPSID(name) {
-    return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
-}
+const itemsDir = path.join(root, "src/minisprites/items");
 
 // Derived from pokemon-showdown/data/items.ts
 const ITEMS = {
@@ -551,12 +550,11 @@ const ITEMS = {
 
 const found = new Map;
 
-for (const {type, sid, names} of spritedata.entries()) {
-    if (type !== 'item') continue;
-    for (let name of names) {
-        const id = toPSID(name);
-        const filename = spritedata.formatFilename({id: sid});
-        found.set(id, path.join(root, "src/minisprites/items", filename + ".png"));
+for (const filename of fs.readdirSync(itemsDir)) {
+    const sn = spritedata.parseFilename(path.parse(filename).name);
+    if (sn.kind !== 'i') continue;
+    for (const name of [sn.name, ...spritedata.ITEM_ALIASES[sn.name] ?? []]) {
+        found.set(spritedata.psid(name), path.join(itemsDir, filename));
     }
 }
 

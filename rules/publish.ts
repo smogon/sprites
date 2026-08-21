@@ -64,64 +64,35 @@ function extOf(f: Sprite, ext?: string): string {
     return result;
 }
 
-export function toSmogonAlias(name: string): string {
-    return name.toLowerCase().
-        replace(/[ _]+/, '-').
-        replace(/[^a-z0-9-]+/g, '');
-}
-
-export function toPSID(name: string): string {
-    return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
-}
-
 export async function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
                                  allowUnknown = false): Promise<void> {
     let sn = spritedata.parseFilename(f.name);
-    let name: string;
 
     // Skip asymmetrical for now
     if (sn.extra.has('a') || sn.extra.has('b') || sn.extra.has('s')) {
         return;
     }
 
-    if (sn.extension) {
-        if (allowUnknown && sn.name === 'Unknown') {
-            name = 'unknown';
-        } else {
-            // Skip this, we don't use Unknown/Substitute
+    if (sn.kind === 'x') {
+        // Skip these, we don't use Unknown/Substitute
+        if (!allowUnknown || sn.name !== 'unknown') {
             return;
         }
-    } else {
-        let sd = spritedata.get(sn.id);
-        if (sd.type !== 'specie') {
-            throw new Error(`Not a specie sprite: ${f.name}`);
-        }
-        name = toSmogonAlias(sd.base);
-        if (sd.forme) {
-            name += `-${toSmogonAlias(sd.forme)}`;
-        }
-    }
-    if (sn.extra.has('f')) {
-        name += '-f';
-    }
-    if (sn.extra.has('g')) {
-        name += '-gmax';
+    } else if (sn.kind !== 's') {
+        throw new Error(`Not a specie sprite: ${f.name}`);
     }
 
-    await manifest.copy(f, dest, name);
+    await manifest.copy(f, dest, spritedata.publishedName(sn, spritedata.smogon));
 }
 
 // TODO: merge with above
 export async function itemspritecopy(manifest: Manifest, f: Sprite, dest: Dest): Promise<void> {
     let sn = spritedata.parseFilename(f.name);
-    if (sn.extension) {
+    if (sn.kind !== 'i') {
         throw new Error(`Not an item sprite: ${f.name}`);
     }
-    let sd = spritedata.get(sn.id);
-    if (sd.type !== 'item') {
-        throw new Error(`Not an item sprite: ${f.name}`);
-    }
-    for (let n of sd.names) {
-        await manifest.copy(f, dest, toSmogonAlias(n));
+    await manifest.copy(f, dest, spritedata.smogon(sn.name));
+    for (let alias of spritedata.ITEM_ALIASES[sn.name] ?? []) {
+        await manifest.copy(f, dest, spritedata.smogon(alias));
     }
 }

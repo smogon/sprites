@@ -1,6 +1,8 @@
 {
     "type": "module",
     "dependencies": {
+        "@smogon/sprite-data": "workspace:*",
+        "@smogon/sprite-root": "workspace:*",
         "@types/node": "^24.10.7"
     }
 }

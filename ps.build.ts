@@ -2,18 +2,16 @@
 import * as spritedata from '@smogon/sprite-data/index.ts';
 
 import {gen10Modelslike} from './rules/modelslike.ts';
-import {type Sprite, toPSID} from './rules/publish.ts';
+import type {Sprite} from './rules/publish.ts';
 import {forEachRule, rule} from './tools/build/artifact.ts';
 import {PNG_DETERMINISTIC, base, compresspng, pad, spriteglob} from './tools/build/helpers.ts';
 import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 
-// PS spritesheets. The sheet tools readdir the minisprite dirs and resolve
-// ids through the sprite data, baking input names into the sheet layout,
-// hence nameSensitive.
+// PS spritesheets. The sheet tools readdir the minisprite dirs and read the
+// ids off the filenames, baking those names into the sheet layout, hence
+// nameSensitive.
 
 let sheetDeps = [
-    'data/species.json',
-    'data/items.json',
     'data/lib/index.ts',
     'lib/root/index.ts',
     'tools/sheet/index.ts',
@@ -103,34 +101,21 @@ deploy(async ctx => {
     // the PS deploy is revived; the rules above keep them building.
 });
 
-// PS ids keep the forme dash, unlike the smogon aliases.
+// PS runs the words of a name together, where the smogon aliases dash them.
 function psSpritecopy(ctx: DeployCtx, f: Sprite, dir: string): void {
     let sn = spritedata.parseFilename(f.name);
-    let name: string;
 
     // Skip asymmetrical for now
     if (sn.extra.has('a') || sn.extra.has('b') || sn.extra.has('s')) {
         return;
     }
 
-    if (sn.extension) {
+    if (sn.kind !== 's') {
         // Skip this, we don't use Unknown/Substitute
         return;
     }
-    let sd = spritedata.get(sn.id);
-    if (sd.type !== 'specie') {
-        throw new Error(`Not a specie sprite: ${f.name}`);
-    }
-    name = toPSID(sd.base);
-    if (sd.forme) {
-        name += `-${toPSID(sd.forme)}`;
-    }
-    if (sn.extra.has('f')) {
-        name += '-f';
-    }
-    if (sn.extra.has('g')) {
-        name += '-gmax';
-    }
+
+    let name = spritedata.publishedName(sn, spritedata.psid);
 
     if (f.ext === null) {
         throw new Error(`Sprite ${f.name} has no extension`);

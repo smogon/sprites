@@ -67,7 +67,7 @@ $ pnpm deploy                                    # list the deploys in deploy.js
 $ pnpm deploy assets                             # run a named deploy
 $ node tools/deploy/index.ts build ps.build.ts   # build one deploy's rules
 $ node tools/deploy/index.ts run smogon.build.ts -o deploy/smogon
-$ node tools/deploy/index.ts inspect src/minisprites/items/i1.png -o /tmp/out
+$ node tools/deploy/index.ts inspect src/minisprites/items/ileftovers.png -o /tmp/out
 ```
 
 `run` materializes a deploy to a directory (`--link` hardlinks, `--tar`

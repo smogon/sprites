@@ -16,7 +16,7 @@ let SERVED = '/__assets';
 
 let minispriteInputs = spriteglob(['src/minisprites/pokemon/gen6/*', 'src/minisprites/items/*'], {a: false});
 
-// Smogdex spritesheet. The sheet tool bakes sprite ids parsed from the %f
+// Smogdex spritesheet. The sheet tool bakes the names parsed from the %f
 // filenames into the css, hence nameSensitive. The png is declared only so
 // cwebp has something to read; only the css and the webp are published.
 
@@ -24,10 +24,7 @@ let [, sheetCss, sheetWebp] = rule(minispriteInputs, {
     display: 'smogdex sheet',
     nameSensitive: true,
     deps: [
-        'data/species.json',
-        'data/items.json',
         'data/lib/index.ts',
-        'lib/root/index.ts',
         'tools/smogdexspritesheet/index.ts',
     ],
     cmds: [

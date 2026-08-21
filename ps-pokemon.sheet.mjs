@@ -9,10 +9,6 @@ import {DEX_NUMS} from './ps-pokemon.dexnums.mjs';
 const srcDir = path.join(root, "src");
 const spritesDir = path.join(srcDir, "minisprites/pokemon/gen6");
 
-function toPSID(name) {
-    return name.toLowerCase().replace(/[^a-z0-9]+/g, '');
-}
-
 // Derived from pokemon-showdown-client/src/battle-dex-data.ts
 const BattlePokemonIconIndexes = {
 	unknown: 0,
@@ -670,12 +666,9 @@ for (const name of fs.readdirSync(spritesDir)) {
     const parsed = path.parse(name);
     const sn = spritedata.parseFilename(parsed.name);
 
-    let entry;
-    if (!sn.extension) {
-        entry = spritedata.get(sn.id);
-    }
-    let id = toPSID(entry ? entry.base + entry.forme : sn.name);
-    
+    // PS runs a name and its forme together, unlike the published sprite name.
+    let id = spritedata.psid(sn.name) + spritedata.psid(sn.extra.get("o") ?? '');
+
     if (sn.extra.has("f")) id += 'f';
     if (sn.extra.has("g")) id += 'gmax';
     
@@ -691,8 +684,8 @@ for (const name of fs.readdirSync(spritesDir)) {
     if (index === undefined) {
         // A base species sits at the slot named by its dex number; only alt
         // formes need the hand-kept table above.
-        if (entry && !entry.forme) {
-            index = DEX_NUMS[toPSID(entry.base)];
+        if (sn.kind === 's' && !sn.extra.has("o")) {
+            index = DEX_NUMS[spritedata.psid(sn.name)];
         } else {
             errors.push(`can't find ${name}`);
             continue;

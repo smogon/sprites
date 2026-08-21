@@ -22,38 +22,28 @@ let result = await run({
     src: srcs
 });
 
-let spaceRe = /[ _]+/g
-let removeRe = /[^a-z0-9-]/g
-
-export function toAlias(s: string) {
-    s = s.toLowerCase()
-    s = s.replace(spaceRe, '-')
-    s = s.replace(removeRe, '')
-    return s
-}
-
 let sprites = new Map;
 for (let [filename, sprite] of Object.entries(result.coordinates)) {
     let parsed = spritedata.parseFilename(path.parse(filename).name);
-    if (parsed.extension) {
-        sprites.set(toAlias(parsed.name),sprite);
+    if (parsed.kind === 'i') {
+        sprites.set(spritedata.smogon(parsed.name), sprite);
+        for (let alias of spritedata.ITEM_ALIASES[parsed.name] ?? []) {
+            sprites.set(spritedata.smogon(alias), sprite);
+        }
         continue;
     }
-    let data = spritedata.get(parsed.id);
-    if (data.type === 'specie') {
-        // TODO would like to use toPSID here, mess with it later.
-        let name = toAlias(data.base + (data.forme ? '-' + data.forme : ''));
-        if (parsed.extra.has('g')) {
-            name += '-gmax';
-        } else if (parsed.extra.has('f')) {
-            name += '-f';
-        }
-        sprites.set(name, sprite);
-    } else {
-        for (let name of data.names) {
-            sprites.set(toAlias(name), sprite);
-        }
+    // TODO would like to use psid here, mess with it later.
+    let name = spritedata.smogon(parsed.name);
+    let forme = parsed.extra.get('o');
+    if (forme) {
+        name += `-${spritedata.smogon(forme)}`;
     }
+    if (parsed.extra.has('g')) {
+        name += '-gmax';
+    } else if (parsed.extra.has('f')) {
+        name += '-f';
+    }
+    sprites.set(name, sprite);
 }
 
 let stylesheet = '';

@@ -1,5 +1,35 @@
 
-Documentation for flags used.
+# Filenames
+
+    <kind><name>[-o<forme>][-<flag>...].<ext>
+
+`<kind>` is `s` for a species, `i` for an item, or `x` for something the games
+don't name (`xegg`, `xsubstitute`, `xarceusunknown`), so a directory can hold
+more than one and rules can match them apart.
+
+`<name>` is the name with its case and punctuation flattened away, keeping only
+where the words divide: a run of non-alphanumerics becomes `_` when it separates
+words and disappears otherwise. `Ho-Oh` is `sho_oh`, `Mr. Mime` is `smr_mime`,
+`Farfetch’d` is `sfarfetchd`, `Flabébé` is `sflabebe`. Keeping the divisions is
+what lets the two places these sprites are published each spell a name their own
+way, smogon as `ho-oh` and PS as `hooh`, with nothing having to look it up.
+
+Formes ride in `-o`, so `Charizard-Mega-X`'s back sprite is
+`scharizard-omega_x-b.gif` and every Charizard is `scharizard-*`. The forme
+comes first so a forme's sprites sort together.
+
+`tools/spritedata/names.ts` prints every filename pokemon-showdown implies, if
+you need to check a directory against it.
+
+# Flags
+
+Beyond the per-directory flags below:
+
+- `-o` Forme
+- `-a` Asymmetrical, faces the wrong way and needs flipping
+- `-c` Which of several identical formes, where pokemon-showdown gives one name
+  to more than one of the games' forme slots (Zygarde's Power Construct pair,
+  Minior's seven meteors)
 
 # sprites/gen1
 

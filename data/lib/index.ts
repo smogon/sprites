@@ -1,80 +1,99 @@
+// The sprite filename grammar.
+//
+//     <kind><name>[-o<forme>][-<flag>...]
+//
+//     kind   s specie, i item, x literal (Egg, Substitute, ...)
+//     name   the encoded name, [a-z0-9_]+
+//     flags  -o forme  -b back  -s shiny  -a asymmetrical  -f female
+//            -g gmax or -g<game>  -v<vendor>  -c<slot>
+//
+// A name is encoded rather than spelled, because the two places these sprites
+// are published disagree about what a word boundary is: smogon writes
+// `mr-mime` and `ho-oh`, PS writes `mrmime` and `hooh`. Recording where the
+// boundaries are lets both fall out of the filename, so nothing needs a table
+// of names to publish.
 
-import * as path from 'node:path';
-import * as fs from 'node:fs';
-import root from '@smogon/sprite-root/index.ts';
+export type Kind = 's' | 'i' | 'x';
 
-let libdir = path.join(root, 'data');
-
-export type Id = string;
-
-export type SpecieEntry = {
-    type: 'specie',
-    num: number,
-    formeNum: number,
-    base: string,
-    forme: string,
-    sid: string
-};
-
-export type ItemEntry = {
-    type: 'item',
-    sid: string,
-    names: string[]
-};
-
-export type Entry = SpecieEntry | ItemEntry;
-
-let objects: Record<Id, Entry> = {};
-Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, 'species.json'), 'utf8')));
-Object.assign(objects, JSON.parse(fs.readFileSync(path.join(libdir, 'items.json'), 'utf8')));
-
-let map = new Map<Id, Entry>();
-for (let entry of Object.values(objects)) {
-    map.set(entry.sid, entry);
-}
-
-export function get(id: Id): Entry {
-    let entry = map.get(id);
-    if (entry === undefined)
-        throw new Error(`No id for ${id}`);
-    return entry;
-}
-
-export function entries(): Entry[] {
-    return Array.from(map.values());
-}
-
-
-// TODO Moved here from deploy/spritename.ts, better place to put these??
-export type SpriteFilename = ({
-    extension: true,
-    name: string
-} | {
-    extension: false,
-    id: Id
-}) & {
+export type SpriteFilename = {
+    kind: Kind,
+    name: string,
     extra: Map<string, string>
 };
 
-export type InputSpriteFilename = ({
-    extension: true,
-    name: string
-} | {
-    extension?: false,
-    id: Id
-}) & {
+export type InputSpriteFilename = {
+    kind: Kind,
+    name: string,
     extra?: Map<string, string>
+};
+
+// A run of non-alphanumerics becomes _ when it separates words and vanishes
+// otherwise, so `Ho-Oh` and `Mr. Mime` both encode with one boundary and
+// `Farfetch’d` with none. Decompose first: accents are then dropped on
+// purpose, rather than by accident of whether the source spelled them
+// composed.
+export function encode(s: string): string {
+    return s.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase()
+        .replace(/[^a-z0-9]+/g, m => /[ _-]/.test(m) ? '_' : '');
+}
+
+// The two readings of an encoded name.
+export function smogon(e: string): string {
+    return e.replace(/_/g, '-');
+}
+
+export function psid(e: string): string {
+    return e.replace(/_/g, '');
+}
+
+// A published name: the name and its forme joined with a dash, then the
+// variant flags, which both sides spell the same way.
+export function publishedName(sn: SpriteFilename, part: (e: string) => string): string {
+    let name = part(sn.name);
+    let forme = sn.extra.get('o');
+    if (forme) {
+        name += `-${part(forme)}`;
+    }
+    if (sn.extra.has('f')) {
+        name += '-f';
+    }
+    if (sn.extra.has('g')) {
+        name += '-gmax';
+    }
+    return name;
+}
+
+// Items whose sprite ships under more than one name, because the games renamed
+// them. The modern name is the filename; these are the ones that also have to
+// resolve. Keyed and valued in encoded form.
+export const ITEM_ALIASES: Record<string, string[]> = {
+    aspear_berry: ['burnt_berry'],            // Aspear Berry / Burnt Berry
+    cheri_berry: ['prz_cure_berry'],          // Cheri Berry / PRZ Cure Berry
+    chesto_berry: ['mint_berry'],             // Chesto Berry / Mint Berry
+    leek: ['stick'],                          // Leek / Stick
+    leppa_berry: ['mystery_berry'],           // Leppa Berry / Mystery Berry
+    lum_berry: ['miracle_berry'],             // Lum Berry / Miracle Berry
+    oran_berry: ['berry'],                    // Oran Berry / Berry
+    pecha_berry: ['psn_cure_berry'],          // Pecha Berry / PSN Cure Berry
+    persim_berry: ['bitter_berry'],           // Persim Berry / Bitter Berry
+    rawst_berry: ['ice_berry'],               // Rawst Berry / Ice Berry
+    silk_scarf: ['pink_bow', 'polkadot_bow'], // Silk Scarf / Pink Bow / Polkadot Bow
+    sitrus_berry: ['gold_berry'],             // Sitrus Berry / Gold Berry
 };
 
 export function parseFilename(s: string): SpriteFilename {
     if (s.length < 2)
-        throw new Error(`Filename ${s} needs to be at least 2 characters'`);
+        throw new Error(`Filename ${s} needs to be at least 2 characters`);
 
-    let prefix = s.charAt(0);
-    if (!prefix.match(/[a-z]/))
-        throw new Error(`Filename ${s} must start with alpha character`);
+    let kind = s.charAt(0);
+    if (kind !== 's' && kind !== 'i' && kind !== 'x')
+        throw new Error(`Filename ${s} must start with s, i or x`);
 
     let parts = s.split('-');
+    let first = parts[0];
+    if (first === undefined)
+        throw new Error(`Can't parse ${s}`);
+
     let extra = new Map<string, string>();
     for (let part of parts.slice(1)) {
         if (part.length === 0)
@@ -82,30 +101,25 @@ export function parseFilename(s: string): SpriteFilename {
         extra.set(part.charAt(0), part.slice(1));
     }
 
-    let first = parts[0];
-    if (first === undefined)
-        throw new Error(`Can't parse ${s}`);
-    if (prefix === 'x') {
-        return {extension: true, name: first.slice(1), extra};
-    } else {
-        return {extension: false, id: first, extra};
-    }
+    return {kind, name: first.slice(1), extra};
 }
 
-export function formatFilename(si: InputSpriteFilename) {
-    let s: string;
-    if (si.extension) {
-        s = `x${si.name}`;
-    } else {
-        s = si.id;
+export function formatFilename(si: InputSpriteFilename): string {
+    let s = `${si.kind}${si.name}`;
+
+    // The forme leads, so a forme's whole set of sprites sorts together
+    // instead of interleaving with the base forme's by flag letter.
+    let forme = si.extra?.get('o');
+    if (forme !== undefined) {
+        s += `-o${forme}`;
     }
+
     let extra = [];
-    if (si.extra) {
-        for (let [k, v] of si.extra.entries()) {
+    for (let [k, v] of si.extra?.entries() ?? []) {
+        if (k !== 'o') {
             extra.push(`-${k}${v}`);
         }
     }
     extra.sort();
-    s += extra.join('');
-    return s;
+    return s + extra.join('');
 }
