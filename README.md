@@ -72,8 +72,8 @@ $ node tools/deploy/index.ts inspect src/minisprites/items/i1.png -o /tmp/out
 
 `run` materializes a deploy to a directory (`--link` hardlinks, `--tar`
 writes a tar file) without uploading anything. `inspect` builds every rule
-that consumes the given source paths (and their transitive consumers) and
-copies the outputs out under readable names for eyeballing.
+that consumes the given source paths and copies the outputs out under
+readable names for eyeballing.
 
 Useful flags: `-j <n>` parallelism, `-n` dry run, `-v` verbose,
 `--fail-fast` stop after the first failure.
@@ -156,6 +156,10 @@ DEFAULT_ADVPNG=-z4 -i5000
   `nameSensitive: true` or renames will leave its output silently stale.
 - Rules must be declared when a deploy module is imported (top level), not
   inside a `deploy` block — the build runs before the blocks do.
+- A rule's inputs are source paths; one rule never consumes another's output.
+  Multi-step work is several `cmds` in one rule, with `%oN` to feed a later
+  step from an earlier output (the Smogdex sheet emits its png, css, and
+  webp that way).
 
 ## License
 

@@ -330,33 +330,11 @@ async function cmdInspect(paths: string[], opts: VerbOpts): Promise<void> {
         return target;
     });
 
-    let closure = new Set<artifact.RuleDecl>();
-    for (let decl of artifact.getDecls()) {
-        let hit = [...decl.inputs, ...decl.deps].some(i => typeof i === 'string'
-            && targets.some(t => i === t || i.startsWith(t + '/')));
-        if (hit) {
-            closure.add(decl);
-        }
-    }
-    if (closure.size === 0) {
+    let decls = artifact.getDecls().filter(decl =>
+        [...decl.inputs, ...decl.deps].some(i => targets.some(t => i === t || i.startsWith(t + '/'))));
+    if (decls.length === 0) {
         throw new BuildError(`No rules consume: ${targets.join(' ')}`);
     }
-    // Transitive consumers: show everything these files end up in. The
-    // executor pulls in any producers the closure needs on its own.
-    for (let grew = true; grew;) {
-        grew = false;
-        for (let decl of artifact.getDecls()) {
-            if (closure.has(decl)) {
-                continue;
-            }
-            if ([...decl.inputs, ...decl.deps].some(i => typeof i !== 'string' && closure.has(i.decl))) {
-                closure.add(decl);
-                grew = true;
-            }
-        }
-    }
-
-    let decls = artifact.getDecls().filter(d => closure.has(d));
     console.log(`inspect: ${decls.length} rules`);
     let exists = (p: string) => fs.access(p).then(() => true, () => false);
     process.exitCode = await buildThen(decls, opts, false, async () => {

@@ -12,11 +12,10 @@ import {substitute} from './subst.ts';
 export type DirtyReason = 'new' | 'cas-missing';
 
 export type RuleOutcome =
-    | {status: 'clean'}                                        // key hit, CAS objects present
+    | {status: 'clean'}                        // key hit, CAS objects present
     | {status: 'ran', reason: DirtyReason}
-    | {status: 'would-run', reason: DirtyReason | 'blocked'}  // dry run
-    | {status: 'failed', message: string}
-    | {status: 'blocked'};                                     // a producer failed
+    | {status: 'would-run', reason: DirtyReason}   // dry run
+    | {status: 'failed', message: string};
 
 export type BuildResult = {
     outcomes: Map<artifact.RuleDecl, RuleOutcome>;   // no entry = not attempted (aborted)
@@ -27,7 +26,7 @@ export type BuildResult = {
 export type ExecutorOpts = {
     root: string;                           // cwd for commands
     store: Store,
-    casDir: string;                         // relative to root (substituted into commands)
+    casDir: string;                         // relative to root (outputs land here)
     tmpDir: string,
     jobs: number,
     dryRun: boolean,
@@ -57,10 +56,8 @@ function indent(text: string): string {
     return text.replace(/\n$/, '').split('\n').map(l => '    ' + l).join('\n');
 }
 
-// Sentinels thrown through the demand graph. They carry no message; the
-// outcome map is the report.
+// Sentinels. They carry no message; the outcome map is the report.
 class RuleFailed extends Error {}
-class DryDirty extends Error {}
 class Aborted extends Error {}
 
 class Semaphore {
@@ -89,14 +86,12 @@ class Semaphore {
     }
 }
 
-// Demand-driven memoized executor. Each rule's identity key is computable
-// only once its artifact inputs have digests, so there is no upfront plan:
-// demanding a rule awaits its producers, computes the key, and skips or runs.
-// The artifact graph is a DAG by construction (a rule can only reference
-// artifacts that already exist as values), so there is no cycle check.
+// Rules read source files only, so every identity key is computable upfront
+// and the rules are independent: this is a flat parallel sweep, no plan and
+// no dependency graph. The only coupling is that byte-identical declarations
+// share one execution.
 export class Executor {
     #opts: ExecutorOpts;
-    #memo = new Map<artifact.RuleDecl, Promise<string[]>>();
     #inflightByKey = new Map<string, Promise<string[]>>();
     #outcomes = new Map<artifact.RuleDecl, RuleOutcome>();
     #keys = new Map<artifact.RuleDecl, string>();
@@ -117,7 +112,7 @@ export class Executor {
     }
 
     async build(decls: readonly artifact.RuleDecl[]): Promise<BuildResult> {
-        await Promise.allSettled(decls.map(d => this.#demand(d)));
+        await Promise.all(decls.map(d => this.#guard(d)));
         let ok = decls.every(d => {
             let status = this.#outcomes.get(d)?.status;
             return status === 'clean' || status === 'ran';
@@ -125,98 +120,44 @@ export class Executor {
         return {outcomes: this.#outcomes, keys: this.#keys, ok};
     }
 
-    #demand(decl: artifact.RuleDecl): Promise<string[]> {
-        let p = this.#memo.get(decl);
-        if (p === undefined) {
-            // Any non-sentinel escape (a store error, a resolve conflict, a
-            // bug) must surface as a reported failure, not vanish into the
-            // allSettled in build().
-            p = this.#demandInner(decl).catch(err => {
-                if (err instanceof RuleFailed || err instanceof DryDirty || err instanceof Aborted) {
-                    throw err;
-                }
-                this.#outcomes.set(decl, {status: 'failed', message: 'internal error'});
-                this.#logError(`FAILED (internal error): ${label(decl)}`);
-                this.#logError(indent(err instanceof Error ? err.stack ?? err.message : String(err)));
-                this.#failAc.abort();
-                throw new RuleFailed();
-            });
-            this.#memo.set(decl, p);
+    async #guard(decl: artifact.RuleDecl): Promise<void> {
+        try {
+            await this.#run(decl);
+        } catch (err) {
+            if (err instanceof RuleFailed || err instanceof Aborted) {
+                return;
+            }
+            // Any other escape (a store error, a resolve conflict, a bug)
+            // must surface as a reported failure, not vanish here.
+            this.#outcomes.set(decl, {status: 'failed', message: 'internal error'});
+            this.#logError(`FAILED (internal error): ${label(decl)}`);
+            this.#logError(indent(err instanceof Error ? err.stack ?? err.message : String(err)));
+            this.#failAc.abort();
         }
-        return p;
     }
 
-    async #digestOf(i: artifact.Input): Promise<string> {
-        if (typeof i !== 'string') {
-            await this.#demand(i.decl);
-            return i.hash;
-        }
-        let hash = this.#opts.sourceHashes.get(i);
+    #digestOf(path: string): string {
+        let hash = this.#opts.sourceHashes.get(path);
         if (hash === undefined) {
-            throw new BuildError(`No hash for source ${i}`);
+            throw new BuildError(`No hash for source ${path}`);
         }
         return hash.toString('hex');
     }
 
-    async #demandInner(decl: artifact.RuleDecl): Promise<string[]> {
-        let digests: Map<artifact.Input, string>;
-        try {
-            let inputs = [...decl.inputs, ...decl.deps];
-            let resolved = await Promise.all(inputs.map(i => this.#digestOf(i)));
-            digests = new Map(inputs.map((i, n) => [i, paired(resolved, n)]));
-        } catch (err) {
-            if (err instanceof RuleFailed) {
-                this.#outcomes.set(decl, {status: 'blocked'});
-            } else if (err instanceof DryDirty) {
-                this.#outcomes.set(decl, {status: 'would-run', reason: 'blocked'});
-                this.#log(`would run (blocked by dirty producer): ${label(decl)}`);
-            }
-            throw err;
-        }
-
-        let key = artifact.computeKey(decl, i => {
-            let d = digests.get(i);
-            if (d === undefined) {
-                throw new Error(`No digest for input ${typeof i === 'string' ? i : i.filename}`);
-            }
-            return d;
-        });
+    async #run(decl: artifact.RuleDecl): Promise<void> {
+        let {store, casDir} = this.#opts;
+        let key = artifact.computeKey(decl, p => this.#digestOf(p));
         this.#keys.set(decl, key);
 
-        // Byte-identical duplicate declarations share one execution.
-        let existing = this.#inflightByKey.get(key);
-        if (existing !== undefined) {
-            try {
-                let shared = await existing;
-                decl.outputs.forEach((o, n) => o.resolve(paired(shared, n)));
-                this.#outcomes.set(decl, {status: 'clean'});
-                return shared;
-            } catch (err) {
-                if (err instanceof RuleFailed) {
-                    this.#outcomes.set(decl, {status: 'blocked'});
-                } else if (err instanceof DryDirty) {
-                    this.#outcomes.set(decl, {status: 'would-run', reason: 'blocked'});
-                }
-                throw err;
-            }
-        }
-        let work = this.#perform(decl, key);
-        this.#inflightByKey.set(key, work);
-        let result = await work;
-        decl.outputs.forEach((o, n) => o.resolve(paired(result, n)));
-        return result;
-    }
-
-    async #perform(decl: artifact.RuleDecl, key: string): Promise<string[]> {
-        let {store, casDir} = this.#opts;
         let stored = store.lookupRule(key);
         if (stored !== null
             && stored.length === decl.outputs.length
             && stored.every((o, n) => o.ext === paired(decl.outputs, n).ext)) {
             let sizes = await Promise.all(stored.map(o => cas.casStat(casDir, o.digest, o.ext)));
             if (stored.every((o, n) => sizes[n] === o.size)) {
+                this.#resolve(decl, stored.map(o => o.digest));
                 this.#outcomes.set(decl, {status: 'clean'});
-                return stored.map(o => o.digest);
+                return;
             }
         }
         let reason: DirtyReason = stored === null ? 'new' : 'cas-missing';
@@ -224,9 +165,34 @@ export class Executor {
         if (this.#opts.dryRun) {
             this.#outcomes.set(decl, {status: 'would-run', reason});
             this.#log(`would run (${reason}): ${label(decl)}`);
-            throw new DryDirty();
+            return;
         }
 
+        // Byte-identical duplicate declarations share one execution; the
+        // loser adopts the winner's digests and reads as clean.
+        let existing = this.#inflightByKey.get(key);
+        if (existing !== undefined) {
+            try {
+                this.#resolve(decl, await existing);
+            } catch (err) {
+                if (err instanceof RuleFailed) {
+                    this.#outcomes.set(decl, {status: 'failed', message: 'byte-identical rule failed'});
+                }
+                throw err;
+            }
+            this.#outcomes.set(decl, {status: 'clean'});
+            return;
+        }
+        let work = this.#gated(decl, key, reason);
+        this.#inflightByKey.set(key, work);
+        this.#resolve(decl, await work);   // #execute already recorded the outcome
+    }
+
+    #resolve(decl: artifact.RuleDecl, digests: readonly string[]): void {
+        decl.outputs.forEach((o, n) => o.resolve(paired(digests, n)));
+    }
+
+    async #gated(decl: artifact.RuleDecl, key: string, reason: DirtyReason): Promise<string[]> {
         await this.#semaphore.acquire();
         try {
             if (this.#runSignal.aborted) {
@@ -243,9 +209,7 @@ export class Executor {
         let ruleTmp = pathlib.join(tmpDir, String(this.#tmpSeq++));
         await fs.mkdir(ruleTmp, {recursive: true});
         let tempOutputs = decl.outputs.map(o => pathlib.join(ruleTmp, o.filename));
-        let concreteInputs = decl.inputs.map(
-            i => typeof i === 'string' ? i : cas.casPath(casDir, i.hash, i.ext));
-        let command = decl.cmds.map(c => substitute(c, concreteInputs, tempOutputs)).join(' && ');
+        let command = decl.cmds.map(c => substitute(c, decl.inputs, tempOutputs)).join(' && ');
 
         try {
             let result = await runShell(command, {cwd: root, signal: this.#runSignal});

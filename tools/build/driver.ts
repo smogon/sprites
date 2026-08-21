@@ -9,7 +9,7 @@ import {type Store} from './store.ts';
 export type BuildOpts = {
     root: string,
     store: Store,
-    casDir: string;                 // relative to root; substituted into commands
+    casDir: string;                 // relative to root; where outputs land
     tmpDir: string,
     jobs: number,
     dryRun: boolean,
@@ -34,24 +34,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
     let logError = opts.logError ?? console.error;
     let {store} = opts;
 
-    // Hash sources over the producer closure: demanding a rule demands the
-    // producers of its artifact inputs, even ones outside `decls`.
-    let closure = new Set<RuleDecl>();
-    let sources = new Set<string>();
-    let add = (decl: RuleDecl) => {
-        if (closure.has(decl)) {
-            return;
-        }
-        closure.add(decl);
-        for (let input of [...decl.inputs, ...decl.deps]) {
-            if (typeof input === 'string') {
-                sources.add(input);
-            } else {
-                add(input.decl);
-            }
-        }
-    };
-    decls.forEach(add);
+    let sources = new Set(decls.flatMap(d => [...d.inputs, ...d.deps]));
     let {hashes, updated, missing} = await reconcileHashes(sources, store.loadFileCache());
     if (missing.length > 0) {
         throw new BuildError(`Missing input files:\n  ${missing.slice(0, 20).join('\n  ')}`
@@ -78,7 +61,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
     let result = await exe.build(decls);
     let interrupted = opts.signal.aborted;
 
-    let counts = {clean: 0, ran: 0, 'would-run': 0, failed: 0, blocked: 0};
+    let counts = {clean: 0, ran: 0, 'would-run': 0, failed: 0};
     for (let decl of decls) {
         let outcome = result.outcomes.get(decl);
         if (outcome !== undefined) {
@@ -94,9 +77,6 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
         }
         if (counts.failed > 0) {
             parts.push(`${counts.failed} FAILED`);
-        }
-        if (counts.blocked > 0) {
-            parts.push(`${counts.blocked} blocked`);
         }
         log(parts.join(', ') + '.');
         if (counts.failed > 0) {

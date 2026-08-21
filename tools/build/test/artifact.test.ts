@@ -2,17 +2,14 @@
 import assert from 'node:assert/strict';
 import {beforeEach, test} from 'node:test';
 
-import {type Input, computeKey, forEachRule, getDecls, resetDecls, rule} from '../artifact.ts';
+import {computeKey, forEachRule, getDecls, resetDecls, rule} from '../artifact.ts';
 
 beforeEach(resetDecls);
 
-function digests(map: Record<string, string>): (i: Input) => string {
-    return i => {
-        if (typeof i !== 'string') {
-            return i.hash;
-        }
-        let d = map[i];
-        assert.ok(d !== undefined, `no digest for ${i}`);
+function digests(map: Record<string, string>): (path: string) => string {
+    return path => {
+        let d = map[path];
+        assert.ok(d !== undefined, `no digest for ${path}`);
         return d;
     };
 }
@@ -22,7 +19,6 @@ test('rule declares artifacts with nominal names', () => {
     assert.equal(png.name, 'sheet');
     assert.equal(png.ext, 'png');
     assert.equal(css.filename, 'sheet.css');
-    assert.deepEqual(png.sources, ['src/a.png']);
     assert.equal(png.decl, css.decl);
     assert.throws(() => png.hash, /not been built/);
     png.resolve('d1');
@@ -45,17 +41,14 @@ test('rule rejects paths, substitutions, missing extensions in outputs', () => {
 });
 
 test('%b/%B in commands expand to nominal names at declaration', () => {
-    let art = rule('src/dir/a.png', ['tool %f %o'], 'mid.png');
-    let out = rule(art, ['emit --name %B %f %o'], 'x.css');
-    // Expanded eagerly (never a CAS basename), and thus part of the key.
-    assert.deepEqual(out.decl.cmds, ['emit --name mid %f %o']);
-    art.resolve('d1');
-    let renamed = rule('src/dir/b.png', ['tool %f %o'], 'other.png');
-    let out2 = rule(renamed, ['emit --name %B %f %o'], 'x.css');
-    renamed.resolve('d1');
+    let out = rule('src/dir/a.png', ['emit --name %B %f %o'], 'x.css');
+    // Expanded eagerly, and thus part of the key: same bytes under a
+    // different name is a different rule once %B is in the command.
+    assert.deepEqual(out.decl.cmds, ['emit --name a %f %o']);
+    let out2 = rule('src/dir/b.png', ['emit --name %B %f %o'], 'x.css');
     assert.notEqual(
-        computeKey(out.decl, digests({})),
-        computeKey(out2.decl, digests({})));
+        computeKey(out.decl, digests({'src/dir/a.png': 'd1'})),
+        computeKey(out2.decl, digests({'src/dir/b.png': 'd1'})));
 });
 
 test('a multi-line command and split commands get different keys', () => {
@@ -76,16 +69,6 @@ test('forEachRule declares one rule per input, %b/%B templates', () => {
     assert.deepEqual(outs.map(o => o.filename), ['a.gif', 'b.gif']);
     assert.notEqual(outs[0]!.decl, outs[1]!.decl);
     assert.throws(() => forEachRule('src/a.png', ['c'], '%f.gif'), /only use %b\/%B/);
-});
-
-test('chained rules accept artifacts as inputs', () => {
-    let png = rule('src/a.png', ['tool %f %o'], 'x.png');
-    let webp = rule(png, ['cwebp %f -o %o'], 'x.webp');
-    assert.equal(webp.decl.inputs[0], png);
-    assert.deepEqual(webp.sources, []);
-    png.resolve('dp');
-    let key = computeKey(webp.decl, digests({}));
-    assert.equal(typeof key, 'string');
 });
 
 test('key ignores input paths but not bytes, order, exts, or commands', () => {
@@ -113,8 +96,6 @@ test('nameSensitive keys on paths; rejects artifact inputs', () => {
     assert.notEqual(
         computeKey(a.decl, digests({'src/a.png': 'd1'})),
         computeKey(b.decl, digests({'src/b.png': 'd1'})));
-    let art = rule('src/a.png', ['t %f %o'], 'x.png');
-    assert.throws(() => rule(art, spec, 'y.png'), /not yet supported/);
 });
 
 test('deps are part of identity', () => {
@@ -145,12 +126,4 @@ test('declarations differing in display, cmds, or outputs stay distinct', () => 
     rule('a.png', {display: 'one', cmds: ['other %f %o']}, 'x.png');
     rule('a.png', {display: 'one', cmds: ['c %f %o']}, 'y.png');
     assert.equal(getDecls().length, 4);
-});
-
-test('chained declarations dedupe through artifact inputs', () => {
-    let mid = rule('a.png', ['c %f %o'], 'mid.png');
-    let first = rule(mid, ['convert %f %o'], 'out.webp');
-    let second = rule(mid, ['convert %f %o'], 'out.webp');
-    assert.equal(first, second);
-    assert.equal(getDecls().length, 2);
 });
