@@ -33,17 +33,9 @@ for (let [filename, sprite] of Object.entries(result.coordinates)) {
         continue;
     }
     // TODO would like to use psid here, mess with it later.
-    let name = spritedata.smogon(parsed.name);
-    let forme = parsed.extra.get('o');
-    if (forme) {
-        name += `-${spritedata.smogon(forme)}`;
+    for (let name of spritedata.smogonNames(parsed)) {
+        sprites.set(name, sprite);
     }
-    if (parsed.extra.has('g')) {
-        name += '-gmax';
-    } else if (parsed.extra.has('f')) {
-        name += '-f';
-    }
-    sprites.set(name, sprite);
 }
 
 let stylesheet = '';

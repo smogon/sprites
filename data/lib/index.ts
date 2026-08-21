@@ -81,6 +81,21 @@ export const ITEM_ALIASES: Record<string, string[]> = {
     sitrus_berry: ['gold_berry'],             // Sitrus Berry / Gold Berry
 };
 
+// Species the smogdex names differently from PS, and so publishes twice. PS's
+// Meowstic is the male -- baseForme M, with Meowstic-F the alt forme -- while
+// the dex splits the pair evenly and calls that entry Meowstic-M. Keyed and
+// valued in published smogon form, because only that side asks: PS wants
+// `meowstic`, which is what the filename already says.
+export const SPECIES_ALIASES: Record<string, string[]> = {
+    meowstic: ['meowstic-m'],
+};
+
+// Every name a sprite answers to on the smogon side: its own, and any alias.
+export function smogonNames(sn: SpriteFilename): string[] {
+    let name = publishedName(sn, smogon);
+    return [name, ...SPECIES_ALIASES[name] ?? []];
+}
+
 export function parseFilename(s: string): SpriteFilename {
     if (s.length < 2)
         throw new Error(`Filename ${s} needs to be at least 2 characters`);

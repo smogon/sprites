@@ -82,7 +82,9 @@ export async function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
         throw new Error(`Not a specie sprite: ${f.name}`);
     }
 
-    await manifest.copy(f, dest, spritedata.publishedName(sn, spritedata.smogon));
+    for (let name of spritedata.smogonNames(sn)) {
+        await manifest.copy(f, dest, name);
+    }
 }
 
 // TODO: merge with above
