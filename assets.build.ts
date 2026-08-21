@@ -18,9 +18,10 @@ let SERVED = '/__assets';
 let minispriteInputs = spriteglob(['src/minisprites/pokemon/gen6/*', 'src/minisprites/items/*'], {a: false});
 
 // Smogdex spritesheet. The sheet tool bakes sprite ids parsed from the %f
-// filenames into the css, hence nameSensitive.
+// filenames into the css, hence nameSensitive. The png is declared only so
+// cwebp has something to read; only the css and the webp are published.
 
-let [sheetPng, sheetCss] = rule(minispriteInputs, {
+let [, sheetCss, sheetWebp] = rule(minispriteInputs, {
     display: 'smogdex sheet',
     nameSensitive: true,
     deps: [
@@ -30,10 +31,11 @@ let [sheetPng, sheetCss] = rule(minispriteInputs, {
         'lib/root/index.ts',
         'tools/smogdexspritesheet/index.ts',
     ],
-    cmds: ['node tools/smogdexspritesheet/index.ts --image %o1 --stylesheet %o2 -- %f'],
-}, ['spritesheet.png', 'spritesheet.css']);
-
-let sheetWebp = rule(sheetPng, ['cwebp -z 9 %f -o %o'], 'spritesheet.webp');
+    cmds: [
+        'node tools/smogdexspritesheet/index.ts --image %o1 --stylesheet %o2 -- %f',
+        'cwebp -z 9 %o1 -o %o3',
+    ],
+}, ['spritesheet.png', 'spritesheet.css', 'spritesheet.webp']);
 
 // Hash-stamped css + webp. The css url rides in __meta/ for the dex to read.
 deploy(async ctx => {
