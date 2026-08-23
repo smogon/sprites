@@ -92,13 +92,17 @@ export const ITEM_ALIASES: Record<string, string[]> = {
     sitrus_berry: ['gold_berry'],             // Sitrus Berry / Gold Berry
 };
 
-// Species the smogdex names differently from PS, and so publishes twice. PS's
-// Meowstic is the male -- baseForme M, with Meowstic-F the alt forme -- while
-// the dex splits the pair evenly and calls that entry Meowstic-M. Keyed and
-// valued in published smogon form, because only that side asks: PS wants
-// `meowstic`, which is what the filename already says.
+// The second name a sprite answers to, where one picture publishes twice.
+// Meowstic is a disagreement: PS's is the male, baseForme M with Meowstic-F the
+// alt forme, while the dex splits the pair evenly and calls that entry
+// Meowstic-M. Toxtricity is a shortage: the games drew one Gigantamax
+// Toxtricity and not two, which is why PS's own icon sheet gives Amped and
+// Low-Key a single slot and its animations no low-key gmax at all. Keyed and
+// valued in published smogon form, because only that side asks; PS wants
+// `meowstic` and `toxtricitygmax`, which is what the filenames already say.
 export const SPECIES_ALIASES: Record<string, string[]> = {
     meowstic: ['meowstic-m'],
+    'toxtricity-gmax': ['toxtricity-low-key-gmax'],
 };
 
 // Every name a sprite answers to on the smogon side: its own, and any alias.
