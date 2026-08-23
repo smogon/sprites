@@ -1,9 +1,12 @@
 
+import * as spritedata from '@smogon/sprite-data/index.ts';
+
+import {AVATARS, AVATAR_ALIASES, avatarSlots} from './rules/avatars.ts';
 import {gen10Modelslike} from './rules/modelslike.ts';
 import {GEN4_CAPS, forEachFront, fronts, named} from './rules/oldgen.ts';
 import {Manifest, type Sprite, type Tree, firstWins, itemspritecopy, spritecopy} from './rules/publish.ts';
-import {type CmdSpec, forEachRule, rule} from './tools/build/artifact.ts';
-import {compresspng, pad, spriteglob, trimimg} from './tools/build/helpers.ts';
+import {type Artifact, type CmdSpec, forEachRule, rule} from './tools/build/artifact.ts';
+import {base, compresspng, pad, spriteglob, trimimg} from './tools/build/helpers.ts';
 import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 
 // The tar root maps onto the served tree: sprites/x is served at
@@ -218,6 +221,60 @@ deploy(async ctx => {
         await spritecopy(manifest, f, {dir: 'forumsprites'}, {allowUnknown: true, icons: true});
     }
     manifest.write('__meta/forumsprites/manifest.json');
+});
+
+// Forum auto avatars: the gen 5 animations on a uniform 96x96 box, which is
+// what XenForo's avatar container is. It scales an <img> to fill, so a sprite
+// published at its own aspect would arrive stretched; the box is the games' own
+// sprite size, so nothing is scaled up, and the few animations that overflow it
+// are cropped to it, which is what the set the forum used to carry did too.
+
+// The pool with its two second slots resolved, which is the set of pictures to
+// build. See rules/avatars.ts for why it is a list and not a glob.
+let avatarPool = new Set(AVATARS.map(name => AVATAR_ALIASES[name] ?? name));
+
+let avatarArt = new Map<string, Artifact>();
+for (let f of spriteglob(['src/sprites/gen5/*.gif', 'src/sprites/gen5/xsubstitute.png'],
+                         {b: false, s: false})) {
+    // publishedNames() is no use here: it resolves smogon names where the pool
+    // is spelled in PS ids, and it refuses the one x-kind sprite the pool
+    // carries. Backs and shinies are filtered above rather than here, since
+    // publishedName spells them exactly as it spells their front.
+    let name = spritedata.publishedName(spritedata.parseFilename(base(f)), spritedata.psid);
+    if (!avatarPool.has(name)) {
+        continue;
+    }
+    if (avatarArt.has(name)) {
+        throw new Error(`avatar ${name}: two gen 5 sources publish it`);
+    }
+    avatarArt.set(name, rule(f, {
+        display: 'avatar %f',
+        cmds: [
+            'magick convert %f -coalesce -background none -gravity center -extent 96x96 %o',
+            'gifsicle -O3 -b %o',
+        ],
+    }, `${name}.gif`));
+}
+
+// A pool member with no source would leave the forum a shorter list and
+// reassign every user, so a source renamed out from under one fails the build
+// rather than the deploy.
+for (let name of avatarPool) {
+    if (!avatarArt.has(name)) {
+        throw new Error(`avatar ${name}: no gen 5 source`);
+    }
+}
+
+deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
+    for (let [name, art] of avatarArt) {
+        await manifest.copy(art, {dir: 'avatars'}, name);
+    }
+    // Published by slot rather than by name: nothing looks an avatar up, the
+    // forum picks one with crc32(username) % count, so the order is the whole
+    // mapping and the length is the divisor.
+    let slots = avatarSlots().map(name => manifest.url(AVATAR_ALIASES[name] ?? name));
+    ctx.write('__meta/avatars/manifest.json', JSON.stringify(slots, null, 4) + '\n');
 });
 
 // PMD sprites ship as-is, stamped.

@@ -55,10 +55,20 @@ export class Manifest {
         this.#ctx.copy(f, `${this.#tree.root}/${dir}/${stamped}`);
     }
 
+    // The whole url the copy `name` answers to. Exposed on its own for a set
+    // that publishes some other projection of this mapping than write()'s.
+    url(name: string): string {
+        let e = this.#entries.get(name);
+        if (e === undefined) {
+            throw new Error(`no sprite named ${name}`);
+        }
+        return `${this.#tree.served}/${e.dir}/${e.stamped}`;
+    }
+
     write(dst: string): void {
         let sorted: Record<string, string> = {};
-        for (let [k, e] of this.#sorted()) {
-            sorted[k] = `${this.#tree.served}/${e.dir}/${e.stamped}`;
+        for (let [k] of this.#sorted()) {
+            sorted[k] = this.url(k);
         }
         this.#ctx.write(dst, JSON.stringify(sorted, null, 4) + '\n');
     }
