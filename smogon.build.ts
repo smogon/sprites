@@ -1,11 +1,35 @@
 
 import {gen10Modelslike} from './rules/modelslike.ts';
-import {type Sprite, publishedNames} from './rules/publish.ts';
-import {forEachRule} from './tools/build/artifact.ts';
-import {compresspng, trimimg} from './tools/build/helpers.ts';
-import {type DeployCtx, deploy} from './tools/deploy/api.ts';
+import {Manifest, type Sprite, type Tree, itemspritecopy, publishedNames, spritecopy} from './rules/publish.ts';
+import {forEachRule, rule} from './tools/build/artifact.ts';
+import {compresspng, pad, spriteglob, trimimg} from './tools/build/helpers.ts';
+import {deploy} from './tools/deploy/api.ts';
 
-// xy/ animations: first source wins per sprite name.
+// The tar root maps onto the served tree: sprites/x is served at
+// /__assets/sprites/x. The upload rejects a tar whose tree disagrees with the
+// prefix in services.toml, so the two are checked against each other rather
+// than each guessing -- which is what lets the pointers below name whole urls
+// and their readers hold no configuration. __meta/ is the exception: the
+// upload diverts it to assets-meta/, beside the served tree and out of it.
+
+let ASSETS = 'sprites';
+let SERVED = '/__assets';
+let TREE: Tree = {root: ASSETS, served: `${SERVED}/${ASSETS}`};
+
+// Where the un-stamped names go. A served name carries a content hash and so
+// can be cached forever, which is exactly why it can't be composed by a reader
+// that knows only the sprite: the smogdex asks for sprites/xy/charizard.gif
+// and reads no manifest. So the sets it composes paths into publish the tree a
+// second time, as links under the un-stamped names naming the stamped file.
+// They ride in __meta/ rather than the served tree because the tree is
+// add-only -- a name in it is promised never to change -- and a link is
+// repointed on every upload; the upload retargets each one at where its asset
+// landed on its side, under a directory it already names for this set.
+let LINKS = '__meta/links';
+
+let minispriteInputs = spriteglob(['src/minisprites/pokemon/gen6/*', 'src/minisprites/items/*'], {a: false});
+
+// sprites/xy/ animations: first source wins per sprite name.
 
 let xyModels = forEachRule('src/gen9species/*.png', {
     display: '96x96 %f',
@@ -31,81 +55,135 @@ let xyGen5 = forEachRule('src/sprites/gen5/*.png', [
 ], '%B.gif');
 
 deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
     let seen = new Set<string>();
     // First source wins per published name rather than per filename, because
     // the later sources are backfills and one name can be spelled several
     // ways. gen 5 carries a sprite per forme slot, so its six Minior meteors
     // and its two Zygarde Power Construct slots all want the name the models
-    // already published, and two copies to one path is an invalid queue.
-    let xycopy = (f: Sprite) => {
+    // already published, which the manifest would refuse as a duplicate.
+    let xycopy = async (f: Sprite) => {
         let names = publishedNames(f);
         if (names.some(n => seen.has(n))) {
             return;
         }
         for (let name of names) {
             seen.add(name);
+            await manifest.copy(f, {dir: 'xy'}, name);
         }
-        smogonSpritecopy(ctx, f, 'xy', names);
     };
 
     for (let f of await ctx.list('src/models')) {
-        xycopy(f);
+        await xycopy(f);
     }
     for (let f of xyModels) {
-        xycopy(f);
+        await xycopy(f);
     }
     for (let f of xyChampions) {
-        xycopy(f);
+        await xycopy(f);
     }
     for (let f of await ctx.list('src/sprites/gen5')) {
         if (f.ext === 'gif') {
-            xycopy(f);
+            await xycopy(f);
         }
     }
     for (let f of xyGen5) {
-        xycopy(f);
+        await xycopy(f);
     }
+    manifest.write('__meta/xy/manifest.json');
+    manifest.links(LINKS);
 });
 
-// xyicons/: trimmed gen6 minisprites.
+// sprites/xyicons/: trimmed gen6 minisprites.
 
 let xyIcons = forEachRule('src/minisprites/pokemon/gen6/*.png', {
     display: 'trim g6 minisprite %f',
     cmds: [trimimg(), compresspng({config: 'MINISPRITE'})],
 }, '%b');
 
-deploy(ctx => {
+deploy(async ctx => {
     // icons: the gen 6 set has no art for some formes and lends them another's,
-    // which the smogdex sheet and forumsprites do off the same directory.
-    let byName = new Map<string, Sprite>();
+    // which the smogdex sheet and forumsprites do off the same directory. Two
+    // formes lent the same icon are a duplicate name the manifest refuses.
+    let manifest = new Manifest(ctx, TREE);
     for (let f of xyIcons) {
-        for (let name of publishedNames(f, {icons: true})) {
-            if (byName.has(name)) {
-                throw new Error(`Two icons published as ${name}`);
-            }
-            byName.set(name, f);
-        }
+        await spritecopy(manifest, f, {dir: 'xyicons'}, {icons: true});
     }
-    for (let [name, f] of byName) {
-        smogonSpritecopy(ctx, f, 'xyicons', [name]);
-    }
+    manifest.write('__meta/xyicons/manifest.json');
+    manifest.links(LINKS);
 });
 
-// The smogon side asks for a fixed path, /sprites/xy/charizard.gif, and reads
-// no manifest yet, so these copies carry no content stamp and the published
-// name is the whole filename.
-function smogonSpritecopy(ctx: DeployCtx, f: Sprite, dir: string, names: string[]): void {
-    if (f.ext === null) {
-        throw new Error(`Sprite ${f.name} has no extension`);
+// Smogdex spritesheet. The sheet tool bakes the names parsed from the %f
+// filenames into the css, hence nameSensitive. The png is declared only so
+// cwebp has something to read; only the css and the webp are published.
+
+let [, sheetCss, sheetWebp] = rule(minispriteInputs, {
+    display: 'smogdex sheet',
+    nameSensitive: true,
+    deps: [
+        'data/lib/index.ts',
+        'tools/smogdexspritesheet/index.ts',
+    ],
+    cmds: [
+        'node tools/smogdexspritesheet/index.ts --image %o1 --stylesheet %o2 -- %f',
+        'cwebp -z 9 %o1 -o %o3',
+    ],
+}, ['spritesheet.png', 'spritesheet.css', 'spritesheet.webp']);
+
+// Hash-stamped css + webp. The css url rides in __meta/ for the dex to read.
+deploy(async ctx => {
+    let wh = await ctx.hash(sheetWebp);
+    ctx.copy(sheetWebp, `${ASSETS}/spritesheet-${wh}.webp`);
+    let src = await ctx.read(sheetCss);
+    let css = src.replaceAll('url("./spritesheet.webp")', `url("./spritesheet-${wh}.webp")`);
+    if (css === src) {
+        throw new Error('spritesheet.css: no webp urls rewritten');
     }
-    for (let name of names) {
-        ctx.copy(f, `${dir}/${name}.${f.ext}`);
+    // Suffix from source content: the rewritten css is a pure function
+    // of (css, webp), so this changes exactly when the served bytes
+    // change.
+    let ch = await ctx.hash(sheetCss, sheetWebp);
+    ctx.write(`${ASSETS}/spritesheet-${ch}.css`, css);
+    ctx.write('__meta/spritesheet-css-url.txt', `${SERVED}/${ASSETS}/spritesheet-${ch}.css\n`);
+});
+
+// Forumsprites: uniform-size minisprites under stamped names, with the
+// unhashed -> url mapping in a manifest.
+
+let forumItems = forEachRule('src/minisprites/items/*.png', {
+    display: 'pad item minisprite %f',
+    cmds: [pad({w: 24, h: 24}), compresspng({config: 'MINISPRITE'})],
+}, '%b');
+
+let forumG6 = forEachRule('src/minisprites/pokemon/gen6/*.png', {
+    display: 'pad g6 minisprite %f',
+    cmds: [pad({w: 40, h: 30}), compresspng({config: 'MINISPRITE'})],
+}, '%b');
+
+deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
+    for (let f of forumItems) {
+        await itemspritecopy(manifest, f, {dir: 'forumsprites'});
     }
-}
+    for (let f of forumG6) {
+        await spritecopy(manifest, f, {dir: 'forumsprites'}, {allowUnknown: true, icons: true});
+    }
+    manifest.write('__meta/forumsprites/manifest.json');
+});
+
+// PMD sprites ship as-is, stamped.
+
+deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
+    for (let f of await ctx.list('src/pmd')) {
+        await spritecopy(manifest, f, {dir: 'pmd'});
+    }
+    manifest.write('__meta/pmd/manifest.json');
+});
 
 // Deprecated, unstamped sets. Reviving one also means importing what it
-// uses (PNG_DETERMINISTIC, base, spriteglob, itemspritecopy) and giving the
-// copies a Manifest, as the stamped deploys above do.
+// uses (PNG_DETERMINISTIC, base) and giving the copies a Manifest, as the
+// deploys above do.
 //
 // let xyItems = forEachRule('src/minisprites/items/*.png', {
 //     display: 'trim item minisprite %f',

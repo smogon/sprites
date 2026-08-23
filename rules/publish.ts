@@ -8,19 +8,34 @@ import type {DeployCtx, SrcFile} from '../tools/deploy/api.ts';
 // or a raw source file.
 export type Sprite = Artifact | SrcFile;
 
-// The unhashed name -> served url mapping published beside a stamped set.
-// `base` is the url this deploy's tree is served at, so an entry is just that
-// plus the copy's destination and no consumer needs a prefix of its own. The
-// rsync sets don't know their url yet and pass none, keeping the older
-// `name.ext` -> stamped filename shape.
+// The published tree a stamped set goes into: where it sits in the output, and
+// the url that root is served at. Both live here rather than in a `dir` so
+// that they are written once and everything a set publishes -- the copies, the
+// urls, the mirror -- is spelled from the same place.
+export type Tree = {
+    root: string,
+    served: string,
+};
+
+// One copy this manifest made: where under the tree root it landed, and the
+// un-stamped filename it answers to.
+type Entry = {
+    dir: string,
+    stamped: string,
+    filename: string,
+};
+
+// The unhashed name -> served url mapping published beside a stamped set. An
+// entry is the tree's url plus the copy's place in it, so no consumer needs a
+// prefix of its own.
 export class Manifest {
     #ctx: DeployCtx;
-    #base: string | null;
-    #entries = new Map<string, string>();
+    #tree: Tree;
+    #entries = new Map<string, Entry>();
 
-    constructor(ctx: DeployCtx, base: string | null = null) {
+    constructor(ctx: DeployCtx, tree: Tree) {
         this.#ctx = ctx;
-        this.#base = base;
+        this.#tree = tree;
     }
 
     // Queue a copy of `f` under `dir` with a content-stamped name and record
@@ -28,30 +43,46 @@ export class Manifest {
     async copy(f: Sprite, {dir, ext}: Dest, name: string): Promise<void> {
         let h = await this.#ctx.hash(f);
         let e = extOf(f, ext);
-        let stamped = `${name}-${h}.${e}`;
-        let dst = `${dir}/${stamped}`;
-        // A url names the whole path, so its key has nothing to disambiguate
-        // with an extension.
-        let key = this.#base === null ? `${name}.${e}` : name;
-        // ActionQueue only dedups final dsts; hashed dsts differ even when
-        // unhashed names collide, so check the key explicitly.
-        if (this.#entries.has(key)) {
-            throw new Error(`duplicate sprite name ${key}`);
+        // Keyed on the name alone, since a url names the whole path and has
+        // nothing to disambiguate with an extension. ActionQueue only dedups
+        // final dsts, and hashed dsts differ even where unhashed names
+        // collide, so the collision is caught here or not at all.
+        if (this.#entries.has(name)) {
+            throw new Error(`duplicate sprite name ${name}`);
         }
-        this.#entries.set(key, this.#base === null ? stamped : `${this.#base}/${dst}`);
-        this.#ctx.copy(f, dst);
+        let stamped = `${name}-${h}.${e}`;
+        this.#entries.set(name, {dir, stamped, filename: `${name}.${e}`});
+        this.#ctx.copy(f, `${this.#tree.root}/${dir}/${stamped}`);
     }
 
     write(dst: string): void {
         let sorted: Record<string, string> = {};
-        for (let [k, v] of [...this.#entries].sort((a, b) => a[0] < b[0] ? -1 : 1)) {
-            sorted[k] = v;
+        for (let [k, e] of this.#sorted()) {
+            sorted[k] = `${this.#tree.served}/${e.dir}/${e.stamped}`;
         }
         this.#ctx.write(dst, JSON.stringify(sorted, null, 4) + '\n');
+    }
+
+    // The same set again under its un-stamped names, as links to the stamped
+    // files. `dst` is a root of its own rather than the tree's, so what a link
+    // says is a path and not a name: the two ends land apart, and the reader
+    // that follows one composed its half from nothing but the sprite. The
+    // tree's own root is not repeated under it, since the mirror is already
+    // one set's worth of it.
+    links(dst: string): void {
+        for (let [, e] of this.#sorted()) {
+            this.#ctx.symlink(`${dst}/${e.dir}/${e.filename}`,
+                              `${this.#tree.root}/${e.dir}/${e.stamped}`);
+        }
+    }
+
+    #sorted(): [string, Entry][] {
+        return [...this.#entries].sort((a, b) => a[0] < b[0] ? -1 : 1);
     }
 }
 
 export type Dest = {
+    // Under the tree root, not from the output root.
     dir: string,
     ext?: string,
 };

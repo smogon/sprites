@@ -64,7 +64,7 @@ reuses the build's digests. All state lives in `.build/`.
 ```
 $ pnpm build                                     # build every deploy's rules, GC stale state
 $ pnpm deploy                                    # list the deploys in deploy.json5
-$ pnpm deploy assets                             # run a named deploy
+$ pnpm deploy smogon                             # run a named deploy
 $ node tools/deploy/index.ts build smogon.build.ts  # build one deploy's rules
 $ node tools/deploy/index.ts run smogon.build.ts -o deploy/smogon
 $ node tools/deploy/index.ts inspect src/minisprites/items/ileftovers.png -o /tmp/out
@@ -106,26 +106,24 @@ repo ships to are written down.
 
 ```json5
 {
-    assets: {
-        buildFile: "assets.build.ts",
-        deploy: [
-            {subset: ["**"], cmd: "smogonctl assets upload sprites"},
-        ],
-    },
     smogon: {
         buildFile: "smogon.build.ts",
         deploy: [
-            {subset: ["xy/**"], dir: true, cmd: "rsync -a --delete-after %d/xy/ <host>:<path>/xy"},
+            {subset: ["**"], cmd: "smogonctl assets upload sprites"},
         ],
     },
 }
 ```
 
+Note that the coverage rule is per deploy name, over the whole buildFile's
+outputs: two names on one buildFile can't split its tree between them, since
+each of them has to cover all of it.
+
 ### The asset upload's tar layout
 
 `smogonctl assets upload` publishes a tar into a served tree under a prefix
 named in the receiving home's `services.toml`, which this side can't read. So
-`assets.build.ts` writes that prefix itself -- everything served ships under
+`smogon.build.ts` writes that prefix itself -- everything served ships under
 `sprites/` -- and the upload rejects a tar whose tree disagrees. The two are
 checked against each other instead of each guessing, which is what lets the
 manifests and pointers in `__meta/` name whole urls (`/__assets/sprites/...`)
@@ -135,6 +133,22 @@ and their readers hold no configuration at all.
 `assets-meta/`, beside the served tree rather than in it, because a served
 name carries a content hash and something un-stamped has to say which name to
 ask for.
+
+Three kinds of thing ride there. A manifest, `name` -> the whole url of the
+stamped file, for a reader that looks one up. A pointer file naming a single
+url, for the one-file sets. And `__meta/links/`, the served tree recreated as
+symlinks under the un-stamped names, which is the same mapping said in names
+instead of a file. It lives out here rather than in the tree because the tree
+is add-only -- a name in it is promised never to change -- and a link is
+repointed on every upload.
+
+A link says where in the tar its file is, not what to write into the link:
+`__meta/links/xy/charizard.gif` names `sprites/xy/charizard-<hash>.gif` and
+what is packed is the path between the two. The two halves land in different
+trees on the far side (`assets-meta/<key>/` and `assets/`), so the upload
+retargets every link at where its asset actually went, and refuses one naming
+anything that tar didn't carry. The mirror doesn't repeat the `sprites/`
+prefix, since the directory it lands in is already this set's.
 
 ## Configuration
 
