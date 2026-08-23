@@ -146,3 +146,25 @@ export async function itemspritecopy(manifest: Manifest, f: Sprite, dest: Dest):
         await manifest.copy(f, dest, spritedata.smogon(alias));
     }
 }
+
+// A copy that takes a published name only where nothing before it did. Every
+// layered set is built this way: the later sources are backfills, and the
+// claim is per published name rather than per filename because the mapping is
+// one to many in both directions. One name can be spelled several ways, and
+// gen 5 carries a sprite per forme slot, so its six Minior meteors and its two
+// Zygarde Power Construct slots all want the name the layer above already
+// published, which the manifest would refuse as a duplicate.
+export function firstWins(manifest: Manifest, dest: Dest,
+                          opts: NameOpts = {}): (f: Sprite) => Promise<void> {
+    let seen = new Set<string>();
+    return async (f: Sprite): Promise<void> => {
+        let names = publishedNames(f, opts);
+        if (names.some(n => seen.has(n))) {
+            return;
+        }
+        for (let name of names) {
+            seen.add(name);
+            await manifest.copy(f, dest, name);
+        }
+    };
+}

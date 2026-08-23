@@ -1,9 +1,10 @@
 
 import {gen10Modelslike} from './rules/modelslike.ts';
-import {Manifest, type Sprite, type Tree, itemspritecopy, publishedNames, spritecopy} from './rules/publish.ts';
-import {forEachRule, rule} from './tools/build/artifact.ts';
+import {GEN4_CAPS, forEachFront, fronts, named} from './rules/oldgen.ts';
+import {Manifest, type Sprite, type Tree, firstWins, itemspritecopy, spritecopy} from './rules/publish.ts';
+import {type CmdSpec, forEachRule, rule} from './tools/build/artifact.ts';
 import {compresspng, pad, spriteglob, trimimg} from './tools/build/helpers.ts';
-import {deploy} from './tools/deploy/api.ts';
+import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 
 // The tar root maps onto the served tree: sprites/x is served at
 // /__assets/sprites/x. The upload rejects a tar whose tree disagrees with the
@@ -56,23 +57,7 @@ let xyGen5 = forEachRule('src/sprites/gen5/*.png', [
 
 deploy(async ctx => {
     let manifest = new Manifest(ctx, TREE);
-    let seen = new Set<string>();
-    // First source wins per published name rather than per filename, because
-    // the later sources are backfills and one name can be spelled several
-    // ways. gen 5 carries a sprite per forme slot, so its six Minior meteors
-    // and its two Zygarde Power Construct slots all want the name the models
-    // already published, which the manifest would refuse as a duplicate.
-    let xycopy = async (f: Sprite) => {
-        let names = publishedNames(f);
-        if (names.some(n => seen.has(n))) {
-            return;
-        }
-        for (let name of names) {
-            seen.add(name);
-            await manifest.copy(f, {dir: 'xy'}, name);
-        }
-    };
-
+    let xycopy = firstWins(manifest, {dir: 'xy'});
     for (let f of await ctx.list('src/models')) {
         await xycopy(f);
     }
@@ -112,6 +97,67 @@ deploy(async ctx => {
     manifest.write('__meta/xyicons/manifest.json');
     manifest.links(LINKS);
 });
+
+// sprites/rb, rg, y, c, rs, dp, bw: the older-gen full sprites, the front of
+// each generation under the name the smogdex, the forum and chatot each
+// compose from a dex alias. They read no manifest, which is why these ride
+// the LINKS mirror the way xy/ does.
+
+function trimmed(display: string): CmdSpec {
+    return {display, cmds: [trimimg(), compresspng({config: 'SPRITE'})]};
+}
+
+// Red and Blue and Japanese Red and Green are two palettes of one set of
+// drawings; Yellow's are the Game Boy Color's, which is a directory of its
+// own, the sprites beside it being the Super Game Boy ones.
+let gen1 = trimmed('gen 1 sprite %f');
+let rb = forEachFront(fronts('src/sprites/gen1/*.png', 'b'), gen1, 'png');
+let rg = forEachFront(fronts('src/sprites/gen1/*.png', 'g'), gen1, 'png');
+let y = forEachFront(fronts('src/sprites/gen1/gbc/*.png', 'y'), gen1, 'png');
+
+// Crystal's animations come at the games' own 56x56 and are published on the
+// 60x60 box the legacy set used: the smogdex scales a sprite to fill its
+// frame, so trimmed, a Diglett would arrive the size of a Steelix.
+let c = forEachFront(fronts('src/sprites/gen2/*.gif'), {
+    display: 'gen 2 animation %f',
+    cmds: [
+        'magick convert %f -coalesce -background none -gravity center -extent 60x60 %o',
+        'gifsicle -O3 -b %o',
+    ],
+}, 'gif');
+
+let rs = forEachFront(fronts('src/sprites/gen3/*.png', 'rfle'), trimmed('gen 3 sprite %f'), 'png');
+
+let dp = forEachFront([
+    ...fronts('src/sprites/gen4/*.png', 'dph'),
+    ...named(fronts('src/sprites/gen5/*.png'), GEN4_CAPS),
+], trimmed('gen 4 sprite %f'), 'png');
+
+function oldgen(dir: string, sources: (ctx: DeployCtx) => Promise<Sprite[]>): void {
+    deploy(async ctx => {
+        let manifest = new Manifest(ctx, TREE);
+        let copy = firstWins(manifest, {dir});
+        for (let f of await sources(ctx)) {
+            await copy(f);
+        }
+        manifest.write(`__meta/${dir}/manifest.json`);
+        manifest.links(LINKS);
+    });
+}
+
+oldgen('rb', async () => rb);
+oldgen('rg', async () => rg);
+oldgen('y', async () => y);
+oldgen('c', async () => c);
+oldgen('rs', async () => rs);
+oldgen('dp', async () => dp);
+// bw/ is gen 5's animations, backfilled from the gen 5-style stills for what
+// the games never animated: the CAPs, and everything the Smogon Sprite
+// Project has drawn since. The stills are the rule set xy/ already layers on.
+oldgen('bw', async ctx => [
+    ...(await ctx.list('src/sprites/gen5')).filter(f => f.ext === 'gif'),
+    ...xyGen5,
+]);
 
 // Smogdex spritesheet. The sheet tool bakes the names parsed from the %f
 // filenames into the css, hence nameSensitive. The png is declared only so
