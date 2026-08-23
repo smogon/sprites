@@ -69,7 +69,7 @@ deploy(async ctx => {
         await itemspritecopy(manifest, f, {dir: `${ASSETS}/forumsprites`});
     }
     for (let f of forumG6) {
-        await spritecopy(manifest, f, {dir: `${ASSETS}/forumsprites`}, true);
+        await spritecopy(manifest, f, {dir: `${ASSETS}/forumsprites`}, {allowUnknown: true, icons: true});
     }
     manifest.write('__meta/forumsprites/manifest.json');
 });

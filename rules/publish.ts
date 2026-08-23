@@ -69,7 +69,15 @@ function extOf(f: Sprite, ext?: string): string {
 // copies, since the mapping isn't one name per filename in either direction:
 // Meowstic answers to two, and the forme slots the games gave one sprite (the
 // six Minior meteors, Zygarde's Power Construct pair) answer to the same one.
-export function publishedNames(f: Sprite, allowUnknown = false): string[] {
+export type NameOpts = {
+    // forumsprites publishes Unknown; no other set does.
+    allowUnknown?: boolean,
+    // The gen 6 icon sets publish the formes they have no icon for under a
+    // borrowed one. See ICON_ALIASES.
+    icons?: boolean,
+};
+
+export function publishedNames(f: Sprite, opts: NameOpts = {}): string[] {
     let sn = spritedata.parseFilename(f.name);
 
     // Skip asymmetrical for now
@@ -79,19 +87,19 @@ export function publishedNames(f: Sprite, allowUnknown = false): string[] {
 
     if (sn.kind === 'x') {
         // Skip these, we don't use Unknown/Substitute
-        if (!allowUnknown || sn.name !== 'unknown') {
+        if (!opts.allowUnknown || sn.name !== 'unknown') {
             return [];
         }
     } else if (sn.kind !== 's') {
         throw new Error(`Not a specie sprite: ${f.name}`);
     }
 
-    return spritedata.smogonNames(sn);
+    return opts.icons ? spritedata.iconNames(sn) : spritedata.smogonNames(sn);
 }
 
 export async function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
-                                 allowUnknown = false): Promise<void> {
-    for (let name of publishedNames(f, allowUnknown)) {
+                                 opts: NameOpts = {}): Promise<void> {
+    for (let name of publishedNames(f, opts)) {
         await manifest.copy(f, dest, name);
     }
 }

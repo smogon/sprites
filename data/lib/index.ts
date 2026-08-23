@@ -84,15 +84,53 @@ export const ITEM_ALIASES: Record<string, string[]> = {
 // The second name a sprite answers to, where one picture publishes twice.
 // Meowstic is a disagreement: PS's is the male, baseForme M with Meowstic-F the
 // alt forme, while the dex splits the pair evenly and calls that entry
-// Meowstic-M. Toxtricity is a shortage: the games drew one Gigantamax
-// Toxtricity and not two, which is why PS's own icon sheet gives Amped and
-// Low-Key a single slot and its animations no low-key gmax at all. Keyed and
-// valued in published smogon form, because only that side asks; PS wants
-// `meowstic` and `toxtricitygmax`, which is what the filenames already say.
+// Meowstic-M. The other two are one picture wearing two names. The games drew
+// one Gigantamax Toxtricity and not two, which is why PS's own icon sheet gives
+// Amped and Low-Key a single slot and its animations no low-key gmax at all.
+// Greninja-Bond is Battle Bond's form and looks like any other Greninja, unlike
+// Greninja-Ash, which is drawn: the gen 5 renditions of the two are byte for
+// byte the base sprite, and nothing ever drew a model. Keyed and valued in
+// published smogon form, because only that side asks; PS wants `meowstic`,
+// `toxtricitygmax` and `greninja`, which is what the filenames already say.
 export const SPECIES_ALIASES: Record<string, string[]> = {
+    greninja: ['greninja-bond'],
     meowstic: ['meowstic-m'],
     'toxtricity-gmax': ['toxtricity-low-key-gmax'],
 };
+
+// Formes the gen 6 icon set has no art for, because the games drew them none.
+// PS's client says the same thing in its own sheet, where each of these sits at
+// the slot of the forme it shares, under "alt forms with duplicate icons".
+// Keyed by the name that has the icon, in published smogon form.
+//
+// The icon sets alone borrow this way. src/models has a real animation for
+// every one of these, so smogonNames() must not know about them: in xy/ the
+// borrowing name would be claimed by the base sprite and shadow the forme's
+// own art.
+export const ICON_ALIASES: Record<string, string[]> = {
+    araquanid: ['araquanid-totem'],
+    gourgeist: ['gourgeist-large', 'gourgeist-small', 'gourgeist-super'],
+    gumshoos: ['gumshoos-totem'],
+    'kommo-o': ['kommo-o-totem'],
+    lurantis: ['lurantis-totem'],
+    'marowak-alola': ['marowak-alola-totem'],
+    mimikyu: ['mimikyu-busted', 'mimikyu-busted-totem', 'mimikyu-totem'],
+    pichu: ['pichu-spiky-eared'],
+    pumpkaboo: ['pumpkaboo-large', 'pumpkaboo-small', 'pumpkaboo-super'],
+    'raticate-alola': ['raticate-alola-totem'],
+    ribombee: ['ribombee-totem'],
+    rockruff: ['rockruff-dusk'],
+    salazzle: ['salazzle-totem'],
+    togedemaru: ['togedemaru-totem'],
+    vikavolt: ['vikavolt-totem'],
+};
+
+// Every name a gen 6 icon answers to: its own, and any forme with no icon of
+// its own that borrows it.
+export function iconNames(sn: SpriteFilename): string[] {
+    let names = smogonNames(sn);
+    return [...names, ...names.flatMap(n => ICON_ALIASES[n] ?? [])];
+}
 
 // Every name a sprite answers to on the smogon side: its own, and any alias.
 export function smogonNames(sn: SpriteFilename): string[] {

@@ -74,52 +74,17 @@ let xyIcons = forEachRule('src/minisprites/pokemon/gen6/*.png', {
     cmds: [trimimg(), compresspng({config: 'MINISPRITE'})],
 }, '%b');
 
-// The games drew these formes no icon of their own, so gen 6 has none and
-// nothing upstream does either: PS ships icons as one dexnum-indexed sheet, and
-// its own copy of this list sits commented out in ps-pokemon.sheet.mjs under
-// "alt forms with duplicate icons". Serve each the icon it shares. Only this
-// set needs them; xy/ has real art for all 22.
-let xyIconAliases: Record<string, string> = {
-    'araquanid-totem': 'araquanid',
-    'gourgeist-large': 'gourgeist',
-    'gourgeist-small': 'gourgeist',
-    'gourgeist-super': 'gourgeist',
-    'greninja-bond': 'greninja',
-    'gumshoos-totem': 'gumshoos',
-    'kommo-o-totem': 'kommo-o',
-    'lurantis-totem': 'lurantis',
-    'marowak-alola-totem': 'marowak-alola',
-    'mimikyu-busted': 'mimikyu',
-    'mimikyu-busted-totem': 'mimikyu',
-    'mimikyu-totem': 'mimikyu',
-    'pichu-spiky-eared': 'pichu',
-    'pumpkaboo-large': 'pumpkaboo',
-    'pumpkaboo-small': 'pumpkaboo',
-    'pumpkaboo-super': 'pumpkaboo',
-    'raticate-alola-totem': 'raticate-alola',
-    'ribombee-totem': 'ribombee',
-    'rockruff-dusk': 'rockruff',
-    'salazzle-totem': 'salazzle',
-    'togedemaru-totem': 'togedemaru',
-    'vikavolt-totem': 'vikavolt',
-};
-
 deploy(ctx => {
+    // icons: the gen 6 set has no art for some formes and lends them another's,
+    // which the smogdex sheet and forumsprites do off the same directory.
     let byName = new Map<string, Sprite>();
     for (let f of xyIcons) {
-        for (let name of publishedNames(f)) {
+        for (let name of publishedNames(f, {icons: true})) {
+            if (byName.has(name)) {
+                throw new Error(`Two icons published as ${name}`);
+            }
             byName.set(name, f);
         }
-    }
-    for (let [name, from] of Object.entries(xyIconAliases)) {
-        let f = byName.get(from);
-        if (f === undefined) {
-            throw new Error(`No ${from} icon to publish as ${name}`);
-        }
-        if (byName.has(name)) {
-            throw new Error(`${name} has an icon of its own now; drop the alias`);
-        }
-        byName.set(name, f);
     }
     for (let [name, f] of byName) {
         smogonSpritecopy(ctx, f, 'xyicons', [name]);

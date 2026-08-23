@@ -33,7 +33,7 @@ for (let [filename, sprite] of Object.entries(result.coordinates)) {
         continue;
     }
     // TODO would like to use psid here, mess with it later.
-    for (let name of spritedata.smogonNames(parsed)) {
+    for (let name of spritedata.iconNames(parsed)) {
         sprites.set(name, sprite);
     }
 }
