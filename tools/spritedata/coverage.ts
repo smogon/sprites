@@ -31,14 +31,16 @@ let STAMPED = /-[A-Z2-7]{8}\.[a-z0-9]+$/;
 // The cap spellings, hoopa-alt and darmanitan-zen-galar predate PS's renames
 // to Pikachu-Alola, Hoopa-Unbound and Darmanitan-Galar-Zen, all of which the
 // build publishes; nothing in smogon.com or forum names the old ones. The
-// strawberry sweet is spelled as the bare cream both upstream and in chatot's
-// list. The pngs are shadowed by the gifs the build ships. The subdirectories
-// are XY-era scratch that no build has ever written.
+// Alcremie sweets are cosmetic formes PS's data does not carry, so the dex
+// never names one either; the only list of them is chatot's, and chatot reads
+// play.pokemonshowdown.com first and only falls back here on a 404, which for
+// these never happens. The pngs are shadowed by the gifs the build ships. The
+// subdirectories are XY-era scratch that no build has ever written.
 let BACKLOG = [
     /^(\.gitignore|manifest\.json)$/,
     /^pikachu-(kanto|hoenn|sinnoh|unova|kalos|alola)cap\.gif$/,
     /^(hoopa-alt|darmanitan-zen-galar)\.(gif|png)$/,
-    /^alcremie-[a-z-]+-strawberry\.gif$/,
+    /^alcremie-[a-z-]+-(berry|clover|flower|love|ribbon|star|strawberry)\.gif$/,
     /^(lokix|melmetal|meltan|pawmi|quaquaval|syclant)\.png$/,
     /^(aback|afront|asback|asfront|back|mini|sback|sfront)\//,
 ];
