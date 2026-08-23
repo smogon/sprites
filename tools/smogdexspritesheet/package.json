@@ -1,5 +1,8 @@
 {
     "type": "module",
+    "scripts": {
+        "test": "node --test test/*.test.ts"
+    },
     "dependencies": {
         "@smogon/sprite-data": "workspace:*",
         "@types/node": "^24.10.7",

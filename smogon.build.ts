@@ -162,6 +162,8 @@ oldgen('bw', async ctx => [
 // Smogdex spritesheet. The sheet tool bakes the names parsed from the %f
 // filenames into the css, hence nameSensitive. The png is declared only so
 // cwebp has something to read; only the css and the webp are published.
+// A sprite's place in the sheet is one grid index, so the css is a rule of
+// geometry per region and a single declaration per name.
 
 let [, sheetCss, sheetWebp] = rule(minispriteInputs, {
     display: 'smogdex sheet',
@@ -169,6 +171,7 @@ let [, sheetCss, sheetWebp] = rule(minispriteInputs, {
     deps: [
         'data/lib/index.ts',
         'tools/smogdexspritesheet/index.ts',
+        'tools/smogdexspritesheet/layout.ts',
     ],
     cmds: [
         'node tools/smogdexspritesheet/index.ts --image %o1 --stylesheet %o2 -- %f',
