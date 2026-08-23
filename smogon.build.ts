@@ -1,9 +1,9 @@
 
 import {gen10Modelslike} from './rules/modelslike.ts';
-import {Manifest, type Sprite, publishedNames, spritecopy} from './rules/publish.ts';
+import {type Sprite, publishedNames} from './rules/publish.ts';
 import {forEachRule} from './tools/build/artifact.ts';
 import {compresspng, trimimg} from './tools/build/helpers.ts';
-import {deploy} from './tools/deploy/api.ts';
+import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 
 // xy/ animations: first source wins per sprite name.
 
@@ -32,41 +32,39 @@ let xyGen5 = forEachRule('src/sprites/gen5/*.png', [
 
 deploy(async ctx => {
     let seen = new Set<string>();
-    let manifest = new Manifest(ctx);
     // First source wins per published name rather than per filename, because
-    // the later sources are backfills and a name can be spelled more than one
-    // way. gen 5 carries a sprite per forme slot, so its six Minior meteors
-    // and two Zygarde Power Construct slots all want the name the models
-    // already publish, which the manifest would reject as a duplicate.
-    let xycopy = async (f: Sprite) => {
+    // the later sources are backfills and one name can be spelled several
+    // ways. gen 5 carries a sprite per forme slot, so its six Minior meteors
+    // and its two Zygarde Power Construct slots all want the name the models
+    // already published, and two copies to one path is an invalid queue.
+    let xycopy = (f: Sprite) => {
         let names = publishedNames(f);
         if (names.some(n => seen.has(n))) {
             return;
         }
         for (let name of names) {
             seen.add(name);
-            await manifest.copy(f, {dir: 'xy'}, name);
         }
+        smogonSpritecopy(ctx, f, 'xy', names);
     };
 
     for (let f of await ctx.list('src/models')) {
-        await xycopy(f);
+        xycopy(f);
     }
     for (let f of xyModels) {
-        await xycopy(f);
+        xycopy(f);
     }
     for (let f of xyChampions) {
-        await xycopy(f);
+        xycopy(f);
     }
     for (let f of await ctx.list('src/sprites/gen5')) {
         if (f.ext === 'gif') {
-            await xycopy(f);
+            xycopy(f);
         }
     }
     for (let f of xyGen5) {
-        await xycopy(f);
+        xycopy(f);
     }
-    manifest.write('xy/manifest.json');
 });
 
 // xyicons/: trimmed gen6 minisprites.
@@ -76,13 +74,23 @@ let xyIcons = forEachRule('src/minisprites/pokemon/gen6/*.png', {
     cmds: [trimimg(), compresspng({config: 'MINISPRITE'})],
 }, '%b');
 
-deploy(async ctx => {
-    let manifest = new Manifest(ctx);
+deploy(ctx => {
     for (let f of xyIcons) {
-        await spritecopy(manifest, f, {dir: 'xyicons'});
+        smogonSpritecopy(ctx, f, 'xyicons', publishedNames(f));
     }
-    manifest.write('xyicons/manifest.json');
 });
+
+// The smogon side asks for a fixed path, /sprites/xy/charizard.gif, and reads
+// no manifest yet, so these copies carry no content stamp and the published
+// name is the whole filename.
+function smogonSpritecopy(ctx: DeployCtx, f: Sprite, dir: string, names: string[]): void {
+    if (f.ext === null) {
+        throw new Error(`Sprite ${f.name} has no extension`);
+    }
+    for (let name of names) {
+        ctx.copy(f, `${dir}/${name}.${f.ext}`);
+    }
+}
 
 // Deprecated, unstamped sets. Reviving one also means importing what it
 // uses (PNG_DETERMINISTIC, base, spriteglob, itemspritecopy) and giving the
