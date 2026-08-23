@@ -1,5 +1,6 @@
 
 import {spawn, type ChildProcess} from 'node:child_process';
+import * as crypto from 'node:crypto';
 import * as fs from 'node:fs/promises';
 import * as os from 'node:os';
 import * as nodePath from 'node:path';
@@ -8,6 +9,7 @@ import {parseArgs} from 'node:util';
 
 import * as artifact from '../build/artifact.ts';
 import {casPath} from '../build/cas.ts';
+import {hashFile} from '../build/hash.ts';
 import {loadConfig} from '../build/config.ts';
 import {build} from '../build/driver.ts';
 import {BuildError} from '../build/errors.ts';
@@ -26,6 +28,7 @@ let DB_PATH = '.build/db.sqlite';
 let LOCK_PATH = '.build/lock.sqlite';
 let CAS_DIR = '.build/cas';
 let TMP_DIR = '.build/tmp';
+let BASELINE_PATH = '.build/outputs.json';
 
 type CommonOpts = {
     jobs: string,
@@ -39,6 +42,7 @@ type VerbOpts = CommonOpts & {
     output?: string,
     link?: boolean,
     tar?: boolean,
+    record?: boolean,
 };
 
 let USAGE = `usage: node tools/deploy/index.ts <command> [options]
@@ -52,6 +56,8 @@ commands:
   run <file> -o <dir>         build, finish, and materialize to a directory (or tar file)
   inspect <paths...> -o <dir> build every rule touching the given source paths and copy
                               the outputs out
+  refactor [files...]         report how the published files differ from the last
+                              --record (default: all *.build.ts)
 
 options:
   -j, --jobs <n>       number of parallel jobs (default: all cores)
@@ -59,6 +65,7 @@ options:
       --fail-fast      stop scheduling new rules after the first failure
       --config <file>  config file (default: build.config)
   -o, --output <dir>   run/inspect/deploy: output directory (a file with --tar)
+      --record         refactor: overwrite the baseline instead of checking it
       --link           run: hardlink instead of copying
       --tar            run: write a tar file
   -v, --verbose        print more detail
@@ -85,6 +92,9 @@ let VERB_OPTIONS = {
     },
     inspect: {
         output: {type: 'string', short: 'o'},
+    },
+    refactor: {
+        record: {type: 'boolean'},
     },
 } as const;
 
@@ -309,6 +319,89 @@ async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
     });
 }
 
+// What a deploy publishes: the digest of the bytes landing at each name.
+// tup's `refactor` checked that a Tupfile edit left the build graph alone;
+// this checks the same thing one layer out, over the names and bytes the
+// deploy blocks decide, which is where a rename or a lost alias shows up.
+//
+//   node tools/deploy/index.ts refactor --record   # before the change
+//   node tools/deploy/index.ts refactor            # after it
+//
+// The baseline lives in .build/ beside the rest of the build state, so it is
+// per-checkout and never committed.
+async function outputs(aq: ActionQueue): Promise<Map<string, string>> {
+    let out = new Map<string, string>();
+    for (let e of aq.log) {
+        if (e.type !== 'Op') continue;
+        if (e.op.type === 'Write') {
+            out.set(e.dst, crypto.createHash('sha256').update(e.op.data).digest('hex'));
+            continue;
+        }
+        // A CAS path spells its own digest, so only raw sources are read.
+        let cas = new RegExp(`^${CAS_DIR}/[0-9a-f]{2}/([0-9a-f]{64})\\.`).exec(e.op.src);
+        out.set(e.dst, cas ? cas[1]! : (await hashFile(e.op.src)).toString('hex'));
+    }
+    return out;
+}
+
+function diffOutputs(was: Record<string, string>, now: Map<string, string>): string[] {
+    let lines = [];
+    for (let [dst, digest] of now) {
+        let before = was[dst];
+        if (before === undefined) {
+            lines.push(`+ ${dst}`);
+        } else if (before !== digest) {
+            lines.push(`M ${dst}`);
+        }
+    }
+    for (let dst of Object.keys(was)) {
+        if (!now.has(dst)) {
+            lines.push(`- ${dst}`);
+        }
+    }
+    return lines.sort((a, b) => a.slice(2) < b.slice(2) ? -1 : 1);
+}
+
+async function cmdRefactor(files: string[], opts: VerbOpts): Promise<void> {
+    setConfig(await loadConfig(opts.config));
+    let deployFiles = files.length > 0 ? files : await discoverDeployFiles();
+    let specs = await importDeploys(deployFiles);
+    let baseline: Record<string, Record<string, string>> = {};
+    try {
+        baseline = JSON.parse(await fs.readFile(BASELINE_PATH, 'utf8')) as typeof baseline;
+    } catch {
+        // No baseline yet; every file below records one.
+    }
+    process.exitCode = await buildThen(artifact.getDecls(), opts, false, async () => {
+        let changed = false;
+        for (let file of deployFiles) {
+            let aq = await runFinish(finishOf(specs, file), Boolean(opts.verbose));
+            if (aq === null) {
+                return 1;
+            }
+            let now = await outputs(aq);
+            let was = baseline[file];
+            if (opts.record || was === undefined) {
+                console.log(`${file}: recorded ${now.size} files${was === undefined && !opts.record ? ' (no baseline)' : ''}`);
+            } else {
+                let lines = diffOutputs(was, now);
+                console.log(`${file}: ${now.size} files, ${lines.length} changed`);
+                for (let line of lines) {
+                    console.log(`    ${line}`);
+                }
+                changed ||= lines.length > 0;
+                continue;
+            }
+            baseline[file] = Object.fromEntries([...now].sort((a, b) => a[0] < b[0] ? -1 : 1));
+        }
+        if (opts.record || Object.keys(baseline).length > 0) {
+            await fs.mkdir(nodePath.dirname(BASELINE_PATH), {recursive: true});
+            await fs.writeFile(BASELINE_PATH, JSON.stringify(baseline, null, 4) + '\n');
+        }
+        return changed ? 1 : 0;
+    });
+}
+
 function slugOf(decl: artifact.RuleDecl): string {
     let template = decl.displayTemplate ?? decl.cmds[0] ?? '';
     let slug = template.replace(/%[a-zA-Z0-9]+/g, ' ')
@@ -389,6 +482,7 @@ async function main(argv: string[]): Promise<void> {
         output: v.output as string | undefined,
         link: Boolean(v.link),
         tar: Boolean(v.tar),
+        record: Boolean(v.record),
     };
     switch (verb) {
         case 'build':
@@ -407,6 +501,8 @@ async function main(argv: string[]): Promise<void> {
                 throw new BuildError('inspect takes at least one source path');
             }
             return cmdInspect(positionals, opts);
+        case 'refactor':
+            return cmdRefactor(positionals, opts);
     }
 }
 

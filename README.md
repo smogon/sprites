@@ -68,12 +68,22 @@ $ pnpm deploy assets                             # run a named deploy
 $ node tools/deploy/index.ts build smogon.build.ts  # build one deploy's rules
 $ node tools/deploy/index.ts run smogon.build.ts -o deploy/smogon
 $ node tools/deploy/index.ts inspect src/minisprites/items/ileftovers.png -o /tmp/out
+$ node tools/deploy/index.ts refactor --record       # remember what the deploys publish
+$ node tools/deploy/index.ts refactor                # and what a change did to it
 ```
 
 `run` materializes a deploy to a directory (`--link` hardlinks, `--tar`
 writes a tar file) without uploading anything. `inspect` builds every rule
 that consumes the given source paths and copies the outputs out under
 readable names for eyeballing.
+
+`refactor` answers "did that change anything we ship". It builds, runs the
+deploy blocks, and digests the bytes landing at every published name, then
+prints what was added, removed or modified since the last `--record` and exits
+non-zero if anything was. A built artifact's CAS path already spells its
+digest, so only raw sources are read; the baseline sits in `.build/` and is
+per-checkout. Record on the commit you are comparing against, make the change,
+run it again.
 
 Useful flags: `-j <n>` parallelism, `-n` dry run, `-v` verbose,
 `--fail-fast` stop after the first failure.
