@@ -18,8 +18,6 @@ Formes ride in `-o`, so `Charizard-Mega-X`'s back sprite is
 `scharizard-omega_x-b.gif` and every Charizard is `scharizard-*`. The forme
 comes first so a forme's sprites sort together.
 
-`tools/deploy/coverage.ts` prints what a deploy would delete off the server, if
-you need to check the build against what is actually being served.
 
 # Flags
 

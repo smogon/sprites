@@ -91,6 +91,9 @@ covered by some entry. `deploy <name> -o <dir>` materializes each entry's
 subset under `<dir>/<name>/<entry index>/` instead of running its command,
 for eyeballing what would ship.
 
+This file is not committed, because it is where the hosts and paths this
+repo ships to are written down.
+
 ```json5
 {
     assets: {
@@ -102,7 +105,7 @@ for eyeballing what would ship.
     smogon: {
         buildFile: "smogon.build.ts",
         deploy: [
-            {subset: ["xy/**"], dir: true, cmd: "rsync -a --delete-after %d/xy/ smogon:/smog2/sprites/xy"},
+            {subset: ["xy/**"], dir: true, cmd: "rsync -a --delete-after %d/xy/ <host>:<path>/xy"},
         ],
     },
 }
