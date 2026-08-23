@@ -1,4 +1,6 @@
 
+import {FORME_PARENTS} from '@smogon/sprite-data/formes.ts';
+
 import {gen10Modelslike} from './rules/modelslike.ts';
 import {type Sprite, publishedNames} from './rules/publish.ts';
 import {forEachRule} from './tools/build/artifact.ts';
@@ -75,8 +77,31 @@ let xyIcons = forEachRule('src/minisprites/pokemon/gen6/*.png', {
 }, '%b');
 
 deploy(ctx => {
+    let byName = new Map<string, Sprite>();
     for (let f of xyIcons) {
-        smogonSpritecopy(ctx, f, 'xyicons', publishedNames(f));
+        for (let name of publishedNames(f)) {
+            byName.set(name, f);
+        }
+    }
+    // The games drew no icon for some formes, so PS's own sheet sends them to
+    // the nearest one that has art: Gourgeist-Super to Gourgeist,
+    // Mimikyu-Busted-Totem to Mimikyu-Busted and on to Mimikyu. Walk the same
+    // chain, so a name the data knows gets an icon rather than a 404. Only
+    // this set needs it, since xy/ has real art for every one of them.
+    for (let name of Object.keys(FORME_PARENTS)) {
+        if (byName.has(name)) {
+            continue;
+        }
+        for (let p = FORME_PARENTS[name]; p !== undefined; p = FORME_PARENTS[p]) {
+            let f = byName.get(p);
+            if (f) {
+                byName.set(name, f);
+                break;
+            }
+        }
+    }
+    for (let [name, f] of byName) {
+        smogonSpritecopy(ctx, f, 'xyicons', [name]);
     }
 });
 
