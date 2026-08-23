@@ -162,6 +162,27 @@ oldgen('bw', async ctx => [
     ...xyGen5,
 ]);
 
+// sprites/minisprites/: the smogdex's icons as files, one apiece, for a reader
+// that wants one of them rather than the whole sheet. The sources ship
+// verbatim, which is what makes a file and its cell in the sheet the same
+// picture; xyicons/ is the trimmed reading of the same set.
+//
+// They ride the LINKS mirror because what asks for one composes the path out of
+// the sprite and nothing else, which is what the set used to make it read a
+// whole-set hash out of a pointer file to do.
+
+deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
+    for (let f of await ctx.list('src/minisprites/items')) {
+        await itemspritecopy(manifest, f, {dir: 'minisprites'});
+    }
+    for (let f of await ctx.list('src/minisprites/pokemon/gen6')) {
+        await spritecopy(manifest, f, {dir: 'minisprites'}, {icons: true});
+    }
+    manifest.write('__meta/minisprites/manifest.json');
+    manifest.links(LINKS);
+});
+
 // Smogdex spritesheet. The sheet tool bakes the names parsed from the %f
 // filenames into the css, hence nameSensitive. The png is declared only so
 // cwebp has something to read; only the css and the webp are published.
