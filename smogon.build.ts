@@ -1,6 +1,6 @@
 
 import {gen10Modelslike} from './rules/modelslike.ts';
-import {Manifest, type Sprite, spritecopy} from './rules/publish.ts';
+import {Manifest, type Sprite, publishedNames, spritecopy} from './rules/publish.ts';
 import {forEachRule} from './tools/build/artifact.ts';
 import {compresspng, trimimg} from './tools/build/helpers.ts';
 import {deploy} from './tools/deploy/api.ts';
@@ -19,7 +19,9 @@ let xyModels = forEachRule('src/gen9species/*.png', {
 
 let xyChampions = gen10Modelslike();
 
-// Non-model gen 5 CAPs.
+// Whatever the models don't cover, in gen 5 style: the CAPs that never got a
+// model, and, since the Smogon Sprite Project's batch landed, the Gigantamax
+// formes and a few others.
 
 let xyGen5 = forEachRule('src/sprites/gen5/*.png', [
     // TODO, add customizable compression for gif
@@ -29,14 +31,22 @@ let xyGen5 = forEachRule('src/sprites/gen5/*.png', [
 ], '%B.gif');
 
 deploy(async ctx => {
-    let seenModels = new Set<string>();
+    let seen = new Set<string>();
     let manifest = new Manifest(ctx);
+    // First source wins per published name rather than per filename, because
+    // the later sources are backfills and a name can be spelled more than one
+    // way. gen 5 carries a sprite per forme slot, so its six Minior meteors
+    // and two Zygarde Power Construct slots all want the name the models
+    // already publish, which the manifest would reject as a duplicate.
     let xycopy = async (f: Sprite) => {
-        if (seenModels.has(f.name)) {
+        let names = publishedNames(f);
+        if (names.some(n => seen.has(n))) {
             return;
         }
-        seenModels.add(f.name);
-        await spritecopy(manifest, f, {dir: 'xy'});
+        for (let name of names) {
+            seen.add(name);
+            await manifest.copy(f, {dir: 'xy'}, name);
+        }
     };
 
     for (let f of await ctx.list('src/models')) {
@@ -48,7 +58,6 @@ deploy(async ctx => {
     for (let f of xyChampions) {
         await xycopy(f);
     }
-    // Non-model CAPs
     for (let f of await ctx.list('src/sprites/gen5')) {
         if (f.ext === 'gif') {
             await xycopy(f);

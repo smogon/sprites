@@ -64,25 +64,34 @@ function extOf(f: Sprite, ext?: string): string {
     return result;
 }
 
-export async function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
-                                 allowUnknown = false): Promise<void> {
+// The names a sprite publishes under on the smogon side, or none where it
+// isn't published at all. A set that backfills another needs this before it
+// copies, since the mapping isn't one name per filename in either direction:
+// Meowstic answers to two, and the forme slots the games gave one sprite (the
+// six Minior meteors, Zygarde's Power Construct pair) answer to the same one.
+export function publishedNames(f: Sprite, allowUnknown = false): string[] {
     let sn = spritedata.parseFilename(f.name);
 
     // Skip asymmetrical for now
     if (sn.extra.has('a') || sn.extra.has('b') || sn.extra.has('s')) {
-        return;
+        return [];
     }
 
     if (sn.kind === 'x') {
         // Skip these, we don't use Unknown/Substitute
         if (!allowUnknown || sn.name !== 'unknown') {
-            return;
+            return [];
         }
     } else if (sn.kind !== 's') {
         throw new Error(`Not a specie sprite: ${f.name}`);
     }
 
-    for (let name of spritedata.smogonNames(sn)) {
+    return spritedata.smogonNames(sn);
+}
+
+export async function spritecopy(manifest: Manifest, f: Sprite, dest: Dest,
+                                 allowUnknown = false): Promise<void> {
+    for (let name of publishedNames(f, allowUnknown)) {
         await manifest.copy(f, dest, name);
     }
 }
