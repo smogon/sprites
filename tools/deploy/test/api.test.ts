@@ -88,17 +88,24 @@ test('ctx.list sorts, parses extensions, skips dotfiles and directories', async 
     ]);
 });
 
+type PackedEntry = {name: string, data: string, type?: string, linkname?: string};
+
 async function packedEntries(aq: ActionQueue, filter?: (dst: string) => boolean)
-    : Promise<{name: string, data: string}[]> {
+    : Promise<PackedEntry[]> {
     let packed = await aq.pack(filter);
     return new Promise((resolve, reject) => {
         let extract = tar.extract();
-        let entries: {name: string, data: string}[] = [];
+        let entries: PackedEntry[] = [];
         extract.on('entry', (header, stream, next) => {
             let chunks: Buffer[] = [];
             stream.on('data', c => chunks.push(c));
             stream.on('end', () => {
-                entries.push({name: header.name, data: Buffer.concat(chunks).toString()});
+                let entry: PackedEntry = {name: header.name, data: Buffer.concat(chunks).toString()};
+                if (header.type === 'symlink') {
+                    entry.type = header.type;
+                    entry.linkname = header.linkname ?? undefined;
+                }
+                entries.push(entry);
                 next();
             });
         });
@@ -163,4 +170,64 @@ test('copy-mode materialization restores 0644 on read-only sources', async () =>
     let out = pathlib.join(dir, 'deploy');
     await aq.run(out, 'copy');
     assert.equal(fs.statSync(pathlib.join(out, 'out/x.png')).mode & 0o777, 0o644);
+});
+
+test('pack carries a symlink as a link, not the bytes it names', async () => {
+    let aq = new ActionQueue();
+    aq.write('1', 'links/xy/a-XXXX.gif');
+    aq.symlink('a-XXXX.gif', 'links/xy/a.gif');
+    assert.deepEqual(await packedEntries(aq), [
+        {name: 'links/xy/a-XXXX.gif', data: '1'},
+        {name: 'links/xy/a.gif', data: '', type: 'symlink', linkname: 'a-XXXX.gif'},
+    ]);
+});
+
+test('run materializes a symlink resolving beside its target', async () => {
+    let dir = tmpdir();
+    let aq = new ActionQueue();
+    aq.write('bytes', 'xy/a-XXXX.gif');
+    aq.symlink('a-XXXX.gif', 'xy/a.gif');
+    let out = pathlib.join(dir, 'deploy');
+    await aq.run(out, 'copy');
+    let link = pathlib.join(out, 'xy/a.gif');
+    assert.ok(fs.lstatSync(link).isSymbolicLink());
+    assert.equal(fs.readlinkSync(link), 'a-XXXX.gif');
+    assert.equal(fs.readFileSync(link, 'utf8'), 'bytes');
+    // A second pass over the same tree is what a rerun looks like
+    await aq.run(out, 'copy');
+    assert.equal(fs.readlinkSync(link), 'a-XXXX.gif');
+});
+
+test('a symlink target naming anything outside the tree invalidates the queue', async () => {
+    let escaping = new ActionQueue();
+    escaping.symlink('../../etc/passwd', 'xy/a.gif');
+    assert.ok(!escaping.valid);
+
+    let absolute = new ActionQueue();
+    absolute.symlink('/etc/passwd', 'xy/a.gif');
+    assert.ok(!absolute.valid);
+
+    let tree = new ActionQueue();
+    tree.symlink('..', 'xy/a.gif');
+    assert.ok(!tree.valid);
+
+    // A target that walks up and back down again stays in the tree, which is
+    // what a link between two of its subtrees looks like.
+    let across = new ActionQueue();
+    across.symlink('../sprites/a-XXXX.gif', '__meta/a.gif');
+    across.symlink('a-XXXX.gif', 'xy/a.gif');
+    assert.ok(across.valid);
+});
+
+test('ctx.symlink writes the path from the link to what it names', async () => {
+    let aq = new ActionQueue();
+    let ctx = makeCtx('cas', aq);
+    ctx.symlink('__meta/links/sprites/xy/a.gif', 'sprites/xy/a-XXXX.gif');
+    ctx.symlink('__meta/a.gif', 'sprites/a-XXXX.gif');
+    let ops = aq.log.filter(e => e.type === 'Op');
+    assert.ok(aq.valid);
+    assert.deepEqual(ops.map(e => (e.op as {target: string}).target), [
+        '../../../../sprites/xy/a-XXXX.gif',
+        '../sprites/a-XXXX.gif',
+    ]);
 });

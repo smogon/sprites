@@ -10,13 +10,16 @@ type Op = {
 } | {
     type: 'Copy',
     src: string,
+} | {
+    type: 'Symlink',
+    target: string,
 };
 
 type OpEntry = {
     type: 'Op',
     op: Op,
     dst: string,
-    valid: 'Success' | 'Absolute' | 'Multiple',
+    valid: 'Success' | 'Absolute' | 'Multiple' | 'Escapes',
     debugObjs: unknown[]
 };
 
@@ -27,6 +30,27 @@ type DebugEntry = {
 };
 
 export type LogEntry = OpEntry | DebugEntry;
+
+// What a link names, resolved lexically against the directory it sits in: the
+// tree it describes isn't on disk anywhere yet, so there is nothing else to
+// resolve against. Null where it walks out of the tree, or names the tree
+// itself, neither of which is a name this tree can publish.
+function resolveLink(dst: string, target: string): string | null {
+    let parts = nodePath.dirname(dst).split('/').filter(p => p !== '' && p !== '.');
+    for (let part of target.split('/')) {
+        if (part === '' || part === '.') {
+            continue;
+        }
+        if (part !== '..') {
+            parts.push(part);
+        } else if (parts.length > 0) {
+            parts.pop();
+        } else {
+            return null;
+        }
+    }
+    return parts.length === 0 ? null : parts.join('/');
+}
 
 export class ActionQueue {
     #seen: Map<string, OpEntry | 'MoreThan1'>;
@@ -55,7 +79,7 @@ export class ActionQueue {
         this.log.push({type: 'Debug', obj, stray});
     }
 
-    #pushOp(op: Op, dst: string) {
+    #pushOp(op: Op, dst: string): OpEntry {
         dst = nodePath.normalize(dst);
         let entry: OpEntry = {
             type: 'Op',
@@ -81,6 +105,7 @@ export class ActionQueue {
                 }
             }
         }
+        return entry;
     }
 
     copy(src: string, dst: string) {
@@ -89,6 +114,16 @@ export class ActionQueue {
 
     write(data: string, dst: string) {
         this.#pushOp({type: 'Write', data}, dst);
+    }
+
+    // A link the receiving side extracts as root, so its target may only name
+    // something else in this tree.
+    symlink(target: string, dst: string) {
+        let entry = this.#pushOp({type: 'Symlink', target}, dst);
+        if (nodePath.isAbsolute(target) || resolveLink(entry.dst, target) === null) {
+            this.valid = false;
+            entry.valid = 'Escapes';
+        }
     }
 
     skip() {
@@ -115,6 +150,8 @@ export class ActionQueue {
                     console.error(`COPY${addendum}: ${op.src} ==> ${entry.dst}`);
                 } else if (op.type === 'Write') {
                     console.error(`WRITE${addendum}: ${op.data.length} characters ==> ${entry.dst}`);
+                } else if (op.type === 'Symlink') {
+                    console.error(`SYMLINK${addendum}: ${entry.dst} -> ${op.target}`);
                 }
             } else if (entry.type === 'Debug') {
                 let addendum = '';
@@ -148,6 +185,14 @@ export class ActionQueue {
                     }
                 } else if (op.type === 'Write') {
                     await fs.writeFile(dst, op.data);
+                } else if (op.type === 'Symlink') {
+                    // A link and not the file it names, in every mode: what
+                    // the tar carries is what a directory has to hold too.
+                    // symlink() has no truncating open behind it, so the name
+                    // is cleared first to keep a rerun over an existing tree
+                    // working the way copy and write already do.
+                    await fs.rm(dst, {force: true});
+                    await fs.symlink(op.target, dst);
                 }
             }
         } else {
@@ -169,6 +214,10 @@ export class ActionQueue {
             if (entry.type !== 'Op' || (filter !== undefined && !filter(entry.dst)))
                 continue;
             let op = entry.op;
+            if (op.type === 'Symlink') {
+                t.entry({name: entry.dst, type: 'symlink', linkname: op.target}).on('error', () => {});
+                continue;
+            }
             let data = op.type === 'Copy' ? await fs.readFile(op.src) : op.data;
             // A dying consumer destroys the pack and every pending entry
             // sink, and each sink emits the error; the consumer is the one

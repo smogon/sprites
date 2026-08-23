@@ -1,6 +1,7 @@
 
 import * as crypto from 'node:crypto';
 import * as fs from 'node:fs/promises';
+import * as nodePath from 'node:path';
 
 import b32encode from 'base32-encode';
 
@@ -24,6 +25,11 @@ export type DeployCtx = {
     // read, list, and hash do file I/O.
     copy(src: CopySource, dst: string): void,
     write(dst: string, data: string): void,
+    // A second name for something else this tree publishes, carried as a link
+    // rather than a second copy. `names` is that thing's destination, not a
+    // link target: what gets written is the path from `dst` to it, since the
+    // two ends can be moved apart by whoever unpacks the tree.
+    symlink(dst: string, names: string): void,
     read(src: CopySource): Promise<string>,
     list(dir: string): Promise<SrcFile[]>,
     // 8-char base32 content stamp. One source: the digest of its bytes,
@@ -75,6 +81,9 @@ export function makeCtx(casDir: string, queue: ActionQueue): DeployCtx {
         },
         write(dst: string, data: string): void {
             queue.write(data, dst);
+        },
+        symlink(dst: string, names: string): void {
+            queue.symlink(nodePath.relative(nodePath.dirname(nodePath.normalize(dst)), names), dst);
         },
         async read(src: CopySource): Promise<string> {
             return await fs.readFile(srcPath(src), 'utf8');

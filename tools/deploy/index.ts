@@ -337,6 +337,12 @@ async function outputs(aq: ActionQueue): Promise<Map<string, string>> {
             out.set(e.dst, crypto.createHash('sha256').update(e.op.data).digest('hex'));
             continue;
         }
+        // A link has no bytes; what it publishes is the name it points at, so
+        // that is what a retarget has to show up as.
+        if (e.op.type === 'Symlink') {
+            out.set(e.dst, `symlink:${e.op.target}`);
+            continue;
+        }
         // A CAS path spells its own digest, so only raw sources are read.
         let cas = new RegExp(`^${CAS_DIR}/[0-9a-f]{2}/([0-9a-f]{64})\\.`).exec(e.op.src);
         out.set(e.dst, cas ? cas[1]! : (await hashFile(e.op.src)).toString('hex'));
