@@ -1,6 +1,0 @@
-{
-    "type": "module",
-    "dependencies": {
-        "@types/node": "^24.10.7"
-    }
-}

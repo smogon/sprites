@@ -1,7 +1,0 @@
-{
-    "extends": "../../tsconfig-base",
-    "references": [
-        {"path": "../../data/lib"},
-        {"path": "../../lib/root"}
-    ]
-}

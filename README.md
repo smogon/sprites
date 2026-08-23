@@ -65,7 +65,7 @@ reuses the build's digests. All state lives in `.build/`.
 $ pnpm build                                     # build every deploy's rules, GC stale state
 $ pnpm deploy                                    # list the deploys in deploy.json5
 $ pnpm deploy assets                             # run a named deploy
-$ node tools/deploy/index.ts build ps.build.ts   # build one deploy's rules
+$ node tools/deploy/index.ts build smogon.build.ts  # build one deploy's rules
 $ node tools/deploy/index.ts run smogon.build.ts -o deploy/smogon
 $ node tools/deploy/index.ts inspect src/minisprites/items/ileftovers.png -o /tmp/out
 ```
@@ -99,10 +99,10 @@ for eyeballing what would ship.
             {subset: ["**"], cmd: "smogonctl assets upload sprites"},
         ],
     },
-    ps: {
-        buildFile: "ps.build.ts",
+    smogon: {
+        buildFile: "smogon.build.ts",
         deploy: [
-            {subset: ["ani/**"], dir: true, cmd: "rsync -a %d/ani/ ps:sprites/ani/"},
+            {subset: ["xy/**"], dir: true, cmd: "rsync -a --delete-after %d/xy/ smogon:/smog2/sprites/xy"},
         ],
     },
 }

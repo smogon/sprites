@@ -58,12 +58,6 @@ importers:
         specifier: ^3.0.0
         version: 3.2.0
 
-  tools/sheet:
-    dependencies:
-      '@types/node':
-        specifier: ^24.10.7
-        version: 24.13.3
-
   tools/smogdexspritesheet:
     dependencies:
       '@smogon/sprite-data':
@@ -78,18 +72,6 @@ importers:
       spritesmith:
         specifier: ^3.4.1
         version: 3.5.1
-
-  tools/spritedata:
-    dependencies:
-      '@smogon/sprite-data':
-        specifier: workspace:*
-        version: link:../../data/lib
-      '@smogon/sprite-root':
-        specifier: workspace:*
-        version: link:../../lib/root
-      '@types/node':
-        specifier: ^24.10.7
-        version: 24.13.3
 
   tools/trim:
     dependencies:

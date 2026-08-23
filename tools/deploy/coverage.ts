@@ -11,9 +11,6 @@ import {spawnSync} from 'node:child_process';
 // when these two sets published through Manifest, and the pre-rename spellings
 // below that nothing has asked for in years. Anything else is a hole in the
 // build, and this finds it before rsync does.
-//
-// names.ts answers the same question against pokemon-showdown; this one
-// answers it against what is actually being served.
 
 let dir = process.argv[2];
 let remote = process.argv[3] ?? 'smogon:/smog2/sprites';
@@ -57,7 +54,7 @@ for (let set of ['xy', 'xyicons']) {
 
     let stamped = 0;
     let backlog = 0;
-    let unexplained = [];
+    let unexplained: string[] = [];
     for (let line of rsync.stdout.split('\n')) {
         let m = /^\*deleting +(.*)$/.exec(line);
         if (!m) continue;
