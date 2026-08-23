@@ -4,8 +4,8 @@
 //
 //     kind   s specie, i item, x literal (Egg, Substitute, ...)
 //     name   the encoded name, [a-z0-9_]+
-//     flags  -o forme  -b back  -s shiny  -a asymmetrical  -f female
-//            -g gmax or -g<game>  -v<vendor>  -c<slot>
+//     flags  -o forme  -k cosmetic  -b back  -s shiny  -a asymmetrical
+//            -f female  -g gmax or -g<game>  -v<vendor>  -c<slot>
 //
 // A name is encoded rather than spelled, because the two places these sprites
 // are published disagree about what a word boundary is: smogon writes
@@ -48,11 +48,22 @@ export function psid(e: string): string {
 
 // A published name: the name and its forme joined with a dash, then the
 // variant flags, which both sides spell the same way.
+//
+// A cosmetic is its own component rather than part of the forme, because the
+// two readings disagree about where a forme's words divide but not about the
+// boundary in front of the cosmetic. Alcremie's cream is `caramel-swirl` for
+// smogon and `caramelswirl` for PS, while its sweet is `-berry` for both; fold
+// the sweet into the forme and whichever reading you spell it for, the other
+// one comes out wrong.
 export function publishedName(sn: SpriteFilename, part: (e: string) => string): string {
     let name = part(sn.name);
     let forme = sn.extra.get('o');
     if (forme) {
         name += `-${part(forme)}`;
+    }
+    let cosmetic = sn.extra.get('k');
+    if (cosmetic) {
+        name += `-${part(cosmetic)}`;
     }
     if (sn.extra.has('f')) {
         name += '-f';
@@ -119,19 +130,25 @@ export function parseFilename(s: string): SpriteFilename {
     return {kind, name: first.slice(1), extra};
 }
 
+// The flags publishedName() spells into the name, in the order it spells them.
+const NAME_PARTS = ['o', 'k'];
+
 export function formatFilename(si: InputSpriteFilename): string {
     let s = `${si.kind}${si.name}`;
 
-    // The forme leads, so a forme's whole set of sprites sorts together
-    // instead of interleaving with the base forme's by flag letter.
-    let forme = si.extra?.get('o');
-    if (forme !== undefined) {
-        s += `-o${forme}`;
+    // The parts of the name lead, in the order they are published, so a
+    // forme's whole set of sprites sorts together instead of interleaving with
+    // the base forme's by flag letter.
+    for (let k of NAME_PARTS) {
+        let v = si.extra?.get(k);
+        if (v !== undefined) {
+            s += `-${k}${v}`;
+        }
     }
 
     let extra = [];
     for (let [k, v] of si.extra?.entries() ?? []) {
-        if (k !== 'o') {
+        if (!NAME_PARTS.includes(k)) {
             extra.push(`-${k}${v}`);
         }
     }
