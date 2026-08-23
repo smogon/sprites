@@ -1,6 +1,4 @@
 
-import {FORME_PARENTS} from '@smogon/sprite-data/formes.ts';
-
 import {gen10Modelslike} from './rules/modelslike.ts';
 import {type Sprite, publishedNames} from './rules/publish.ts';
 import {forEachRule} from './tools/build/artifact.ts';
@@ -76,6 +74,36 @@ let xyIcons = forEachRule('src/minisprites/pokemon/gen6/*.png', {
     cmds: [trimimg(), compresspng({config: 'MINISPRITE'})],
 }, '%b');
 
+// The games drew these formes no icon of their own, so gen 6 has none and
+// nothing upstream does either: PS ships icons as one dexnum-indexed sheet, and
+// its own copy of this list sits commented out in ps-pokemon.sheet.mjs under
+// "alt forms with duplicate icons". Serve each the icon it shares. Only this
+// set needs them; xy/ has real art for all 22.
+let xyIconAliases: Record<string, string> = {
+    'araquanid-totem': 'araquanid',
+    'gourgeist-large': 'gourgeist',
+    'gourgeist-small': 'gourgeist',
+    'gourgeist-super': 'gourgeist',
+    'greninja-bond': 'greninja',
+    'gumshoos-totem': 'gumshoos',
+    'kommo-o-totem': 'kommo-o',
+    'lurantis-totem': 'lurantis',
+    'marowak-alola-totem': 'marowak-alola',
+    'mimikyu-busted': 'mimikyu',
+    'mimikyu-busted-totem': 'mimikyu',
+    'mimikyu-totem': 'mimikyu',
+    'pichu-spiky-eared': 'pichu',
+    'pumpkaboo-large': 'pumpkaboo',
+    'pumpkaboo-small': 'pumpkaboo',
+    'pumpkaboo-super': 'pumpkaboo',
+    'raticate-alola-totem': 'raticate-alola',
+    'ribombee-totem': 'ribombee',
+    'rockruff-dusk': 'rockruff',
+    'salazzle-totem': 'salazzle',
+    'togedemaru-totem': 'togedemaru',
+    'vikavolt-totem': 'vikavolt',
+};
+
 deploy(ctx => {
     let byName = new Map<string, Sprite>();
     for (let f of xyIcons) {
@@ -83,22 +111,15 @@ deploy(ctx => {
             byName.set(name, f);
         }
     }
-    // The games drew no icon for some formes, so PS's own sheet sends them to
-    // the nearest one that has art: Gourgeist-Super to Gourgeist,
-    // Mimikyu-Busted-Totem to Mimikyu-Busted and on to Mimikyu. Walk the same
-    // chain, so a name the data knows gets an icon rather than a 404. Only
-    // this set needs it, since xy/ has real art for every one of them.
-    for (let name of Object.keys(FORME_PARENTS)) {
+    for (let [name, from] of Object.entries(xyIconAliases)) {
+        let f = byName.get(from);
+        if (f === undefined) {
+            throw new Error(`No ${from} icon to publish as ${name}`);
+        }
         if (byName.has(name)) {
-            continue;
+            throw new Error(`${name} has an icon of its own now; drop the alias`);
         }
-        for (let p = FORME_PARENTS[name]; p !== undefined; p = FORME_PARENTS[p]) {
-            let f = byName.get(p);
-            if (f) {
-                byName.set(name, f);
-                break;
-            }
-        }
+        byName.set(name, f);
     }
     for (let [name, f] of byName) {
         smogonSpritecopy(ctx, f, 'xyicons', [name]);
