@@ -247,8 +247,15 @@ deploy(async ctx => {
 // Forum auto avatars: the gen 5 animations on a uniform 96x96 box, which is
 // what XenForo's avatar container is. It scales an <img> to fill, so a sprite
 // published at its own aspect would arrive stretched; the box is the games' own
-// sprite size, so nothing is scaled up, and the few animations that overflow it
-// are cropped to it, which is what the set the forum used to carry did too.
+// sprite size, so nothing is scaled up.
+//
+// The 40 slots whose animation is drawn wider or taller than the box -- a
+// wingspan, mostly, and Lugia's is 153px of it -- are shrunk into it rather
+// than cropped to it. The box is there to hold the picture, and an extent that
+// trims one cuts the wings off flat at the frame edge. Resampling a 16-color
+// picture invents shades, so the frames are requantized afterwards, which is
+// what keeps those 40 from doubling in bytes; 64 is above every source palette
+// here, so the slots that fit the box are untouched by it.
 
 // The pool with its two second slots resolved, which is the set of pictures to
 // build. See rules/avatars.ts for why it is a list and not a glob.
@@ -271,7 +278,7 @@ for (let f of spriteglob(['src/sprites/gen5/*.gif', 'src/sprites/gen5/xsubstitut
     avatarArt.set(name, rule(f, {
         display: 'avatar %f',
         cmds: [
-            'magick convert %f -coalesce -background none -gravity center -extent 96x96 %o',
+            'magick convert %f -coalesce -background none -resize "96x96>" -dither None -colors 64 -gravity center -extent 96x96 %o',
             'gifsicle -O3 -b %o',
         ],
     }, `${name}.gif`));
