@@ -40,8 +40,8 @@ let xyModels = forEachRule('src/gen9species/*.png', {
     // TODO, add customizable compression for gif
     // ... or investigate using webp instead of both png/gif here
     cmds: [
-        'magick convert %f -trim +repage -resize 90x90 %o',
-        'gifsicle -O3 -b %o',
+        'magick %f -trim +repage -resize 90x90 %o',
+        'gifsicle -O3 -w -b %o',
     ],
 }, '%B.gif');
 
@@ -54,8 +54,8 @@ let xyChampions = gen10Modelslike();
 let xyGen5 = forEachRule('src/sprites/gen5/*.png', [
     // TODO, add customizable compression for gif
     // ... or investigate using webp instead of both png/gif here
-    'magick convert %f %o',
-    'gifsicle -O3 -b %o',
+    'magick %f %o',
+    'gifsicle -O3 -w -b %o',
 ], '%B.gif');
 
 deploy(async ctx => {
@@ -124,8 +124,8 @@ let y = forEachFront(fronts('src/sprites/gen1/gbc/*.png', 'y'), gen1, 'png');
 let c = forEachFront(fronts('src/sprites/gen2/*.gif'), {
     display: 'gen 2 animation %f',
     cmds: [
-        'magick convert %f -coalesce -background none -gravity center -extent 60x60 %o',
-        'gifsicle -O3 -b %o',
+        'magick %f -coalesce -background none -gravity center -extent 60x60 %o',
+        'gifsicle -O3 -w -b %o',
     ],
 }, 'gif');
 
@@ -278,8 +278,8 @@ for (let f of spriteglob(['src/sprites/gen5/*.gif', 'src/sprites/gen5/xsubstitut
     avatarArt.set(name, rule(f, {
         display: 'avatar %f',
         cmds: [
-            'magick convert %f -coalesce -background none -resize "96x96>" -dither None -colors 64 -gravity center -extent 96x96 %o',
-            'gifsicle -O3 -b %o',
+            'magick %f -coalesce -background none -resize "96x96>" -dither None -colors 64 -gravity center -extent 96x96 %o',
+            'gifsicle -O3 -w -b %o',
         ],
     }, `${name}.gif`));
 }
@@ -342,7 +342,7 @@ deploy(async ctx => {
 // let fb = forEachRule(socialInputs(), {
 //     display: 'fbsprite %f',
 //     cmds: [
-//         `magick convert "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 150x150 -background white -gravity center -extent 198x198 -bordercolor black -border 1 %o`,
+//         `magick "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 150x150 -background white -gravity center -extent 198x198 -bordercolor black -border 1 %o`,
 //         compresspng({config: 'MODELS'}),
 //     ],
 // }, '%B.png');
@@ -350,7 +350,7 @@ deploy(async ctx => {
 // let twitter = forEachRule(socialInputs(), {
 //     display: 'twittersprite %f',
 //     cmds: [
-//         `magick convert "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 115x115 -background white -gravity center -extent 120x120 %o`,
+//         `magick "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 115x115 -background white -gravity center -extent 120x120 %o`,
 //         compresspng({config: 'MODELS'}),
 //     ],
 // }, '%B.png');

@@ -15,8 +15,8 @@ test('substitute expands %f/%o/%b/%B', () => {
 
 test('substitute handles quoted frame selector', () => {
     assert.equal(
-        substitute('magick convert "%f[0]" -trim %o', ['src/models/a.gif'], ['out/a.png']),
-        'magick convert "src/models/a.gif[0]" -trim out/a.png');
+        substitute('magick "%f[0]" -trim %o', ['src/models/a.gif'], ['out/a.png']),
+        'magick "src/models/a.gif[0]" -trim out/a.png');
 });
 
 test('substitute expands indexed %oN', () => {

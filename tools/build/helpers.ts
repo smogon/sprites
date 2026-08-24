@@ -104,11 +104,11 @@ export let PNG_DETERMINISTIC = '-define png:exclude-chunks=date,time';
 export function pad(opts: {w: number, h: number, input?: string, output?: string}): string {
     let input = opts.input ?? '%f';
     let output = opts.output ?? '%o';
-    return `magick convert ${input} ${PNG_DETERMINISTIC} -background transparent -gravity center -extent ${opts.w}x${opts.h} ${output}`;
+    return `magick ${input} ${PNG_DETERMINISTIC} -background transparent -gravity center -extent ${opts.w}x${opts.h} ${output}`;
 }
 
 export function trimimg(opts: {input?: string, output?: string} = {}): string {
-    return `magick convert ${opts.input ?? '%f'} ${PNG_DETERMINISTIC} -trim ${opts.output ?? '%o'}`;
+    return `magick ${opts.input ?? '%f'} ${PNG_DETERMINISTIC} -trim ${opts.output ?? '%o'}`;
 }
 
 type CompressOpts = {

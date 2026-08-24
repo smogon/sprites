@@ -9,8 +9,8 @@ export function gen10Modelslike(): Artifact[] {
         // TODO, add customizable compression for gif
         // ... or investigate using webp instead of both png/gif here
         cmds: [
-            'magick convert %f -trim +repage -resize 90x90 %o',
-            'gifsicle -O3 -b %o',
+            'magick %f -trim +repage -resize 90x90 %o',
+            'gifsicle -O3 -w -b %o',
         ],
     }, '%B.gif');
 }
