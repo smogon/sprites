@@ -58,13 +58,18 @@ export function forEachFront(files: Front[], spec: CmdSpec, ext: string): Artifa
     return files.map(f => rule(f.file, spec, `${f.name}.${ext}`));
 }
 
-// The CAPs that were playable while Diamond and Pearl were. They were only
-// ever drawn in gen 5's style, so dp/ carries them from the gen 5 sources the
-// way the legacy set did -- and has to name them, since nothing in a filename
-// says a sprite is a CAP.
+// The gen 4 CAP families: the eleven CAPs a gen 4 process produced, and the
+// prevos later processes gave them. None of it was drawn in gen 4's style --
+// the CAPs were only ever drawn in gen 5's, and the prevos did not exist until
+// BW -- so dp/ carries the lot from the gen 5 sources, as the legacy set did
+// for the eleven. A prevo lands on a gen 4 dex page like its evolution does,
+// which is why it is here too. The list is by hand, since nothing in a
+// filename says a sprite is a CAP.
 export let GEN4_CAPS = [
-    'arghonaut', 'colossoil', 'cyclohm', 'fidgit', 'kitsunoh', 'krilowatt',
-    'pyroak', 'revenankh', 'stratagem', 'syclant', 'voodoom',
+    'arghonaut', 'breezi', 'colossoil', 'cyclohm', 'dorsoil', 'duohm',
+    'embirch', 'fidgit', 'flarelm', 'kitsunoh', 'krilowatt', 'monohm',
+    'nohface', 'privatyke', 'protowatt', 'pyroak', 'rebble', 'revenankh',
+    'stratagem', 'syclant', 'syclar', 'tactite', 'voodoll', 'voodoom',
 ];
 
 // Every front of the given species, formes and female slots included.
