@@ -244,6 +244,34 @@ deploy(async ctx => {
     manifest.write('__meta/forumsprites/manifest.json');
 });
 
+// sprites/types/gen5/: the Black & White type labels, for the forum, which
+// looks one up rather than composing a path, so the set rides no links mirror
+// -- forumsprites, the other set the forum reads, doesn't either.
+//
+// The two source directories publish into one. Which of them a label came from
+// says whether the games drew it in this style, which is a fact about the
+// picture and not about the reader: Fairy and Stellar are types the forum
+// renders like any other, and gen 5 simply never labelled them.
+//
+// They ship verbatim. A label is already the picture, at 32x12 and a couple
+// hundred bytes, so there is nothing for a rule to do to one.
+
+deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
+    for (let canon of ['canonical', 'noncanonical']) {
+        for (let f of await ctx.list(`src/_uncategorized/${canon}/ui/types/gen5`)) {
+            // Held back: the only build that ever published this one renamed it
+            // to `???`, which is PS's name for the type. What the forum calls it
+            // is for the forum to say.
+            if (f.name === 'Unknown') {
+                continue;
+            }
+            await manifest.copy(f, {dir: 'types/gen5'}, spritedata.encode(f.name));
+        }
+    }
+    manifest.write('__meta/types/gen5/manifest.json');
+});
+
 // Forum auto avatars: the gen 5 animations on a uniform 96x96 box, which is
 // what XenForo's avatar container is. It scales an <img> to fill, so a sprite
 // published at its own aspect would arrive stretched; the box is the games' own
