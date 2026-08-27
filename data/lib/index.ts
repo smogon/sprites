@@ -63,13 +63,14 @@ export function publishedName(sn: SpriteFilename, part: (e: string) => string): 
     return name;
 }
 
-// Items whose sprite ships under more than one name, because the games renamed
-// them. The modern name is the filename; these are the ones that also have to
-// resolve. Keyed and valued in encoded form.
+// Items whose sprite ships under more than one name. Mostly the games renamed
+// them, and the modern name is the filename; the Grams are three items the
+// games drew one envelope for. Keyed and valued in encoded form.
 export const ITEM_ALIASES: Record<string, string[]> = {
     aspear_berry: ['burnt_berry'],            // Aspear Berry / Burnt Berry
     cheri_berry: ['prz_cure_berry'],          // Cheri Berry / PRZ Cure Berry
     chesto_berry: ['mint_berry'],             // Chesto Berry / Mint Berry
+    gram_1: ['gram_2', 'gram_3'],             // Gram 1 / Gram 2 / Gram 3
     leek: ['stick'],                          // Leek / Stick
     leppa_berry: ['mystery_berry'],           // Leppa Berry / Mystery Berry
     lum_berry: ['miracle_berry'],             // Lum Berry / Miracle Berry

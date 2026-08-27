@@ -222,11 +222,19 @@ deploy(async ctx => {
 
 // Forumsprites: uniform-size minisprites under stamped names, with the
 // unhashed -> url mapping in a manifest.
+//
+// Both item directories ship here. src/minisprites/items is the set the
+// smogdex draws on, which is the items a set can hold; otheritems is the rest
+// of the bag -- the medicine, the mail, the bikes and the Rare Candy -- which
+// the dex never shows and the forum names as readily as any other sprite. The
+// split is the dex's, so it is spelled where the dex's sets are globbed rather
+// than here, where a forum token is a name and nothing else.
 
-let forumItems = forEachRule('src/minisprites/items/*.png', {
-    display: 'pad item minisprite %f',
-    cmds: [pad({w: 24, h: 24}), compresspng({config: 'MINISPRITE'})],
-}, '%b');
+let forumItems = forEachRule(
+    ['src/minisprites/items/*.png', 'src/minisprites/otheritems/*.png'], {
+        display: 'pad item minisprite %f',
+        cmds: [pad({w: 24, h: 24}), compresspng({config: 'MINISPRITE'})],
+    }, '%b');
 
 let forumG6 = forEachRule('src/minisprites/pokemon/gen6/*.png', {
     display: 'pad g6 minisprite %f',
