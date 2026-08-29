@@ -82,25 +82,6 @@ deploy(async ctx => {
     manifest.links(LINKS);
 });
 
-// sprites/xyicons/: trimmed gen6 minisprites.
-
-let xyIcons = forEachRule('src/minisprites/pokemon/gen6/*.png', {
-    display: 'trim g6 minisprite %f',
-    cmds: [trimimg(), compresspng({config: 'MINISPRITE'})],
-}, '%b');
-
-deploy(async ctx => {
-    // icons: the gen 6 set has no art for some formes and lends them another's,
-    // which the smogdex sheet and forumsprites do off the same directory. Two
-    // formes lent the same icon are a duplicate name the manifest refuses.
-    let manifest = new Manifest(ctx, TREE);
-    for (let f of xyIcons) {
-        await spritecopy(manifest, f, {dir: 'xyicons'}, {icons: true});
-    }
-    manifest.write('__meta/xyicons/manifest.json');
-    manifest.links(LINKS);
-});
-
 // sprites/rb, rg, y, c, rs, dp, bw: the older-gen full sprites, the front of
 // each generation under the name the smogdex, the forum and chatot each
 // compose from a dex alias. They read no manifest, which is why these ride
@@ -162,14 +143,31 @@ oldgen('bw', async ctx => [
     ...xyGen5,
 ]);
 
-// sprites/minisprites/: the smogdex's icons as files, one apiece, for a reader
-// that wants one of them rather than the whole sheet. The sources ship
-// verbatim, which is what makes a file and its cell in the sheet the same
-// picture; xyicons/ is the trimmed reading of the same set.
+// sprites/minisprites/ and sprites/xyicons/: the smogdex's icons as files, one
+// apiece, for a reader that wants one of them rather than the whole sheet. The
+// two are the same set of pictures read two ways, which is why they are
+// spelled together: minisprites/ ships the sources verbatim, which is what
+// makes a file and its cell in the sheet the same picture, and xyicons/ is the
+// trimmed reading, where a name answers with the drawing and none of the box
+// around it.
 //
 // They ride the LINKS mirror because what asks for one composes the path out of
 // the sprite and nothing else, which is what the set used to make it read a
 // whole-set hash out of a pointer file to do.
+
+let xyItems = forEachRule('src/minisprites/items/*.png', {
+    display: 'trim item minisprite %f',
+    cmds: [trimimg(), compresspng({config: 'MINISPRITE'})],
+}, '%b');
+
+let xyIcons = forEachRule('src/minisprites/pokemon/gen6/*.png', {
+    display: 'trim g6 minisprite %f',
+    cmds: [trimimg(), compresspng({config: 'MINISPRITE'})],
+}, '%b');
+
+// icons: the gen 6 set has no art for some formes and lends them another's,
+// which the smogdex sheet and forumsprites do off the same directory. Two
+// formes lent the same icon are a duplicate name the manifest refuses.
 
 deploy(async ctx => {
     let manifest = new Manifest(ctx, TREE);
@@ -180,6 +178,18 @@ deploy(async ctx => {
         await spritecopy(manifest, f, {dir: 'minisprites'}, {icons: true});
     }
     manifest.write('__meta/minisprites/manifest.json');
+    manifest.links(LINKS);
+});
+
+deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
+    for (let f of xyItems) {
+        await itemspritecopy(manifest, f, {dir: 'xyicons'});
+    }
+    for (let f of xyIcons) {
+        await spritecopy(manifest, f, {dir: 'xyicons'}, {icons: true});
+    }
+    manifest.write('__meta/xyicons/manifest.json');
     manifest.links(LINKS);
 });
 
@@ -355,11 +365,6 @@ deploy(async ctx => {
 // uses (PNG_DETERMINISTIC, base) and giving the copies a Manifest, as the
 // deploys above do.
 //
-// let xyItems = forEachRule('src/minisprites/items/*.png', {
-//     display: 'trim item minisprite %f',
-//     cmds: [trimimg(), compresspng({config: 'MINISPRITE'})],
-// }, '%b');
-//
 // Smogdex social images: models, backfilled with gen9 species not yet in
 // models (first source wins).
 //
@@ -392,9 +397,6 @@ deploy(async ctx => {
 // }, '%B.png');
 //
 // deploy(ctx => {
-//     for (let f of xyItems) {
-//         itemspritecopy(?, f, {dir: "xyitems"});
-//     }
 //     for (let f of fb) {
 //         spritecopy(?, f, {dir: "fbsprites/xy"});
 //     }
