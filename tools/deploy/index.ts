@@ -19,6 +19,7 @@ import * as db from '../build/store.ts';
 import * as api from './api.ts';
 import {loadDeployConfig, matchSubsets} from './config.ts';
 import {withProgress} from './progress.ts';
+import {manifestOf, negotiate} from './protocol.ts';
 import {ActionQueue} from './queue.ts';
 
 let root = nodePath.resolve(fileURLToPath(import.meta.url), '../../..');
@@ -50,8 +51,9 @@ let USAGE = `usage: node tools/deploy/index.ts <command> [options]
 
 commands:
   build [files...]            build the rules of the given deploys (default: all *.build.ts)
-  deploy [names...]           build, finish, and pipe each subset tar (or %d dir) to its
-                              command from deploy.json5 (no names: list the deploys;
+  deploy [names...]           build, finish, and send each subset to its command from
+                              deploy.json5: a manifest and then a tar of what it asks
+                              for on stdin, or a %d dir (no names: list the deploys;
                               -o <dir>: materialize each subset there instead of
                               running its command)
   run <file> -o <dir>         build, finish, and materialize to a directory (or tar file)
@@ -287,7 +289,10 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                     }
                     continue;
                 }
-                let upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'inherit', 'inherit']});
+                // The command's stdout is ours to read: the reply to the
+                // manifest comes back on it, and its report after that is
+                // relayed. stderr stays the terminal's, for the bar.
+                let upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'pipe', 'inherit']});
                 let stdin = upload.stdin;
                 if (stdin === null) {
                     throw new BuildError(`no stdin pipe for: ${entry.cmd}`);
@@ -296,14 +301,35 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                 // also crash on the resulting EPIPE, which reaches both
                 // stdin and (via streamx's destroy propagation) the pack.
                 stdin.on('error', () => {});
-                // The bar tracks the upload itself: an entry counts once the
-                // command has taken it, not once it has been read off disk.
-                let code = await withProgress(`${name}: uploading`, matched.size, async tick => {
-                    let pack = await aq.pack(dst => matched.has(dst), tick);
-                    pack.on('error', () => {});
-                    pack.pipe(stdin);
-                    return await waitExit(upload);
-                });
+                let manifest = await manifestOf(aq, dst => matched.has(dst));
+                let reply = await negotiate(upload, manifest);
+                if ('error' in reply) {
+                    // What the command had to say is already on stdout; this
+                    // is for the case where it said nothing usable.
+                    let code = await waitExit(upload);
+                    console.log(`    refused before anything was sent`
+                        + (reply.error === null ? '' : `: ${reply.error}`));
+                    return code === 0 || code === null ? 1 : code;
+                }
+                let send = new Set([...reply.wanted, ...manifest.metaFiles]);
+                console.log(`    ${reply.wanted.size} of ${manifest.assets.size} files to send`);
+                let code;
+                if (send.size === 0) {
+                    // Nothing follows an empty answer, not even an empty tar:
+                    // the command takes the end of the stream as the end.
+                    stdin.end();
+                    code = await waitExit(upload);
+                } else {
+                    // The bar tracks the upload itself: an entry counts once
+                    // the command has taken it, not once it has been read off
+                    // disk. It counts what travels, not what was published.
+                    code = await withProgress(`${name}: uploading`, send.size, async tick => {
+                        let pack = await aq.pack(dst => send.has(dst), tick);
+                        pack.on('error', () => {});
+                        pack.pipe(stdin);
+                        return await waitExit(upload);
+                    });
+                }
                 if (code !== 0) {
                     return 1;
                 }
