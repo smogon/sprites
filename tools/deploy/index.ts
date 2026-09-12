@@ -18,6 +18,7 @@ import {setConfig} from '../build/helpers.ts';
 import * as db from '../build/store.ts';
 import * as api from './api.ts';
 import {loadDeployConfig, matchSubsets} from './config.ts';
+import {withProgress} from './progress.ts';
 import {ActionQueue} from './queue.ts';
 
 let root = nodePath.resolve(fileURLToPath(import.meta.url), '../../..');
@@ -265,7 +266,8 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                 // entries included) instead of running its command.
                 if (opts.output !== undefined) {
                     let dir = nodePath.join(opts.output, name, String(i));
-                    await aq.run(dir, 'copy', dst => matched.has(dst));
+                    await withProgress(`${name}: copying`, matched.size,
+                        tick => aq.run(dir, 'copy', dst => matched.has(dst), tick));
                     console.log(`    -> ${dir}`);
                     continue;
                 }
@@ -273,7 +275,8 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                     await fs.mkdir(TMP_DIR, {recursive: true});
                     let tmp = await fs.mkdtemp(nodePath.join(TMP_DIR, 'deploy-'));
                     try {
-                        await aq.run(tmp, 'copy', dst => matched.has(dst));
+                        await withProgress(`${name}: staging`, matched.size,
+                            tick => aq.run(tmp, 'copy', dst => matched.has(dst), tick));
                         let cmd = spawn(entry.cmd.replaceAll('%d', tmp),
                             {shell: true, stdio: ['ignore', 'inherit', 'inherit']});
                         if (await waitExit(cmd) !== 0) {
@@ -293,10 +296,15 @@ async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
                 // also crash on the resulting EPIPE, which reaches both
                 // stdin and (via streamx's destroy propagation) the pack.
                 stdin.on('error', () => {});
-                let pack = await aq.pack(dst => matched.has(dst));
-                pack.on('error', () => {});
-                pack.pipe(stdin);
-                if (await waitExit(upload) !== 0) {
+                // The bar tracks the upload itself: an entry counts once the
+                // command has taken it, not once it has been read off disk.
+                let code = await withProgress(`${name}: uploading`, matched.size, async tick => {
+                    let pack = await aq.pack(dst => matched.has(dst), tick);
+                    pack.on('error', () => {});
+                    pack.pipe(stdin);
+                    return await waitExit(upload);
+                });
+                if (code !== 0) {
                     return 1;
                 }
             }

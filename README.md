@@ -101,6 +101,12 @@ covered by some entry. `deploy <name> -o <dir>` materializes each entry's
 subset under `<dir>/<name>/<entry index>/` instead of running its command,
 for eyeballing what would ship.
 
+Where stderr is a terminal, each entry draws a progress bar over its files
+while they go out -- an entry counts once the command has taken it, not once
+it has been read off disk -- and the line is cleared again afterwards. Piped
+or under CI nothing is drawn, and the lines the deploy prints are the same
+either way.
+
 This file is not committed, because it is where the hosts and paths this
 repo ships to are written down.
 

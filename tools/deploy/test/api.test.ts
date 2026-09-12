@@ -4,6 +4,7 @@ import {createHash} from 'node:crypto';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as pathlib from 'node:path';
+import * as stream from 'node:stream';
 import {beforeEach, test} from 'node:test';
 
 import b32encode from 'base32-encode';
@@ -135,6 +136,36 @@ test('pack with a filter packs only matching entries in order', async () => {
         {name: 'xy/a.png', data: '1'},
         {name: 'xy/b.png', data: '3'},
     ]);
+});
+
+test('pack counts an entry for the progress bar as the consumer takes it', async () => {
+    let aq = new ActionQueue();
+    for (let i = 0; i < 4; i++) {
+        aq.write('x'.repeat(50_000), `f${i}.txt`);
+    }
+    let counted = 0;
+    let packed = await aq.pack(undefined, () => counted++);
+    // Nothing has read the pack yet: an entry queued is not an entry shipped.
+    assert.equal(counted, 0);
+    let sink = new stream.Writable({highWaterMark: 1, write: (_c, _e, cb) => setImmediate(cb)});
+    await new Promise((resolve, reject) => {
+        sink.on('finish', resolve);
+        sink.on('error', reject);
+        packed.pipe(sink);
+    });
+    assert.equal(counted, 4);
+});
+
+test('run counts each materialized entry for the progress bar, filter and all', async () => {
+    let dir = tmpdir();
+    let aq = new ActionQueue();
+    aq.write('1', 'ani/a.gif');
+    aq.symlink('a.gif', 'ani/b.gif');
+    aq.write('2', 'dex/c.png');
+    let counted: number[] = [];
+    await aq.run(pathlib.join(dir, 'deploy'), 'copy', dst => dst.startsWith('ani/'),
+        () => counted.push(counted.length + 1));
+    assert.deepEqual(counted, [1, 2]);
 });
 
 test('duplicate and absolute destinations invalidate the queue', async () => {
