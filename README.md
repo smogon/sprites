@@ -93,19 +93,32 @@ Useful flags: `-j <n>` parallelism, `-n` dry run, `-v` verbose,
 `deploy` reads `deploy.json5` at the repo root (not tracked by git). It maps
 deploy names to a buildFile and a list of (subset, cmd) entries: after
 building and finishing the buildFile, each entry's globs select a subset of
-the finish outputs, which are tarred and piped to the entry's command on
-stdin. An entry with `dir: true` instead materializes the subset into a temp
-directory whose path replaces `%d` in the command (for rsync-style
-transports). Every glob must match something, and every output must be
-covered by some entry. `deploy <name> -o <dir>` materializes each entry's
-subset under `<dir>/<name>/<entry index>/` instead of running its command,
-for eyeballing what would ship.
+the finish outputs and sends it to the entry's command, which is `smogonctl
+assets upload` (possibly behind `ssh` and `sudo`). An entry with `dir: true`
+instead materializes the subset into a temp directory whose path replaces
+`%d` in the command (for rsync-style transports). Every glob must match
+something, and every output must be covered by some entry. `deploy <name> -o
+<dir>` materializes each entry's subset under `<dir>/<name>/<entry index>/`
+instead of running its command, for eyeballing what would ship.
 
-Where stderr is a terminal, each entry draws a progress bar over its files
-while they go out -- an entry counts once the command has taken it, not once
-it has been read off disk -- and the line is cleared again afterwards. Piped
-or under CI nothing is drawn, and the lines the deploy prints are the same
-either way.
+Sending is a conversation over the command's stdin and stdout rather than a
+tar poured into it. Every served name carries a content hash and the served
+tree is add-only, so a name the home already has is a file that needn't
+travel: the deploy first writes a manifest -- every name with its size, and
+every `__meta/` link -- and the command answers with the ones it hasn't got.
+Only those, plus the `__meta/` files, are then tarred into the same stream. A
+redeploy of an unchanged tree moves kilobytes. The command's stdout has to be
+the upload's alone and reach the deploy unfiltered: the reply is the first
+thing on it, and anything else there (a shell profile that prints over ssh, a
+`| grep`) is taken as a refusal and fails the deploy rather than being
+skipped past. `run --tar` still writes a bare tar, which the upload also
+accepts.
+
+Where stderr is a terminal, each entry draws a progress bar over the files
+that travel while they go out -- an entry counts once the command has taken
+it, not once it has been read off disk -- and the line is cleared again
+afterwards. Piped or under CI nothing is drawn, and the lines the deploy
+prints are the same either way.
 
 This file is not committed, because it is where the hosts and paths this
 repo ships to are written down.
@@ -127,7 +140,7 @@ each of them has to cover all of it.
 
 ### The asset upload's tar layout
 
-`smogonctl assets upload` publishes a tar into a served tree under a prefix
+`smogonctl assets upload` publishes a tree into a served tree under a prefix
 named in the receiving home's `services.toml`, which this side can't read. So
 `smogon.build.ts` writes that prefix itself -- everything served ships under
 `sprites/` -- and the upload rejects a tar whose tree disagrees. The two are

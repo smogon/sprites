@@ -10,7 +10,9 @@ export type DeployEntry = {
     subset: string[],
     cmd: string,
     // dir entries get their subset materialized into a temp directory whose
-    // path replaces %d in cmd; tar entries get the subset tarred on stdin.
+    // path replaces %d in cmd. Every other entry's cmd is `smogonctl assets
+    // upload` (or a wrapper around it): it gets a manifest of the subset on
+    // stdin, answers on stdout with what it lacks, and gets a tar of that.
     dir?: boolean,
 };
 
