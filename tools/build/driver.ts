@@ -23,6 +23,7 @@ export type BuildOpts = {
     signal: AbortSignal,
     log?: (line: string) => void,
     logError?: (line: string) => void,
+    write?: (text: string) => void,
 };
 
 export type DriveResult = executor.BuildResult & {
@@ -57,6 +58,7 @@ export async function build(decls: readonly RuleDecl[], opts: BuildOpts): Promis
         signal: opts.signal,
         log,
         logError,
+        write: opts.write,
     });
     let result = await exe.build(decls);
     let interrupted = opts.signal.aborted;

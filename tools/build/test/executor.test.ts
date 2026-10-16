@@ -8,7 +8,7 @@ import {beforeEach, test} from 'node:test';
 import {type Artifact, type CmdSpec, getDecls, resetDecls, rule} from '../artifact.ts';
 import {casPath} from '../cas.ts';
 import {type DriveResult, build} from '../driver.ts';
-import {type RuleOutcome} from '../executor.ts';
+import {JobLog, type RuleOutcome} from '../executor.ts';
 import {Store} from '../store.ts';
 
 beforeEach(resetDecls);
@@ -70,6 +70,7 @@ async function runBuild(env: Env, opts: {dryRun?: boolean, gc?: boolean} = {},
             signal: new AbortController().signal,
             log: () => {},
             logError: () => {},
+            write: () => {},
         });
     } finally {
         store.close();
@@ -232,4 +233,23 @@ test('missing sources fail upfront', async () => {
     let env = setup();
     copyRule(env, pathlib.join(env.root, 'src/nope.txt'), 'out.txt');
     await assert.rejects(() => runBuild(env), /Missing input files/);
+});
+
+test('a rule finishes on its own open line, or on a line of its own', () => {
+    let out = '';
+    let jl = new JobLog(s => { out += s; });
+    let log = (line: string) => { out += line + '\n'; };
+    jl.start('[1] a');
+    jl.finish('[1] a');
+    jl.start('[2] b');
+    jl.start('[3] c');
+    jl.finish('[2] b');
+    jl.line('    output of b', log);
+    jl.finish('[3] c');
+    assert.equal(out, '[1] a ... done\n'
+        + '[2] b ...\n'
+        + '[3] c ...\n'
+        + '[2] b done\n'
+        + '    output of b\n'
+        + '[3] c done\n');
 });

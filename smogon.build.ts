@@ -209,7 +209,7 @@ let [, sheetCss, sheetWebp] = rule(minispriteInputs, {
     ],
     cmds: [
         'node tools/smogdexspritesheet/index.ts --image %o1 --stylesheet %o2 -- %f',
-        'cwebp -z 9 %o1 -o %o3',
+        'cwebp -z 7 %o1 -o %o3',
     ],
 }, ['spritesheet.png', 'spritesheet.css', 'spritesheet.webp']);
 

@@ -36,6 +36,7 @@ export type ExecutorOpts = {
     signal: AbortSignal,
     log?: (line: string) => void,
     logError?: (line: string) => void,
+    write?: (text: string) => void,         // raw stdout, for lines left open
 };
 
 export function label(decl: artifact.RuleDecl): string {
@@ -54,6 +55,47 @@ function paired<T>(xs: readonly T[], n: number): T {
 
 function indent(text: string): string {
     return text.replace(/\n$/, '').split('\n').map(l => '    ' + l).join('\n');
+}
+
+// Rule progress. A rule announces itself as it starts, `[n] label ...`, and
+// leaves the line open so its result lands on it: ` done`. With parallel jobs
+// something else can print first; the open line is then ended as it is and
+// the result gets a line of its own, `[n] label done`. Every other line goes
+// through `line`, which ends the open one first.
+export class JobLog {
+    #write: (text: string) => void;
+    #open: string | null = null;
+
+    constructor(write: (text: string) => void) {
+        this.#write = write;
+    }
+
+    start(text: string): void {
+        this.break();
+        this.#write(`${text} ...`);
+        this.#open = text;
+    }
+
+    finish(text: string): void {
+        if (this.#open === text) {
+            this.#write(' done\n');
+            this.#open = null;
+        } else {
+            this.line(`${text} done`, s => this.#write(s + '\n'));
+        }
+    }
+
+    line(text: string, log: (line: string) => void): void {
+        this.break();
+        log(text);
+    }
+
+    break(): void {
+        if (this.#open !== null) {
+            this.#write('\n');
+            this.#open = null;
+        }
+    }
 }
 
 // Sentinels. They carry no message; the outcome map is the report.
@@ -100,6 +142,7 @@ export class Executor {
     #runSignal: AbortSignal;
     #counter = 0;
     #tmpSeq = 0;
+    #jobLog: JobLog;
     #log: (line: string) => void;
     #logError: (line: string) => void;
 
@@ -107,8 +150,11 @@ export class Executor {
         this.#opts = opts;
         this.#semaphore = new Semaphore(opts.jobs);
         this.#runSignal = AbortSignal.any([opts.signal, this.#failAc.signal]);
-        this.#log = opts.log ?? console.log;
-        this.#logError = opts.logError ?? console.error;
+        this.#jobLog = new JobLog(opts.write ?? (s => process.stdout.write(s)));
+        let log = opts.log ?? console.log;
+        let logError = opts.logError ?? console.error;
+        this.#log = line => this.#jobLog.line(line, log);
+        this.#logError = line => this.#jobLog.line(line, logError);
     }
 
     async build(decls: readonly artifact.RuleDecl[]): Promise<BuildResult> {
@@ -210,6 +256,9 @@ export class Executor {
         await fs.mkdir(ruleTmp, {recursive: true});
         let tempOutputs = decl.outputs.map(o => pathlib.join(ruleTmp, o.filename));
         let command = decl.cmds.map(c => substitute(c, decl.inputs, tempOutputs)).join(' && ');
+        let announce = `[${++this.#counter}] ${label(decl)}`
+            + (this.#opts.verbose ? ` (${reason})` : '');
+        this.#jobLog.start(announce);
 
         try {
             let result = await runShell(command, {cwd: root, signal: this.#runSignal});
@@ -228,8 +277,7 @@ export class Executor {
                     }
                     store.recordRule(key, decl.cmds, outputs);
                     this.#outcomes.set(decl, {status: 'ran', reason});
-                    this.#log(`[${++this.#counter}] ${label(decl)}`
-                        + (this.#opts.verbose ? ` (${reason})` : ''));
+                    this.#jobLog.finish(announce);
                     if (result.output !== '') {
                         this.#log(indent(result.output));
                     }
