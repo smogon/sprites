@@ -4,16 +4,15 @@ import {createHash} from 'node:crypto';
 import * as fs from 'node:fs';
 import * as os from 'node:os';
 import * as pathlib from 'node:path';
-import * as stream from 'node:stream';
 import {beforeEach, test} from 'node:test';
 
 import b32encode from 'base32-encode';
-import tar from 'tar-stream';
 
 import {resetDecls, rule} from '../../build/artifact.ts';
 import {casPath} from '../../build/cas.ts';
 import {makeCtx} from '../api.ts';
 import {ActionQueue} from '../queue.ts';
+import {BuildError} from '../../build/errors.ts';
 
 beforeEach(resetDecls);
 
@@ -33,6 +32,7 @@ function makeArtifact(casDir: string, content: string, ext: string) {
     let obj = casPath(casDir, digest, ext);
     fs.mkdirSync(pathlib.dirname(obj), {recursive: true});
     fs.writeFileSync(obj, content);
+    fs.chmodSync(obj, 0o444);
     return artifact;
 }
 
@@ -89,91 +89,16 @@ test('ctx.list sorts, parses extensions, skips dotfiles and directories', async 
     ]);
 });
 
-type PackedEntry = {name: string, data: string, type?: string, linkname?: string};
-
-async function packedEntries(aq: ActionQueue, filter?: (dst: string) => boolean)
-    : Promise<PackedEntry[]> {
-    let packed = await aq.pack(filter);
-    return new Promise((resolve, reject) => {
-        let extract = tar.extract();
-        let entries: PackedEntry[] = [];
-        extract.on('entry', (header, stream, next) => {
-            let chunks: Buffer[] = [];
-            stream.on('data', c => chunks.push(c));
-            stream.on('end', () => {
-                let entry: PackedEntry = {name: header.name, data: Buffer.concat(chunks).toString()};
-                if (header.type === 'symlink') {
-                    entry.type = header.type;
-                    entry.linkname = header.linkname ?? undefined;
-                }
-                entries.push(entry);
-                next();
-            });
-        });
-        extract.on('finish', () => resolve(entries));
-        extract.on('error', reject);
-        packed.pipe(extract);
-    });
-}
-
-test('pack preserves op order', async () => {
-    let aq = new ActionQueue();
-    aq.write('zzz', 'z.txt');
-    aq.write('aaa', 'a.txt');
-    assert.deepEqual(await packedEntries(aq), [
-        {name: 'z.txt', data: 'zzz'},
-        {name: 'a.txt', data: 'aaa'},
-    ]);
-});
-
-test('pack with a filter packs only matching entries in order', async () => {
-    let aq = new ActionQueue();
-    aq.write('1', 'xy/a.png');
-    aq.write('2', 'meta/m.json');
-    aq.write('3', 'xy/b.png');
-    let subset = await packedEntries(aq, dst => dst.startsWith('xy/'));
-    assert.deepEqual(subset, [
-        {name: 'xy/a.png', data: '1'},
-        {name: 'xy/b.png', data: '3'},
-    ]);
-});
-
-test('pack counts an entry for the progress bar as the consumer takes it', async () => {
-    let aq = new ActionQueue();
-    for (let i = 0; i < 4; i++) {
-        aq.write('x'.repeat(50_000), `f${i}.txt`);
-    }
-    let counted = 0;
-    let packed = await aq.pack(undefined, () => counted++);
-    // Nothing has read the pack yet: an entry queued is not an entry shipped.
-    assert.equal(counted, 0);
-    let sink = new stream.Writable({highWaterMark: 1, write: (_c, _e, cb) => setImmediate(cb)});
-    await new Promise((resolve, reject) => {
-        sink.on('finish', resolve);
-        sink.on('error', reject);
-        packed.pipe(sink);
-    });
-    assert.equal(counted, 4);
-});
-
-test('run counts each materialized entry for the progress bar, filter and all', async () => {
-    let dir = tmpdir();
-    let aq = new ActionQueue();
-    aq.write('1', 'ani/a.gif');
-    aq.symlink('a.gif', 'ani/b.gif');
-    aq.write('2', 'dex/c.png');
-    let counted: number[] = [];
-    await aq.run(pathlib.join(dir, 'deploy'), 'copy', dst => dst.startsWith('ani/'),
-        () => counted.push(counted.length + 1));
-    assert.deepEqual(counted, [1, 2]);
-});
-
 test('duplicate and absolute destinations invalidate the queue', async () => {
     let dup = new ActionQueue();
     dup.write('a', 'x.txt');
     dup.write('b', 'x.txt');
     assert.ok(!dup.valid);
-    await assert.rejects(() => dup.pack(), /Invalid ActionQueue/);
+    await assert.rejects(() => dup.run(tmpdir(), 'copy'), /Invalid ActionQueue/);
+
+    let up = new ActionQueue();
+    up.write('a', 'x/../../y.txt');
+    assert.ok(!up.valid);
 
     let abs = new ActionQueue();
     abs.write('a', '/etc/passwd');
@@ -201,16 +126,6 @@ test('copy-mode materialization restores 0644 on read-only sources', async () =>
     let out = pathlib.join(dir, 'deploy');
     await aq.run(out, 'copy');
     assert.equal(fs.statSync(pathlib.join(out, 'out/x.png')).mode & 0o777, 0o644);
-});
-
-test('pack carries a symlink as a link, not the bytes it names', async () => {
-    let aq = new ActionQueue();
-    aq.write('1', 'links/xy/a-XXXX.gif');
-    aq.symlink('a-XXXX.gif', 'links/xy/a.gif');
-    assert.deepEqual(await packedEntries(aq), [
-        {name: 'links/xy/a-XXXX.gif', data: '1'},
-        {name: 'links/xy/a.gif', data: '', type: 'symlink', linkname: 'a-XXXX.gif'},
-    ]);
 });
 
 test('run materializes a symlink resolving beside its target', async () => {
@@ -261,4 +176,76 @@ test('ctx.symlink writes the path from the link to what it names', async () => {
         '../../../../sprites/xy/a-XXXX.gif',
         '../sprites/a-XXXX.gif',
     ]);
+});
+
+// A tree and a meta directory under one scratch root, with a CAS beside them.
+function publishDirs() {
+    let dir = tmpdir();
+    return {dir, tree: pathlib.join(dir, 'tree'), meta: pathlib.join(dir, 'meta'), cas: pathlib.join(dir, 'cas')};
+}
+
+test('publish places the tree, retargets links into it and records what it stands behind', async () => {
+    let {dir, tree, meta, cas} = publishDirs();
+    let art = makeArtifact(cas, 'gif bytes', 'gif');
+    let src = pathlib.join(dir, 'src.png');
+    fs.writeFileSync(src, 'png bytes');
+    let aq = new ActionQueue();
+    let ctx = makeCtx(cas, aq);
+    ctx.copy(art, 'xy/a-HASH.gif');
+    ctx.copy(src, 'xy/b-HASH.png');
+    ctx.write('spritesheet-HASH.css', 'css');
+    ctx.write('__meta/xy/manifest.json', '{}');
+    ctx.symlink('__meta/links/xy/a.gif', 'xy/a-HASH.gif');
+    ctx.symlink('__meta/other.json', '__meta/xy/manifest.json');
+    assert.deepEqual(await aq.publish(tree, meta, 'd1g3st'), {files: 3, placed: 3, kept: 0});
+
+    // The CAS object is shared, the source is copied, the write is a file
+    assert.equal(fs.statSync(pathlib.join(tree, 'xy/a-HASH.gif')).ino, fs.statSync(casPath(cas, art.hash, 'gif')).ino);
+    assert.notEqual(fs.statSync(pathlib.join(tree, 'xy/b-HASH.png')).ino, fs.statSync(src).ino);
+    assert.equal(fs.statSync(pathlib.join(tree, 'xy/b-HASH.png')).mode & 0o777, 0o644);
+    assert.equal(fs.readFileSync(pathlib.join(tree, 'spritesheet-HASH.css'), 'utf8'), 'css');
+    assert.equal(fs.readFileSync(pathlib.join(meta, 'xy/manifest.json'), 'utf8'), '{}');
+    // Both ends landed apart; the link follows the file into the tree
+    let link = pathlib.join(meta, 'links/xy/a.gif');
+    assert.equal(fs.readlinkSync(link), '../../../tree/xy/a-HASH.gif');
+    assert.equal(fs.readFileSync(link, 'utf8'), 'gif bytes');
+    assert.equal(fs.readFileSync(pathlib.join(meta, 'other.json'), 'utf8'), '{}');
+    assert.equal(fs.readFileSync(pathlib.join(meta, '__files'), 'utf8'),
+        'spritesheet-HASH.css\nxy/a-HASH.gif\nxy/b-HASH.png\n');
+    assert.equal(fs.readFileSync(pathlib.join(meta, '__digest'), 'utf8'), 'd1g3st\n');
+    assert.ok(!fs.readdirSync(pathlib.join(tree, 'xy')).some(name => name.startsWith('.')), 'no temp files left');
+});
+
+test('publish keeps what the tree has and refuses a name holding something else', async () => {
+    let {tree, meta, cas} = publishDirs();
+    fs.mkdirSync(pathlib.join(tree, 'xy'), {recursive: true});
+    fs.writeFileSync(pathlib.join(tree, 'xy/a-HASH.gif'), 'same size');
+    let old = new Date(2020, 0, 1);
+    fs.utimesSync(pathlib.join(tree, 'xy/a-HASH.gif'), old, old);
+    let aq = new ActionQueue();
+    aq.write('SAME SIZE', 'xy/a-HASH.gif');
+    assert.deepEqual(await aq.publish(tree, meta, 'd'), {files: 1, placed: 0, kept: 1});
+    assert.equal(fs.readFileSync(pathlib.join(tree, 'xy/a-HASH.gif'), 'utf8'), 'same size', 'not rewritten');
+    assert.ok(fs.statSync(pathlib.join(tree, 'xy/a-HASH.gif')).mtime > old, 'touched');
+
+    let other = new ActionQueue();
+    other.write('a different length', 'xy/a-HASH.gif');
+    await assert.rejects(() => other.publish(tree, pathlib.join(meta, '2'), 'd'), /Different file size/);
+    void cas;
+});
+
+test('publish refuses links in the tree, links to what it does not carry, and __ meta names', async () => {
+    let {tree, meta} = publishDirs();
+    let inTree = new ActionQueue();
+    inTree.write('a', 'xy/a-HASH.gif');
+    inTree.symlink('a-HASH.gif', 'xy/a.gif');
+    await assert.rejects(() => inTree.publish(tree, meta, 'd'), BuildError);
+
+    let dangling = new ActionQueue();
+    dangling.symlink('../../xy/a-HASH.gif', '__meta/links/xy/a.gif');
+    await assert.rejects(() => dangling.publish(tree, meta, 'd'), /doesn't carry/);
+
+    let reserved = new ActionQueue();
+    reserved.write('a', '__meta/__files');
+    await assert.rejects(() => reserved.publish(tree, meta, 'd'), /publish's own/);
 });

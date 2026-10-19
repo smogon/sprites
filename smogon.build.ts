@@ -9,16 +9,13 @@ import {type Artifact, type CmdSpec, forEachRule, rule} from './tools/build/arti
 import {base, compresspng, pad, spriteglob, trimimg} from './tools/build/helpers.ts';
 import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 
-// The tar root maps onto the served tree: sprites/x is served at
-// /__assets/sprites/x. The upload rejects a tar whose tree disagrees with the
-// prefix in services.toml, so the two are checked against each other rather
-// than each guessing -- which is what lets the pointers below name whole urls
-// and their readers hold no configuration. __meta/ is the exception: the
-// upload diverts it to assets-meta/, beside the served tree and out of it.
+// The output root is the served tree: x is served at /__assets/sprites/x,
+// which is what lets the pointers below name whole urls and their readers
+// hold no configuration. __meta/ is the exception: `publish` puts it beside
+// the served tree and out of it.
 
-let ASSETS = 'sprites';
-let SERVED = '/__assets';
-let TREE: Tree = {root: ASSETS, served: `${SERVED}/${ASSETS}`};
+let SERVED = '/__assets/sprites';
+let TREE: Tree = {root: '', served: SERVED};
 
 // Where the un-stamped names go. A served name carries a content hash and so
 // can be cached forever, which is exactly why it can't be composed by a reader
@@ -27,8 +24,8 @@ let TREE: Tree = {root: ASSETS, served: `${SERVED}/${ASSETS}`};
 // second time, as links under the un-stamped names naming the stamped file.
 // They ride in __meta/ rather than the served tree because the tree is
 // add-only -- a name in it is promised never to change -- and a link is
-// repointed on every upload; the upload retargets each one at where its asset
-// landed on its side, under a directory it already names for this set.
+// repointed on every publish, which points each one at where its file sits
+// in the tree.
 let LINKS = '__meta/links';
 
 let minispriteInputs = spriteglob(['src/minisprites/pokemon/gen6/*', 'src/minisprites/items/*'], {a: false});
@@ -216,7 +213,7 @@ let [, sheetCss, sheetWebp] = rule(minispriteInputs, {
 // Hash-stamped css + webp. The css url rides in __meta/ for the dex to read.
 deploy(async ctx => {
     let wh = await ctx.hash(sheetWebp);
-    ctx.copy(sheetWebp, `${ASSETS}/spritesheet-${wh}.webp`);
+    ctx.copy(sheetWebp, `spritesheet-${wh}.webp`);
     let src = await ctx.read(sheetCss);
     let css = src.replaceAll('url("./spritesheet.webp")', `url("./spritesheet-${wh}.webp")`);
     if (css === src) {
@@ -226,8 +223,8 @@ deploy(async ctx => {
     // of (css, webp), so this changes exactly when the served bytes
     // change.
     let ch = await ctx.hash(sheetCss, sheetWebp);
-    ctx.write(`${ASSETS}/spritesheet-${ch}.css`, css);
-    ctx.write('__meta/spritesheet-css-url.txt', `${SERVED}/${ASSETS}/spritesheet-${ch}.css\n`);
+    ctx.write(`spritesheet-${ch}.css`, css);
+    ctx.write('__meta/spritesheet-css-url.txt', `${SERVED}/spritesheet-${ch}.css\n`);
 });
 
 // Forumsprites: uniform-size minisprites under stamped names, with the

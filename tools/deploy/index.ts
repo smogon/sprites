@@ -1,5 +1,4 @@
 
-import {spawn, type ChildProcess} from 'node:child_process';
 import * as crypto from 'node:crypto';
 import * as fs from 'node:fs/promises';
 import * as os from 'node:os';
@@ -17,9 +16,6 @@ import {killAllProcessGroups} from '../build/exec.ts';
 import {setConfig} from '../build/helpers.ts';
 import * as db from '../build/store.ts';
 import * as api from './api.ts';
-import {loadDeployConfig, matchSubsets} from './config.ts';
-import {withProgress} from './progress.ts';
-import {manifestOf, negotiate} from './protocol.ts';
 import {ActionQueue} from './queue.ts';
 
 let root = nodePath.resolve(fileURLToPath(import.meta.url), '../../..');
@@ -43,20 +39,20 @@ type CommonOpts = {
 type VerbOpts = CommonOpts & {
     output?: string,
     link?: boolean,
-    tar?: boolean,
     record?: boolean,
+    tree?: string,
+    meta?: string,
 };
 
 let USAGE = `usage: node tools/deploy/index.ts <command> [options]
 
 commands:
   build [files...]            build the rules of the given deploys (default: all *.build.ts)
-  deploy [names...]           build, finish, and send each subset to its command from
-                              deploy.json5: a manifest and then a tar of what it asks
-                              for on stdin, or a %d dir (no names: list the deploys;
-                              -o <dir>: materialize each subset there instead of
-                              running its command)
-  run <file> -o <dir>         build, finish, and materialize to a directory (or tar file)
+  run <file> -o <dir>         build, finish, and materialize to a directory
+  publish <file> --tree <dir> --meta <dir>
+                              build, finish, and place the outputs: the served tree gets
+                              what it hasn't got, __meta/ is written whole to the meta
+                              directory with its links pointing into the tree
   inspect <paths...> -o <dir> build every rule touching the given source paths and copy
                               the outputs out
   refactor [files...]         report how the published files differ from the last
@@ -67,10 +63,11 @@ options:
   -n, --dry-run        print what would run without changing anything
       --fail-fast      stop scheduling new rules after the first failure
       --config <file>  config file (default: build.config)
-  -o, --output <dir>   run/inspect/deploy: output directory (a file with --tar)
+  -o, --output <dir>   run/inspect: output directory
+      --tree <dir>     publish: the served tree (add-only)
+      --meta <dir>     publish: where __meta/ goes
       --record         refactor: overwrite the baseline instead of checking it
       --link           run: hardlink instead of copying
-      --tar            run: write a tar file
   -v, --verbose        print more detail
   -h, --help           show this help`;
 
@@ -85,13 +82,13 @@ let COMMON_OPTIONS = {
 
 let VERB_OPTIONS = {
     build: {},
-    deploy: {
-        output: {type: 'string', short: 'o'},
-    },
     run: {
         output: {type: 'string', short: 'o'},
         link: {type: 'boolean'},
-        tar: {type: 'boolean'},
+    },
+    publish: {
+        tree: {type: 'string'},
+        meta: {type: 'string'},
     },
     inspect: {
         output: {type: 'string', short: 'o'},
@@ -218,13 +215,6 @@ async function runFinish(fns: readonly api.DeployFn[], verbose: boolean): Promis
     return aq;
 }
 
-function waitExit(child: ChildProcess): Promise<number | null> {
-    return new Promise((resolve, reject) => {
-        child.on('error', reject);
-        child.on('close', code => resolve(code));
-    });
-}
-
 async function cmdBuild(files: string[], opts: CommonOpts): Promise<void> {
     setConfig(await loadConfig(opts.config));
     // GC needs the full rule universe: only an unfiltered union build
@@ -232,111 +222,6 @@ async function cmdBuild(files: string[], opts: CommonOpts): Promise<void> {
     let gc = files.length === 0 && !Boolean(opts.dryRun);
     await importDeploys(files.length > 0 ? files : await discoverDeployFiles());
     process.exitCode = await buildThen(artifact.getDecls(), opts, gc);
-}
-
-async function cmdDeploy(names: string[], opts: VerbOpts): Promise<void> {
-    let config = await loadDeployConfig('deploy.json5');
-    if (names.length === 0) {
-        for (let [name, target] of config) {
-            console.log(`${name} (${target.buildFile})`);
-            for (let entry of target.deploy) {
-                console.log(`    ${entry.subset.join(' ')} | ${entry.cmd}`);
-            }
-        }
-        return;
-    }
-    let targets = names.map(name => {
-        let target = config.get(name);
-        if (target === undefined) {
-            throw new BuildError(`deploy.json5: no deploy named ${name}`);
-        }
-        return {name, target};
-    });
-    setConfig(await loadConfig(opts.config));
-    let files = [...new Set(targets.map(t => t.target.buildFile))];
-    let specs = await importDeploys(files);
-    process.exitCode = await buildThen(artifact.getDecls(), opts, false, async () => {
-        for (let {name, target} of targets) {
-            let aq = await runFinish(finishOf(specs, target.buildFile), Boolean(opts.verbose));
-            if (aq === null) {
-                return 1;
-            }
-            let dsts = aq.log.filter(e => e.type === 'Op').map(e => e.dst);
-            for (let [i, {entry, matched}] of matchSubsets(dsts, target.deploy).entries()) {
-                console.log(`${name}: ${matched.size} files | ${entry.cmd}`);
-                // Debug mode: materialize what each entry would ship (tar
-                // entries included) instead of running its command.
-                if (opts.output !== undefined) {
-                    let dir = nodePath.join(opts.output, name, String(i));
-                    await withProgress(`${name}: copying`, matched.size,
-                        tick => aq.run(dir, 'copy', dst => matched.has(dst), tick));
-                    console.log(`    -> ${dir}`);
-                    continue;
-                }
-                if (entry.dir) {
-                    await fs.mkdir(TMP_DIR, {recursive: true});
-                    let tmp = await fs.mkdtemp(nodePath.join(TMP_DIR, 'deploy-'));
-                    try {
-                        await withProgress(`${name}: staging`, matched.size,
-                            tick => aq.run(tmp, 'copy', dst => matched.has(dst), tick));
-                        let cmd = spawn(entry.cmd.replaceAll('%d', tmp),
-                            {shell: true, stdio: ['ignore', 'inherit', 'inherit']});
-                        if (await waitExit(cmd) !== 0) {
-                            return 1;
-                        }
-                    } finally {
-                        await fs.rm(tmp, {recursive: true, force: true});
-                    }
-                    continue;
-                }
-                // The command's stdout is ours to read: the reply to the
-                // manifest comes back on it, and its report after that is
-                // relayed. stderr stays the terminal's, for the bar.
-                let upload = spawn(entry.cmd, {shell: true, stdio: ['pipe', 'pipe', 'inherit']});
-                let stdin = upload.stdin;
-                if (stdin === null) {
-                    throw new BuildError(`no stdin pipe for: ${entry.cmd}`);
-                }
-                // If the command dies early we report its exit code; don't
-                // also crash on the resulting EPIPE, which reaches both
-                // stdin and (via streamx's destroy propagation) the pack.
-                stdin.on('error', () => {});
-                let manifest = await manifestOf(aq, dst => matched.has(dst));
-                let reply = await negotiate(upload, manifest);
-                if ('error' in reply) {
-                    // What the command had to say is already on stdout; this
-                    // is for the case where it said nothing usable.
-                    let code = await waitExit(upload);
-                    console.log(`    refused before anything was sent`
-                        + (reply.error === null ? '' : `: ${reply.error}`));
-                    return code === 0 || code === null ? 1 : code;
-                }
-                let send = new Set([...reply.wanted, ...manifest.metaFiles]);
-                console.log(`    ${reply.wanted.size} of ${manifest.assets.size} files to send`);
-                let code;
-                if (send.size === 0) {
-                    // Nothing follows an empty answer, not even an empty tar:
-                    // the command takes the end of the stream as the end.
-                    stdin.end();
-                    code = await waitExit(upload);
-                } else {
-                    // The bar tracks the upload itself: an entry counts once
-                    // the command has taken it, not once it has been read off
-                    // disk. It counts what travels, not what was published.
-                    code = await withProgress(`${name}: uploading`, send.size, async tick => {
-                        let pack = await aq.pack(dst => send.has(dst), tick);
-                        pack.on('error', () => {});
-                        pack.pipe(stdin);
-                        return await waitExit(upload);
-                    });
-                }
-                if (code !== 0) {
-                    return 1;
-                }
-            }
-        }
-        return 0;
-    });
 }
 
 async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
@@ -348,7 +233,36 @@ async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
         if (aq === null) {
             return 1;
         }
-        await aq.run(output, opts.tar ? 'tar' : opts.link ? 'link' : 'copy');
+        await aq.run(output, opts.link ? 'link' : 'copy');
+        return 0;
+    });
+}
+
+// What the publish stands for as one string: the sorted name -> digest map,
+// so two publishes of the same bytes under the same names compare equal
+// whatever built them.
+function digestOf(outputs: Map<string, string>): string {
+    let h = crypto.createHash('sha256');
+    for (let [dst, digest] of [...outputs].sort((a, b) => a[0] < b[0] ? -1 : 1)) {
+        h.update(`${dst}\0${digest}\n`);
+    }
+    return h.digest('hex');
+}
+
+async function cmdPublish(file: string, opts: VerbOpts): Promise<void> {
+    let {tree, meta} = opts;
+    if (tree === undefined || meta === undefined) {
+        throw new BuildError('publish needs --tree and --meta');
+    }
+    setConfig(await loadConfig(opts.config));
+    let specs = await importDeploys([file]);
+    process.exitCode = await buildThen(artifact.getDecls(), opts, false, async () => {
+        let aq = await runFinish(finishOf(specs, file), Boolean(opts.verbose));
+        if (aq === null) {
+            return 1;
+        }
+        let {files, placed, kept} = await aq.publish(tree, meta, digestOf(await outputs(aq)));
+        console.log(`published ${files} files: ${placed} new, ${kept} already there`);
         return 0;
     });
 }
@@ -521,20 +435,20 @@ async function main(argv: string[]): Promise<void> {
         verbose: Boolean(v.verbose),
         output: v.output as string | undefined,
         link: Boolean(v.link),
-        tar: Boolean(v.tar),
         record: Boolean(v.record),
+        tree: v.tree as string | undefined,
+        meta: v.meta as string | undefined,
     };
     switch (verb) {
         case 'build':
             return cmdBuild(positionals, opts);
-        case 'deploy':
-            return cmdDeploy(positionals, opts);
-        case 'run': {
+        case 'run':
+        case 'publish': {
             let [file, ...extra] = positionals;
             if (file === undefined || extra.length > 0) {
-                throw new BuildError('run takes exactly one deploy file');
+                throw new BuildError(`${verb} takes exactly one deploy file`);
             }
-            return cmdRun(file, opts);
+            return verb === 'run' ? cmdRun(file, opts) : cmdPublish(file, opts);
         }
         case 'inspect':
             if (positionals.length === 0) {

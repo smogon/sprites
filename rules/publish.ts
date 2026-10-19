@@ -1,4 +1,6 @@
 
+import * as nodePath from 'node:path';
+
 import * as spritedata from '@smogon/sprite-data/index.ts';
 
 import type {Artifact} from '../tools/build/artifact.ts';
@@ -8,10 +10,10 @@ import type {DeployCtx, SrcFile} from '../tools/deploy/api.ts';
 // or a raw source file.
 export type Sprite = Artifact | SrcFile;
 
-// The published tree a stamped set goes into: where it sits in the output, and
-// the url that root is served at. Both live here rather than in a `dir` so
-// that they are written once and everything a set publishes -- the copies, the
-// urls, the mirror -- is spelled from the same place.
+// The published tree a stamped set goes into: where it sits in the output ('' for
+// the output root itself), and the url that root is served at. Both live here
+// rather than in a `dir` so that they are written once and everything a set
+// publishes -- the copies, the urls, the mirror -- is spelled from the same place.
 export type Tree = {
     root: string,
     served: string,
@@ -52,7 +54,7 @@ export class Manifest {
         }
         let stamped = `${name}-${h}.${e}`;
         this.#entries.set(name, {dir, stamped, filename: `${name}.${e}`});
-        this.#ctx.copy(f, `${this.#tree.root}/${dir}/${stamped}`);
+        this.#ctx.copy(f, nodePath.posix.join(this.#tree.root, dir, stamped));
     }
 
     // The whole url the copy `name` answers to. Exposed on its own for a set
@@ -74,15 +76,12 @@ export class Manifest {
     }
 
     // The same set again under its un-stamped names, as links to the stamped
-    // files. `dst` is a root of its own rather than the tree's, so what a link
-    // says is a path and not a name: the two ends land apart, and the reader
-    // that follows one composed its half from nothing but the sprite. The
-    // tree's own root is not repeated under it, since the mirror is already
-    // one set's worth of it.
+    // files. `dst` is a root of its own rather than the tree's: the reader
+    // that follows one composed its half from nothing but the sprite.
     links(dst: string): void {
         for (let [, e] of this.#sorted()) {
             this.#ctx.symlink(`${dst}/${e.dir}/${e.filename}`,
-                              `${this.#tree.root}/${e.dir}/${e.stamped}`);
+                              nodePath.posix.join(this.#tree.root, e.dir, e.stamped));
         }
     }
 
