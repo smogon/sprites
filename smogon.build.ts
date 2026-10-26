@@ -6,7 +6,7 @@ import {gen10Modelslike} from './rules/modelslike.ts';
 import {GEN4_CAPS, forEachFront, fronts, named} from './rules/oldgen.ts';
 import {Manifest, type Sprite, type Tree, firstWins, itemspritecopy, spritecopy} from './rules/publish.ts';
 import {type Artifact, type CmdSpec, forEachRule, rule} from './tools/build/artifact.ts';
-import {base, compresspng, pad, spriteglob, trimimg} from './tools/build/helpers.ts';
+import {PNG_DETERMINISTIC, base, compresspng, pad, spriteglob, trimimg} from './tools/build/helpers.ts';
 import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 
 // The output root is the served tree: x is served at /__assets/sprites/x,
@@ -358,46 +358,53 @@ deploy(async ctx => {
     manifest.write('__meta/pmd/manifest.json');
 });
 
-// Deprecated, unstamped sets. Reviving one also means importing what it
-// uses (PNG_DETERMINISTIC, base) and giving the copies a Manifest, as the
-// deploys above do.
-//
 // Smogdex social images: models, backfilled with gen9 species not yet in
 // models (first source wins).
-//
-// function socialInputs(): string[] {
-//     let social = spriteglob(['src/models/*'], {b: false, s: false});
-//     let socialSeen = new Set(social.map(base));
-//     for (let file of spriteglob(['src/gen9species/*'], {b: false, s: false})) {
-//         if (!socialSeen.has(base(file))) {
-//             social.push(file);
-//             socialSeen.add(base(file));
-//         }
-//     }
-//     return social;
-// }
-//
-// let fb = forEachRule(socialInputs(), {
-//     display: 'fbsprite %f',
-//     cmds: [
-//         `magick "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 150x150 -background white -gravity center -extent 198x198 -bordercolor black -border 1 %o`,
-//         compresspng({config: 'MODELS'}),
-//     ],
-// }, '%B.png');
-//
-// let twitter = forEachRule(socialInputs(), {
-//     display: 'twittersprite %f',
-//     cmds: [
-//         `magick "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 115x115 -background white -gravity center -extent 120x120 %o`,
-//         compresspng({config: 'MODELS'}),
-//     ],
-// }, '%B.png');
-//
-// deploy(ctx => {
-//     for (let f of fb) {
-//         spritecopy(?, f, {dir: "fbsprites/xy"});
-//     }
-//     for (let f of twitter) {
-//         spritecopy(?, f, {dir: "twittersprites/xy"});
-//     }
-// });
+
+function socialInputs(): string[] {
+    let social = spriteglob(['src/models/*'], {b: false, s: false});
+    let socialSeen = new Set(social.map(base));
+    for (let file of spriteglob(['src/gen9species/*'], {b: false, s: false})) {
+        if (!socialSeen.has(base(file))) {
+            social.push(file);
+            socialSeen.add(base(file));
+        }
+    }
+    return social;
+}
+
+let social = socialInputs();
+
+let fb = forEachRule(social, {
+    display: 'fbsprite %f',
+    cmds: [
+        `magick "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 150x150 -background white -gravity center -extent 198x198 -bordercolor black -border 1 %o`,
+        compresspng({config: 'MODELS'}),
+    ],
+}, '%B.png');
+
+let twitter = forEachRule(social, {
+    display: 'twittersprite %f',
+    cmds: [
+        `magick "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 115x115 -background white -gravity center -extent 120x120 %o`,
+        compresspng({config: 'MODELS'}),
+    ],
+}, '%B.png');
+
+deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
+    let copy = firstWins(manifest, {dir: 'fbsprites'});
+    for (let f of fb) {
+        await copy(f);
+    }
+    manifest.write('__meta/fbsprites/manifest.json');
+});
+
+deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
+    let copy = firstWins(manifest, {dir: 'twittersprites'});
+    for (let f of twitter) {
+        await copy(f);
+    }
+    manifest.write('__meta/twittersprites/manifest.json');
+});
