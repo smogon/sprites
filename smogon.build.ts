@@ -358,16 +358,19 @@ deploy(async ctx => {
     manifest.write('__meta/pmd/manifest.json');
 });
 
-// Smogdex social images: models, backfilled with gen9 species not yet in
-// models (first source wins).
+// Smogdex social images: the xy set's sources, first source wins per file
+// name, so everything the dex draws has one.
 
 function socialInputs(): string[] {
-    let social = spriteglob(['src/models/*'], {b: false, s: false});
-    let socialSeen = new Set(social.map(base));
-    for (let file of spriteglob(['src/gen9species/*'], {b: false, s: false})) {
-        if (!socialSeen.has(base(file))) {
-            social.push(file);
-            socialSeen.add(base(file));
+    let social: string[] = [];
+    let seen = new Set<string>();
+    for (let pat of ['src/models/*', 'src/gen9species/*', 'src/champions/*',
+                     'src/sprites/gen5/*.png', 'src/sprites/gen5/*.gif']) {
+        for (let file of spriteglob(pat, {b: false, s: false})) {
+            if (!seen.has(base(file))) {
+                social.push(file);
+                seen.add(base(file));
+            }
         }
     }
     return social;
