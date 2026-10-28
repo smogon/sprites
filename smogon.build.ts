@@ -3,7 +3,7 @@ import * as spritedata from '@smogon/sprite-data/index.ts';
 
 import {AVATARS, AVATAR_ALIASES, avatarSlots} from './rules/avatars.ts';
 import {gen10Modelslike} from './rules/modelslike.ts';
-import {GEN4_CAPS, forEachFront, fronts, named} from './rules/oldgen.ts';
+import {type Front, GEN4_CAPS, forEachFront, fronts, named} from './rules/oldgen.ts';
 import {Manifest, type Sprite, type Tree, firstWins, itemspritecopy, spritecopy} from './rules/publish.ts';
 import {type Artifact, type CmdSpec, forEachRule, rule} from './tools/build/artifact.ts';
 import {PNG_DETERMINISTIC, base, compresspng, pad, spriteglob, trimimg} from './tools/build/helpers.ts';
@@ -358,19 +358,22 @@ deploy(async ctx => {
     manifest.write('__meta/pmd/manifest.json');
 });
 
-// Smogdex social images: the xy set's sources, first source wins per file
-// name, so everything the dex draws has one.
-
-function socialInputs(): string[] {
-    let social: string[] = [];
-    let seen = new Set<string>();
+function socialInputs(): Front[] {
+    let candidates: Front[] = [];
     for (let pat of ['src/models/*', 'src/gen9species/*', 'src/champions/*',
                      'src/sprites/gen5/*.png', 'src/sprites/gen5/*.gif']) {
         for (let file of spriteglob(pat, {b: false, s: false})) {
-            if (!seen.has(base(file))) {
-                social.push(file);
-                seen.add(base(file));
-            }
+            candidates.push({file, name: base(file)});
+        }
+    }
+    // Spiky-eared Pichu was only ever drawn in gen 4.
+    candidates.push(...fronts('src/sprites/gen4/*.png', 'dph'));
+    let social: Front[] = [];
+    let seen = new Set<string>();
+    for (let f of candidates) {
+        if (!seen.has(f.name)) {
+            social.push(f);
+            seen.add(f.name);
         }
     }
     return social;
@@ -378,21 +381,21 @@ function socialInputs(): string[] {
 
 let social = socialInputs();
 
-let fb = forEachRule(social, {
+let fb = forEachFront(social, {
     display: 'fbsprite %f',
     cmds: [
         `magick "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 150x150 -background white -gravity center -extent 198x198 -bordercolor black -border 1 %o`,
         compresspng({config: 'MODELS'}),
     ],
-}, '%B.png');
+}, 'png');
 
-let twitter = forEachRule(social, {
+let twitter = forEachFront(social, {
     display: 'twittersprite %f',
     cmds: [
         `magick "%f[0]" ${PNG_DETERMINISTIC} -trim -resize 115x115 -background white -gravity center -extent 120x120 %o`,
         compresspng({config: 'MODELS'}),
     ],
-}, '%B.png');
+}, 'png');
 
 deploy(async ctx => {
     let manifest = new Manifest(ctx, TREE);
