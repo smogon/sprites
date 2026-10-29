@@ -178,7 +178,8 @@ test('ctx.symlink writes the path from the link to what it names', async () => {
     ]);
 });
 
-// A tree and a meta directory under one scratch root, with a CAS beside them.
+// Returns paths for a tree and a meta directory under one scratch root, with a
+// CAS beside them.
 function publishDirs() {
     let dir = tmpdir();
     return {dir, tree: pathlib.join(dir, 'tree'), meta: pathlib.join(dir, 'meta'), cas: pathlib.join(dir, 'cas')};

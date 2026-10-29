@@ -17,11 +17,12 @@ import {type DeployCtx, deploy} from './tools/deploy/api.ts';
 let SERVED = '/__assets/sprites';
 let TREE: Tree = {root: '', served: SERVED};
 
-// Where the un-stamped names go. A served name carries a content hash and so
-// can be cached forever, which is exactly why it can't be composed by a reader
-// that knows only the sprite: the smogdex asks for sprites/xy/charizard.gif
-// and reads no manifest. So the sets it composes paths into publish the tree a
-// second time, as links under the un-stamped names naming the stamped file.
+// The directory for the un-stamped names. A served name carries a content hash
+// and so can be cached forever, which is exactly why it can't be composed by a
+// reader that knows only the sprite: the smogdex asks for
+// sprites/xy/charizard.gif and reads no manifest. So the sets it composes paths
+// into publish the tree a second time, as links under the un-stamped names
+// naming the stamped file.
 // They ride in __meta/ rather than the served tree because the tree is
 // add-only -- a name in it is promised never to change -- and a link is
 // repointed on every publish, which points each one at where its file sits
@@ -44,9 +45,9 @@ let xyModels = forEachRule('src/gen9species/*.png', {
 
 let xyChampions = gen10Modelslike();
 
-// Whatever the models don't cover, in gen 5 style: the CAPs that never got a
-// model, and, since the Smogon Sprite Project's batch landed, the Gigantamax
-// formes and a few others.
+// Gen 5-style sprites for whatever the models don't cover: the CAPs that never
+// got a model, and, since the Smogon Sprite Project's batch landed, the
+// Gigantamax formes and a few others.
 
 let xyGen5 = forEachRule('src/sprites/gen5/*.png', [
     // TODO, add customizable compression for gif
@@ -81,16 +82,16 @@ deploy(async ctx => {
 
 // sprites/rb, rg, y, c, rs, dp, bw: the older-gen full sprites, the front of
 // each generation under the name the smogdex, the forum and chatot each
-// compose from a dex alias. They read no manifest, which is why these ride
-// the LINKS mirror the way xy/ does.
+// compose from a dex alias. Those readers read no manifest, which is why these
+// sets ride the LINKS mirror the way xy/ does.
 
 function trimmed(display: string): CmdSpec {
     return {display, cmds: [trimimg(), compresspng({config: 'SPRITE'})]};
 }
 
 // Red and Blue and Japanese Red and Green are two palettes of one set of
-// drawings; Yellow's are the Game Boy Color's, which is a directory of its
-// own, the sprites beside it being the Super Game Boy ones.
+// drawings. Yellow uses the Game Boy Color sprites, in gbc/; the sprites
+// beside that directory are the Super Game Boy ones.
 let gen1 = trimmed('gen 1 sprite %f');
 let rb = forEachFront(fronts('src/sprites/gen1/*.png', 'b'), gen1, 'png');
 let rg = forEachFront(fronts('src/sprites/gen1/*.png', 'g'), gen1, 'png');
@@ -142,15 +143,14 @@ oldgen('bw', async ctx => [
 
 // sprites/minisprites/ and sprites/xyicons/: the smogdex's icons as files, one
 // apiece, for a reader that wants one of them rather than the whole sheet. The
-// two are the same set of pictures read two ways, which is why they are
-// spelled together: minisprites/ ships the sources verbatim, which is what
-// makes a file and its cell in the sheet the same picture, and xyicons/ is the
-// trimmed reading, where a name answers with the drawing and none of the box
-// around it.
+// two are the same pictures read two ways, which is why they are built
+// together: minisprites/ ships the sources verbatim, so a file and its cell in
+// the sheet are the same picture, and xyicons/ trims each to the drawing,
+// without the box around it.
 //
-// They ride the LINKS mirror because what asks for one composes the path out of
-// the sprite and nothing else, which is what the set used to make it read a
-// whole-set hash out of a pointer file to do.
+// They ride the LINKS mirror because a reader asking for one composes the path
+// out of the sprite and nothing else. The set used to make the reader read a
+// whole-set hash out of a pointer file to do that.
 
 let xyItems = forEachRule('src/minisprites/items/*.png', {
     display: 'trim item minisprite %f',
@@ -164,7 +164,8 @@ let xyIcons = forEachRule('src/minisprites/pokemon/gen6/*.png', {
 
 // icons: the gen 6 set has no art for some formes and lends them another's,
 // which the smogdex sheet and forumsprites do off the same directory. Two
-// formes lent the same icon are a duplicate name the manifest refuses.
+// formes lent the same icon would publish a duplicate name, which the manifest
+// refuses.
 
 deploy(async ctx => {
     let manifest = new Manifest(ctx, TREE);
@@ -219,9 +220,9 @@ deploy(async ctx => {
     if (css === src) {
         throw new Error('spritesheet.css: no webp urls rewritten');
     }
-    // Suffix from source content: the rewritten css is a pure function
-    // of (css, webp), so this changes exactly when the served bytes
-    // change.
+    // The suffix is a hash of the sources: the rewritten css is a pure
+    // function of (css, webp), so the suffix changes exactly when the served
+    // bytes change.
     let ch = await ctx.hash(sheetCss, sheetWebp);
     ctx.write(`spritesheet-${ch}.css`, css);
     ctx.write('__meta/spritesheet-css-url.txt', `${SERVED}/spritesheet-${ch}.css\n`);
@@ -234,8 +235,8 @@ deploy(async ctx => {
 // smogdex draws on, which is the items a set can hold; otheritems is the rest
 // of the bag -- the medicine, the mail, the bikes and the Rare Candy -- which
 // the dex never shows and the forum names as readily as any other sprite. The
-// split is the dex's, so it is spelled where the dex's sets are globbed rather
-// than here, where a forum token is a name and nothing else.
+// split matters only to the dex, so it is spelled where the dex's sets are
+// globbed rather than here, where a forum token is a name and nothing else.
 
 let forumItems = forEachRule(
     ['src/minisprites/items/*.png', 'src/minisprites/otheritems/*.png'], {
@@ -263,8 +264,8 @@ deploy(async ctx => {
 // looks one up rather than composing a path, so the set rides no links mirror
 // -- forumsprites, the other set the forum reads, doesn't either.
 //
-// The two source directories publish into one. Which of them a label came from
-// says whether the games drew it in this style, which is a fact about the
+// The two source directories publish into one. A label's source directory
+// records whether the games drew it in this style, which is a fact about the
 // picture and not about the reader: Fairy and Stellar are types the forum
 // renders like any other, and gen 5 simply never labelled them.
 //
@@ -275,9 +276,9 @@ deploy(async ctx => {
     let manifest = new Manifest(ctx, TREE);
     for (let canon of ['canonical', 'noncanonical']) {
         for (let f of await ctx.list(`src/_uncategorized/${canon}/ui/types/gen5`)) {
-            // Held back: the only build that ever published this one renamed it
-            // to `???`, which is PS's name for the type. What the forum calls it
-            // is for the forum to say.
+            // Unknown is held back: the only build that ever published it
+            // renamed it to `???`, which is PS's name for the type. The forum
+            // decides what to call it.
             if (f.name === 'Unknown') {
                 continue;
             }
@@ -341,9 +342,9 @@ deploy(async ctx => {
     for (let [name, art] of avatarArt) {
         await manifest.copy(art, {dir: 'avatars'}, name);
     }
-    // Published by slot rather than by name: nothing looks an avatar up, the
-    // forum picks one with crc32(username) % count, so the order is the whole
-    // mapping and the length is the divisor.
+    // The manifest is by slot rather than by name: nothing looks an avatar up,
+    // the forum picks one with crc32(username) % count, so the order is the
+    // whole mapping and the length is the divisor.
     let slots = avatarSlots().map(name => manifest.url(AVATAR_ALIASES[name] ?? name));
     ctx.write('__meta/avatars/manifest.json', JSON.stringify(slots, null, 4) + '\n');
 });

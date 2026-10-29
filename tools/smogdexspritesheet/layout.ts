@@ -1,12 +1,12 @@
 
 // The sheet is a stack of uniform grids, one region per grid, each cell the
 // size of its region's widest and tallest sprite. A sprite's place in the
-// sheet is then its index and nothing else, which is the whole of what the
-// stylesheet has to say about it -- the alternative, a tight pack, has to
-// spell two coordinates per sprite and costs about five times the css. The
-// padding a uniform cell wastes is nearly free: lossless webp encodes
-// transparency for almost nothing, and the sheet came out slightly smaller
-// than the tight pack it replaced.
+// sheet is then its index and nothing else, so that index is all the
+// stylesheet encodes for it. The alternative, a tight pack, has to spell two
+// coordinates per sprite and costs about five times the css. The padding a
+// uniform cell wastes is nearly free: lossless webp encodes transparency for
+// almost nothing, and the sheet came out slightly smaller than the tight pack
+// it replaced.
 
 // A decoded sprite is opaque to us beyond its size.
 export type Image = {width: number, height: number};
@@ -25,8 +25,8 @@ export type Layout = Region & {cols: number, cellW: number, cellH: number, y: nu
 
 export type Sheet = {layouts: Layout[], width: number, height: number};
 
-// Where a cell's box sits in the sheet. The stylesheet says this same thing in
-// css, and the two have to agree.
+// Returns where a cell's box sits in the sheet. The stylesheet computes the
+// same position in css, and the two have to agree.
 export function place(l: Layout, i: number): {x: number, y: number} {
     return {
         x: (i % l.cols) * l.cellW,
@@ -50,8 +50,8 @@ export function pack(regions: Region[]): Sheet {
         }
     }
 
-    // Laid out region by region down the sheet. The first sizes the sheet,
-    // chosen to come out roughly square; the rest fill that width.
+    // Regions are laid out one after another down the sheet. The first sizes
+    // the sheet, chosen to come out roughly square; the rest fill that width.
     let layouts: Layout[] = [];
     let width = 0;
     let height = 0;
@@ -79,8 +79,8 @@ export function pack(regions: Region[]): Sheet {
     return {layouts, width, height};
 }
 
-// One rule per region carries the geometry, and one declaration per sprite
-// says which cell it is. Every constant in the geometry is computed from the
+// Emits one rule per region carrying the geometry, and one declaration per
+// sprite naming its cell. Every constant in the geometry is computed from the
 // layout, so the stylesheet and the image can't drift apart.
 //
 // The dex puts `sprite` on the element beside the `sprite-<name>` it already

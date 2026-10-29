@@ -28,7 +28,7 @@ export function substituteNames(s: string, inputs: string[]): string {
                   : inputs.map(basenameNoExt).join(' '));
 }
 
-// Tup-style substitutions:
+// Applies Tup-style substitutions:
 //   %f  inputs, space-joined        %b  input basenames
 //   %o  outputs, space-joined       %B  input basenames without extension
 //   %oN (1-based) a single output, for rules with several

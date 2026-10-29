@@ -25,16 +25,16 @@ export type DeployCtx = {
     // read, list, and hash do file I/O.
     copy(src: CopySource, dst: string): void,
     write(dst: string, data: string): void,
-    // A second name for something else this tree publishes, carried as a link
-    // rather than a second copy. `names` is that thing's destination, not a
-    // link target: what gets written is the path from `dst` to it, since the
+    // Gives something else this tree publishes a second name, carried as a
+    // link rather than a second copy. `names` is that thing's destination, not
+    // a link target: what gets written is the path from `dst` to it, since the
     // two ends can be moved apart by whoever unpacks the tree.
     symlink(dst: string, names: string): void,
     read(src: CopySource): Promise<string>,
     list(dir: string): Promise<SrcFile[]>,
-    // 8-char base32 content stamp. One source: the digest of its bytes,
-    // byte-compatible with artifact hashes. Several: a digest of the sorted
-    // per-source digests (order-insensitive).
+    // Returns an 8-char base32 content stamp. For one source it is the digest
+    // of its bytes, byte-compatible with artifact hashes; for several, a digest
+    // of the sorted per-source digests (order-insensitive).
     hash(...srcs: CopySource[]): Promise<string>,
 };
 

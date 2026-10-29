@@ -82,7 +82,7 @@ export function resetDecls(): void {
     declIndex = new Map();
 }
 
-// Rule identity. Input paths are deliberately excluded (unless
+// Computes a rule's identity. Input paths are deliberately excluded (unless
 // nameSensitive): identity is the computation and the bytes it consumes, so
 // source renames and byte-identical duplicates dedupe for free. Output exts
 // are included because tools pick output formats from extensions; nominal
@@ -173,9 +173,9 @@ function makeDecl(inputs: string[], deps: string[], spec: CmdSpec, outputs: stri
     return decl;
 }
 
-// One Artifact per declared output, as a tuple when the output list is a
-// literal, so `let [png, css] = rule(...)` needs no undefined checks. A
-// single string output returns its Artifact directly.
+// Declares a rule and returns one Artifact per declared output, as a tuple
+// when the output list is a literal, so `let [png, css] = rule(...)` needs no
+// undefined checks. A single string output returns its Artifact directly.
 export function rule(input: string | string[], spec: CmdSpec | subst.Cmd[],
                      output: string): Artifact;
 export function rule<const T extends readonly string[]>(

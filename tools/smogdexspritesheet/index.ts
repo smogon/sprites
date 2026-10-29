@@ -60,10 +60,11 @@ let sheet = pack([
 let canvas = engine.createCanvas(sheet.width, sheet.height);
 for (let layout of sheet.layouts) {
     for (let [i, cell] of layout.cells.entries()) {
-        // Flush against the left of its cell, so the x offset is the column
-        // and nothing else, and centred down it, so a short sprite sits where
-        // its own box used to. The element is only as wide as the sprite, so
-        // the rest of the cell stays behind it and no neighbour shows through.
+        // Each sprite sits flush against the left of its cell, so the x offset
+        // is the column and nothing else, and is centred down it, so a short
+        // sprite sits where its own box used to. The element is only as wide
+        // as the sprite, so the rest of the cell stays behind it and no
+        // neighbour shows through.
         let {x, y} = place(layout, i);
         canvas.addImage(cell.image, x, y + Math.floor((layout.cellH - cell.image.height) / 2));
     }

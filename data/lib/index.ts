@@ -37,7 +37,6 @@ export function encode(s: string): string {
         .replace(/[^a-z0-9]+/g, m => /[ _-]/.test(m) ? '_' : '');
 }
 
-// The two readings of an encoded name.
 export function smogon(e: string): string {
     return e.replace(/_/g, '-');
 }
@@ -46,8 +45,7 @@ export function psid(e: string): string {
     return e.replace(/_/g, '');
 }
 
-// A published name: the name and its forme joined with a dash, then the
-// variant flags, which both sides spell the same way.
+// The variant flags skip `part`: both sides spell them the same way.
 export function publishedName(sn: SpriteFilename, part: (e: string) => string): string {
     let name = part(sn.name);
     let forme = sn.extra.get('o');
@@ -91,8 +89,9 @@ export const ITEM_ALIASES: Record<string, string[]> = {
 // Greninja-Bond is Battle Bond's form and looks like any other Greninja, unlike
 // Greninja-Ash, which is drawn: the gen 5 renditions of the two are byte for
 // byte the base sprite, and nothing ever drew a model. Keyed and valued in
-// published smogon form, because only that side asks; PS wants `meowstic`,
-// `toxtricitygmax` and `greninja`, which is what the filenames already say.
+// published smogon form, because only the smogon side looks them up; PS wants
+// `meowstic`, `toxtricitygmax` and `greninja`, which is what the filenames
+// already say.
 export const SPECIES_ALIASES: Record<string, string[]> = {
     greninja: ['greninja-bond'],
     meowstic: ['meowstic-m'],
@@ -100,12 +99,12 @@ export const SPECIES_ALIASES: Record<string, string[]> = {
 };
 
 // Formes the gen 6 icon set has no art for, because the games drew them none.
-// PS's client says the same thing in its own sheet, where each of these sits at
-// the slot of the forme it shares, under "alt forms with duplicate icons".
+// PS's client does the same in its own sheet: each of these sits at the slot of
+// the forme it shares, under "alt forms with duplicate icons".
 // Keyed by the name that has the icon, in published smogon form.
 //
 // The icon sets alone borrow this way. src/models has a real animation for
-// every one of these, so smogonNames() must not know about them: in xy/ the
+// every one of these, so smogonNames() must leave them out: in xy/ the
 // borrowing name would be claimed by the base sprite and shadow the forme's
 // own art.
 export const ICON_ALIASES: Record<string, string[]> = {
@@ -126,14 +125,11 @@ export const ICON_ALIASES: Record<string, string[]> = {
     vikavolt: ['vikavolt-totem'],
 };
 
-// Every name a gen 6 icon answers to: its own, and any forme with no icon of
-// its own that borrows it.
 export function iconNames(sn: SpriteFilename): string[] {
     let names = smogonNames(sn);
     return [...names, ...names.flatMap(n => ICON_ALIASES[n] ?? [])];
 }
 
-// Every name a sprite answers to on the smogon side: its own, and any alias.
 export function smogonNames(sn: SpriteFilename): string[] {
     let name = publishedName(sn, smogon);
     return [name, ...SPECIES_ALIASES[name] ?? []];

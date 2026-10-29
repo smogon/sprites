@@ -40,10 +40,10 @@ export type Published = {
     kept: number,
 };
 
-// What a link names, resolved lexically against the directory it sits in: the
-// tree it describes isn't on disk anywhere yet, so there is nothing else to
-// resolve against. Null where it walks out of the tree, or names the tree
-// itself, neither of which is a name this tree can publish.
+// Resolves a link's target lexically against the directory the link sits in:
+// the tree being described isn't on disk anywhere yet, so there is nothing
+// else to resolve against. Returns null where the target walks out of the
+// tree or names the tree itself, neither of which this tree can publish.
 function resolveLink(dst: string, target: string): string | null {
     let parts = nodePath.dirname(dst).split('/').filter(p => p !== '' && p !== '.');
     for (let part of target.split('/')) {
@@ -61,7 +61,7 @@ function resolveLink(dst: string, target: string): string | null {
     return parts.length === 0 ? null : parts.join('/');
 }
 
-// The path under META, or null for a dst outside it.
+// Returns the path under META, or null for a dst outside it.
 function metaRest(dst: string): string | null {
     if (dst === META) {
         return '';
@@ -69,8 +69,8 @@ function metaRest(dst: string): string | null {
     return dst.startsWith(`${META}/`) ? dst.slice(META.length + 1) : null;
 }
 
-// Write-then-rename: a served name is cached forever, so nothing may ever
-// read it half written.
+// Writes to a temp file and renames it into place: a served name is cached
+// forever, so nothing may ever read it half written.
 async function place(dst: string, write: (tmp: string) => Promise<void>): Promise<void> {
     await fs.mkdir(nodePath.dirname(dst), {recursive: true});
     let tmp = nodePath.join(nodePath.dirname(dst),
@@ -232,12 +232,12 @@ export class ActionQueue {
         }
     }
 
-    // Into a served tree and the directory beside it holding what isn't
-    // served. The tree is add-only: every name in it carries a content hash
-    // and is cached forever, so a name already there is the same file and is
-    // touched, and one there at another size is refused. `meta` is this
-    // publish's own and is written whole; it gets `__files`, the tree names
-    // this publish stands behind, and `__digest`, the caller's digest of
+    // Publishes into a served tree and the directory beside it that holds what
+    // isn't served. The tree is add-only: every name in it carries a content
+    // hash and is cached forever, so a name already there is the same file and
+    // is touched, and one there at another size is refused. `meta` belongs to
+    // this publish alone and is written whole; it gets `__files`, the tree
+    // names this publish stands behind, and `__digest`, the caller's digest of
     // everything published.
     async publish(tree: string, meta: string, digest: string): Promise<Published> {
         let ops = this.#ops();
@@ -313,7 +313,7 @@ export class ActionQueue {
                         await fs.link(src, dst);
                         linked = true;
                     } catch (err) {
-                        // Another filesystem: a copy, like a source
+                        // A cross-filesystem object is copied like a source
                         if ((err as NodeJS.ErrnoException).code !== 'EXDEV') {
                             throw err;
                         }

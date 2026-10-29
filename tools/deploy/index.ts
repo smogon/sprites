@@ -238,9 +238,9 @@ async function cmdRun(file: string, opts: VerbOpts): Promise<void> {
     });
 }
 
-// What the publish stands for as one string: the sorted name -> digest map,
-// so two publishes of the same bytes under the same names compare equal
-// whatever built them.
+// Digests a publish's sorted name -> digest map into one string, so two
+// publishes of the same bytes under the same names compare equal whatever
+// built them.
 function digestOf(outputs: Map<string, string>): string {
     let h = crypto.createHash('sha256');
     for (let [dst, digest] of [...outputs].sort((a, b) => a[0] < b[0] ? -1 : 1)) {
@@ -267,10 +267,11 @@ async function cmdPublish(file: string, opts: VerbOpts): Promise<void> {
     });
 }
 
-// What a deploy publishes: the digest of the bytes landing at each name.
+// Maps each name a deploy publishes to the digest of the bytes landing there.
 // tup's `refactor` checked that a Tupfile edit left the build graph alone;
-// this checks the same thing one layer out, over the names and bytes the
-// deploy blocks decide, which is where a rename or a lost alias shows up.
+// this repo's `refactor` checks the same thing one layer out, over the names
+// and bytes the deploy blocks decide, which is where a rename or a lost alias
+// shows up.
 //
 //   node tools/deploy/index.ts refactor --record   # before the change
 //   node tools/deploy/index.ts refactor            # after it

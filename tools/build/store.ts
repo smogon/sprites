@@ -140,8 +140,8 @@ export class Store {
         });
     }
 
-    // One transaction per completed rule: an interrupted build only ever
-    // contains fully-recorded rules.
+    // Records each completed rule in a transaction of its own: an interrupted
+    // build only ever contains fully-recorded rules.
     recordRule(key: string, cmds: string[], outputs: StoredOutput[]): void {
         let upsert = this.#db.prepare(`
             INSERT INTO rules (key, cmds) VALUES (?, ?)
@@ -174,7 +174,8 @@ export class Store {
         return removed;
     }
 
-    // Every CAS object referenced by some rule, as "<digest>.<ext>" basenames.
+    // Returns every CAS object referenced by some rule, as "<digest>.<ext>"
+    // basenames.
     liveObjects(): Set<string> {
         let rows = this.#db.prepare('SELECT digest, ext FROM rule_outputs').all() as
             unknown as {digest: string, ext: string}[];
@@ -187,8 +188,8 @@ export class Store {
     }
 }
 
-// Schema version of an existing db, without opening it for writing (the
-// Store constructor migrates); null if there is no db.
+// Returns an existing db's schema version without opening it for writing
+// (the Store constructor migrates), or null if there is no db.
 export function dbVersion(dbPath: string): number | null {
     if (!fs.existsSync(dbPath)) {
         return null;

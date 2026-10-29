@@ -10,26 +10,27 @@ import type {DeployCtx, SrcFile} from '../tools/deploy/api.ts';
 // or a raw source file.
 export type Sprite = Artifact | SrcFile;
 
-// The published tree a stamped set goes into: where it sits in the output ('' for
-// the output root itself), and the url that root is served at. Both live here
-// rather than in a `dir` so that they are written once and everything a set
-// publishes -- the copies, the urls, the mirror -- is spelled from the same place.
+// The location of the published tree a stamped set goes into: where it sits in
+// the output ('' for the output root itself), and the url that root is served
+// at. Both live here rather than in a `dir` so that they are written once and
+// everything a set publishes -- the copies, the urls, the mirror -- is spelled
+// from the same place.
 export type Tree = {
     root: string,
     served: string,
 };
 
-// One copy this manifest made: where under the tree root it landed, and the
-// un-stamped filename it answers to.
+// A record of one copy this manifest made: where under the tree root the copy
+// landed, and the un-stamped filename it answers to.
 type Entry = {
     dir: string,
     stamped: string,
     filename: string,
 };
 
-// The unhashed name -> served url mapping published beside a stamped set. An
-// entry is the tree's url plus the copy's place in it, so no consumer needs a
-// prefix of its own.
+// Holds the unhashed name -> served url mapping published beside a stamped set.
+// Each entry's url is the tree's url plus the copy's place in it, so no
+// consumer needs a prefix of its own.
 export class Manifest {
     #ctx: DeployCtx;
     #tree: Tree;
@@ -45,10 +46,10 @@ export class Manifest {
     async copy(f: Sprite, {dir, ext}: Dest, name: string): Promise<void> {
         let h = await this.#ctx.hash(f);
         let e = extOf(f, ext);
-        // Keyed on the name alone, since a url names the whole path and has
-        // nothing to disambiguate with an extension. ActionQueue only dedups
-        // final dsts, and hashed dsts differ even where unhashed names
-        // collide, so the collision is caught here or not at all.
+        // The entries are keyed on the name alone, since a url names the whole
+        // path and has nothing to disambiguate with an extension. ActionQueue
+        // only dedups final dsts, and hashed dsts differ even where unhashed
+        // names collide, so the collision is caught here or not at all.
         if (this.#entries.has(name)) {
             throw new Error(`duplicate sprite name ${name}`);
         }
@@ -57,8 +58,8 @@ export class Manifest {
         this.#ctx.copy(f, nodePath.posix.join(this.#tree.root, dir, stamped));
     }
 
-    // The whole url the copy `name` answers to. Exposed on its own for a set
-    // that publishes some other projection of this mapping than write()'s.
+    // Returns the whole url the copy `name` answers to. It's public for a set
+    // that publishes some other projection of this mapping than write() does.
     url(name: string): string {
         let e = this.#entries.get(name);
         if (e === undefined) {
@@ -75,9 +76,9 @@ export class Manifest {
         this.#ctx.write(dst, JSON.stringify(sorted, null, 4) + '\n');
     }
 
-    // The same set again under its un-stamped names, as links to the stamped
-    // files. `dst` is a root of its own rather than the tree's: the reader
-    // that follows one composed its half from nothing but the sprite.
+    // Publishes the same set again under its un-stamped names, as links to the
+    // stamped files. `dst` is a root of its own rather than the tree's: the
+    // reader that follows one composed its half from nothing but the sprite.
     links(dst: string): void {
         for (let [, e] of this.#sorted()) {
             this.#ctx.symlink(`${dst}/${e.dir}/${e.filename}`,
@@ -104,11 +105,6 @@ function extOf(f: Sprite, ext?: string): string {
     return result;
 }
 
-// The names a sprite publishes under on the smogon side, or none where it
-// isn't published at all. A set that backfills another needs this before it
-// copies, since the mapping isn't one name per filename in either direction:
-// Meowstic answers to two, and the forme slots the games gave one sprite (the
-// six Minior meteors, Zygarde's Power Construct pair) answer to the same one.
 export type NameOpts = {
     // forumsprites publishes Unknown; no other set does.
     allowUnknown?: boolean,
@@ -117,6 +113,11 @@ export type NameOpts = {
     icons?: boolean,
 };
 
+// Returns the names a sprite publishes under on the smogon side, or none where
+// it isn't published at all. A set that backfills another needs this before it
+// copies, since the mapping isn't one name per filename in either direction:
+// Meowstic answers to two, and the forme slots the games gave one sprite (the
+// six Minior meteors, Zygarde's Power Construct pair) answer to the same one.
 export function publishedNames(f: Sprite, opts: NameOpts = {}): string[] {
     let sn = spritedata.parseFilename(f.name);
 
@@ -156,13 +157,13 @@ export async function itemspritecopy(manifest: Manifest, f: Sprite, dest: Dest):
     }
 }
 
-// A copy that takes a published name only where nothing before it did. Every
-// layered set is built this way: the later sources are backfills, and the
-// claim is per published name rather than per filename because the mapping is
-// one to many in both directions. One name can be spelled several ways, and
-// gen 5 carries a sprite per forme slot, so its six Minior meteors and its two
-// Zygarde Power Construct slots all want the name the layer above already
-// published, which the manifest would refuse as a duplicate.
+// Returns a copy that takes a published name only where nothing before it
+// did. Every layered set is built this way: the later sources are backfills,
+// and the claim is per published name rather than per filename because the
+// mapping is one to many in both directions. One name can be spelled several
+// ways, and gen 5 carries a sprite per forme slot, so its six Minior meteors
+// and its two Zygarde Power Construct slots all want the name the layer above
+// already published, which the manifest would refuse as a duplicate.
 export function firstWins(manifest: Manifest, dest: Dest,
                           opts: NameOpts = {}): (f: Sprite) => Promise<void> {
     let seen = new Set<string>();

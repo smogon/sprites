@@ -723,14 +723,14 @@ export let AVATAR_ALIASES: Record<string, string> = {
     'swanna-2': 'swanna',
 };
 
-// The pool in the order the forum indexes it, which is the directory listing
-// scandir() used to return. Two things about that listing are the index and so
-// are reproduced rather than tidied away: it sorted filenames with the
-// extension attached, which orders `arceus-bug.gif` ahead of `arceus.gif` where
-// the bare names sort the other way round, and it led with `.` and `..`, which
-// named no avatar but counted toward the divisor. Those two slots rendered a
-// broken image; they get Substitute, which the pool already carries, so they
-// cost nothing but the slot.
+// Returns the pool in the order the forum indexes it, which is the directory
+// listing scandir() used to return. Two quirks of that listing determine the
+// index, so they are reproduced rather than tidied away: it sorted filenames
+// with the extension attached, which orders `arceus-bug.gif` ahead of
+// `arceus.gif` where the bare names sort the other way round, and it led with
+// `.` and `..`, which named no avatar but counted toward the divisor. Those two
+// slots rendered a broken image; they get Substitute, which the pool already
+// carries, so they cost nothing but the slot.
 export function avatarSlots(): string[] {
     let files = [...AVATARS].sort((a, b) => `${a}.gif` < `${b}.gif` ? -1 : 1);
     return ['substitute', 'substitute', ...files];

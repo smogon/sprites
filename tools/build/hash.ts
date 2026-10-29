@@ -18,10 +18,10 @@ export type ReconcileResult = {
     missing: string[],                // paths that don't exist or aren't files
 };
 
-// Content hashes with a stat cache: only files whose (size, mtime_ns) changed
-// since the recorded cache entry are rehashed. mtime_ns exceeds 2^53, hence
-// bigint stats throughout. A small worker pool keeps the fs thread pool fed
-// without holding thousands of files open at once.
+// Hashes file contents with a stat cache: only files whose (size, mtime_ns)
+// changed since the recorded cache entry are rehashed. mtime_ns exceeds 2^53,
+// hence bigint stats throughout. A small worker pool keeps the fs thread pool
+// fed without holding thousands of files open at once.
 export async function reconcileHashes(paths: Iterable<string>,
                                       cache: Map<string, FileStat>): Promise<ReconcileResult> {
     let queue = [...paths];

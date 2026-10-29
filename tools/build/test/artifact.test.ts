@@ -42,7 +42,7 @@ test('rule rejects paths, substitutions, missing extensions in outputs', () => {
 
 test('%b/%B in commands expand to nominal names at declaration', () => {
     let out = rule('src/dir/a.png', ['emit --name %B %f %o'], 'x.css');
-    // Expanded eagerly, and thus part of the key: same bytes under a
+    // %B is expanded eagerly, and thus part of the key: same bytes under a
     // different name is a different rule once %B is in the command.
     assert.deepEqual(out.decl.cmds, ['emit --name a %f %o']);
     let out2 = rule('src/dir/b.png', ['emit --name %B %f %o'], 'x.css');
@@ -75,9 +75,10 @@ test('key ignores input paths but not bytes, order, exts, or commands', () => {
     let a = rule('src/a.png', ['convert %f %o'], 'out.png');
     let b = rule('src/elsewhere/z.png', ['convert %f %o'], 'other.png');
     let kA = computeKey(a.decl, digests({'src/a.png': 'd1'}));
-    // Renamed source, same bytes, different nominal output: same key.
+    // A renamed source with the same bytes and a different nominal output
+    // keeps the key.
     assert.equal(kA, computeKey(b.decl, digests({'src/elsewhere/z.png': 'd1'})));
-    // Different bytes: different key.
+    // Different bytes change the key.
     assert.notEqual(kA, computeKey(b.decl, digests({'src/elsewhere/z.png': 'd2'})));
 
     let two = rule(['x.png', 'y.png'], ['join %f %o'], 'out.png');

@@ -23,7 +23,7 @@ export function astable(x: string | readonly string[] | undefined): string[] {
     return typeof x === 'string' ? [x] : [...x];
 }
 
-// Single-directory, single-'*' glob (all Tupfile patterns were of this form).
+// Globs one directory with one '*' (all Tupfile patterns were of this form).
 // Non-glob strings pass through literally; existence is checked at hash time.
 // Results are sorted within a pattern; declared order is preserved across
 // patterns (some rules, e.g. the pokeball sheet, are input-order-sensitive).
@@ -59,8 +59,8 @@ export function glob(pats: string | string[]): string[] {
     return astable(pats).flatMap(globOne);
 }
 
-// tup.base: basename without directory or final extension. For an artifact,
-// its nominal name.
+// Returns the basename without directory or final extension, like tup.base,
+// or an artifact's nominal name.
 export function base(x: string | Artifact): string {
     return typeof x === 'string' ? basenameNoExt(x) : x.name;
 }

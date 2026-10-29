@@ -43,7 +43,7 @@ export function label(decl: artifact.RuleDecl): string {
     return decl.display ?? decl.cmds[0] ?? '(no commands)';
 }
 
-// Parallel-array access: the arrays are constructed the same length, so a
+// Indexes a parallel array. The arrays are constructed the same length, so a
 // miss is a bug worth crashing on.
 function paired<T>(xs: readonly T[], n: number): T {
     let x = xs[n];
@@ -57,11 +57,11 @@ function indent(text: string): string {
     return text.replace(/\n$/, '').split('\n').map(l => '    ' + l).join('\n');
 }
 
-// Rule progress. A rule announces itself as it starts, `[n] label ...`, and
-// leaves the line open so its result lands on it: ` done`. With parallel jobs
-// something else can print first; the open line is then ended as it is and
-// the result gets a line of its own, `[n] label done`. Every other line goes
-// through `line`, which ends the open one first.
+// A log of rule progress. A rule announces itself as it starts,
+// `[n] label ...`, and leaves the line open so its result lands on it:
+// ` done`. With parallel jobs something else can print first; the open line is
+// then ended as it is and the result gets a line of its own, `[n] label done`.
+// Every other line goes through `line`, which ends the open one first.
 export class JobLog {
     #write: (text: string) => void;
     #open: string | null = null;
@@ -129,9 +129,9 @@ class Semaphore {
 }
 
 // Rules read source files only, so every identity key is computable upfront
-// and the rules are independent: this is a flat parallel sweep, no plan and
-// no dependency graph. The only coupling is that byte-identical declarations
-// share one execution.
+// and the rules are independent: the executor runs a flat parallel sweep, with
+// no plan and no dependency graph. The only coupling is that byte-identical
+// declarations share one execution.
 export class Executor {
     #opts: ExecutorOpts;
     #inflightByKey = new Map<string, Promise<string[]>>();

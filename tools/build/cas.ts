@@ -19,7 +19,7 @@ export async function casExists(casDir: string, digest: string, ext: string): Pr
     return await casStat(casDir, digest, ext) !== null;
 }
 
-// Size of an object, or null if absent. Callers verify it against the
+// Returns an object's size, or null if absent. Callers verify it against the
 // recorded size: a crash between rename and data flush can leave a
 // truncated object, which must read as dirty, not clean.
 export async function casStat(casDir: string, digest: string, ext: string): Promise<bigint | null> {

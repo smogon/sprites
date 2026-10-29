@@ -39,7 +39,7 @@ function src(env: Env, name: string, content: string): string {
     return p;
 }
 
-// A copy rule that also counts its executions in env.execLog.
+// Declares a copy rule that also counts its executions in env.execLog.
 function copyRule(env: Env, input: string, out: string,
                   extra: Partial<CmdSpec> = {}): Artifact {
     return rule(input, {cmds: [`cat %f > %o && echo x >> ${env.execLog}`], ...extra}, out);
