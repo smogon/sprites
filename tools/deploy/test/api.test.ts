@@ -250,3 +250,20 @@ test('publish refuses links in the tree, links to what it does not carry, and __
     reserved.write('a', '__meta/__files');
     await assert.rejects(() => reserved.publish(tree, meta, 'd'), /publish's own/);
 });
+
+test('ctx.size reads each format the sets publish', async () => {
+    let ctx = makeCtx(pathlib.join(tmpdir(), 'cas'), new ActionQueue());
+    let src = pathlib.join(import.meta.dirname, 'src');
+    let sizes = await Promise.all(['32.png', '7x5.gif', '9x4-lossy.webp', '9x4-lossless.webp', '300x200-animated.webp']
+        .map(name => ctx.size(pathlib.join(src, name))));
+    assert.deepEqual(sizes, [
+        {width: 20, height: 26},
+        {width: 7, height: 5},
+        {width: 9, height: 4},
+        {width: 9, height: 4},
+        {width: 300, height: 200},
+    ]);
+    let other = pathlib.join(tmpdir(), 'x.png');
+    fs.writeFileSync(other, '<svg xmlns="http://www.w3.org/2000/svg"/>');
+    await assert.rejects(() => ctx.size(other), /not a PNG, GIF or WebP/);
+});

@@ -36,7 +36,36 @@ export type DeployCtx = {
     // of its bytes, byte-compatible with artifact hashes; for several, a digest
     // of the sorted per-source digests (order-insensitive).
     hash(...srcs: CopySource[]): Promise<string>,
+    size(src: CopySource): Promise<Size>,
 };
+
+export type Size = {width: number, height: number};
+
+// Reads the size a browser lays a PNG, GIF or WebP out at from its header: a
+// GIF's is its logical screen, not its first frame's.
+export function imageSize(head: Buffer, what: string): Size {
+    let ascii = (start: number, end: number) => head.toString('latin1', start, end);
+    if (ascii(1, 4) === 'PNG') {
+        return {width: head.readUInt32BE(16), height: head.readUInt32BE(20)};
+    }
+    if (ascii(0, 3) === 'GIF') {
+        return {width: head.readUInt16LE(6), height: head.readUInt16LE(8)};
+    }
+    if (ascii(0, 4) === 'RIFF' && ascii(8, 12) === 'WEBP') {
+        switch (ascii(12, 16)) {
+        case 'VP8 ':
+            return {width: head.readUInt16LE(26) & 0x3fff, height: head.readUInt16LE(28) & 0x3fff};
+        case 'VP8L': {
+            let bits = head.readUInt32LE(21);
+            return {width: (bits & 0x3fff) + 1, height: ((bits >>> 14) & 0x3fff) + 1};
+        }
+        case 'VP8X':
+            return {width: head.readUIntLE(24, 3) + 1, height: head.readUIntLE(27, 3) + 1};
+        }
+    }
+    throw new Error(`${what} is not a PNG, GIF or WebP`);
+}
+
 
 export type DeployFn = (ctx: DeployCtx) => void | Promise<void>;
 
@@ -113,6 +142,12 @@ export function makeCtx(casDir: string, queue: ActionQueue): DeployCtx {
                 h.update(d);
             }
             return shortHash(h.digest());
+        },
+        async size(src: CopySource): Promise<Size> {
+            let path = srcPath(src);
+            await using f = await fs.open(path);
+            let {buffer} = await f.read({buffer: Buffer.alloc(30), position: 0});
+            return imageSize(buffer, path);
         },
     };
 }

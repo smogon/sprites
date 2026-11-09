@@ -4,7 +4,7 @@ import * as nodePath from 'node:path';
 import * as spritedata from '@smogon/sprite-data/index.ts';
 
 import type {Artifact} from '../tools/build/artifact.ts';
-import type {DeployCtx, SrcFile} from '../tools/deploy/api.ts';
+import type {DeployCtx, Size, SrcFile} from '../tools/deploy/api.ts';
 
 // Anything with a sprite-id nominal name and an extension: a built artifact
 // or a raw source file.
@@ -21,16 +21,17 @@ export type Tree = {
 };
 
 // A record of one copy this manifest made: where under the tree root the copy
-// landed, and the un-stamped filename it answers to.
+// landed, the un-stamped filename it answers to, and the picture's size.
 type Entry = {
     dir: string,
     stamped: string,
     filename: string,
+    size: Size,
 };
 
-// Holds the unhashed name -> served url mapping published beside a stamped set.
-// Each entry's url is the tree's url plus the copy's place in it, so no
-// consumer needs a prefix of its own.
+// Holds the unhashed name -> served url and size mapping published beside a
+// stamped set. Each entry's url is the tree's url plus the copy's place in it,
+// so no consumer needs a prefix of its own.
 export class Manifest {
     #ctx: DeployCtx;
     #tree: Tree;
@@ -54,7 +55,7 @@ export class Manifest {
             throw new Error(`duplicate sprite name ${name}`);
         }
         let stamped = `${name}-${h}.${e}`;
-        this.#entries.set(name, {dir, stamped, filename: `${name}.${e}`});
+        this.#entries.set(name, {dir, stamped, filename: `${name}.${e}`, size: await this.#ctx.size(f)});
         this.#ctx.copy(f, nodePath.posix.join(this.#tree.root, dir, stamped));
     }
 
@@ -69,9 +70,9 @@ export class Manifest {
     }
 
     write(dst: string): void {
-        let sorted: Record<string, string> = {};
-        for (let [k] of this.#sorted()) {
-            sorted[k] = this.url(k);
+        let sorted: Record<string, {url: string} & Size> = {};
+        for (let [k, e] of this.#sorted()) {
+            sorted[k] = {url: this.url(k), ...e.size};
         }
         this.#ctx.write(dst, JSON.stringify(sorted, null, 4) + '\n');
     }
