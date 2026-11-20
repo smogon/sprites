@@ -262,7 +262,7 @@ deploy(async ctx => {
 
 // sprites/types/gen5/: the Black & White type labels, for the forum, which
 // looks one up rather than composing a path, so the set rides no links mirror
-// -- forumsprites, the other set the forum reads, doesn't either.
+// -- nor do the forum's other sets.
 //
 // The two source directories publish into one. A label's source directory
 // records whether the games drew it in this style, which is a fact about the
@@ -286,6 +286,14 @@ deploy(async ctx => {
         }
     }
     manifest.write('__meta/types/gen5/manifest.json');
+});
+
+deploy(async ctx => {
+    let manifest = new Manifest(ctx, TREE);
+    for (let f of await ctx.list('src/_uncategorized/canonical/ui/categories/gen5')) {
+        await manifest.copy(f, {dir: 'categories/gen5'}, spritedata.encode(f.name));
+    }
+    manifest.write('__meta/categories/gen5/manifest.json');
 });
 
 // Forum auto avatars: the gen 5 animations on a uniform 96x96 box, which is
