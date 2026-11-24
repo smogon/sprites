@@ -26,14 +26,14 @@ export type Front = {
 //
 // Gen 5 has no such axis (there `-g` really is Gigantamax), so its sets pass
 // no `games` and keep every flag they came with.
-export function fronts(pats: string | string[], games?: string): Front[] {
+export function fronts(pats: string | string[], {games, shiny = false}: {games?: string, shiny?: boolean} = {}): Front[] {
     let ranked = [];
     for (let file of glob(pats)) {
         let sn = spritedata.parseFilename(base(file));
-        // Backs and shinies go unpublished: the legacy tree kept them in
-        // subdirectories of their own, under national dex numbers, and
-        // nothing on the site has ever read one.
-        if (sn.extra.has('b') || sn.extra.has('s')) {
+        // Backs go unpublished: the legacy tree kept them in subdirectories
+        // of their own, under national dex numbers, and nothing on the site
+        // has ever read one.
+        if (sn.extra.has('b') || sn.extra.has('s') !== shiny) {
             continue;
         }
         let rank = 0;

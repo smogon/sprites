@@ -4,7 +4,7 @@ import * as spritedata from '@smogon/sprite-data/index.ts';
 import {AVATARS, AVATAR_ALIASES, avatarSlots} from './rules/avatars.ts';
 import {gen10Modelslike} from './rules/modelslike.ts';
 import {type Front, GEN4_CAPS, forEachFront, fronts, named} from './rules/oldgen.ts';
-import {Manifest, type Sprite, type Tree, firstWins, itemspritecopy, spritecopy} from './rules/publish.ts';
+import {Manifest, type NameOpts, type Sprite, type Tree, firstWins, itemspritecopy, spritecopy} from './rules/publish.ts';
 import {type Artifact, type CmdSpec, forEachRule, rule} from './tools/build/artifact.ts';
 import {PNG_DETERMINISTIC, base, compresspng, pad, spriteglob, trimimg} from './tools/build/helpers.ts';
 import {type DeployCtx, deploy} from './tools/deploy/api.ts';
@@ -93,27 +93,33 @@ function trimmed(display: string): CmdSpec {
 // drawings. Yellow uses the Game Boy Color sprites, in gbc/; the sprites
 // beside that directory are the Super Game Boy ones.
 let gen1 = trimmed('gen 1 sprite %f');
-let rb = forEachFront(fronts('src/sprites/gen1/*.png', 'b'), gen1, 'png');
-let rg = forEachFront(fronts('src/sprites/gen1/*.png', 'g'), gen1, 'png');
-let y = forEachFront(fronts('src/sprites/gen1/gbc/*.png', 'y'), gen1, 'png');
+let rb = forEachFront(fronts('src/sprites/gen1/*.png', {games: 'b'}), gen1, 'png');
+let rg = forEachFront(fronts('src/sprites/gen1/*.png', {games: 'g'}), gen1, 'png');
+let y = forEachFront(fronts('src/sprites/gen1/gbc/*.png', {games: 'y'}), gen1, 'png');
 
 // Crystal's animations come at the games' own 56x56 and are published on the
 // 60x60 box the legacy set used: the smogdex scales a sprite to fill its
 // frame, so trimmed, a Diglett would arrive the size of a Steelix.
-let c = forEachFront(fronts('src/sprites/gen2/*.gif'), {
+let gen2: CmdSpec = {
     display: 'gen 2 animation %f',
     cmds: [
         'magick %f -coalesce -background none -gravity center -extent 60x60 %o',
         'gifsicle -O3 -w -b %o',
     ],
-}, 'gif');
+};
+let gen3 = trimmed('gen 3 sprite %f');
+let gen4 = trimmed('gen 4 sprite %f');
 
-let rs = forEachFront(fronts('src/sprites/gen3/*.png', 'rfle'), trimmed('gen 3 sprite %f'), 'png');
+function dpFronts(shiny: boolean): Front[] {
+    return [
+        ...fronts('src/sprites/gen4/*.png', {games: 'dph', shiny}),
+        ...named(fronts('src/sprites/gen5/*.png', {shiny}), GEN4_CAPS),
+    ];
+}
 
-let dp = forEachFront([
-    ...fronts('src/sprites/gen4/*.png', 'dph'),
-    ...named(fronts('src/sprites/gen5/*.png'), GEN4_CAPS),
-], trimmed('gen 4 sprite %f'), 'png');
+let c = forEachFront(fronts('src/sprites/gen2/*.gif'), gen2, 'gif');
+let rs = forEachFront(fronts('src/sprites/gen3/*.png', {games: 'rfle'}), gen3, 'png');
+let dp = forEachFront(dpFronts(false), gen4, 'png');
 
 function oldgen(dir: string, sources: (ctx: DeployCtx) => Promise<Sprite[]>): void {
     deploy(async ctx => {
@@ -140,6 +146,40 @@ oldgen('bw', async ctx => [
     ...(await ctx.list('src/sprites/gen5')).filter(f => f.ext === 'gif'),
     ...xyGen5,
 ]);
+
+// Readers look these sets up, so they ride no links mirror.
+
+function lookedUp(dir: string, sources: (ctx: DeployCtx) => Promise<Sprite[]>, opts: NameOpts = {}): void {
+    deploy(async ctx => {
+        let manifest = new Manifest(ctx, TREE);
+        let copy = firstWins(manifest, {dir}, opts);
+        for (let f of await sources(ctx)) {
+            await copy(f);
+        }
+        manifest.write(`__meta/${dir}/manifest.json`);
+    });
+}
+
+let cShiny = forEachFront(fronts('src/sprites/gen2/*.gif', {shiny: true}), gen2, 'gif');
+let rsShiny = forEachFront(fronts('src/sprites/gen3/*.png', {games: 'rfle', shiny: true}), gen3, 'png');
+let dpShiny = forEachFront(dpFronts(true), gen4, 'png');
+
+lookedUp('c-shiny', async () => cShiny, {shiny: true});
+lookedUp('rs-shiny', async () => rsShiny, {shiny: true});
+lookedUp('dp-shiny', async () => dpShiny, {shiny: true});
+lookedUp('bw-shiny', async ctx => [
+    ...(await ctx.list('src/sprites/gen5')).filter(f => f.ext === 'gif'),
+    ...xyGen5,
+], {shiny: true});
+lookedUp('xy-shiny', async ctx => [
+    ...await ctx.list('src/models'),
+    ...xyModels,
+    ...xyChampions,
+    ...(await ctx.list('src/sprites/gen5')).filter(f => f.ext === 'gif'),
+    ...xyGen5,
+], {shiny: true});
+lookedUp('home', async ctx => ctx.list('src/previews/gen9'));
+lookedUp('home-shiny', async ctx => ctx.list('src/previews/gen9'), {shiny: true});
 
 // sprites/minisprites/ and sprites/xyicons/: the smogdex's icons as files, one
 // apiece, for a reader that wants one of them rather than the whole sheet. The
@@ -376,7 +416,7 @@ function socialInputs(): Front[] {
         }
     }
     // Spiky-eared Pichu was only ever drawn in gen 4.
-    candidates.push(...fronts('src/sprites/gen4/*.png', 'dph'));
+    candidates.push(...fronts('src/sprites/gen4/*.png', {games: 'dph'}));
     let social: Front[] = [];
     let seen = new Set<string>();
     for (let f of candidates) {

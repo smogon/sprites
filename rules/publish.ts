@@ -112,6 +112,7 @@ export type NameOpts = {
     // The gen 6 icon sets publish the formes they have no icon for under a
     // borrowed one. See ICON_ALIASES.
     icons?: boolean,
+    shiny?: boolean,
 };
 
 // Returns the names a sprite publishes under on the smogon side, or none where
@@ -123,9 +124,10 @@ export function publishedNames(f: Sprite, opts: NameOpts = {}): string[] {
     let sn = spritedata.parseFilename(f.name);
 
     // Skip asymmetrical for now
-    if (sn.extra.has('a') || sn.extra.has('b') || sn.extra.has('s')) {
+    if (sn.extra.has('a') || sn.extra.has('b') || sn.extra.has('s') !== (opts.shiny ?? false)) {
         return [];
     }
+    sn.extra.delete('s');
 
     if (sn.kind === 'x') {
         // Skip these, we don't use Unknown/Substitute
