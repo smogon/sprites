@@ -399,13 +399,15 @@ deploy(async ctx => {
 
 // PMD sprites ship as-is, stamped.
 
-deploy(async ctx => {
-    let manifest = new Manifest(ctx, TREE);
-    for (let f of await ctx.list('src/pmd')) {
-        await spritecopy(manifest, f, {dir: 'pmd'});
-    }
-    manifest.write('__meta/pmd/manifest.json');
-});
+for (let [dir, shiny] of [['pmd', false], ['pmd-shiny', true]] as const) {
+    deploy(async ctx => {
+        let manifest = new Manifest(ctx, TREE);
+        for (let f of await ctx.list('src/pmd')) {
+            await spritecopy(manifest, f, {dir}, {shiny});
+        }
+        manifest.write(`__meta/${dir}/manifest.json`);
+    });
+}
 
 function socialInputs(): Front[] {
     let candidates: Front[] = [];
