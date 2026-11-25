@@ -179,15 +179,14 @@ lookedUp('xy-shiny', async ctx => [
     ...xyGen5,
 ], {shiny: true});
 
-// bw-static/: bw/ without the animation, each one's first frame and the stills
-// that backfill it.
 let gen5: CmdSpec = {
     display: 'gen 5 still %f',
     cmds: [trimimg({input: '"%f[0]"'}), compresspng({config: 'SPRITE'})],
 };
 
+// Some CAPs have both, and their first frame isn't the still.
 function bwStills(shiny: boolean): Artifact[] {
-    return forEachFront(fronts(['src/sprites/gen5/*.gif', 'src/sprites/gen5/*.png'], {shiny}), gen5, 'png');
+    return forEachFront(fronts(['src/sprites/gen5/*.png', 'src/sprites/gen5/*.gif'], {shiny}), gen5, 'png');
 }
 
 let bwStatic = bwStills(false);
