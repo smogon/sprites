@@ -178,6 +178,24 @@ lookedUp('xy-shiny', async ctx => [
     ...(await ctx.list('src/sprites/gen5')).filter(f => f.ext === 'gif'),
     ...xyGen5,
 ], {shiny: true});
+
+// bw-static/: bw/ without the animation, each one's first frame and the stills
+// that backfill it.
+let gen5: CmdSpec = {
+    display: 'gen 5 still %f',
+    cmds: [trimimg({input: '"%f[0]"'}), compresspng({config: 'SPRITE'})],
+};
+
+function bwStills(shiny: boolean): Artifact[] {
+    return forEachFront(fronts(['src/sprites/gen5/*.gif', 'src/sprites/gen5/*.png'], {shiny}), gen5, 'png');
+}
+
+let bwStatic = bwStills(false);
+let bwStaticShiny = bwStills(true);
+
+lookedUp('bw-static', async () => bwStatic);
+lookedUp('bw-static-shiny', async () => bwStaticShiny, {shiny: true});
+
 lookedUp('home', async ctx => ctx.list('src/previews/gen9'));
 lookedUp('home-shiny', async ctx => ctx.list('src/previews/gen9'), {shiny: true});
 
